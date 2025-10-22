@@ -5,10 +5,11 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 
-export default function LoginPage() {
+export default function SignUpPage() {
   const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [name, setName] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
@@ -17,39 +18,40 @@ export default function LoginPage() {
     setLoading(true)
     setError('')
 
-    const result = await signIn('credentials', {
-      email,
-      password,
-      redirect: false,
-    })
+    try {
+      // Register the user
+      const response = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password, name }),
+      })
 
-    if (result?.error) {
-      setError('Invalid email or password')
+      const data = await response.json()
+
+      if (!response.ok) {
+        setError(data.error || 'Registration failed')
+        setLoading(false)
+        return
+      }
+
+      // Auto sign in after successful registration
+      const result = await signIn('credentials', {
+        email,
+        password,
+        redirect: false,
+      })
+
+      if (result?.error) {
+        setError('Account created but login failed. Please try logging in.')
+        setLoading(false)
+      } else {
+        router.push('/grove')
+      }
+    } catch (err) {
+      setError('An unexpected error occurred')
       setLoading(false)
-    } else {
-      router.push('/grove')
     }
   }
-
-  const handleDemoLogin = async (demoEmail: string) => {
-    setLoading(true)
-    setError('')
-
-    const result = await signIn('credentials', {
-      email: demoEmail,
-      password: 'demo123',
-      redirect: false,
-    })
-
-    if (result?.error) {
-      setError('Demo login failed')
-      setLoading(false)
-    } else {
-      router.push('/grove')
-    }
-  }
-
-  const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === 'true'
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-bg-darker px-4">
@@ -59,12 +61,27 @@ export default function LoginPage() {
             Firefly Grove
           </h1>
           <p className="text-text-muted text-sm">
-            Preserve the memories that glow brightest
+            Create your account to preserve your memories
           </p>
         </div>
 
         <div className="bg-bg-dark border border-border-subtle rounded-lg p-8">
           <form onSubmit={handleSubmit} className="space-y-6">
+            <div>
+              <label htmlFor="name" className="block text-sm text-text-soft mb-2">
+                Full Name
+              </label>
+              <input
+                id="name"
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-dim transition-soft"
+                required
+                disabled={loading}
+              />
+            </div>
+
             <div>
               <label htmlFor="email" className="block text-sm text-text-soft mb-2">
                 Email
@@ -92,7 +109,11 @@ export default function LoginPage() {
                 className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-dim transition-soft"
                 required
                 disabled={loading}
+                minLength={6}
               />
+              <p className="text-text-muted text-xs mt-1">
+                At least 6 characters
+              </p>
             </div>
 
             {error && (
@@ -104,45 +125,21 @@ export default function LoginPage() {
               disabled={loading}
               className="w-full py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded font-medium transition-soft disabled:opacity-50"
             >
-              {loading ? 'Signing in...' : 'Sign In'}
+              {loading ? 'Creating Account...' : 'Create Account'}
             </button>
           </form>
 
           <div className="mt-6 pt-6 border-t border-border-subtle text-center">
             <p className="text-text-muted text-sm">
-              Don't have an account?{' '}
+              Already have an account?{' '}
               <Link
-                href="/signup"
+                href="/login"
                 className="text-firefly-dim hover:text-firefly-glow transition-soft"
               >
-                Sign up
+                Sign in
               </Link>
             </p>
           </div>
-
-          {isDemoMode && (
-            <div className="mt-6 pt-6 border-t border-border-subtle">
-              <p className="text-text-muted text-xs text-center mb-3">
-                Demo Mode - Quick Login
-              </p>
-              <div className="space-y-2">
-                <button
-                  onClick={() => handleDemoLogin('alice@demo.local')}
-                  disabled={loading}
-                  className="w-full py-2 bg-bg-darker hover:bg-border-subtle text-text-soft rounded text-sm transition-soft disabled:opacity-50"
-                >
-                  Login as Alice
-                </button>
-                <button
-                  onClick={() => handleDemoLogin('bob@demo.local')}
-                  disabled={loading}
-                  className="w-full py-2 bg-bg-darker hover:bg-border-subtle text-text-soft rounded text-sm transition-soft disabled:opacity-50"
-                >
-                  Login as Bob
-                </button>
-              </div>
-            </div>
-          )}
         </div>
       </div>
     </div>
