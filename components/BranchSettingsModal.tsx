@@ -20,6 +20,17 @@ interface Member {
   }
 }
 
+interface PendingInvite {
+  id: string
+  email: string
+  status: string
+  expiresAt: string
+  createdAt: string
+  inviter: {
+    name: string
+  }
+}
+
 interface BranchSettingsModalProps {
   branchId: string
   onClose: () => void
@@ -31,6 +42,7 @@ export default function BranchSettingsModal({
 }: BranchSettingsModalProps) {
   const [heirs, setHeirs] = useState<Heir[]>([])
   const [members, setMembers] = useState<Member[]>([])
+  const [pendingInvites, setPendingInvites] = useState<PendingInvite[]>([])
   const [loading, setLoading] = useState(true)
   const [addingHeir, setAddingHeir] = useState(false)
   const [invitingMember, setInvitingMember] = useState(false)
@@ -44,6 +56,7 @@ export default function BranchSettingsModal({
   useEffect(() => {
     fetchHeirs()
     fetchMembers()
+    fetchPendingInvites()
   }, [])
 
   const fetchHeirs = async () => {
@@ -69,6 +82,58 @@ export default function BranchSettingsModal({
       }
     } catch (error) {
       console.error('Failed to fetch members:', error)
+    }
+  }
+
+  const fetchPendingInvites = async () => {
+    try {
+      const res = await fetch(`/api/branches/${branchId}/invites`)
+      if (res.ok) {
+        const data = await res.json()
+        setPendingInvites(data.filter((inv: PendingInvite) => inv.status === 'PENDING'))
+      }
+    } catch (error) {
+      console.error('Failed to fetch invites:', error)
+    }
+  }
+
+  const handleResendInvite = async (inviteId: string) => {
+    try {
+      const res = await fetch(`/api/invites/${inviteId}/resend`, {
+        method: 'POST',
+      })
+
+      if (res.ok) {
+        alert('Invitation resent successfully!')
+        fetchPendingInvites()
+      } else {
+        const data = await res.json()
+        alert(data.error || 'Failed to resend invitation')
+      }
+    } catch (error) {
+      alert('Failed to resend invitation')
+    }
+  }
+
+  const handleCancelInvite = async (inviteId: string) => {
+    if (!confirm('Are you sure you want to cancel this invitation?')) {
+      return
+    }
+
+    try {
+      const res = await fetch(`/api/invites/${inviteId}/cancel`, {
+        method: 'POST',
+      })
+
+      if (res.ok) {
+        alert('Invitation cancelled')
+        fetchPendingInvites()
+      } else {
+        const data = await res.json()
+        alert(data.error || 'Failed to cancel invitation')
+      }
+    } catch (error) {
+      alert('Failed to cancel invitation')
     }
   }
 
@@ -234,6 +299,46 @@ export default function BranchSettingsModal({
                 {invitingMember ? 'Inviting...' : 'Invite Member'}
               </button>
             </form>
+
+            {/* Pending Invites */}
+            {pendingInvites.length > 0 && (
+              <div className="mt-6 pt-6 border-t border-border-subtle">
+                <h4 className="text-md text-text-soft mb-3">Pending Invitations</h4>
+                <div className="space-y-2">
+                  {pendingInvites.map((invite) => (
+                    <div
+                      key={invite.id}
+                      className="bg-bg-darker border border-border-subtle rounded p-3 flex justify-between items-center"
+                    >
+                      <div>
+                        <div className="text-text-soft text-sm">
+                          {invite.email}
+                        </div>
+                        <div className="text-text-muted text-xs">
+                          Sent {new Date(invite.createdAt).toLocaleDateString()} •
+                          Expires {new Date(invite.expiresAt).toLocaleDateString()}
+                        </div>
+                      </div>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => handleResendInvite(invite.id)}
+                          className="px-3 py-1 text-xs bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded transition-soft"
+                          title="Resend invitation with new link"
+                        >
+                          Resend
+                        </button>
+                        <button
+                          onClick={() => handleCancelInvite(invite.id)}
+                          className="px-3 py-1 text-xs bg-red-600 hover:bg-red-700 text-white rounded transition-soft"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Heirs Section */}
