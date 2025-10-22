@@ -10,6 +10,16 @@ interface Heir {
   notified: boolean
 }
 
+interface Member {
+  id: string
+  role: string
+  approved: boolean
+  user: {
+    name: string
+    email: string
+  }
+}
+
 interface BranchSettingsModalProps {
   branchId: string
   onClose: () => void
@@ -20,15 +30,20 @@ export default function BranchSettingsModal({
   onClose,
 }: BranchSettingsModalProps) {
   const [heirs, setHeirs] = useState<Heir[]>([])
+  const [members, setMembers] = useState<Member[]>([])
   const [loading, setLoading] = useState(true)
   const [addingHeir, setAddingHeir] = useState(false)
+  const [invitingMember, setInvitingMember] = useState(false)
   const [newHeirEmail, setNewHeirEmail] = useState('')
+  const [newMemberEmail, setNewMemberEmail] = useState('')
   const [releaseCondition, setReleaseCondition] = useState('AFTER_DEATH')
   const [releaseDate, setReleaseDate] = useState('')
   const [error, setError] = useState('')
+  const [memberError, setMemberError] = useState('')
 
   useEffect(() => {
     fetchHeirs()
+    fetchMembers()
   }, [])
 
   const fetchHeirs = async () => {
@@ -42,6 +57,18 @@ export default function BranchSettingsModal({
       console.error('Failed to fetch heirs:', error)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const fetchMembers = async () => {
+    try {
+      const res = await fetch(`/api/branches/${branchId}`)
+      if (res.ok) {
+        const data = await res.json()
+        setMembers(data.members || [])
+      }
+    } catch (error) {
+      console.error('Failed to fetch members:', error)
     }
   }
 
@@ -83,12 +110,39 @@ export default function BranchSettingsModal({
     }
   }
 
+  const handleInviteMember = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setMemberError('')
+    setInvitingMember(true)
+
+    try {
+      const res = await fetch(`/api/branches/${branchId}/members`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: newMemberEmail }),
+      })
+
+      if (res.ok) {
+        const newMember = await res.json()
+        setMembers([...members, newMember])
+        setNewMemberEmail('')
+      } else {
+        const data = await res.json()
+        setMemberError(data.error || 'Failed to invite member')
+      }
+    } catch (error) {
+      setMemberError('Failed to invite member')
+    } finally {
+      setInvitingMember(false)
+    }
+  }
+
   return (
     <div className="fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-50">
       <div className="bg-bg-dark border border-border-subtle rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         <div className="p-6 border-b border-border-subtle flex justify-between items-center">
           <h2 className="text-2xl font-light text-text-soft">
-            Branch Settings & Heirs
+            Branch Settings
           </h2>
           <button
             onClick={onClose}
@@ -99,6 +153,79 @@ export default function BranchSettingsModal({
         </div>
 
         <div className="p-6">
+          {/* Members Section */}
+          <div className="mb-8">
+            <h3 className="text-lg text-text-soft mb-4">Branch Members</h3>
+            <p className="text-text-muted text-sm mb-4">
+              Members can view shared memories and add their own contributions to this branch.
+            </p>
+
+            {loading ? (
+              <div className="text-text-muted text-sm">Loading...</div>
+            ) : members.length > 0 ? (
+              <div className="space-y-3 mb-6">
+                {members.map((member) => (
+                  <div
+                    key={member.id}
+                    className="bg-bg-darker border border-border-subtle rounded p-4"
+                  >
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <div className="text-text-soft font-medium">
+                          {member.user.name}
+                        </div>
+                        <div className="text-text-muted text-sm">
+                          {member.user.email}
+                        </div>
+                        <div className="text-text-muted text-xs mt-1">
+                          Role: {member.role}
+                          {member.approved && ' • Active'}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-text-muted text-sm mb-6">
+                No members yet. Invite someone to collaborate!
+              </div>
+            )}
+
+            {/* Invite Member Form */}
+            <form onSubmit={handleInviteMember} className="space-y-4">
+              <div>
+                <label className="block text-sm text-text-soft mb-2">
+                  Invite Member by Email
+                </label>
+                <input
+                  type="email"
+                  value={newMemberEmail}
+                  onChange={(e) => setNewMemberEmail(e.target.value)}
+                  className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-dim transition-soft"
+                  placeholder="member@example.com"
+                  required
+                  disabled={invitingMember}
+                />
+                <p className="text-text-muted text-xs mt-1">
+                  Note: They must have an account to be invited
+                </p>
+              </div>
+
+              {memberError && (
+                <div className="text-red-400 text-sm">{memberError}</div>
+              )}
+
+              <button
+                type="submit"
+                disabled={invitingMember}
+                className="w-full py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded font-medium transition-soft disabled:opacity-50"
+              >
+                {invitingMember ? 'Inviting...' : 'Invite Member'}
+              </button>
+            </form>
+          </div>
+
           {/* Heirs Section */}
           <div className="mb-8">
             <h3 className="text-lg text-text-soft mb-4">Legacy Heirs</h3>

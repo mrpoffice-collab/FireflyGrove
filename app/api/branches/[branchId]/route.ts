@@ -40,6 +40,16 @@ export async function GET(
             email: true,
           },
         },
+        members: {
+          include: {
+            user: {
+              select: {
+                name: true,
+                email: true,
+              },
+            },
+          },
+        },
         entries: {
           where: {
             OR: [
