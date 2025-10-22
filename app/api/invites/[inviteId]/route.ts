@@ -5,13 +5,15 @@ export const dynamic = 'force-dynamic'
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { token: string } }
+  { params }: { params: { inviteId: string } }
 ) {
   try {
-    const token = params.token
+    // inviteId can be either a token or an ID
+    const inviteId = params.inviteId
 
-    const invite = await prisma.invite.findUnique({
-      where: { token },
+    // Try to find by token first (for invite page), then by ID
+    let invite = await prisma.invite.findUnique({
+      where: { token: inviteId },
       include: {
         inviter: {
           select: {

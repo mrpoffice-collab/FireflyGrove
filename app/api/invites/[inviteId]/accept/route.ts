@@ -6,10 +6,10 @@ export const dynamic = 'force-dynamic'
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: { token: string } }
+  { params }: { params: { inviteId: string } }
 ) {
   try {
-    const token = params.token
+    const token = params.inviteId // This is actually a token, not an ID
     const { name, password } = await req.json()
 
     if (!name || !password) {
