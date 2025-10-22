@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import { sendMemberInviteEmail } from '@/lib/email'
 
 export const dynamic = 'force-dynamic'
 
@@ -71,6 +72,18 @@ export async function POST(
       )
     }
 
+    // Get branch details for email
+    const branchWithOwner = await prisma.branch.findUnique({
+      where: { id: branchId },
+      include: {
+        owner: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    })
+
     // Create branch member
     const member = await prisma.branchMember.create({
       data: {
@@ -88,6 +101,18 @@ export async function POST(
         },
       },
     })
+
+    // Send invitation email
+    if (branchWithOwner) {
+      const branchUrl = `${process.env.NEXTAUTH_URL}/branch/${branchId}`
+      await sendMemberInviteEmail(
+        invitedUser.email,
+        invitedUser.name,
+        branchWithOwner.title,
+        branchWithOwner.owner.name,
+        branchUrl
+      )
+    }
 
     return NextResponse.json(member)
   } catch (error: any) {
