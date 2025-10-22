@@ -123,9 +123,19 @@ export default function BranchSettingsModal({
       })
 
       if (res.ok) {
-        const newMember = await res.json()
-        setMembers([...members, newMember])
-        setNewMemberEmail('')
+        const data = await res.json()
+
+        // Handle different response types
+        if (data.type === 'member') {
+          // Existing user was added directly
+          setMembers([...members, data.member])
+          setNewMemberEmail('')
+          alert('Member added successfully!')
+        } else if (data.type === 'invite') {
+          // New user - invitation sent
+          setNewMemberEmail('')
+          alert(`Invitation sent to ${data.invite.email}! They'll receive an email to create an account and join this branch.`)
+        }
       } else {
         const data = await res.json()
         setMemberError(data.error || 'Failed to invite member')
