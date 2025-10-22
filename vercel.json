@@ -1,0 +1,20 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron?job=weekly-backup",
+      "schedule": "0 2 * * 0"
+    },
+    {
+      "path": "/api/cron?job=monthly-integrity",
+      "schedule": "0 3 1 * *"
+    },
+    {
+      "path": "/api/cron?job=daily-legacy",
+      "schedule": "0 1 * * *"
+    },
+    {
+      "path": "/api/cron?job=nightly-subscription",
+      "schedule": "0 0 * * *"
+    }
+  ]
+}

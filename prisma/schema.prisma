@@ -1,0 +1,124 @@
+// Firefly Grove Database Schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+  password  String
+  status    String   @default("ACTIVE") // ACTIVE, LOCKED, LEGACY
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Subscriptions
+  stripeCustomerId       String?   @unique
+  stripeSubscriptionId   String?   @unique
+  subscriptionStatus     String?
+  subscriptionEndsAt     DateTime?
+  graceEndsAt            DateTime?
+
+  // Relations
+  ownedBranches    Branch[]       @relation("BranchOwner")
+  entries          Entry[]
+  branchMemberships BranchMember[]
+
+  @@index([email])
+  @@index([status])
+}
+
+model Branch {
+  id          String   @id @default(cuid())
+  ownerId     String
+  title       String
+  description String?
+  status      String   @default("ACTIVE") // ACTIVE, ARCHIVED, LEGACY_RELEASED
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  owner       User     @relation("BranchOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  entries     Entry[]
+  members     BranchMember[]
+  heirs       Heir[]
+
+  @@index([ownerId])
+  @@index([status])
+}
+
+model Entry {
+  id          String   @id @default(cuid())
+  branchId    String
+  authorId    String
+  text        String
+  visibility  String   @default("PRIVATE") // PRIVATE, SHARED, LEGACY
+  legacyFlag  Boolean  @default(false)
+  mediaUrl    String?
+  audioUrl    String?
+  approved    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  branch      Branch   @relation(fields: [branchId], references: [id], onDelete: Cascade)
+  author      User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@index([branchId])
+  @@index([authorId])
+  @@index([visibility])
+  @@index([createdAt])
+}
+
+model BranchMember {
+  id         String   @id @default(cuid())
+  branchId   String
+  userId     String
+  role       String   @default("GUEST") // OWNER, GUEST
+  approved   Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  // Relations
+  branch     Branch   @relation(fields: [branchId], references: [id], onDelete: Cascade)
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([branchId, userId])
+  @@index([userId])
+}
+
+model Heir {
+  id               String   @id @default(cuid())
+  branchId         String
+  heirEmail        String
+  releaseCondition String   @default("AFTER_DEATH") // AFTER_DEATH, AFTER_DATE, MANUAL
+  releaseDate      DateTime?
+  notified         Boolean  @default(false)
+  notifiedAt       DateTime?
+  downloadToken    String?  @unique
+  createdAt        DateTime @default(now())
+
+  // Relations
+  branch           Branch   @relation(fields: [branchId], references: [id], onDelete: Cascade)
+
+  @@index([branchId])
+  @@index([heirEmail])
+}
+
+model Backup {
+  id          String   @id @default(cuid())
+  filename    String
+  storageUrl  String
+  size        Int
+  hash        String
+  createdAt   DateTime @default(now())
+  verified    Boolean  @default(false)
+  verifiedAt  DateTime?
+
+  @@index([createdAt])
+}
