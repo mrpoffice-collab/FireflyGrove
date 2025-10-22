@@ -4,6 +4,8 @@ import { stripe } from '@/lib/stripe'
 import { prisma } from '@/lib/prisma'
 import { isDemoMode } from '@/lib/demo'
 
+export const dynamic = 'force-dynamic'
+
 export async function POST(req: NextRequest) {
   if (isDemoMode()) {
     return NextResponse.json({ received: true })

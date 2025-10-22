@@ -1,10 +1,10 @@
 import Stripe from 'stripe'
 import { isDemoMode } from './demo'
 
-// Initialize Stripe only if not in demo mode
-export const stripe = isDemoMode()
+// Initialize Stripe only if not in demo mode and API key is available
+export const stripe = isDemoMode() || !process.env.STRIPE_SECRET_KEY
   ? null
-  : new Stripe(process.env.STRIPE_SECRET_KEY || '', {
+  : new Stripe(process.env.STRIPE_SECRET_KEY, {
       apiVersion: '2025-02-24.acacia',
     })
 
