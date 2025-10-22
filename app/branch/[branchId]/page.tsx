@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react'
 import Header from '@/components/Header'
 import MemoryCard from '@/components/MemoryCard'
 import MemoryModal from '@/components/MemoryModal'
+import BranchSettingsModal from '@/components/BranchSettingsModal'
 
 interface Entry {
   id: string
@@ -39,6 +40,7 @@ export default function BranchPage() {
   const [branch, setBranch] = useState<Branch | null>(null)
   const [loading, setLoading] = useState(true)
   const [showNewMemory, setShowNewMemory] = useState(false)
+  const [showSettings, setShowSettings] = useState(false)
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -127,12 +129,43 @@ export default function BranchPage() {
           </button>
 
           <div className="mb-8">
-            <h1 className="text-3xl font-light text-text-soft mb-2">
-              {branch.title}
-            </h1>
-            {branch.description && (
-              <p className="text-text-muted">{branch.description}</p>
-            )}
+            <div className="flex justify-between items-start">
+              <div>
+                <h1 className="text-3xl font-light text-text-soft mb-2">
+                  {branch.title}
+                </h1>
+                {branch.description && (
+                  <p className="text-text-muted">{branch.description}</p>
+                )}
+              </div>
+              {branch.owner.id === (session.user as any)?.id && (
+                <button
+                  onClick={() => setShowSettings(true)}
+                  className="text-text-muted hover:text-text-soft transition-soft"
+                  title="Manage heirs and settings"
+                >
+                  <svg
+                    className="w-6 h-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                    />
+                  </svg>
+                </button>
+              )}
+            </div>
           </div>
 
           <div className="bg-bg-dark border border-firefly-dim/30 rounded-lg p-6 mb-8">
@@ -166,6 +199,13 @@ export default function BranchPage() {
           onClose={() => setShowNewMemory(false)}
           onSave={handleCreateMemory}
           prompt={randomPrompt}
+        />
+      )}
+
+      {showSettings && (
+        <BranchSettingsModal
+          branchId={branchId}
+          onClose={() => setShowSettings(false)}
         />
       )}
     </div>
