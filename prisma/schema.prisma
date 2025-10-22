@@ -29,6 +29,7 @@ model User {
   ownedBranches    Branch[]       @relation("BranchOwner")
   entries          Entry[]
   branchMemberships BranchMember[]
+  sentInvites      Invite[]
 
   @@index([email])
   @@index([status])
@@ -48,6 +49,7 @@ model Branch {
   entries     Entry[]
   members     BranchMember[]
   heirs       Heir[]
+  invites     Invite[]
 
   @@index([ownerId])
   @@index([status])
@@ -121,4 +123,25 @@ model Backup {
   verifiedAt  DateTime?
 
   @@index([createdAt])
+}
+
+model Invite {
+  id          String   @id @default(cuid())
+  inviterId   String
+  email       String
+  branchId    String
+  token       String   @unique
+  status      String   @default("PENDING") // PENDING, ACCEPTED, EXPIRED
+  expiresAt   DateTime
+  createdAt   DateTime @default(now())
+  acceptedAt  DateTime?
+
+  // Relations
+  inviter     User     @relation(fields: [inviterId], references: [id], onDelete: Cascade)
+  branch      Branch   @relation(fields: [branchId], references: [id], onDelete: Cascade)
+
+  @@index([token])
+  @@index([email])
+  @@index([branchId])
+  @@index([status])
 }

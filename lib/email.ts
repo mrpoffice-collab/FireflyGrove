@@ -9,7 +9,8 @@ export async function sendMemberInviteEmail(
   recipientName: string,
   branchTitle: string,
   inviterName: string,
-  branchUrl: string
+  branchUrl: string,
+  isNewUser: boolean = false
 ) {
   if (!resend) {
     console.log('Resend not configured - email not sent')
@@ -17,6 +18,10 @@ export async function sendMemberInviteEmail(
   }
 
   const fromEmail = process.env.EMAIL_FROM || 'noreply@fireflygrove.app'
+  const buttonText = isNewUser ? 'Create Account & Join' : 'View Branch'
+  const instructions = isNewUser
+    ? "You'll need to create a free account to start collaborating."
+    : "You can log in and start collaborating right away."
 
   try {
     const { data, error } = await resend.emails.send({
@@ -44,6 +49,8 @@ export async function sendMemberInviteEmail(
 
               <p><strong>${inviterName}</strong> has invited you to collaborate on the branch <strong>"${branchTitle}"</strong> in Firefly Grove.</p>
 
+              <p style="color: #666; font-size: 14px; margin-bottom: 20px;">${instructions}</p>
+
               <p>As a member, you'll be able to:</p>
               <ul style="color: #555;">
                 <li>View shared memories in this branch</li>
@@ -53,11 +60,11 @@ export async function sendMemberInviteEmail(
 
               <div style="text-align: center; margin: 30px 0;">
                 <a href="${branchUrl}" style="background: #ffd700; color: #1a1a1a; padding: 14px 28px; text-decoration: none; border-radius: 5px; font-weight: 600; display: inline-block;">
-                  View Branch
+                  ${buttonText}
                 </a>
               </div>
 
-              <p style="color: #666; font-size: 14px;">If you don't have an account yet, you'll be prompted to sign up first.</p>
+              <p style="color: #999; font-size: 12px; text-align: center;">This invitation expires in 7 days</p>
             </div>
 
             <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e0e0e0;">
