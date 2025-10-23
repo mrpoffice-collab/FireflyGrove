@@ -66,6 +66,11 @@ export default function BranchSettingsModal({
   const [discoveryEnabled, setDiscoveryEnabled] = useState(true)
   const [togglingDiscovery, setTogglingDiscovery] = useState(false)
 
+  // Transfer ownership
+  const [transferEmail, setTransferEmail] = useState('')
+  const [transferring, setTransferring] = useState(false)
+  const [transferError, setTransferError] = useState('')
+
   useEffect(() => {
     fetchBranchInfo()
     fetchHeirs()
@@ -297,7 +302,7 @@ export default function BranchSettingsModal({
         alert(
           newValue
             ? 'Discovery enabled - this memorial can now be found through public search'
-            : 'Discovery disabled - this memorial is now hidden from public search'
+            : 'Discovery disabled - this memorial is hidden from public search'
         )
       } else {
         const data = await res.json()
@@ -307,6 +312,46 @@ export default function BranchSettingsModal({
       alert('Failed to update discovery setting')
     } finally {
       setTogglingDiscovery(false)
+    }
+  }
+
+  const handleTransferOwnership = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!branch?.person?.id) return
+
+    setTransferError('')
+    setTransferring(true)
+
+    const confirmed = confirm(
+      `Transfer ownership to ${transferEmail}?\n\nThis will give them full control of this legacy tree. You can still access it if you're added as a member.\n\nThis action cannot be undone.`
+    )
+
+    if (!confirmed) {
+      setTransferring(false)
+      return
+    }
+
+    try {
+      const res = await fetch(`/api/legacy-tree/${branch.person.id}/transfer`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ newOwnerEmail: transferEmail }),
+      })
+
+      const data = await res.json()
+
+      if (res.ok) {
+        alert(data.message || 'Ownership transferred successfully!')
+        setTransferEmail('')
+        await fetchBranchInfo()
+        onBranchUpdate?.()
+      } else {
+        setTransferError(data.error || 'Failed to transfer ownership')
+      }
+    } catch (error) {
+      setTransferError('Failed to transfer ownership')
+    } finally {
+      setTransferring(false)
     }
   }
 
@@ -670,6 +715,64 @@ export default function BranchSettingsModal({
                     )}
                   </div>
                 )}
+              </div>
+            </div>
+          )}
+
+          {/* Transfer Ownership - Only for Person-based legacy trees (trustee/owner only) */}
+          {branch?.person?.isLegacy && (
+            <div className="mb-8">
+              <h3 className="text-lg text-text-soft mb-4">Transfer Ownership</h3>
+              <p className="text-text-muted text-sm mb-4">
+                Transfer this legacy tree to a family member. The new owner will have full control and become the moderator.
+              </p>
+
+              <div className="bg-[var(--legacy-amber)]/5 border border-[var(--legacy-amber)]/30 rounded-lg p-4">
+                {branch.person.trusteeId && branch.person.trusteeExpiresAt && (
+                  <div className="mb-4 pb-4 border-b border-[var(--legacy-amber)]/30">
+                    <div className="text-[var(--legacy-text)] text-sm font-medium mb-1">
+                      🕒 Trustee Period Active
+                    </div>
+                    <div className="text-text-muted text-xs">
+                      Trustee period expires: {new Date(branch.person.trusteeExpiresAt).toLocaleDateString()}
+                    </div>
+                    <div className="text-text-muted text-xs mt-1">
+                      Transfer ownership to a family member before this date to ensure continuity.
+                    </div>
+                  </div>
+                )}
+
+                <form onSubmit={handleTransferOwnership} className="space-y-4">
+                  <div>
+                    <label className="block text-sm text-text-soft mb-2">
+                      New Owner's Email
+                    </label>
+                    <input
+                      type="email"
+                      value={transferEmail}
+                      onChange={(e) => setTransferEmail(e.target.value)}
+                      className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-[var(--legacy-amber)] transition-soft"
+                      placeholder="family@example.com"
+                      required
+                      disabled={transferring}
+                    />
+                    <p className="text-text-muted text-xs mt-1">
+                      They must have a Firefly Grove account to receive ownership
+                    </p>
+                  </div>
+
+                  {transferError && (
+                    <div className="text-red-400 text-sm">{transferError}</div>
+                  )}
+
+                  <button
+                    type="submit"
+                    disabled={transferring}
+                    className="w-full py-2 bg-[var(--legacy-amber)] hover:bg-[var(--legacy-glow)] text-bg-dark rounded font-medium transition-soft disabled:opacity-50"
+                  >
+                    {transferring ? 'Transferring...' : 'Transfer Ownership'}
+                  </button>
+                </form>
               </div>
             </div>
           )}
