@@ -73,10 +73,11 @@ export default function FireflyCanvas({ branches }: FireflyCanvasProps) {
           if (firefly.nextBlinkIn <= 0) {
             // Start blinking
             firefly.isBlinking = true
-            firefly.blinkDuration = 20 + Math.random() * 20 // Blink for 20-40 frames
+            firefly.blinkDuration = 30 + Math.random() * 30 // Blink for 30-60 frames (0.5-1 second)
             firefly.blinkPhase = 0
           }
         } else {
+          firefly.blinkPhase += 0.08 // Faster blink speed
           firefly.blinkDuration--
           if (firefly.blinkDuration <= 0) {
             // Stop blinking
@@ -89,19 +90,29 @@ export default function FireflyCanvas({ branches }: FireflyCanvasProps) {
         firefly.phase += 0.02
         const basePulse = 0.7 + Math.sin(firefly.phase) * 0.3
 
-        // Blink effect (rapid fade in/out)
+        // Blink effect - firefly disappears completely
         let blinkAlpha = 1
         if (firefly.isBlinking) {
-          firefly.blinkPhase += firefly.blinkSpeed
-          // Sharp blink curve - goes to 0 then back to 1
-          blinkAlpha = Math.abs(Math.sin(firefly.blinkPhase))
+          // Create a sharp blink that goes fully to 0
+          const blinkCycle = firefly.blinkPhase % (Math.PI * 2)
+
+          if (blinkCycle < Math.PI) {
+            // Fading out - goes from 1 to 0
+            blinkAlpha = Math.cos(blinkCycle / 2)
+          } else {
+            // Fading in - goes from 0 to 1
+            blinkAlpha = Math.cos((blinkCycle - Math.PI) / 2)
+          }
+
+          // Square the alpha to make the off period more pronounced
+          blinkAlpha = Math.max(0, blinkAlpha) ** 2
         }
 
         // Combine base pulse with blink
         const finalAlpha = basePulse * blinkAlpha
 
-        // Only draw if alpha > 0.05 (firefly completely disappears during blink)
-        if (finalAlpha > 0.05) {
+        // Only draw if alpha > 0.01 (firefly completely disappears during blink)
+        if (finalAlpha > 0.01) {
           // Draw glow
           const gradient = ctx.createRadialGradient(
             firefly.x,

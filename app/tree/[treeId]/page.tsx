@@ -222,9 +222,6 @@ export default function TreePage() {
                 {tree.description && (
                   <p className="text-text-muted mb-2">{tree.description}</p>
                 )}
-                <p className="text-text-muted text-sm">
-                  Your story glows brighter with every memory.
-                </p>
               </div>
             )}
           </div>
