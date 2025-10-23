@@ -33,7 +33,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
 
   /* Subtle background image */
-  background-image: url('/background.jpg'); /* Replace with your image path */
+  background-image: url('/background.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;

@@ -76,33 +76,22 @@ export default function GrovePage() {
 
   return (
     <div className="min-h-screen bg-bg-darker">
-      <Header userName={session.user?.name || ''} />
+      <Header
+        userName={session.user?.name || ''}
+        groveInfo={{
+          planName: plan.name,
+          treeCount,
+          treeLimit: grove.treeLimit,
+        }}
+      />
 
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-5xl mx-auto">
           {/* Grove Header */}
           <div className="mb-8">
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <h1 className="text-4xl font-light text-text-soft mb-2">
-                  {grove.name}
-                </h1>
-                <div className="flex items-center gap-3">
-                  <span className="px-3 py-1 text-xs rounded-full bg-firefly-dim/20 text-firefly-glow border border-firefly-dim/30">
-                    {plan.name}
-                  </span>
-                  <span className="text-text-muted text-sm">
-                    Trees: {treeCount} / {grove.treeLimit}
-                  </span>
-                </div>
-              </div>
-              <button
-                onClick={() => router.push('/billing')}
-                className="px-4 py-2 text-sm bg-bg-dark hover:bg-border-subtle text-text-soft rounded border border-border-subtle transition-soft"
-              >
-                Manage Plan
-              </button>
-            </div>
+            <h1 className="text-4xl font-light text-text-soft mb-4">
+              {grove.name}
+            </h1>
 
             {grove.status === 'past_due' && (
               <div className="bg-orange-500/10 border border-orange-500/30 rounded-lg p-4 mb-4">

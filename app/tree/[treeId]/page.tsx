@@ -4,6 +4,7 @@ import { useSession } from 'next-auth/react'
 import { useRouter, useParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import Header from '@/components/Header'
+import FireflyCanvas from '@/components/FireflyCanvas'
 
 interface Branch {
   id: string
@@ -99,6 +100,13 @@ export default function TreePage() {
               <p className="text-text-muted">{tree.description}</p>
             )}
           </div>
+
+          {/* Firefly Visualization */}
+          {tree.branches.length > 0 && (
+            <div className="mb-8">
+              <FireflyCanvas branches={tree.branches} />
+            </div>
+          )}
 
           <div className="mb-6 flex items-center justify-between">
             <h2 className="text-2xl font-light text-text-soft">Branches</h2>
