@@ -46,7 +46,7 @@ function MemorialCreatedContent() {
             </div>
             {birthDate && deathDate && (
               <div className="text-text-muted text-sm">
-                {formatDate(birthDate)} – {formatDate(deathDate)}
+                {formatDate(birthDate)} ~ {formatDate(deathDate)}
               </div>
             )}
           </div>
