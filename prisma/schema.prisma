@@ -61,6 +61,7 @@ model Grove {
   // Relations
   user         User              @relation("UserGrove", fields: [userId], references: [id], onDelete: Cascade)
   memberships  GroveTreeMembership[]
+  trees        Tree[] // OLD MODEL - temporary for backward compatibility
 
   @@index([userId])
   @@index([status])
@@ -99,6 +100,7 @@ model GroveTreeMembership {
   grove                Grove    @relation(fields: [groveId], references: [id], onDelete: Cascade)
   person               Person   @relation(fields: [personId], references: [id], onDelete: Cascade)
   subscription         TreeSubscription? @relation("MembershipSubscription")
+  branches             Branch[] // Branches linked to this tree (temporary for migration)
 
   @@unique([groveId, personId])
   @@index([groveId])
@@ -106,6 +108,25 @@ model GroveTreeMembership {
   @@index([isOriginal])
   @@index([status])
   @@index([subscriptionOwnerId])
+}
+
+// TEMPORARY: Old Tree model kept for backward compatibility during migration
+// Will be removed after Person model migration is complete
+model Tree {
+  id          String   @id @default(cuid())
+  groveId     String
+  name        String
+  description String?
+  status      String   @default("ACTIVE") // ACTIVE, ARCHIVED
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  grove       Grove    @relation(fields: [groveId], references: [id], onDelete: Cascade)
+
+  @@index([groveId])
+  @@index([status])
 }
 
 // Individual Tree Subscription ($4.99/year)
@@ -133,7 +154,8 @@ model TreeSubscription {
 
 model Branch {
   id          String   @id @default(cuid())
-  personId    String   // Links to Person (global identity)
+  personId    String?  // Links to Person (global identity) - MIGRATION PENDING
+  treeId      String?  // OLD MODEL - will be removed after Person migration
   ownerId     String   // User who owns/manages this branch
   title       String
   description String?
@@ -157,7 +179,8 @@ model Branch {
   updatedAt   DateTime @updatedAt
 
   // Relations
-  person            Person              @relation(fields: [personId], references: [id], onDelete: Cascade)
+  person            Person?             @relation(fields: [personId], references: [id], onDelete: Cascade)
+  tree              GroveTreeMembership? @relation(fields: [treeId], references: [id], onDelete: Cascade)
   owner             User                @relation("BranchOwner", fields: [ownerId], references: [id], onDelete: Cascade)
   entries           Entry[]
   members           BranchMember[]
@@ -169,6 +192,7 @@ model Branch {
   localMetadata     MemoryLocalMeta[]
 
   @@index([personId])
+  @@index([treeId])
   @@index([ownerId])
   @@index([status])
   @@index([archived])
