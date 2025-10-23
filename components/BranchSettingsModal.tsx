@@ -62,6 +62,10 @@ export default function BranchSettingsModal({
   const [settingLegacy, setSettingLegacy] = useState(false)
   const [legacyError, setLegacyError] = useState('')
 
+  // Discovery toggle
+  const [discoveryEnabled, setDiscoveryEnabled] = useState(true)
+  const [togglingDiscovery, setTogglingDiscovery] = useState(false)
+
   useEffect(() => {
     fetchBranchInfo()
     fetchHeirs()
@@ -75,6 +79,11 @@ export default function BranchSettingsModal({
       if (res.ok) {
         const data = await res.json()
         setBranch(data)
+
+        // Set discovery toggle state if this is a Person-based legacy tree
+        if (data.person?.isLegacy) {
+          setDiscoveryEnabled(data.person.discoveryEnabled)
+        }
       }
     } catch (error) {
       console.error('Failed to fetch branch info:', error)
@@ -267,6 +276,37 @@ export default function BranchSettingsModal({
       setLegacyError('Failed to set legacy status')
     } finally {
       setSettingLegacy(false)
+    }
+  }
+
+  const handleToggleDiscovery = async () => {
+    if (!branch?.person?.id) return
+
+    setTogglingDiscovery(true)
+    const newValue = !discoveryEnabled
+
+    try {
+      const res = await fetch(`/api/legacy-tree/${branch.person.id}/discovery`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ discoveryEnabled: newValue }),
+      })
+
+      if (res.ok) {
+        setDiscoveryEnabled(newValue)
+        alert(
+          newValue
+            ? 'Discovery enabled - this memorial can now be found through public search'
+            : 'Discovery disabled - this memorial is now hidden from public search'
+        )
+      } else {
+        const data = await res.json()
+        alert(data.error || 'Failed to update discovery setting')
+      }
+    } catch (error) {
+      alert('Failed to update discovery setting')
+    } finally {
+      setTogglingDiscovery(false)
     }
   }
 
@@ -581,6 +621,58 @@ export default function BranchSettingsModal({
               </form>
             )}
           </div>
+
+          {/* Discovery Toggle - Only for Person-based legacy trees */}
+          {branch?.person?.isLegacy && (
+            <div className="mb-8">
+              <h3 className="text-lg text-text-soft mb-4">Public Discovery</h3>
+              <p className="text-text-muted text-sm mb-4">
+                Control whether this memorial can be found through public search. Family members can always access it through direct links.
+              </p>
+
+              <div className="bg-bg-darker border border-border-subtle rounded-lg p-4">
+                <label className="flex items-center justify-between cursor-pointer">
+                  <div className="flex-1">
+                    <div className="text-text-soft font-medium mb-1">
+                      {discoveryEnabled ? '🔍 Discoverable' : '🔒 Private'}
+                    </div>
+                    <div className="text-text-muted text-sm">
+                      {discoveryEnabled
+                        ? 'This memorial can be found through public search'
+                        : 'This memorial is hidden from public search'}
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleToggleDiscovery}
+                    disabled={togglingDiscovery}
+                    className={`relative inline-flex h-6 w-11 flex-shrink-0 rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-firefly-dim focus:ring-offset-2 disabled:opacity-50 ${
+                      discoveryEnabled ? 'bg-firefly-dim' : 'bg-border-subtle'
+                    }`}
+                  >
+                    <span
+                      className={`inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                        discoveryEnabled ? 'translate-x-5' : 'translate-x-0'
+                      }`}
+                    />
+                  </button>
+                </label>
+
+                {branch.person.memoryLimit && (
+                  <div className="mt-4 pt-4 border-t border-border-subtle">
+                    <div className="text-text-muted text-xs">
+                      📊 Memory Usage: {branch.person.memoryCount || 0} / {branch.person.memoryLimit}
+                    </div>
+                    {branch.person.memoryCount >= 50 && branch.person.memoryCount < branch.person.memoryLimit && (
+                      <div className="text-[var(--legacy-amber)] text-xs mt-1">
+                        ⚠️ Approaching limit - consider adopting this tree for unlimited memories
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
 
           <div className="pt-6 border-t border-border-subtle">
             <button

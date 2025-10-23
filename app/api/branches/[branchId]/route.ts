@@ -40,6 +40,19 @@ export async function GET(
             email: true,
           },
         },
+        person: {
+          select: {
+            id: true,
+            isLegacy: true,
+            discoveryEnabled: true,
+            memoryLimit: true,
+            memoryCount: true,
+            trusteeId: true,
+            ownerId: true,
+            moderatorId: true,
+            trusteeExpiresAt: true,
+          },
+        },
         members: {
           include: {
             user: {
