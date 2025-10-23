@@ -221,7 +221,7 @@ export default function BranchPage() {
     return null
   }
 
-  const prompts = [
+  const livingPrompts = [
     "Describe a small thing that made you laugh today.",
     "What's a smell that brings you back?",
     "Tell me about a time you felt truly seen.",
@@ -229,7 +229,19 @@ export default function BranchPage() {
     "Capture a quiet moment you don't want to forget.",
   ]
 
-  const randomPrompt = prompts[Math.floor(Math.random() * prompts.length)]
+  const legacyPrompts = [
+    "What's a story they told that you never want to forget?",
+    "Describe a moment when their presence changed everything.",
+    "What did their hands look like? What did they create?",
+    "What would you want them to know, if you could tell them now?",
+    "Share a memory that makes you smile through the tears.",
+    "What's something they said that you still carry with you?",
+    "Describe the way they made you feel safe.",
+  ]
+
+  const isLegacy = branch?.personStatus === 'legacy'
+  const promptList = isLegacy ? legacyPrompts : livingPrompts
+  const randomPrompt = promptList[Math.floor(Math.random() * promptList.length)]
 
   return (
     <div className="min-h-screen bg-bg-darker">
@@ -325,15 +337,25 @@ export default function BranchPage() {
             </div>
           </div>
 
-          <div className="bg-bg-dark border border-firefly-dim/30 rounded-lg p-6 mb-8">
-            <p className="text-text-muted text-sm italic mb-4">
+          <div className={`rounded-lg p-6 mb-8 ${
+            isLegacy
+              ? 'bg-[var(--legacy-amber)]/5 border border-[var(--legacy-amber)]/30'
+              : 'bg-bg-dark border border-firefly-dim/30'
+          }`}>
+            <p className={`text-sm italic mb-4 ${
+              isLegacy ? 'text-[var(--legacy-text)]' : 'text-text-muted'
+            }`}>
               "{randomPrompt}"
             </p>
             <button
               onClick={() => setShowNewMemory(true)}
-              className="w-full py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded font-medium transition-soft"
+              className={`w-full py-3 rounded font-medium transition-soft ${
+                isLegacy
+                  ? 'bg-[var(--legacy-amber)]/20 hover:bg-[var(--legacy-amber)]/30 text-[var(--legacy-text)] border border-[var(--legacy-amber)]/40'
+                  : 'bg-firefly-dim hover:bg-firefly-glow text-bg-dark'
+              }`}
             >
-              Add Memory
+              {isLegacy ? 'Add Memory of Them' : 'Add Memory'}
             </button>
           </div>
 

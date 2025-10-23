@@ -5,6 +5,7 @@ import { useEffect, useRef } from 'react'
 interface Branch {
   id: string
   title: string
+  personStatus: string
   _count: {
     entries: number
   }
@@ -33,21 +34,26 @@ export default function FireflyCanvas({ branches }: FireflyCanvasProps) {
     updateSize()
 
     // Firefly data
-    const fireflies = branches.map((branch, i) => ({
-      x: Math.random() * canvas.offsetWidth,
-      y: Math.random() * canvas.offsetHeight,
-      vx: (Math.random() - 0.5) * 0.5,
-      vy: (Math.random() - 0.5) * 0.5,
-      brightness: 0.5 + (branch._count.entries / 10) * 0.5,
-      size: 3 + Math.min(branch._count.entries, 10) * 0.5,
-      phase: Math.random() * Math.PI * 2,
-      // Blinking behavior
-      blinkPhase: Math.random() * Math.PI * 2,
-      blinkSpeed: 0.03 + Math.random() * 0.02, // Vary blink speed
-      nextBlinkIn: Math.random() * 400 + 300, // Random time until next blink (5-12 seconds)
-      isBlinking: false,
-      blinkDuration: 0,
-    }))
+    const fireflies = branches.map((branch, i) => {
+      const isLegacy = branch.personStatus === 'legacy'
+
+      return {
+        x: Math.random() * canvas.offsetWidth,
+        y: Math.random() * canvas.offsetHeight,
+        vx: (Math.random() - 0.5) * (isLegacy ? 0.2 : 0.5), // Legacy moves slower
+        vy: (Math.random() - 0.5) * (isLegacy ? 0.2 : 0.5),
+        brightness: 0.5 + (branch._count.entries / 10) * 0.5,
+        size: 3 + Math.min(branch._count.entries, 10) * 0.5,
+        phase: Math.random() * Math.PI * 2,
+        isLegacy,
+        // Blinking behavior
+        blinkPhase: Math.random() * Math.PI * 2,
+        blinkSpeed: 0.03 + Math.random() * 0.02,
+        nextBlinkIn: Math.random() * 400 + 300,
+        isBlinking: false,
+        blinkDuration: 0,
+      }
+    })
 
     let animationId: number
 
@@ -87,8 +93,11 @@ export default function FireflyCanvas({ branches }: FireflyCanvasProps) {
         }
 
         // Pulsing glow (continuous, subtle)
-        firefly.phase += 0.02
-        const basePulse = 0.7 + Math.sin(firefly.phase) * 0.3
+        // Legacy fireflies pulse slower and calmer
+        firefly.phase += firefly.isLegacy ? 0.01 : 0.02
+        const basePulse = firefly.isLegacy
+          ? 0.75 + Math.sin(firefly.phase) * 0.25  // Calmer, more stable
+          : 0.7 + Math.sin(firefly.phase) * 0.3
 
         // Blink effect - firefly disappears completely
         let blinkAlpha = 1
@@ -113,6 +122,11 @@ export default function FireflyCanvas({ branches }: FireflyCanvasProps) {
 
         // Only draw if alpha > 0.01 (firefly completely disappears during blink)
         if (finalAlpha > 0.01) {
+          // Legacy fireflies use warm amber-silver glow, living fireflies use golden yellow
+          const color = firefly.isLegacy
+            ? { r: 212, g: 165, b: 116 }  // --legacy-amber: #d4a574
+            : { r: 255, g: 217, b: 102 }  // --firefly-glow: #ffd966
+
           // Draw glow
           const gradient = ctx.createRadialGradient(
             firefly.x,
@@ -122,9 +136,9 @@ export default function FireflyCanvas({ branches }: FireflyCanvasProps) {
             firefly.y,
             firefly.size * 3
           )
-          gradient.addColorStop(0, `rgba(255, 217, 102, ${firefly.brightness * finalAlpha})`)
-          gradient.addColorStop(0.5, `rgba(255, 217, 102, ${firefly.brightness * finalAlpha * 0.3})`)
-          gradient.addColorStop(1, 'rgba(255, 217, 102, 0)')
+          gradient.addColorStop(0, `rgba(${color.r}, ${color.g}, ${color.b}, ${firefly.brightness * finalAlpha})`)
+          gradient.addColorStop(0.5, `rgba(${color.r}, ${color.g}, ${color.b}, ${firefly.brightness * finalAlpha * 0.3})`)
+          gradient.addColorStop(1, `rgba(${color.r}, ${color.g}, ${color.b}, 0)`)
 
           ctx.fillStyle = gradient
           ctx.beginPath()
@@ -132,7 +146,7 @@ export default function FireflyCanvas({ branches }: FireflyCanvasProps) {
           ctx.fill()
 
           // Draw core
-          ctx.fillStyle = `rgba(255, 217, 102, ${0.8 * finalAlpha})`
+          ctx.fillStyle = `rgba(${color.r}, ${color.g}, ${color.b}, ${0.8 * finalAlpha})`
           ctx.beginPath()
           ctx.arc(firefly.x, firefly.y, firefly.size, 0, Math.PI * 2)
           ctx.fill()
