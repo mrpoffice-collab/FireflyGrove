@@ -35,7 +35,7 @@ export default function Header({ userName, groveInfo }: HeaderProps) {
     <header className="bg-bg-dark border-b border-border-subtle">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
-          <Link href="/grove" className="flex items-center gap-2 hover:opacity-80 transition-soft">
+          <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-soft">
             <span className="text-firefly-glow text-2xl">✦</span>
             <h1 className="text-xl font-light text-text-soft">Firefly Grove</h1>
           </Link>
