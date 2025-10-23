@@ -17,6 +17,7 @@ interface Entry {
   audioUrl: string | null
   createdAt: string
   author: {
+    id: string
     name: string
   }
 }
@@ -152,6 +153,14 @@ export default function BranchPage() {
     setLastCreatedEntry(null)
   }
 
+  const handleWithdraw = async (entryId: string) => {
+    await fetchBranch() // Refresh to remove withdrawn entry
+  }
+
+  const handleHide = async (entryId: string) => {
+    await fetchBranch() // Refresh to remove hidden entry
+  }
+
   if (status === 'loading' || loading) {
     return (
       <div className="min-h-screen bg-bg-darker flex items-center justify-center">
@@ -246,7 +255,13 @@ export default function BranchPage() {
               </div>
             ) : (
               branch.entries.map((entry) => (
-                <MemoryCard key={entry.id} entry={entry} />
+                <MemoryCard
+                  key={entry.id}
+                  entry={entry}
+                  branchOwnerId={branch.owner.id}
+                  onWithdraw={handleWithdraw}
+                  onHide={handleHide}
+                />
               ))
             )}
           </div>

@@ -52,6 +52,7 @@ export async function GET(
         },
         entries: {
           where: {
+            status: 'ACTIVE', // Only show active entries
             OR: [
               { authorId: userId },
               { visibility: 'SHARED', approved: true },
@@ -60,6 +61,7 @@ export async function GET(
           include: {
             author: {
               select: {
+                id: true,
                 name: true,
               },
             },
