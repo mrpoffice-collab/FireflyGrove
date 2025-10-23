@@ -23,6 +23,7 @@ export default function MemoryModal({ onClose, onSave, prompt }: MemoryModalProp
   const [isRecording, setIsRecording] = useState(false)
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null)
   const [audioUrl, setAudioUrl] = useState<string | null>(null)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null)
   const chunksRef = useRef<Blob[]>([])
@@ -77,7 +78,9 @@ export default function MemoryModal({ onClose, onSave, prompt }: MemoryModalProp
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!text.trim()) return
+    if (!text.trim() || isSubmitting) return
+
+    setIsSubmitting(true)
 
     // For MVP, we'll store media as data URLs (in production, upload to storage)
     const data: any = {
@@ -96,12 +99,14 @@ export default function MemoryModal({ onClose, onSave, prompt }: MemoryModalProp
       reader.onloadend = () => {
         data.audioUrl = reader.result as string
         onSave(data)
+        // Note: setIsSubmitting is reset in parent component
       }
       reader.readAsDataURL(audioBlob)
       return
     }
 
     onSave(data)
+    // Note: setIsSubmitting is reset in parent component
   }
 
   return (
@@ -232,9 +237,10 @@ export default function MemoryModal({ onClose, onSave, prompt }: MemoryModalProp
             </button>
             <button
               type="submit"
-              className="flex-1 py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded font-medium transition-soft"
+              disabled={isSubmitting}
+              className="flex-1 py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded font-medium transition-soft disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Save Memory
+              {isSubmitting ? 'Saving...' : 'Save Memory'}
             </button>
           </div>
         </form>

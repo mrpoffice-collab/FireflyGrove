@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import { generateContentHash, checkRecentDuplicate } from '@/lib/content-hash'
 
 export async function POST(
   req: NextRequest,
@@ -18,7 +19,7 @@ export async function POST(
     const branchId = params.branchId
     const body = await req.json()
 
-    const { text, visibility, legacyFlag, mediaUrl, audioUrl } = body
+    const { text, visibility, legacyFlag, mediaUrl, audioUrl, forceDuplicate } = body
 
     if (!text) {
       return NextResponse.json({ error: 'Text is required' }, { status: 400 })
@@ -49,6 +50,35 @@ export async function POST(
       )
     }
 
+    // Generate content hash for duplicate detection
+    const contentHash = generateContentHash(text, mediaUrl, audioUrl)
+
+    // Check for recent duplicates (unless user explicitly forced)
+    if (!forceDuplicate) {
+      const { isDuplicate, existingEntry } = await checkRecentDuplicate(
+        prisma,
+        userId,
+        branchId,
+        contentHash,
+        5 // 5 minute window
+      )
+
+      if (isDuplicate && existingEntry) {
+        return NextResponse.json(
+          {
+            error: 'duplicate',
+            message: 'You recently added a very similar memory. Was this intentional?',
+            existingEntry: {
+              id: existingEntry.id,
+              text: existingEntry.text,
+              createdAt: existingEntry.createdAt,
+            },
+          },
+          { status: 409 }
+        )
+      }
+    }
+
     // Determine if entry needs approval (if user is not owner)
     const isOwner = branch.ownerId === userId
     const approved = isOwner
@@ -63,6 +93,8 @@ export async function POST(
         mediaUrl: mediaUrl || null,
         audioUrl: audioUrl || null,
         approved,
+        contentHash, // Store the hash
+        status: 'ACTIVE', // Set initial status
       },
       include: {
         author: {
@@ -70,6 +102,21 @@ export async function POST(
             name: true,
           },
         },
+      },
+    })
+
+    // Create audit log for memory creation
+    await prisma.audit.create({
+      data: {
+        actorId: userId,
+        action: 'CREATE',
+        targetType: 'ENTRY',
+        targetId: entry.id,
+        metadata: JSON.stringify({
+          branchId,
+          visibility: entry.visibility,
+          legacyFlag: entry.legacyFlag,
+        }),
       },
     })
 

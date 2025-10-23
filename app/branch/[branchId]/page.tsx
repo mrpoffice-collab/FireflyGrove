@@ -7,6 +7,7 @@ import Header from '@/components/Header'
 import MemoryCard from '@/components/MemoryCard'
 import MemoryModal from '@/components/MemoryModal'
 import BranchSettingsModal from '@/components/BranchSettingsModal'
+import UndoBanner from '@/components/UndoBanner'
 
 interface Entry {
   id: string
@@ -41,6 +42,12 @@ export default function BranchPage() {
   const [loading, setLoading] = useState(true)
   const [showNewMemory, setShowNewMemory] = useState(false)
   const [showSettings, setShowSettings] = useState(false)
+  const [showUndoBanner, setShowUndoBanner] = useState(false)
+  const [lastCreatedEntry, setLastCreatedEntry] = useState<{
+    id: string
+    createdAt: Date
+  } | null>(null)
+  const [submitting, setSubmitting] = useState(false)
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -77,6 +84,9 @@ export default function BranchPage() {
     mediaUrl?: string
     audioUrl?: string
   }) => {
+    if (submitting) return
+    setSubmitting(true)
+
     try {
       const res = await fetch(`/api/branches/${branchId}/entries`, {
         method: 'POST',
@@ -84,13 +94,62 @@ export default function BranchPage() {
         body: JSON.stringify(data),
       })
 
+      const result = await res.json()
+
       if (res.ok) {
+        // Successful creation - show undo banner
+        setLastCreatedEntry({
+          id: result.id,
+          createdAt: new Date(result.createdAt),
+        })
+        setShowUndoBanner(true)
         await fetchBranch()
         setShowNewMemory(false)
+      } else if (res.status === 409 && result.error === 'duplicate') {
+        // Duplicate detected
+        const confirm = window.confirm(
+          `${result.message}\n\nDo you want to add it anyway?`
+        )
+
+        if (confirm) {
+          // User confirmed - bypass duplicate check (we'll need to add a force parameter)
+          const forceRes = await fetch(`/api/branches/${branchId}/entries`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ ...data, forceDuplicate: true }),
+          })
+
+          if (forceRes.ok) {
+            const forceResult = await forceRes.json()
+            setLastCreatedEntry({
+              id: forceResult.id,
+              createdAt: new Date(forceResult.createdAt),
+            })
+            setShowUndoBanner(true)
+            await fetchBranch()
+            setShowNewMemory(false)
+          }
+        }
+      } else {
+        alert(result.error || 'Failed to create memory')
       }
     } catch (error) {
       console.error('Failed to create memory:', error)
+      alert('Failed to create memory')
+    } finally {
+      setSubmitting(false)
     }
+  }
+
+  const handleUndo = async () => {
+    setShowUndoBanner(false)
+    setLastCreatedEntry(null)
+    await fetchBranch() // Refresh to remove the undone entry
+  }
+
+  const handleDismissUndo = () => {
+    setShowUndoBanner(false)
+    setLastCreatedEntry(null)
   }
 
   if (status === 'loading' || loading) {
@@ -206,6 +265,15 @@ export default function BranchPage() {
         <BranchSettingsModal
           branchId={branchId}
           onClose={() => setShowSettings(false)}
+        />
+      )}
+
+      {showUndoBanner && lastCreatedEntry && (
+        <UndoBanner
+          entryId={lastCreatedEntry.id}
+          createdAt={lastCreatedEntry.createdAt}
+          onUndo={handleUndo}
+          onDismiss={handleDismissUndo}
         />
       )}
     </div>

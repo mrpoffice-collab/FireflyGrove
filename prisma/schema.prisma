@@ -30,6 +30,8 @@ model User {
   entries          Entry[]
   branchMemberships BranchMember[]
   sentInvites      Invite[]
+  reports          Report[]       @relation("ReportedBy")
+  audits           Audit[]        @relation("AuditActor")
 
   @@index([email])
   @@index([status])
@@ -41,6 +43,12 @@ model Branch {
   title       String
   description String?
   status      String   @default("ACTIVE") // ACTIVE, ARCHIVED, LEGACY_RELEASED
+
+  // Archive control
+  archived    Boolean  @default(false)
+  archivedAt  DateTime?
+  archivedBy  String?  // User ID who archived it
+
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -53,6 +61,7 @@ model Branch {
 
   @@index([ownerId])
   @@index([status])
+  @@index([archived])
 }
 
 model Entry {
@@ -65,17 +74,31 @@ model Entry {
   mediaUrl    String?
   audioUrl    String?
   approved    Boolean  @default(true)
+
+  // Soft delete and control fields
+  status      String   @default("ACTIVE") // ACTIVE, WITHDRAWN, HIDDEN, DELETED
+  contentHash String?  // For duplicate detection
+  withdrawnAt DateTime?
+  hiddenAt    DateTime?
+  deletedAt   DateTime?
+  hiddenBy    String?  // User ID who hid it
+  deletedBy   String?  // User ID who deleted it
+
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
   // Relations
   branch      Branch   @relation(fields: [branchId], references: [id], onDelete: Cascade)
   author      User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  reports     Report[]
+  audits      Audit[]  @relation("EntryAudits")
 
   @@index([branchId])
   @@index([authorId])
   @@index([visibility])
+  @@index([status])
   @@index([createdAt])
+  @@index([contentHash])
 }
 
 model BranchMember {
@@ -144,4 +167,45 @@ model Invite {
   @@index([email])
   @@index([branchId])
   @@index([status])
+}
+
+model Report {
+  id          String   @id @default(cuid())
+  memoryId    String
+  reporterId  String
+  reason      String   // HARASSMENT, PRIVATE_INFO, SPAM, OTHER
+  notes       String?
+  status      String   @default("OPEN") // OPEN, ACTION_TAKEN, DISMISSED
+  actionNotes String?
+  actionBy    String?  // Admin who resolved
+  createdAt   DateTime @default(now())
+  closedAt    DateTime?
+
+  // Relations
+  memory      Entry    @relation(fields: [memoryId], references: [id], onDelete: Cascade)
+  reporter    User     @relation("ReportedBy", fields: [reporterId], references: [id], onDelete: Cascade)
+
+  @@index([memoryId])
+  @@index([reporterId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model Audit {
+  id          String   @id @default(cuid())
+  actorId     String
+  action      String   // CREATE, UPDATE, DELETE, WITHDRAW, HIDE, RESTORE, ARCHIVE, etc.
+  targetType  String   // ENTRY, BRANCH, USER, etc.
+  targetId    String
+  metadata    String?  // JSON string
+  createdAt   DateTime @default(now())
+
+  // Relations
+  actor       User     @relation("AuditActor", fields: [actorId], references: [id], onDelete: Cascade)
+  entry       Entry?   @relation("EntryAudits", fields: [targetId], references: [id])
+
+  @@index([actorId])
+  @@index([targetType, targetId])
+  @@index([action])
+  @@index([createdAt])
 }
