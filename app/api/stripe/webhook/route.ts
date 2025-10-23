@@ -120,10 +120,11 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     },
     create: {
       id: groveId,
-      ownerId: userId,
+      userId: userId,
       name: 'My Grove',
       planType: plan.id,
       treeLimit: plan.treeLimit,
+      treeCount: 0,
       status: 'active',
       stripeCustomerId: session.customer as string,
       stripeSubscriptionId: subscription.id,
