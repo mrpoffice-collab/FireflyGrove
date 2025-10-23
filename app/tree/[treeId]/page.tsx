@@ -89,6 +89,8 @@ export default function TreePage() {
       if (res.ok) {
         const data = await res.json()
         setTree(data.tree)
+        setTreeName(data.tree.name)
+        setTreeDescription(data.tree.description || '')
         setIsEditingName(false)
       } else {
         const error = await res.json()

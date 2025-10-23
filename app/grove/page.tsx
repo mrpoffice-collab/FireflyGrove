@@ -74,6 +74,7 @@ export default function GrovePage() {
       if (res.ok) {
         const data = await res.json()
         setGrove(data.grove)
+        setGroveName(data.grove.name)
         setIsEditingName(false)
       } else {
         const error = await res.json()
