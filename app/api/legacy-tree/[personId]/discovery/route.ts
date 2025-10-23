@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import { checkAndExpireTrustee } from '@/lib/trustee'
 
 export const dynamic = 'force-dynamic'
 
@@ -53,11 +54,32 @@ export async function PATCH(
       )
     }
 
-    // Only trustee, owner, or moderator can change discovery settings
+    // Check and expire trustee if needed
+    await checkAndExpireTrustee(personId)
+
+    // Re-fetch person to get updated trustee status
+    const updatedPerson = await prisma.person.findUnique({
+      where: { id: personId },
+      select: {
+        trusteeId: true,
+        ownerId: true,
+        moderatorId: true,
+        discoveryEnabled: true,
+      },
+    })
+
+    if (!updatedPerson) {
+      return NextResponse.json(
+        { error: 'Legacy tree not found' },
+        { status: 404 }
+      )
+    }
+
+    // Only trustee (if not expired), owner, or moderator can change discovery settings
     if (
-      person.trusteeId !== userId &&
-      person.ownerId !== userId &&
-      person.moderatorId !== userId
+      updatedPerson.trusteeId !== userId &&
+      updatedPerson.ownerId !== userId &&
+      updatedPerson.moderatorId !== userId
     ) {
       return NextResponse.json(
         { error: 'You do not have permission to modify this legacy tree' },
@@ -66,7 +88,7 @@ export async function PATCH(
     }
 
     // Update discovery setting
-    const updatedPerson = await prisma.person.update({
+    const finalPerson = await prisma.person.update({
       where: { id: personId },
       data: { discoveryEnabled },
     })
@@ -80,7 +102,7 @@ export async function PATCH(
         targetId: personId,
         metadata: JSON.stringify({
           field: 'discoveryEnabled',
-          oldValue: person.discoveryEnabled,
+          oldValue: updatedPerson.discoveryEnabled,
           newValue: discoveryEnabled,
         }),
       },
@@ -88,7 +110,7 @@ export async function PATCH(
 
     return NextResponse.json({
       success: true,
-      discoveryEnabled: updatedPerson.discoveryEnabled,
+      discoveryEnabled: finalPerson.discoveryEnabled,
     })
   } catch (error: any) {
     console.error('Error updating discovery:', error)

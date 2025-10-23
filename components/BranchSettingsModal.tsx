@@ -728,19 +728,37 @@ export default function BranchSettingsModal({
               </p>
 
               <div className="bg-[var(--legacy-amber)]/5 border border-[var(--legacy-amber)]/30 rounded-lg p-4">
-                {branch.person.trusteeId && branch.person.trusteeExpiresAt && (
-                  <div className="mb-4 pb-4 border-b border-[var(--legacy-amber)]/30">
-                    <div className="text-[var(--legacy-text)] text-sm font-medium mb-1">
-                      🕒 Trustee Period Active
+                {branch.person.trusteeId && branch.person.trusteeExpiresAt && (() => {
+                  const expiresAt = new Date(branch.person.trusteeExpiresAt)
+                  const now = new Date()
+                  const daysRemaining = Math.ceil((expiresAt.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
+                  const isExpiringSoon = daysRemaining <= 7 && daysRemaining > 0
+                  const hasExpired = daysRemaining <= 0
+
+                  return (
+                    <div className="mb-4 pb-4 border-b border-[var(--legacy-amber)]/30">
+                      <div className={`text-sm font-medium mb-1 ${hasExpired ? 'text-red-400' : isExpiringSoon ? 'text-orange-400' : 'text-[var(--legacy-text)]'}`}>
+                        {hasExpired ? '⚠️ Trustee Period Expired' : isExpiringSoon ? '⚠️ Trustee Period Expiring Soon' : '🕒 Trustee Period Active'}
+                      </div>
+                      <div className="text-text-muted text-xs">
+                        {hasExpired ? (
+                          <>
+                            Trustee access has expired. Only the owner can now manage this memorial.
+                          </>
+                        ) : (
+                          <>
+                            {daysRemaining} {daysRemaining === 1 ? 'day' : 'days'} remaining (expires {expiresAt.toLocaleDateString()})
+                          </>
+                        )}
+                      </div>
+                      {!hasExpired && (
+                        <div className="text-text-muted text-xs mt-1">
+                          Transfer ownership to a family member before this date to ensure continuity.
+                        </div>
+                      )}
                     </div>
-                    <div className="text-text-muted text-xs">
-                      Trustee period expires: {new Date(branch.person.trusteeExpiresAt).toLocaleDateString()}
-                    </div>
-                    <div className="text-text-muted text-xs mt-1">
-                      Transfer ownership to a family member before this date to ensure continuity.
-                    </div>
-                  </div>
-                )}
+                  )
+                })()}
 
                 <form onSubmit={handleTransferOwnership} className="space-y-4">
                   <div>

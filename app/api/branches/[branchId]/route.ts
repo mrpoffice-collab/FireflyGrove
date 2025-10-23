@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import { checkAndExpireTrustee } from '@/lib/trustee'
 
 export async function GET(
   req: NextRequest,
@@ -88,6 +89,11 @@ export async function GET(
 
     if (!branch) {
       return NextResponse.json({ error: 'Branch not found' }, { status: 404 })
+    }
+
+    // Check and expire trustee if needed (for Person-based legacy trees)
+    if (branch.personId) {
+      await checkAndExpireTrustee(branch.personId)
     }
 
     return NextResponse.json(branch)

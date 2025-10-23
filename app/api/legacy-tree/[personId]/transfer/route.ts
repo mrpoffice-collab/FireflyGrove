@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import { checkAndExpireTrustee } from '@/lib/trustee'
 
 export const dynamic = 'force-dynamic'
 
@@ -61,8 +62,20 @@ export async function POST(
       )
     }
 
-    // Only trustee or owner can transfer ownership
-    if (person.trusteeId !== userId && person.ownerId !== userId) {
+    // Check and expire trustee if needed
+    await checkAndExpireTrustee(personId)
+
+    // Re-fetch person to get updated trustee status
+    const updatedPerson = await prisma.person.findUnique({
+      where: { id: personId },
+      select: {
+        trusteeId: true,
+        ownerId: true,
+      },
+    })
+
+    // Only trustee (if not expired) or owner can transfer ownership
+    if (updatedPerson && updatedPerson.trusteeId !== userId && updatedPerson.ownerId !== userId) {
       return NextResponse.json(
         { error: 'Only the trustee or owner can transfer ownership' },
         { status: 403 }
