@@ -38,6 +38,13 @@ export async function POST(req: NextRequest) {
       )
     }
 
+    if (!birthDate) {
+      return NextResponse.json(
+        { error: 'Birth date is required for legacy trees' },
+        { status: 400 }
+      )
+    }
+
     if (!deathDate) {
       return NextResponse.json(
         { error: 'Death date is required for legacy trees' },
@@ -46,19 +53,19 @@ export async function POST(req: NextRequest) {
     }
 
     // Parse dates
+    const birthDateObj = new Date(birthDate)
     const deathDateObj = new Date(deathDate)
-    const birthDateObj = birthDate ? new Date(birthDate) : null
 
-    if (isNaN(deathDateObj.getTime())) {
+    if (isNaN(birthDateObj.getTime())) {
       return NextResponse.json(
-        { error: 'Invalid death date' },
+        { error: 'Invalid birth date' },
         { status: 400 }
       )
     }
 
-    if (birthDateObj && isNaN(birthDateObj.getTime())) {
+    if (isNaN(deathDateObj.getTime())) {
       return NextResponse.json(
-        { error: 'Invalid birth date' },
+        { error: 'Invalid death date' },
         { status: 400 }
       )
     }

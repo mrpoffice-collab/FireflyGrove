@@ -34,7 +34,7 @@ export default function CreateLegacyTreePage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name,
-          birthDate: birthDate || null,
+          birthDate,
           deathDate,
           groveId: placeInOpenGrove ? null : undefined, // null = Open Grove, undefined = user's grove
           discoveryEnabled,
@@ -115,13 +115,14 @@ export default function CreateLegacyTreePage() {
               {/* Birth Date */}
               <div>
                 <label className="block text-sm text-text-soft mb-2">
-                  Birth Date (optional)
+                  Birth Date <span className="text-red-400">*</span>
                 </label>
                 <input
                   type="date"
                   value={birthDate}
                   onChange={(e) => setBirthDate(e.target.value)}
                   className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-dim transition-soft"
+                  required
                   disabled={creating}
                 />
               </div>
