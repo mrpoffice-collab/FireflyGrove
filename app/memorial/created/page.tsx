@@ -1,9 +1,9 @@
 'use client'
 
 import { useRouter, useSearchParams } from 'next/navigation'
-import { useEffect } from 'react'
+import { Suspense } from 'react'
 
-export default function MemorialCreatedPage() {
+function MemorialCreatedContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const name = searchParams.get('name') || 'your loved one'
@@ -103,5 +103,17 @@ export default function MemorialCreatedPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function MemorialCreatedPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-bg-darker flex items-center justify-center">
+        <div className="text-text-muted">Loading...</div>
+      </div>
+    }>
+      <MemorialCreatedContent />
+    </Suspense>
   )
 }
