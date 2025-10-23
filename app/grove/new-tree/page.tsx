@@ -8,6 +8,7 @@ import Header from '@/components/Header'
 export default function NewTreePage() {
   const { data: session, status } = useSession()
   const router = useRouter()
+  const [showTypeSelection, setShowTypeSelection] = useState(true)
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
   const [submitting, setSubmitting] = useState(false)
@@ -84,13 +85,70 @@ export default function NewTreePage() {
             ← Back to Grove
           </button>
 
-          <div className="bg-bg-dark border border-border-subtle rounded-lg p-8">
-            <h1 className="text-3xl font-light text-text-soft mb-2">
-              Create New Tree
-            </h1>
-            <p className="text-text-muted mb-8">
-              Trees organize your family branches. You might create a tree for your immediate family, extended relatives, or different family lines.
-            </p>
+          {showTypeSelection ? (
+            <div className="bg-bg-dark border border-border-subtle rounded-lg p-8">
+              <h1 className="text-3xl font-light text-text-soft mb-2 text-center">
+                What type of tree?
+              </h1>
+              <p className="text-text-muted mb-8 text-center">
+                Choose the type of tree you'd like to create
+              </p>
+
+              <div className="space-y-4">
+                {/* Living Family Tree */}
+                <button
+                  onClick={() => setShowTypeSelection(false)}
+                  className="w-full p-6 bg-bg-darker border-2 border-border-subtle hover:border-firefly-dim/50 rounded-lg text-left transition-soft group"
+                >
+                  <div className="flex items-start gap-4">
+                    <div className="text-4xl">🌳</div>
+                    <div className="flex-1">
+                      <h3 className="text-lg text-text-soft mb-2 group-hover:text-firefly-glow transition-soft">
+                        Living Family Tree
+                      </h3>
+                      <p className="text-text-muted text-sm">
+                        For your family, friends, and loved ones. Organize branches by person and share memories together.
+                      </p>
+                    </div>
+                  </div>
+                </button>
+
+                {/* Legacy Tree */}
+                <button
+                  onClick={() => router.push('/legacy-tree/create')}
+                  className="w-full p-6 bg-[var(--legacy-amber)]/5 border-2 border-[var(--legacy-amber)]/30 hover:border-[var(--legacy-amber)]/50 rounded-lg text-left transition-soft group"
+                >
+                  <div className="flex items-start gap-4">
+                    <div className="text-4xl">🕯️</div>
+                    <div className="flex-1">
+                      <h3 className="text-lg text-[var(--legacy-text)] mb-2 group-hover:text-[var(--legacy-glow)] transition-soft">
+                        Legacy Tree (Memorial)
+                      </h3>
+                      <p className="text-text-muted text-sm">
+                        Honor the memory of a loved one who has passed. Free public memorial or private in your grove.
+                      </p>
+                    </div>
+                  </div>
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="bg-bg-dark border border-border-subtle rounded-lg p-8">
+              <div className="flex items-center gap-3 mb-6">
+                <button
+                  onClick={() => setShowTypeSelection(true)}
+                  className="text-text-muted hover:text-text-soft transition-soft"
+                  title="Back to tree type selection"
+                >
+                  ←
+                </button>
+                <h1 className="text-3xl font-light text-text-soft">
+                  Create Living Family Tree
+                </h1>
+              </div>
+              <p className="text-text-muted mb-8">
+                Trees organize your family branches. You might create a tree for your immediate family, extended relatives, or different family lines.
+              </p>
 
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
@@ -153,7 +211,8 @@ export default function NewTreePage() {
                 </button>
               </div>
             </form>
-          </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
