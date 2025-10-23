@@ -34,15 +34,18 @@ interface PendingInvite {
 interface BranchSettingsModalProps {
   branchId: string
   onClose: () => void
+  onBranchUpdate?: () => void
 }
 
 export default function BranchSettingsModal({
   branchId,
   onClose,
+  onBranchUpdate,
 }: BranchSettingsModalProps) {
   const [heirs, setHeirs] = useState<Heir[]>([])
   const [members, setMembers] = useState<Member[]>([])
   const [pendingInvites, setPendingInvites] = useState<PendingInvite[]>([])
+  const [branch, setBranch] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [addingHeir, setAddingHeir] = useState(false)
   const [invitingMember, setInvitingMember] = useState(false)
@@ -53,11 +56,30 @@ export default function BranchSettingsModal({
   const [error, setError] = useState('')
   const [memberError, setMemberError] = useState('')
 
+  // Legacy fields
+  const [birthDate, setBirthDate] = useState('')
+  const [deathDate, setDeathDate] = useState('')
+  const [settingLegacy, setSettingLegacy] = useState(false)
+  const [legacyError, setLegacyError] = useState('')
+
   useEffect(() => {
+    fetchBranchInfo()
     fetchHeirs()
     fetchMembers()
     fetchPendingInvites()
   }, [])
+
+  const fetchBranchInfo = async () => {
+    try {
+      const res = await fetch(`/api/branches/${branchId}`)
+      if (res.ok) {
+        const data = await res.json()
+        setBranch(data)
+      }
+    } catch (error) {
+      console.error('Failed to fetch branch info:', error)
+    }
+  }
 
   const fetchHeirs = async () => {
     try {
@@ -209,6 +231,42 @@ export default function BranchSettingsModal({
       setMemberError('Failed to invite member')
     } finally {
       setInvitingMember(false)
+    }
+  }
+
+  const handleSetLegacy = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setLegacyError('')
+    setSettingLegacy(true)
+
+    if (!deathDate) {
+      setLegacyError('Death date is required to set legacy status')
+      setSettingLegacy(false)
+      return
+    }
+
+    try {
+      const res = await fetch(`/api/branches/${branchId}/legacy`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          birthDate: birthDate || null,
+          deathDate,
+        }),
+      })
+
+      if (res.ok) {
+        alert('Branch entered legacy mode')
+        await fetchBranchInfo()
+        onBranchUpdate?.()
+      } else {
+        const data = await res.json()
+        setLegacyError(data.error || 'Failed to set legacy status')
+      }
+    } catch (error) {
+      setLegacyError('Failed to set legacy status')
+    } finally {
+      setSettingLegacy(false)
     }
   }
 
@@ -443,6 +501,85 @@ export default function BranchSettingsModal({
                 {addingHeir ? 'Adding...' : 'Add Heir'}
               </button>
             </form>
+          </div>
+
+          {/* Legacy Section */}
+          <div className="mb-8">
+            <h3 className="text-lg text-text-soft mb-4">Legacy Mode</h3>
+            <p className="text-text-muted text-sm mb-4">
+              Mark this branch as a legacy to honor a loved one's memory. Legacy branches have calmer visuals and special badges.
+            </p>
+
+            {branch?.personStatus === 'legacy' ? (
+              <div className="bg-[var(--legacy-amber)]/10 border border-[var(--legacy-amber)]/30 rounded-lg p-4">
+                <div className="flex items-start gap-3 mb-3">
+                  <span className="text-2xl">🕯️</span>
+                  <div className="flex-1">
+                    <div className="text-[var(--legacy-text)] font-medium mb-2">
+                      This is a Legacy Branch
+                    </div>
+                    {branch.birthDate && branch.deathDate && (
+                      <div className="text-[var(--legacy-silver)] text-sm">
+                        {new Date(branch.birthDate).getFullYear()} – {new Date(branch.deathDate).getFullYear()}
+                      </div>
+                    )}
+                    {branch.legacyEnteredAt && (
+                      <div className="text-text-muted text-xs mt-1">
+                        Entered legacy on {new Date(branch.legacyEnteredAt).toLocaleDateString()}
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <div className="text-text-muted text-sm">
+                  Legacy status is permanent and cannot be changed.
+                </div>
+              </div>
+            ) : (
+              <form onSubmit={handleSetLegacy} className="space-y-4">
+                <div>
+                  <label className="block text-sm text-text-soft mb-2">
+                    Birth Date (optional)
+                  </label>
+                  <input
+                    type="date"
+                    value={birthDate}
+                    onChange={(e) => setBirthDate(e.target.value)}
+                    className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-dim transition-soft"
+                    disabled={settingLegacy}
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm text-text-soft mb-2">
+                    Death Date <span className="text-red-400">*</span>
+                  </label>
+                  <input
+                    type="date"
+                    value={deathDate}
+                    onChange={(e) => setDeathDate(e.target.value)}
+                    max={new Date().toISOString().split('T')[0]}
+                    className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-dim transition-soft"
+                    required
+                    disabled={settingLegacy}
+                  />
+                  <p className="text-text-muted text-xs mt-1">
+                    Setting a death date will permanently mark this branch as legacy.
+                  </p>
+                </div>
+
+                {legacyError && (
+                  <div className="text-red-400 text-sm">{legacyError}</div>
+                )}
+
+                <button
+                  type="submit"
+                  disabled={settingLegacy}
+                  className="w-full py-2 bg-[var(--legacy-amber)] hover:bg-[var(--legacy-glow)] text-bg-dark rounded font-medium transition-soft disabled:opacity-50"
+                >
+                  {settingLegacy ? 'Setting Legacy...' : 'Enter Legacy Mode'}
+                </button>
+              </form>
+            )}
           </div>
 
           <div className="pt-6 border-t border-border-subtle">

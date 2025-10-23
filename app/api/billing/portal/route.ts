@@ -30,8 +30,8 @@ export async function POST(req: NextRequest) {
     const userId = (session.user as any).id
 
     // Get user's Grove
-    const grove = await prisma.grove.findFirst({
-      where: { ownerId: userId },
+    const grove = await prisma.grove.findUnique({
+      where: { userId },
     })
 
     if (!grove || !grove.stripeCustomerId) {

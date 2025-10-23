@@ -26,14 +26,15 @@ model User {
   graceEndsAt            DateTime?
 
   // Relations
-  ownedGroves      Grove[]        @relation("GroveOwner")
-  ownedTrees       Tree[]         @relation("TreeOwner")
+  grove            Grove?         @relation("UserGrove")
+  persons          Person[]       @relation("PersonUser")
   ownedBranches    Branch[]       @relation("BranchOwner")
   entries          Entry[]
   branchMemberships BranchMember[]
   sentInvites      Invite[]
   reports          Report[]       @relation("ReportedBy")
   audits           Audit[]        @relation("AuditActor")
+  treeSubscriptions TreeSubscription[]
 
   @@index([email])
   @@index([status])
@@ -41,11 +42,12 @@ model User {
 
 model Grove {
   id          String   @id @default(cuid())
-  ownerId     String
+  userId      String   @unique // One Grove per user
   name        String
   planType    String   @default("trial") // trial, family, ancestry, institutional
   treeLimit   Int      @default(1)
-  status      String   @default("active") // active, past_due, canceled
+  treeCount   Int      @default(0) // Count of original trees only
+  status      String   @default("active") // active, past_due, canceled, frozen
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -54,47 +56,97 @@ model Grove {
   stripeSubscriptionId   String? @unique
   stripePriceId          String?
   subscriptionEndsAt     DateTime?
+  renewalDate            DateTime? // Next renewal date
 
   // Relations
-  owner       User     @relation("GroveOwner", fields: [ownerId], references: [id], onDelete: Cascade)
-  trees       Tree[]
+  user         User              @relation("UserGrove", fields: [userId], references: [id], onDelete: Cascade)
+  memberships  GroveTreeMembership[]
 
-  @@index([ownerId])
+  @@index([userId])
   @@index([status])
   @@index([stripeCustomerId])
+  @@index([renewalDate])
 }
 
-model Tree {
+// Person represents a global identity that can appear in multiple Groves
+model Person {
   id          String   @id @default(cuid())
-  groveId     String
-  ownerId     String   // Tree steward
+  userId      String?  // Optional: if this person is also a system user
   name        String
-  description String?
-  status      String   @default("ACTIVE") // ACTIVE, ARCHIVED
-
-  // Future: buy-out tracking
-  transferredFromGroveId String?
-
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
   // Relations
-  grove       Grove    @relation(fields: [groveId], references: [id], onDelete: Cascade)
-  owner       User     @relation("TreeOwner", fields: [ownerId], references: [id], onDelete: Cascade)
-  branches    Branch[]
+  user         User?              @relation("PersonUser", fields: [userId], references: [id])
+  memberships  GroveTreeMembership[]
+  branches     Branch[]
 
+  @@index([userId])
+}
+
+// Junction table linking Groves and Persons (Trees)
+model GroveTreeMembership {
+  id                   String   @id @default(cuid())
+  groveId              String
+  personId             String
+  isOriginal           Boolean  @default(false) // true if planted here, false if linked
+  subscriptionOwnerId  String?  // User who pays for individual tree subscription
+  status               String   @default("active") // active, frozen
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  // Relations
+  grove                Grove    @relation(fields: [groveId], references: [id], onDelete: Cascade)
+  person               Person   @relation(fields: [personId], references: [id], onDelete: Cascade)
+  subscription         TreeSubscription? @relation("MembershipSubscription")
+
+  @@unique([groveId, personId])
   @@index([groveId])
-  @@index([ownerId])
+  @@index([personId])
+  @@index([isOriginal])
   @@index([status])
+  @@index([subscriptionOwnerId])
+}
+
+// Individual Tree Subscription ($4.99/year)
+model TreeSubscription {
+  id                    String   @id @default(cuid())
+  userId                String   // Person paying for the subscription
+  membershipId          String   @unique // Links to specific grove_tree_membership
+  status                String   @default("active") // active, past_due, canceled, frozen
+  stripeSubscriptionId  String?  @unique
+  stripePriceId         String?
+  renewalDate           DateTime?
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  // Relations
+  user                  User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  membership            GroveTreeMembership @relation("MembershipSubscription", fields: [membershipId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([membershipId])
+  @@index([status])
+  @@index([stripeSubscriptionId])
+  @@index([renewalDate])
 }
 
 model Branch {
   id          String   @id @default(cuid())
-  treeId      String?  // Nullable during migration, will be required after
-  ownerId     String
+  personId    String   // Links to Person (global identity)
+  ownerId     String   // User who owns/manages this branch
   title       String
   description String?
   status      String   @default("ACTIVE") // ACTIVE, ARCHIVED, LEGACY_RELEASED
+  type        String   @default("living") // living, legacy
+
+  // Legacy Mode fields
+  personStatus      String   @default("living") // living, legacy (deprecated, use type)
+  birthDate         DateTime?
+  deathDate         DateTime?
+  legacyEnteredAt   DateTime? // When status changed to legacy
+  legacyMarkedBy    String?   // User who marked as legacy
+  legacyProofUrl    String?   // Optional proof artifact (private)
 
   // Archive control
   archived    Boolean  @default(false)
@@ -105,17 +157,23 @@ model Branch {
   updatedAt   DateTime @updatedAt
 
   // Relations
-  tree        Tree?    @relation(fields: [treeId], references: [id], onDelete: Cascade)
-  owner       User     @relation("BranchOwner", fields: [ownerId], references: [id], onDelete: Cascade)
-  entries     Entry[]
-  members     BranchMember[]
-  heirs       Heir[]
-  invites     Invite[]
+  person            Person              @relation(fields: [personId], references: [id], onDelete: Cascade)
+  owner             User                @relation("BranchOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  entries           Entry[]
+  members           BranchMember[]
+  heirs             Heir[]
+  invites           Invite[]
+  legacyHeirs       LegacyHeir[]
+  preferences       BranchPreferences?
+  memoryLinks       MemoryBranchLink[]
+  localMetadata     MemoryLocalMeta[]
 
-  @@index([treeId])
+  @@index([personId])
   @@index([ownerId])
   @@index([status])
   @@index([archived])
+  @@index([personStatus])
+  @@index([type])
 }
 
 model Entry {
@@ -142,10 +200,12 @@ model Entry {
   updatedAt   DateTime @updatedAt
 
   // Relations
-  branch      Branch   @relation(fields: [branchId], references: [id], onDelete: Cascade)
-  author      User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  reports     Report[]
-  audits      Audit[]  @relation("EntryAudits")
+  branch          Branch              @relation(fields: [branchId], references: [id], onDelete: Cascade)
+  author          User                @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  reports         Report[]
+  audits          Audit[]             @relation("EntryAudits")
+  memoryLinks     MemoryBranchLink[]  @relation("MemoryLinks")
+  localMetadata   MemoryLocalMeta[]   @relation("MemoryLocalMeta")
 
   @@index([branchId])
   @@index([authorId])
@@ -262,4 +322,82 @@ model Audit {
   @@index([targetType, targetId])
   @@index([action])
   @@index([createdAt])
+}
+
+// Cross-Branch Sharing: Link memories to multiple branches
+model MemoryBranchLink {
+  id                String   @id @default(cuid())
+  memoryId          String   // Entry ID
+  branchId          String
+  role              String   // "origin" or "shared"
+  visibilityStatus  String   @default("active") // active, removed_by_branch, removed_by_user, pending_approval
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  // Relations
+  memory            Entry    @relation("MemoryLinks", fields: [memoryId], references: [id], onDelete: Cascade)
+  branch            Branch   @relation(fields: [branchId], references: [id], onDelete: Cascade)
+
+  @@unique([memoryId, branchId])
+  @@index([memoryId])
+  @@index([branchId])
+  @@index([role])
+  @@index([visibilityStatus])
+}
+
+// Per-branch local metadata for shared memories
+model MemoryLocalMeta {
+  id                    String   @id @default(cuid())
+  memoryId              String
+  branchId              String
+  localReactionsCount   Int      @default(0)
+  localCommentsCount    Int      @default(0)
+  pinned                Boolean  @default(false)
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  // Relations
+  memory                Entry    @relation("MemoryLocalMeta", fields: [memoryId], references: [id], onDelete: Cascade)
+  branch                Branch   @relation(fields: [branchId], references: [id], onDelete: Cascade)
+
+  @@unique([memoryId, branchId])
+  @@index([memoryId])
+  @@index([branchId])
+  @@index([pinned])
+}
+
+// Branch-level preferences for memory association controls
+model BranchPreferences {
+  id                      String   @id @default(cuid())
+  branchId                String   @unique
+  canBeTagged             Boolean  @default(true)
+  requiresTagApproval     Boolean  @default(false)
+  visibleInCrossShares    Boolean  @default(true)
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+
+  // Relations
+  branch                  Branch   @relation(fields: [branchId], references: [id], onDelete: Cascade)
+
+  @@index([branchId])
+  @@index([canBeTagged])
+  @@index([requiresTagApproval])
+}
+
+// Legacy Tree heirs and stewards
+model LegacyHeir {
+  id          String   @id @default(cuid())
+  branchId    String
+  userId      String
+  role        String   // "steward" or "heir"
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  branch      Branch   @relation(fields: [branchId], references: [id], onDelete: Cascade)
+
+  @@unique([branchId, userId])
+  @@index([branchId])
+  @@index([userId])
+  @@index([role])
 }

@@ -90,6 +90,36 @@ export const PLANS: Record<string, Plan> = {
   },
 }
 
+/**
+ * Individual Tree Subscription
+ * Keeps a single Tree active independent of Grove status
+ */
+export interface TreePlan {
+  id: string
+  name: string
+  description: string
+  price: number // in cents
+  interval: 'year' | 'month'
+  features: string[]
+  stripePriceId?: string
+}
+
+export const TREE_PLAN: TreePlan = {
+  id: 'individual_tree',
+  name: 'Individual Tree',
+  description: 'Keep one person\'s tree active independently',
+  price: 499, // $4.99/year
+  interval: 'year',
+  features: [
+    'Keep this Tree active',
+    'Independent of Grove status',
+    'Unlimited Branches',
+    'Unlimited Memories',
+    'Credit toward Grove upgrade',
+  ],
+  stripePriceId: process.env.STRIPE_PRICE_INDIVIDUAL_TREE,
+}
+
 export function getPlanById(planType: string): Plan {
   return PLANS[planType] || PLANS.trial
 }

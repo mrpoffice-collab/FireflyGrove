@@ -57,29 +57,85 @@ export async function POST(req: NextRequest) {
 
     const userId = (session.user as any).id
     const body = await req.json()
-    const { title, description } = body
+    const { treeId, title, description } = body
 
-    if (!title) {
+    if (!title || !title.trim()) {
       return NextResponse.json(
         { error: 'Title is required' },
         { status: 400 }
       )
     }
 
+    if (!treeId) {
+      return NextResponse.json(
+        { error: 'Tree ID is required' },
+        { status: 400 }
+      )
+    }
+
+    // Verify tree exists and user owns the grove
+    const tree = await prisma.tree.findUnique({
+      where: { id: treeId },
+      include: {
+        grove: true,
+      },
+    })
+
+    if (!tree) {
+      return NextResponse.json(
+        { error: 'Tree not found' },
+        { status: 404 }
+      )
+    }
+
+    if (tree.grove.userId !== userId) {
+      return NextResponse.json(
+        { error: 'You do not have access to this tree' },
+        { status: 403 }
+      )
+    }
+
+    // Create branch
     const branch = await prisma.branch.create({
       data: {
+        treeId,
         ownerId: userId,
-        title,
-        description,
+        title: title.trim(),
+        description: description?.trim() || null,
         status: 'ACTIVE',
       },
     })
 
-    return NextResponse.json(branch)
-  } catch (error) {
+    // Create audit log
+    await prisma.audit.create({
+      data: {
+        actorId: userId,
+        action: 'CREATE_BRANCH',
+        targetType: 'BRANCH',
+        targetId: branch.id,
+        metadata: JSON.stringify({
+          treeId,
+          title: branch.title,
+          description: branch.description,
+        }),
+      },
+    })
+
+    return NextResponse.json({
+      success: true,
+      branch: {
+        id: branch.id,
+        title: branch.title,
+        description: branch.description,
+        status: branch.status,
+        createdAt: branch.createdAt.toISOString(),
+      },
+      message: 'Branch created successfully',
+    })
+  } catch (error: any) {
     console.error('Error creating branch:', error)
     return NextResponse.json(
-      { error: 'Failed to create branch' },
+      { error: error.message || 'Failed to create branch' },
       { status: 500 }
     )
   }

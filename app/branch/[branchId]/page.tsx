@@ -26,6 +26,10 @@ interface Branch {
   id: string
   title: string
   description: string | null
+  personStatus: string
+  birthDate: string | null
+  deathDate: string | null
+  legacyEnteredAt: string | null
   owner: {
     id: string
     name: string
@@ -49,6 +53,9 @@ export default function BranchPage() {
     createdAt: Date
   } | null>(null)
   const [submitting, setSubmitting] = useState(false)
+  const [editingBranch, setEditingBranch] = useState(false)
+  const [editTitle, setEditTitle] = useState('')
+  const [editDescription, setEditDescription] = useState('')
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -161,6 +168,47 @@ export default function BranchPage() {
     await fetchBranch() // Refresh to remove hidden entry
   }
 
+  const handleEditBranch = () => {
+    setEditTitle(branch?.title || '')
+    setEditDescription(branch?.description || '')
+    setEditingBranch(true)
+  }
+
+  const handleSaveBranch = async () => {
+    if (!editTitle.trim()) {
+      alert('Branch title cannot be empty')
+      return
+    }
+
+    try {
+      const res = await fetch(`/api/branches/${branchId}/update`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: editTitle,
+          description: editDescription,
+        }),
+      })
+
+      if (res.ok) {
+        await fetchBranch()
+        setEditingBranch(false)
+      } else {
+        const data = await res.json()
+        alert(data.error || 'Failed to update branch')
+      }
+    } catch (error) {
+      console.error('Failed to update branch:', error)
+      alert('Failed to update branch')
+    }
+  }
+
+  const handleCancelEdit = () => {
+    setEditingBranch(false)
+    setEditTitle('')
+    setEditDescription('')
+  }
+
   if (status === 'loading' || loading) {
     return (
       <div className="min-h-screen bg-bg-darker flex items-center justify-center">
@@ -198,12 +246,53 @@ export default function BranchPage() {
 
           <div className="mb-8">
             <div className="flex justify-between items-start">
-              <div>
-                <h1 className="text-3xl font-light text-text-soft mb-2">
-                  {branch.title}
-                </h1>
+              <div className="flex-1">
+                <div className="flex items-center gap-3">
+                  <h1
+                    className={`text-3xl font-light mb-2 ${
+                      branch.personStatus === 'legacy'
+                        ? 'text-[var(--legacy-text)]'
+                        : 'text-text-soft'
+                    }`}
+                  >
+                    {branch.title}
+                  </h1>
+                  {branch.personStatus === 'legacy' && (
+                    <span
+                      className="px-3 py-1 text-xs rounded-full bg-[var(--legacy-amber)]/20 text-[var(--legacy-text)] border border-[var(--legacy-amber)]/30"
+                      title={
+                        branch.birthDate && branch.deathDate
+                          ? `Legacy branch · ${new Date(
+                              branch.birthDate
+                            ).getFullYear()}–${new Date(
+                              branch.deathDate
+                            ).getFullYear()}`
+                          : 'Legacy branch'
+                      }
+                    >
+                      Legacy
+                    </span>
+                  )}
+                  {branch.owner.id === (session.user as any)?.id && (
+                    <button
+                      onClick={handleEditBranch}
+                      className="text-text-muted hover:text-firefly-dim transition-soft"
+                      title="Edit branch name"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                      </svg>
+                    </button>
+                  )}
+                </div>
                 {branch.description && (
                   <p className="text-text-muted">{branch.description}</p>
+                )}
+                {branch.personStatus === 'legacy' && branch.legacyEnteredAt && (
+                  <p className="text-[var(--legacy-silver)] text-sm mt-2">
+                    Entered legacy on{' '}
+                    {new Date(branch.legacyEnteredAt).toLocaleDateString()}
+                  </p>
                 )}
               </div>
               {branch.owner.id === (session.user as any)?.id && (
@@ -280,6 +369,7 @@ export default function BranchPage() {
         <BranchSettingsModal
           branchId={branchId}
           onClose={() => setShowSettings(false)}
+          onBranchUpdate={fetchBranch}
         />
       )}
 
@@ -290,6 +380,58 @@ export default function BranchPage() {
           onUndo={handleUndo}
           onDismiss={handleDismissUndo}
         />
+      )}
+
+      {editingBranch && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-50">
+          <div className="bg-bg-dark border border-border-subtle rounded-lg max-w-md w-full p-6">
+            <h2 className="text-2xl text-text-soft mb-6">Edit Branch</h2>
+
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm text-text-soft mb-2">
+                  Branch Name
+                </label>
+                <input
+                  type="text"
+                  value={editTitle}
+                  onChange={(e) => setEditTitle(e.target.value)}
+                  className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-dim transition-soft"
+                  placeholder="Enter branch name"
+                  autoFocus
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm text-text-soft mb-2">
+                  Description (optional)
+                </label>
+                <textarea
+                  value={editDescription}
+                  onChange={(e) => setEditDescription(e.target.value)}
+                  className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-dim transition-soft resize-none"
+                  placeholder="Add a description"
+                  rows={3}
+                />
+              </div>
+
+              <div className="flex gap-3 pt-4">
+                <button
+                  onClick={handleCancelEdit}
+                  className="flex-1 py-2 bg-bg-darker hover:bg-border-subtle text-text-soft rounded transition-soft"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleSaveBranch}
+                  className="flex-1 py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded font-medium transition-soft"
+                >
+                  Save Changes
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   )
