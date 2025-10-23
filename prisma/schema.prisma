@@ -26,6 +26,8 @@ model User {
   graceEndsAt            DateTime?
 
   // Relations
+  ownedGroves      Grove[]        @relation("GroveOwner")
+  ownedTrees       Tree[]         @relation("TreeOwner")
   ownedBranches    Branch[]       @relation("BranchOwner")
   entries          Entry[]
   branchMemberships BranchMember[]
@@ -37,8 +39,58 @@ model User {
   @@index([status])
 }
 
+model Grove {
+  id          String   @id @default(cuid())
+  ownerId     String
+  name        String
+  planType    String   @default("trial") // trial, family, ancestry, institutional
+  treeLimit   Int      @default(1)
+  status      String   @default("active") // active, past_due, canceled
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Stripe fields
+  stripeCustomerId       String? @unique
+  stripeSubscriptionId   String? @unique
+  stripePriceId          String?
+  subscriptionEndsAt     DateTime?
+
+  // Relations
+  owner       User     @relation("GroveOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  trees       Tree[]
+
+  @@index([ownerId])
+  @@index([status])
+  @@index([stripeCustomerId])
+}
+
+model Tree {
+  id          String   @id @default(cuid())
+  groveId     String
+  ownerId     String   // Tree steward
+  name        String
+  description String?
+  status      String   @default("ACTIVE") // ACTIVE, ARCHIVED
+
+  // Future: buy-out tracking
+  transferredFromGroveId String?
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  grove       Grove    @relation(fields: [groveId], references: [id], onDelete: Cascade)
+  owner       User     @relation("TreeOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  branches    Branch[]
+
+  @@index([groveId])
+  @@index([ownerId])
+  @@index([status])
+}
+
 model Branch {
   id          String   @id @default(cuid())
+  treeId      String?  // Nullable during migration, will be required after
   ownerId     String
   title       String
   description String?
@@ -53,12 +105,14 @@ model Branch {
   updatedAt   DateTime @updatedAt
 
   // Relations
+  tree        Tree?    @relation(fields: [treeId], references: [id], onDelete: Cascade)
   owner       User     @relation("BranchOwner", fields: [ownerId], references: [id], onDelete: Cascade)
   entries     Entry[]
   members     BranchMember[]
   heirs       Heir[]
   invites     Invite[]
 
+  @@index([treeId])
   @@index([ownerId])
   @@index([status])
   @@index([archived])

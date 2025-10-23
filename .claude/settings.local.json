@@ -9,7 +9,9 @@
       "Bash(git branch:*)",
       "Bash(git push:*)",
       "Bash(git commit:*)",
-      "Bash(npx prisma:*)"
+      "Bash(npx prisma:*)",
+      "Bash(npm install:*)",
+      "Bash(npx ts-node:*)"
     ],
     "deny": [],
     "ask": []
