@@ -63,6 +63,20 @@ export default function LoginPage() {
           </p>
         </div>
 
+        {isDemoMode && (
+          <div className="bg-firefly-dim/10 border border-firefly-dim/30 rounded-lg p-4">
+            <div className="flex items-start gap-3">
+              <div className="text-2xl">🔒</div>
+              <div>
+                <div className="text-firefly-glow font-medium mb-1">Beta Testing Mode</div>
+                <p className="text-text-muted text-sm">
+                  Firefly Grove is currently in private beta. Use the demo accounts below to explore, or contact us for early access.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="bg-bg-dark border border-border-subtle rounded-lg p-8">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>

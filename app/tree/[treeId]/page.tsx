@@ -41,6 +41,7 @@ export default function TreePage() {
   const [isEditingName, setIsEditingName] = useState(false)
   const [treeName, setTreeName] = useState('')
   const [treeDescription, setTreeDescription] = useState('')
+  const [deletingBranchId, setDeletingBranchId] = useState<string | null>(null)
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -96,6 +97,33 @@ export default function TreePage() {
     } catch (error) {
       console.error('Failed to rename tree:', error)
       alert('Failed to rename tree')
+    }
+  }
+
+  const handleDeleteBranch = async (branchId: string, branchTitle: string) => {
+    if (!confirm(`Are you sure you want to delete the branch "${branchTitle}"? This action cannot be undone.`)) {
+      return
+    }
+
+    setDeletingBranchId(branchId)
+
+    try {
+      const res = await fetch(`/api/branches/${branchId}`, {
+        method: 'DELETE',
+      })
+
+      const data = await res.json()
+
+      if (res.ok) {
+        await fetchTree() // Refresh to remove deleted branch
+      } else {
+        alert(data.error || 'Failed to delete branch')
+      }
+    } catch (error) {
+      console.error('Failed to delete branch:', error)
+      alert('Failed to delete branch')
+    } finally {
+      setDeletingBranchId(null)
     }
   }
 
@@ -232,40 +260,67 @@ export default function TreePage() {
               {tree.branches.map((branch) => (
                 <div
                   key={branch.id}
-                  onClick={() => router.push(`/branch/${branch.id}`)}
-                  className="bg-bg-dark border border-border-subtle rounded-lg p-6 hover:border-firefly-dim/50 transition-soft cursor-pointer group"
+                  className="bg-bg-dark border border-border-subtle rounded-lg p-6 hover:border-firefly-dim/50 transition-soft group relative"
                 >
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="text-3xl">
-                      {branch.personStatus === 'legacy' ? '🕯️' : '🌿'}
-                    </div>
-                    {branch.personStatus === 'legacy' && (
-                      <span className="px-2 py-1 text-xs rounded-full bg-[var(--legacy-amber)]/20 text-[var(--legacy-text)] border border-[var(--legacy-amber)]/30">
-                        Legacy
-                      </span>
-                    )}
-                  </div>
-                  <h3
-                    className={`text-xl mb-2 group-hover:text-firefly-glow transition-soft ${
-                      branch.personStatus === 'legacy'
-                        ? 'text-[var(--legacy-text)]'
-                        : 'text-text-soft'
-                    }`}
+                  <div
+                    onClick={() => router.push(`/branch/${branch.id}`)}
+                    className="cursor-pointer"
                   >
-                    {branch.title}
-                  </h3>
-                  {branch.description && (
-                    <p className="text-text-muted text-sm mb-4 line-clamp-2">
-                      {branch.description}
-                    </p>
-                  )}
-                  <div className="flex items-center gap-4 text-sm text-text-muted">
-                    <span>{branch._count.entries} memories</span>
-                    <span>•</span>
-                    <span>
-                      Created {new Date(branch.createdAt).toLocaleDateString()}
-                    </span>
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="text-3xl">
+                        {branch.personStatus === 'legacy' ? '🕯️' : '🌿'}
+                      </div>
+                      {branch.personStatus === 'legacy' && (
+                        <span className="px-2 py-1 text-xs rounded-full bg-[var(--legacy-amber)]/20 text-[var(--legacy-text)] border border-[var(--legacy-amber)]/30">
+                          Legacy
+                        </span>
+                      )}
+                    </div>
+                    <h3
+                      className={`text-xl mb-2 group-hover:text-firefly-glow transition-soft ${
+                        branch.personStatus === 'legacy'
+                          ? 'text-[var(--legacy-text)]'
+                          : 'text-text-soft'
+                      }`}
+                    >
+                      {branch.title}
+                    </h3>
+                    {branch.description && (
+                      <p className="text-text-muted text-sm mb-4 line-clamp-2">
+                        {branch.description}
+                      </p>
+                    )}
+                    <div className="flex items-center gap-4 text-sm text-text-muted">
+                      <span>{branch._count.entries} memories</span>
+                      <span>•</span>
+                      <span>
+                        Created {new Date(branch.createdAt).toLocaleDateString()}
+                      </span>
+                    </div>
                   </div>
+                  {/* Delete button - only show for branches with 0 memories */}
+                  {branch._count.entries === 0 && branch.owner.id === (session.user as any)?.id && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        handleDeleteBranch(branch.id, branch.title)
+                      }}
+                      disabled={deletingBranchId === branch.id}
+                      className="absolute top-2 right-2 p-2 text-text-muted hover:text-red-400 transition-soft disabled:opacity-50"
+                      title="Delete empty branch"
+                    >
+                      {deletingBranchId === branch.id ? (
+                        <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                      ) : (
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                      )}
+                    </button>
+                  )}
                 </div>
               ))}
             </div>

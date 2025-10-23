@@ -53,6 +53,8 @@ export default function SignUpPage() {
     }
   }
 
+  const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === 'true'
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-bg-darker px-4">
       <div className="max-w-md w-full space-y-8">
@@ -65,6 +67,21 @@ export default function SignUpPage() {
           </p>
         </div>
 
+        {isDemoMode && (
+          <div className="bg-firefly-dim/10 border border-firefly-dim/30 rounded-lg p-4">
+            <div className="flex items-start gap-3">
+              <div className="text-2xl">🔒</div>
+              <div>
+                <div className="text-firefly-glow font-medium mb-1">Beta Testing Mode</div>
+                <p className="text-text-muted text-sm">
+                  Firefly Grove is currently in private beta. Registration is invite-only at this time.
+                  If you're interested in joining, please check back soon or contact us for early access.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="bg-bg-dark border border-border-subtle rounded-lg p-8">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
@@ -76,9 +93,9 @@ export default function SignUpPage() {
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-dim transition-soft"
+                className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-dim transition-soft disabled:opacity-50 disabled:cursor-not-allowed"
                 required
-                disabled={loading}
+                disabled={loading || isDemoMode}
               />
             </div>
 
@@ -91,9 +108,9 @@ export default function SignUpPage() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-dim transition-soft"
+                className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-dim transition-soft disabled:opacity-50 disabled:cursor-not-allowed"
                 required
-                disabled={loading}
+                disabled={loading || isDemoMode}
               />
             </div>
 
@@ -106,14 +123,16 @@ export default function SignUpPage() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-dim transition-soft"
+                className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-dim transition-soft disabled:opacity-50 disabled:cursor-not-allowed"
                 required
-                disabled={loading}
+                disabled={loading || isDemoMode}
                 minLength={6}
               />
-              <p className="text-text-muted text-xs mt-1">
-                At least 6 characters
-              </p>
+              {!isDemoMode && (
+                <p className="text-text-muted text-xs mt-1">
+                  At least 6 characters
+                </p>
+              )}
             </div>
 
             {error && (
@@ -122,10 +141,11 @@ export default function SignUpPage() {
 
             <button
               type="submit"
-              disabled={loading}
-              className="w-full py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded font-medium transition-soft disabled:opacity-50"
+              disabled={loading || isDemoMode}
+              className="w-full py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded font-medium transition-soft disabled:opacity-50 disabled:cursor-not-allowed"
+              title={isDemoMode ? 'Registration is disabled in beta mode' : ''}
             >
-              {loading ? 'Creating Account...' : 'Create Account'}
+              {loading ? 'Creating Account...' : isDemoMode ? 'Registration Disabled' : 'Create Account'}
             </button>
           </form>
 

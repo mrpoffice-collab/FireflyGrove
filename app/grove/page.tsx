@@ -206,13 +206,9 @@ export default function GrovePage() {
           </div>
 
           {/* Trees Grid - Olive Grove Style */}
-          <div className="mb-6">
-            <h2 className="text-2xl font-light text-text-soft mb-2">Your Grove</h2>
+          <div className="mb-8 text-center">
             <p className="text-text-muted text-sm">
-              {isAtCapacity
-                ? `All ${grove.treeLimit} trees planted`
-                : `${grove.treeLimit - treeCount} ${grove.treeLimit - treeCount === 1 ? 'slot' : 'slots'} available`
-              }
+              Where family, friends, and generations connect through shared memories.
             </p>
           </div>
 

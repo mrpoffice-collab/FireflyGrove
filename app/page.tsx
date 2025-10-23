@@ -1,13 +1,22 @@
 import Link from 'next/link'
 
 export default function HomePage() {
+  const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === 'true'
+
   return (
     <div className="min-h-screen bg-bg-darker flex items-center justify-center px-4">
       <div className="max-w-2xl text-center">
         <div className="mb-8">
-          <h1 className="text-5xl font-light text-firefly-glow mb-4">
-            Firefly Grove
-          </h1>
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <h1 className="text-5xl font-light text-firefly-glow">
+              Firefly Grove
+            </h1>
+            {isDemoMode && (
+              <span className="px-3 py-1 text-xs rounded-full bg-firefly-dim/20 text-firefly-glow border border-firefly-dim/30">
+                BETA
+              </span>
+            )}
+          </div>
           <p className="text-xl text-text-soft mb-2">
             A private memory journal
           </p>
