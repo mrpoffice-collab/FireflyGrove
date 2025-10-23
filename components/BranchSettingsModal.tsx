@@ -71,6 +71,10 @@ export default function BranchSettingsModal({
   const [transferring, setTransferring] = useState(false)
   const [transferError, setTransferError] = useState('')
 
+  // Adopt tree
+  const [adopting, setAdopting] = useState(false)
+  const [adoptError, setAdoptError] = useState('')
+
   useEffect(() => {
     fetchBranchInfo()
     fetchHeirs()
@@ -352,6 +356,54 @@ export default function BranchSettingsModal({
       setTransferError('Failed to transfer ownership')
     } finally {
       setTransferring(false)
+    }
+  }
+
+  const handleAdoptTree = async () => {
+    if (!branch?.person?.id) return
+
+    setAdoptError('')
+    setAdopting(true)
+
+    const confirmed = confirm(
+      'Adopt this tree into your private grove?\n\n✓ Unlimited memories (removes 100-memory limit)\n✓ Enhanced privacy controls\n✓ Uses one tree slot in your grove\n\nThis action cannot be undone.'
+    )
+
+    if (!confirmed) {
+      setAdopting(false)
+      return
+    }
+
+    try {
+      // Get user's grove ID (assuming first grove for now)
+      const groveRes = await fetch('/api/grove')
+      if (!groveRes.ok) {
+        setAdoptError('Failed to fetch your grove')
+        setAdopting(false)
+        return
+      }
+      const groveData = await groveRes.json()
+
+      const res = await fetch(`/api/legacy-tree/${branch.person.id}/adopt`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ groveId: groveData.id }),
+      })
+
+      const data = await res.json()
+
+      if (res.ok) {
+        alert(data.message || 'Tree adopted successfully! You now have unlimited memories.')
+        await fetchBranchInfo()
+        onBranchUpdate?.()
+        onClose()
+      } else {
+        setAdoptError(data.error || 'Failed to adopt tree')
+      }
+    } catch (error) {
+      setAdoptError('Failed to adopt tree')
+    } finally {
+      setAdopting(false)
     }
   }
 
@@ -791,6 +843,68 @@ export default function BranchSettingsModal({
                     {transferring ? 'Transferring...' : 'Transfer Ownership'}
                   </button>
                 </form>
+              </div>
+            </div>
+          )}
+
+          {/* Adopt Tree - Only for Person-based legacy trees in Open Grove with memory limit */}
+          {branch?.person?.isLegacy && branch.person.memoryLimit !== null && (
+            <div className="mb-8">
+              <h3 className="text-lg text-text-soft mb-4">Adopt This Tree</h3>
+              <p className="text-text-muted text-sm mb-4">
+                Move this memorial from the Open Grove into your private grove for unlimited memories and enhanced privacy.
+              </p>
+
+              <div className="bg-firefly-dim/10 border border-firefly-dim/30 rounded-lg p-4">
+                <div className="mb-4">
+                  <div className="text-firefly-glow text-sm font-medium mb-3">
+                    ✨ Benefits of Adoption
+                  </div>
+                  <div className="space-y-2 text-text-muted text-sm">
+                    <div className="flex items-start gap-2">
+                      <span>•</span>
+                      <span>Unlimited memories (removes {branch.person.memoryLimit}-memory limit)</span>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <span>•</span>
+                      <span>Enhanced privacy controls</span>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <span>•</span>
+                      <span>Full ownership and control</span>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <span>•</span>
+                      <span>Uses one tree slot in your grove</span>
+                    </div>
+                  </div>
+                </div>
+
+                {branch.person.memoryCount >= 50 && (
+                  <div className="mb-4 p-3 bg-[var(--legacy-amber)]/10 border border-[var(--legacy-amber)]/30 rounded">
+                    <div className="text-[var(--legacy-text)] text-xs font-medium mb-1">
+                      📊 Current Usage
+                    </div>
+                    <div className="text-text-muted text-xs">
+                      {branch.person.memoryCount} / {branch.person.memoryLimit} memories used
+                      {branch.person.memoryCount >= branch.person.memoryLimit && (
+                        <span className="text-red-400 ml-1">(Limit reached)</span>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {adoptError && (
+                  <div className="text-red-400 text-sm mb-4">{adoptError}</div>
+                )}
+
+                <button
+                  onClick={handleAdoptTree}
+                  disabled={adopting}
+                  className="w-full py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded font-medium transition-soft disabled:opacity-50"
+                >
+                  {adopting ? 'Adopting Tree...' : 'Adopt Into Your Grove'}
+                </button>
               </div>
             </div>
           )}
