@@ -44,7 +44,10 @@ export async function GET(
         person: {
           select: {
             id: true,
+            name: true,
             isLegacy: true,
+            birthDate: true,
+            deathDate: true,
             discoveryEnabled: true,
             memoryLimit: true,
             memoryCount: true,

@@ -34,6 +34,20 @@ interface Branch {
     id: string
     name: string
   }
+  person?: {
+    id: string
+    name: string
+    isLegacy: boolean
+    birthDate: string | null
+    deathDate: string | null
+    discoveryEnabled: boolean
+    memoryLimit: number | null
+    memoryCount: number
+    trusteeId: string | null
+    ownerId: string | null
+    moderatorId: string | null
+    trusteeExpiresAt: string | null
+  }
   entries: Entry[]
 }
 
@@ -286,22 +300,30 @@ export default function BranchPage() {
                   >
                     {branch.title}
                   </h1>
-                  {branch.personStatus === 'legacy' && (
-                    <span
-                      className="px-3 py-1 text-xs rounded-full bg-[var(--legacy-amber)]/20 text-[var(--legacy-text)] border border-[var(--legacy-amber)]/30"
-                      title={
-                        branch.birthDate && branch.deathDate
-                          ? `Legacy branch · ${new Date(
-                              branch.birthDate
-                            ).getFullYear()}–${new Date(
-                              branch.deathDate
-                            ).getFullYear()}`
-                          : 'Legacy branch'
-                      }
-                    >
-                      Legacy
-                    </span>
-                  )}
+                  {branch.personStatus === 'legacy' && (() => {
+                    // Use person dates if available (Person-based legacy), otherwise use branch dates (old legacy branches)
+                    const birthDate = branch.person?.birthDate || branch.birthDate
+                    const deathDate = branch.person?.deathDate || branch.deathDate
+
+                    return (
+                      <span
+                        className="px-3 py-1 text-xs rounded-full bg-[var(--legacy-amber)]/20 text-[var(--legacy-text)] border border-[var(--legacy-amber)]/30"
+                        title={
+                          birthDate && deathDate
+                            ? `Legacy · ${new Date(birthDate).getFullYear()} ~ ${new Date(deathDate).getFullYear()}`
+                            : 'Legacy'
+                        }
+                      >
+                        {birthDate && deathDate ? (
+                          <>
+                            {new Date(birthDate).getFullYear()} ~ {new Date(deathDate).getFullYear()}
+                          </>
+                        ) : (
+                          'Legacy'
+                        )}
+                      </span>
+                    )
+                  })()}
                   {branch.owner.id === (session.user as any)?.id && (
                     <button
                       onClick={handleEditBranch}
