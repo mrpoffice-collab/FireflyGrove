@@ -48,8 +48,8 @@ export async function POST(req: NextRequest) {
     }
 
     // Get or create user's Grove
-    let grove = await prisma.grove.findFirst({
-      where: { ownerId: userId },
+    let grove = await prisma.grove.findUnique({
+      where: { userId },
     })
 
     if (!grove) {
@@ -60,10 +60,11 @@ export async function POST(req: NextRequest) {
 
       grove = await prisma.grove.create({
         data: {
-          ownerId: userId,
+          userId,
           name: `${user?.name}'s Grove`,
           planType: 'trial',
           treeLimit: 1,
+          treeCount: 0,
           status: 'active',
         },
       })
