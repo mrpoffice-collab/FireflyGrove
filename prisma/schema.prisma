@@ -28,6 +28,9 @@ model User {
   // Relations
   grove            Grove?         @relation("UserGrove")
   persons          Person[]       @relation("PersonUser")
+  trusteePerson    Person[]       @relation("PersonTrustee")
+  ownedPerson      Person[]       @relation("PersonOwner")
+  moderatorPerson  Person[]       @relation("PersonModerator")
   ownedBranches    Branch[]       @relation("BranchOwner")
   entries          Entry[]
   branchMemberships BranchMember[]
@@ -48,6 +51,10 @@ model Grove {
   treeLimit   Int      @default(1)
   treeCount   Int      @default(0) // Count of original trees only
   status      String   @default("active") // active, past_due, canceled, frozen
+
+  // Open Grove flag
+  isOpenGrove Boolean  @default(false) // System grove for public legacy trees
+
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -67,6 +74,7 @@ model Grove {
   @@index([status])
   @@index([stripeCustomerId])
   @@index([renewalDate])
+  @@index([isOpenGrove])
 }
 
 // Person represents a global identity that can appear in multiple Groves
@@ -77,12 +85,36 @@ model Person {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
+  // Legacy Tree fields
+  birthDate         DateTime?
+  deathDate         DateTime?
+  isLegacy          Boolean  @default(false)
+
+  // Roles for legacy tree management
+  trusteeId         String?  // Temporary manager (e.g., funeral home)
+  ownerId           String?  // Permanent family owner
+  moderatorId       String?  // Content approver (defaults to owner)
+  trusteeExpiresAt  DateTime? // 60 days from creation
+
+  // Discovery & limits
+  discoveryEnabled  Boolean  @default(true) // Public search toggle
+  memoryLimit       Int?     // 100 for Open Grove, null for private groves
+  memoryCount       Int      @default(0) // Track current count
+
   // Relations
   user         User?              @relation("PersonUser", fields: [userId], references: [id])
+  trustee      User?              @relation("PersonTrustee", fields: [trusteeId], references: [id])
+  owner        User?              @relation("PersonOwner", fields: [ownerId], references: [id])
+  moderator    User?              @relation("PersonModerator", fields: [moderatorId], references: [id])
   memberships  GroveTreeMembership[]
   branches     Branch[]
 
   @@index([userId])
+  @@index([trusteeId])
+  @@index([ownerId])
+  @@index([moderatorId])
+  @@index([isLegacy])
+  @@index([discoveryEnabled])
 }
 
 // Junction table linking Groves and Persons (Trees)
@@ -93,6 +125,10 @@ model GroveTreeMembership {
   isOriginal           Boolean  @default(false) // true if planted here, false if linked
   subscriptionOwnerId  String?  // User who pays for individual tree subscription
   status               String   @default("active") // active, frozen
+
+  // Adoption type for legacy trees
+  adoptionType         String   @default("adopted") // "adopted" (moved, uses slot) or "rooted" (linked, no slot)
+
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt
 
@@ -107,6 +143,7 @@ model GroveTreeMembership {
   @@index([isOriginal])
   @@index([status])
   @@index([subscriptionOwnerId])
+  @@index([adoptionType])
 }
 
 // TEMPORARY: Old Tree model kept for backward compatibility during migration
