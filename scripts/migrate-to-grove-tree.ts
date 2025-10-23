@@ -60,7 +60,6 @@ async function migrate() {
       let tree = await prisma.tree.findFirst({
         where: {
           groveId: grove.id,
-          ownerId: user.id,
         },
       })
 
@@ -69,7 +68,6 @@ async function migrate() {
         tree = await prisma.tree.create({
           data: {
             groveId: grove.id,
-            ownerId: user.id,
             name: 'Family Tree',
             description: 'Default tree for your family memories',
             status: 'ACTIVE',
@@ -106,9 +104,7 @@ async function migrate() {
         ownedBranches: {
           none: {},
         },
-        ownedGroves: {
-          none: {},
-        },
+        grove: null,
       },
     })
 
@@ -117,10 +113,11 @@ async function migrate() {
     for (const user of usersWithoutBranches) {
       const grove = await prisma.grove.create({
         data: {
-          ownerId: user.id,
+          userId: user.id,
           name: `${user.name}'s Grove`,
           planType: 'trial',
           treeLimit: 1,
+          treeCount: 0,
           status: 'active',
         },
       })
