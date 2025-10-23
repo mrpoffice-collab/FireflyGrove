@@ -31,6 +31,8 @@ export default function GrovePage() {
   const router = useRouter()
   const [grove, setGrove] = useState<Grove | null>(null)
   const [loading, setLoading] = useState(true)
+  const [isEditingName, setIsEditingName] = useState(false)
+  const [groveName, setGroveName] = useState('')
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -50,11 +52,36 @@ export default function GrovePage() {
       if (res.ok) {
         const data = await res.json()
         setGrove(data)
+        setGroveName(data.name)
       }
     } catch (error) {
       console.error('Failed to fetch grove:', error)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleRenameGrove = async () => {
+    if (!groveName.trim()) return
+
+    try {
+      const res = await fetch('/api/grove/rename', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: groveName }),
+      })
+
+      if (res.ok) {
+        const data = await res.json()
+        setGrove(data.grove)
+        setIsEditingName(false)
+      } else {
+        const error = await res.json()
+        alert(error.error || 'Failed to rename grove')
+      }
+    } catch (error) {
+      console.error('Failed to rename grove:', error)
+      alert('Failed to rename grove')
     }
   }
 
@@ -89,9 +116,55 @@ export default function GrovePage() {
         <div className="max-w-5xl mx-auto">
           {/* Grove Header */}
           <div className="mb-8">
-            <h1 className="text-4xl font-light text-text-soft mb-4">
-              {grove.name}
-            </h1>
+            {isEditingName ? (
+              <div className="flex items-center gap-3 mb-4">
+                <input
+                  type="text"
+                  value={groveName}
+                  onChange={(e) => setGroveName(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') handleRenameGrove()
+                    if (e.key === 'Escape') {
+                      setGroveName(grove.name)
+                      setIsEditingName(false)
+                    }
+                  }}
+                  className="text-4xl font-light bg-bg-dark border border-firefly-dim/50 rounded px-3 py-1 text-text-soft focus:outline-none focus:border-firefly-glow"
+                  autoFocus
+                  maxLength={100}
+                />
+                <button
+                  onClick={handleRenameGrove}
+                  className="px-4 py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded text-sm font-medium transition-soft"
+                >
+                  Save
+                </button>
+                <button
+                  onClick={() => {
+                    setGroveName(grove.name)
+                    setIsEditingName(false)
+                  }}
+                  className="px-4 py-2 bg-bg-dark hover:bg-border-subtle text-text-muted rounded text-sm transition-soft"
+                >
+                  Cancel
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center gap-3 mb-4">
+                <h1 className="text-4xl font-light text-text-soft">
+                  {grove.name}
+                </h1>
+                <button
+                  onClick={() => setIsEditingName(true)}
+                  className="text-text-muted hover:text-firefly-glow transition-soft"
+                  title="Rename grove"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                  </svg>
+                </button>
+              </div>
+            )}
 
             {grove.status === 'past_due' && (
               <div className="bg-orange-500/10 border border-orange-500/30 rounded-lg p-4 mb-4">

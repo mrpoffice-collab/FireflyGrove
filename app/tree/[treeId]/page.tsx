@@ -38,6 +38,9 @@ export default function TreePage() {
 
   const [tree, setTree] = useState<Tree | null>(null)
   const [loading, setLoading] = useState(true)
+  const [isEditingName, setIsEditingName] = useState(false)
+  const [treeName, setTreeName] = useState('')
+  const [treeDescription, setTreeDescription] = useState('')
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -57,6 +60,8 @@ export default function TreePage() {
       if (res.ok) {
         const data = await res.json()
         setTree(data)
+        setTreeName(data.name)
+        setTreeDescription(data.description || '')
       } else {
         router.push('/grove')
       }
@@ -64,6 +69,33 @@ export default function TreePage() {
       console.error('Failed to fetch tree:', error)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleRenameTree = async () => {
+    if (!treeName.trim()) return
+
+    try {
+      const res = await fetch(`/api/trees/${treeId}/rename`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: treeName,
+          description: treeDescription
+        }),
+      })
+
+      if (res.ok) {
+        const data = await res.json()
+        setTree(data.tree)
+        setIsEditingName(false)
+      } else {
+        const error = await res.json()
+        alert(error.error || 'Failed to rename tree')
+      }
+    } catch (error) {
+      console.error('Failed to rename tree:', error)
+      alert('Failed to rename tree')
     }
   }
 
@@ -93,11 +125,74 @@ export default function TreePage() {
           </button>
 
           <div className="mb-8">
-            <h1 className="text-4xl font-light text-text-soft mb-2">
-              {tree.name}
-            </h1>
-            {tree.description && (
-              <p className="text-text-muted">{tree.description}</p>
+            {isEditingName ? (
+              <div className="space-y-3">
+                <div className="flex items-center gap-3">
+                  <input
+                    type="text"
+                    value={treeName}
+                    onChange={(e) => setTreeName(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') handleRenameTree()
+                      if (e.key === 'Escape') {
+                        setTreeName(tree.name)
+                        setTreeDescription(tree.description || '')
+                        setIsEditingName(false)
+                      }
+                    }}
+                    className="text-4xl font-light bg-bg-dark border border-firefly-dim/50 rounded px-3 py-1 text-text-soft focus:outline-none focus:border-firefly-glow flex-1"
+                    autoFocus
+                    maxLength={100}
+                    placeholder="Tree name"
+                  />
+                </div>
+                <textarea
+                  value={treeDescription}
+                  onChange={(e) => setTreeDescription(e.target.value)}
+                  className="w-full bg-bg-dark border border-border-subtle rounded px-3 py-2 text-text-muted focus:outline-none focus:border-firefly-dim/50 resize-none"
+                  rows={2}
+                  placeholder="Description (optional)"
+                  maxLength={500}
+                />
+                <div className="flex gap-2">
+                  <button
+                    onClick={handleRenameTree}
+                    className="px-4 py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded text-sm font-medium transition-soft"
+                  >
+                    Save
+                  </button>
+                  <button
+                    onClick={() => {
+                      setTreeName(tree.name)
+                      setTreeDescription(tree.description || '')
+                      setIsEditingName(false)
+                    }}
+                    className="px-4 py-2 bg-bg-dark hover:bg-border-subtle text-text-muted rounded text-sm transition-soft"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div>
+                <div className="flex items-center gap-3 mb-2">
+                  <h1 className="text-4xl font-light text-text-soft">
+                    {tree.name}
+                  </h1>
+                  <button
+                    onClick={() => setIsEditingName(true)}
+                    className="text-text-muted hover:text-firefly-glow transition-soft"
+                    title="Rename tree"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                    </svg>
+                  </button>
+                </div>
+                {tree.description && (
+                  <p className="text-text-muted">{tree.description}</p>
+                )}
+              </div>
             )}
           </div>
 
