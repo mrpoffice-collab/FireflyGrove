@@ -420,20 +420,20 @@ export default function CreateMemorialPage() {
           {/* Info Box */}
           <div className="mt-6 bg-firefly-dim/10 border border-firefly-dim/30 rounded-lg p-4">
             <div className="text-firefly-glow text-sm font-medium mb-2">
-              💡 About Free Memorials
+              💡 About Free Memorial Trees
             </div>
             <div className="text-text-muted text-sm space-y-2">
               <p>
-                • Free public memorial with up to 100 memories
+                Create a free public memorial with room for up to 100 cherished memories — photos, stories, and voice notes.
               </p>
               <p>
-                • You'll be the trustee for 60 days to set up and invite family
+                You'll serve as the trustee for the first 60 days — guiding family and friends to contribute.
               </p>
               <p>
-                • Transfer ownership to a family member anytime
+                Transfer ownership to a family member at any time.
               </p>
               <p>
-                • Adopt into a private grove later for unlimited memories
+                Adopt this tree into a private grove later for unlimited memories, enhanced privacy, and lasting preservation.
               </p>
             </div>
           </div>
