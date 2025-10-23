@@ -227,7 +227,6 @@ model Entry {
   branch          Branch              @relation(fields: [branchId], references: [id], onDelete: Cascade)
   author          User                @relation(fields: [authorId], references: [id], onDelete: Cascade)
   reports         Report[]
-  audits          Audit[]             @relation("EntryAudits")
   memoryLinks     MemoryBranchLink[]  @relation("MemoryLinks")
   localMetadata   MemoryLocalMeta[]   @relation("MemoryLocalMeta")
 
@@ -340,7 +339,7 @@ model Audit {
 
   // Relations
   actor       User     @relation("AuditActor", fields: [actorId], references: [id], onDelete: Cascade)
-  entry       Entry?   @relation("EntryAudits", fields: [targetId], references: [id])
+  // Note: entry relation removed to prevent foreign key constraint on non-Entry targets
 
   @@index([actorId])
   @@index([targetType, targetId])
