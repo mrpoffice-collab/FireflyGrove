@@ -305,23 +305,19 @@ export default function BranchPage() {
                     const birthDate = branch.person?.birthDate || branch.birthDate
                     const deathDate = branch.person?.deathDate || branch.deathDate
 
+                    const formatDate = (dateStr: string) => {
+                      const date = new Date(dateStr)
+                      return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+                    }
+
                     return (
-                      <span
-                        className="px-3 py-1 text-xs rounded-full bg-[var(--legacy-amber)]/20 text-[var(--legacy-text)] border border-[var(--legacy-amber)]/30"
-                        title={
-                          birthDate && deathDate
-                            ? `Legacy · ${new Date(birthDate).getFullYear()} ~ ${new Date(deathDate).getFullYear()}`
-                            : 'Legacy'
-                        }
-                      >
-                        {birthDate && deathDate ? (
-                          <>
-                            {new Date(birthDate).getFullYear()} ~ {new Date(deathDate).getFullYear()}
-                          </>
-                        ) : (
-                          'Legacy'
+                      <>
+                        {birthDate && deathDate && (
+                          <div className="text-text-muted text-sm mb-2">
+                            {formatDate(birthDate)} ~ {formatDate(deathDate)}
+                          </div>
                         )}
-                      </span>
+                      </>
                     )
                   })()}
                   {branch.owner.id === (session.user as any)?.id && (
