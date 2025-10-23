@@ -100,7 +100,6 @@ model GroveTreeMembership {
   grove                Grove    @relation(fields: [groveId], references: [id], onDelete: Cascade)
   person               Person   @relation(fields: [personId], references: [id], onDelete: Cascade)
   subscription         TreeSubscription? @relation("MembershipSubscription")
-  branches             Branch[] // Branches linked to this tree (temporary for migration)
 
   @@unique([groveId, personId])
   @@index([groveId])
@@ -124,6 +123,7 @@ model Tree {
 
   // Relations
   grove       Grove    @relation(fields: [groveId], references: [id], onDelete: Cascade)
+  branches    Branch[] @relation("TreeBranches") // Temporary for migration
 
   @@index([groveId])
   @@index([status])
@@ -155,7 +155,7 @@ model TreeSubscription {
 model Branch {
   id          String   @id @default(cuid())
   personId    String?  // Links to Person (global identity) - MIGRATION PENDING
-  treeId      String?  // OLD MODEL - will be removed after Person migration
+  treeId      String?  // Links to Tree (old model) - will be removed after Person migration
   ownerId     String   // User who owns/manages this branch
   title       String
   description String?
@@ -180,7 +180,7 @@ model Branch {
 
   // Relations
   person            Person?             @relation(fields: [personId], references: [id], onDelete: Cascade)
-  tree              GroveTreeMembership? @relation(fields: [treeId], references: [id], onDelete: Cascade)
+  tree              Tree?               @relation("TreeBranches", fields: [treeId], references: [id], onDelete: Cascade)
   owner             User                @relation("BranchOwner", fields: [ownerId], references: [id], onDelete: Cascade)
   entries           Entry[]
   members           BranchMember[]
