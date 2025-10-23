@@ -56,6 +56,8 @@ export default function BranchPage() {
   const [editingBranch, setEditingBranch] = useState(false)
   const [editTitle, setEditTitle] = useState('')
   const [editDescription, setEditDescription] = useState('')
+  const [adoptionPrompt, setAdoptionPrompt] = useState<string | null>(null)
+  const [showAdoptionPrompt, setShowAdoptionPrompt] = useState(false)
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -111,6 +113,13 @@ export default function BranchPage() {
           createdAt: new Date(result.createdAt),
         })
         setShowUndoBanner(true)
+
+        // Check for memory status (50-memory adoption prompt)
+        if (result.memoryStatus?.showAdoptionPrompt && result.memoryStatus.adoptionMessage) {
+          setAdoptionPrompt(result.memoryStatus.adoptionMessage)
+          setShowAdoptionPrompt(true)
+        }
+
         await fetchBranch()
         setShowNewMemory(false)
       } else if (res.status === 409 && result.error === 'duplicate') {
@@ -137,6 +146,14 @@ export default function BranchPage() {
             await fetchBranch()
             setShowNewMemory(false)
           }
+        }
+      } else if (res.status === 403 && result.error === 'memory_limit_reached') {
+        // Memory limit reached
+        const adopt = window.confirm(
+          `${result.message}\n\nWould you like to adopt this tree into your grove now?`
+        )
+        if (adopt) {
+          router.push('/billing')
         }
       } else {
         alert(result.error || 'Failed to create memory')
@@ -402,6 +419,44 @@ export default function BranchPage() {
           onUndo={handleUndo}
           onDismiss={handleDismissUndo}
         />
+      )}
+
+      {showAdoptionPrompt && adoptionPrompt && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-50">
+          <div className="bg-bg-dark border border-[var(--legacy-amber)]/50 rounded-lg max-w-lg w-full p-8">
+            <div className="text-center mb-6">
+              <div className="text-5xl mb-4">🌟</div>
+              <h2 className="text-2xl text-[var(--legacy-text)] mb-4 font-light">
+                A Growing Light
+              </h2>
+              <p className="text-text-soft whitespace-pre-line leading-relaxed">
+                {adoptionPrompt}
+              </p>
+            </div>
+
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowAdoptionPrompt(false)}
+                className="flex-1 py-3 bg-bg-darker hover:bg-border-subtle text-text-soft rounded transition-soft"
+              >
+                Not Now
+              </button>
+              <button
+                onClick={() => {
+                  setShowAdoptionPrompt(false)
+                  router.push('/billing')
+                }}
+                className="flex-1 py-3 bg-[var(--legacy-amber)] hover:bg-[var(--legacy-glow)] text-bg-dark rounded font-medium transition-soft"
+              >
+                Adopt This Tree
+              </button>
+            </div>
+
+            <p className="text-text-muted text-xs text-center mt-4">
+              You can continue adding up to 100 memories in the Open Grove
+            </p>
+          </div>
+        </div>
       )}
 
       {editingBranch && (

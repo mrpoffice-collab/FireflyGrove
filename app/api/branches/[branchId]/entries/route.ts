@@ -41,6 +41,9 @@ export async function POST(
           },
         ],
       },
+      include: {
+        person: true, // Include person to check memory limits
+      },
     })
 
     if (!branch) {
@@ -48,6 +51,29 @@ export async function POST(
         { error: 'Branch not found or access denied' },
         { status: 404 }
       )
+    }
+
+    // Check memory limit for legacy trees
+    if (branch.person?.isLegacy && branch.person?.memoryLimit !== null) {
+      const currentCount = branch.person.memoryCount || 0
+      const limit = branch.person.memoryLimit
+
+      if (currentCount >= limit) {
+        return NextResponse.json(
+          {
+            error: 'memory_limit_reached',
+            message: `This legacy tree has reached its ${limit} memory limit. Adopt this tree into a Grove for unlimited memories.`,
+            memoryCount: currentCount,
+            memoryLimit: limit,
+          },
+          { status: 403 }
+        )
+      }
+
+      // Check if approaching limit (at 50 memories, show adoption prompt)
+      if (currentCount >= 50 && currentCount < limit) {
+        // We'll return this info with the successful response
+      }
     }
 
     // Generate content hash for duplicate detection
@@ -105,6 +131,25 @@ export async function POST(
       },
     })
 
+    // Increment memory count for legacy trees
+    let memoryStatus = null
+    if (branch.person?.isLegacy && branch.person?.memoryLimit !== null) {
+      const updatedPerson = await prisma.person.update({
+        where: { id: branch.person.id },
+        data: { memoryCount: { increment: 1 } },
+      })
+
+      const newCount = updatedPerson.memoryCount
+      memoryStatus = {
+        currentCount: newCount,
+        limit: branch.person.memoryLimit,
+        showAdoptionPrompt: newCount === 50,
+        adoptionMessage: newCount === 50
+          ? "Your loved one's light is growing bright 🌟\n\nYou've added 50 memories — consider adopting this tree into a Grove for full storage and lasting access."
+          : null,
+      }
+    }
+
     // Create audit log for memory creation
     await prisma.audit.create({
       data: {
@@ -120,7 +165,10 @@ export async function POST(
       },
     })
 
-    return NextResponse.json(entry)
+    return NextResponse.json({
+      ...entry,
+      memoryStatus,
+    })
   } catch (error) {
     console.error('Error creating entry:', error)
     return NextResponse.json(
