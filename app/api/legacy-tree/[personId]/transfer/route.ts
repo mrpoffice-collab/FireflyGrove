@@ -66,7 +66,7 @@ export async function POST(
     await checkAndExpireTrustee(personId)
 
     // Re-fetch person to get updated trustee status
-    const updatedPerson = await prisma.person.findUnique({
+    const currentPerson = await prisma.person.findUnique({
       where: { id: personId },
       select: {
         trusteeId: true,
@@ -75,7 +75,7 @@ export async function POST(
     })
 
     // Only trustee (if not expired) or owner can transfer ownership
-    if (updatedPerson && updatedPerson.trusteeId !== userId && updatedPerson.ownerId !== userId) {
+    if (currentPerson && currentPerson.trusteeId !== userId && currentPerson.ownerId !== userId) {
       return NextResponse.json(
         { error: 'Only the trustee or owner can transfer ownership' },
         { status: 403 }
