@@ -44,7 +44,7 @@ export default function FireflyCanvas({ branches }: FireflyCanvasProps) {
       // Blinking behavior
       blinkPhase: Math.random() * Math.PI * 2,
       blinkSpeed: 0.03 + Math.random() * 0.02, // Vary blink speed
-      nextBlinkIn: Math.random() * 200 + 100, // Random time until next blink
+      nextBlinkIn: Math.random() * 400 + 300, // Random time until next blink (5-12 seconds)
       isBlinking: false,
       blinkDuration: 0,
     }))
@@ -81,7 +81,7 @@ export default function FireflyCanvas({ branches }: FireflyCanvasProps) {
           if (firefly.blinkDuration <= 0) {
             // Stop blinking
             firefly.isBlinking = false
-            firefly.nextBlinkIn = 80 + Math.random() * 120 // Wait 80-200 frames before next blink
+            firefly.nextBlinkIn = 300 + Math.random() * 400 // Wait 300-700 frames before next blink (5-12 seconds)
           }
         }
 
