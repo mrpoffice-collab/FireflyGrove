@@ -115,9 +115,9 @@ export default function GrovePage() {
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-5xl mx-auto">
           {/* Grove Header */}
-          <div className="mb-8">
+          <div className="mb-8 text-center">
             {isEditingName ? (
-              <div className="flex items-center gap-3 mb-4">
+              <div className="flex items-center justify-center gap-3 mb-4">
                 <input
                   type="text"
                   value={groveName}
@@ -129,7 +129,7 @@ export default function GrovePage() {
                       setIsEditingName(false)
                     }
                   }}
-                  className="text-4xl font-light bg-bg-dark border border-firefly-dim/50 rounded px-3 py-1 text-text-soft focus:outline-none focus:border-firefly-glow"
+                  className="text-4xl font-light bg-bg-dark border border-firefly-dim/50 rounded px-3 py-1 text-text-soft focus:outline-none focus:border-firefly-glow text-center"
                   autoFocus
                   maxLength={100}
                 />
@@ -150,7 +150,7 @@ export default function GrovePage() {
                 </button>
               </div>
             ) : (
-              <div className="flex items-center gap-3 mb-4">
+              <div className="flex items-center justify-center gap-3 mb-4">
                 <h1 className="text-4xl font-light text-text-soft">
                   {grove.name}
                 </h1>
@@ -166,6 +166,13 @@ export default function GrovePage() {
               </div>
             )}
 
+            <p className="text-text-muted text-sm">
+              Where family, friends, and generations connect through shared memories.
+            </p>
+          </div>
+
+          {/* Status Alerts */}
+          <div className="mb-8">
             {grove.status === 'past_due' && (
               <div className="bg-orange-500/10 border border-orange-500/30 rounded-lg p-4 mb-4">
                 <div className="flex items-start gap-3">
@@ -206,12 +213,6 @@ export default function GrovePage() {
           </div>
 
           {/* Trees Grid - Olive Grove Style */}
-          <div className="mb-8 text-center">
-            <p className="text-text-muted text-sm">
-              Where family, friends, and generations connect through shared memories.
-            </p>
-          </div>
-
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
             {/* Existing Trees */}
             {grove.trees?.map((tree) => (

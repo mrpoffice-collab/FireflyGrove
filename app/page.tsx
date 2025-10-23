@@ -18,10 +18,10 @@ export default function HomePage() {
             )}
           </div>
           <p className="text-xl text-text-soft mb-2">
-            A private memory journal
+            Connecting generations through stories that never fade
           </p>
           <p className="text-text-muted">
-            Preserve the stories, photos, and voices that shaped your life.
+            Where memories take root and keep growing
           </p>
         </div>
 

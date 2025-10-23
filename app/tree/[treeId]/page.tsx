@@ -152,10 +152,10 @@ export default function TreePage() {
             ← Back to Grove
           </button>
 
-          <div className="mb-8">
+          <div className="mb-8 text-center">
             {isEditingName ? (
               <div className="space-y-3">
-                <div className="flex items-center gap-3">
+                <div className="flex items-center justify-center gap-3">
                   <input
                     type="text"
                     value={treeName}
@@ -168,7 +168,7 @@ export default function TreePage() {
                         setIsEditingName(false)
                       }
                     }}
-                    className="text-4xl font-light bg-bg-dark border border-firefly-dim/50 rounded px-3 py-1 text-text-soft focus:outline-none focus:border-firefly-glow flex-1"
+                    className="text-4xl font-light bg-bg-dark border border-firefly-dim/50 rounded px-3 py-1 text-text-soft focus:outline-none focus:border-firefly-glow text-center"
                     autoFocus
                     maxLength={100}
                     placeholder="Tree name"
@@ -177,12 +177,12 @@ export default function TreePage() {
                 <textarea
                   value={treeDescription}
                   onChange={(e) => setTreeDescription(e.target.value)}
-                  className="w-full bg-bg-dark border border-border-subtle rounded px-3 py-2 text-text-muted focus:outline-none focus:border-firefly-dim/50 resize-none"
+                  className="w-full max-w-md mx-auto bg-bg-dark border border-border-subtle rounded px-3 py-2 text-text-muted focus:outline-none focus:border-firefly-dim/50 resize-none text-center"
                   rows={2}
                   placeholder="Description (optional)"
                   maxLength={500}
                 />
-                <div className="flex gap-2">
+                <div className="flex gap-2 justify-center">
                   <button
                     onClick={handleRenameTree}
                     className="px-4 py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded text-sm font-medium transition-soft"
@@ -203,7 +203,7 @@ export default function TreePage() {
               </div>
             ) : (
               <div>
-                <div className="flex items-center gap-3 mb-2">
+                <div className="flex items-center justify-center gap-3 mb-2">
                   <h1 className="text-4xl font-light text-text-soft">
                     {tree.name}
                   </h1>
@@ -218,8 +218,11 @@ export default function TreePage() {
                   </button>
                 </div>
                 {tree.description && (
-                  <p className="text-text-muted">{tree.description}</p>
+                  <p className="text-text-muted mb-2">{tree.description}</p>
                 )}
+                <p className="text-text-muted text-sm">
+                  Your story glows brighter with every memory.
+                </p>
               </div>
             )}
           </div>
