@@ -32,12 +32,12 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  /* Subtle background image */
-  background-image: url('/background.png');
-  background-size: cover;
+  /* Subtle background image - temporarily disabled */
+  /* background-image: url('/background.png'); */
+  /* background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  background-attachment: fixed;
+  background-attachment: fixed; */
 
   /* Overlay to make it subtle */
   position: relative;

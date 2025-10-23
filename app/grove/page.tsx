@@ -98,7 +98,7 @@ export default function GrovePage() {
   }
 
   const plan = getPlanById(grove.planType)
-  const treeCount = grove.trees.length
+  const treeCount = grove.trees?.length || 0
   const isAtCapacity = treeCount >= grove.treeLimit
 
   return (
@@ -218,7 +218,7 @@ export default function GrovePage() {
 
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
             {/* Existing Trees */}
-            {grove.trees.map((tree) => (
+            {grove.trees?.map((tree) => (
               <div
                 key={tree.id}
                 onClick={() => router.push(`/tree/${tree.id}`)}
@@ -284,7 +284,7 @@ export default function GrovePage() {
             ))}
           </div>
 
-          {grove.trees.length === 0 && (
+          {(grove.trees?.length || 0) === 0 && (
             <div className="text-center mt-8 p-8 bg-bg-dark border border-border-subtle rounded-lg">
               <p className="text-text-muted mb-4">
                 Click an empty tree slot above to plant your first tree
