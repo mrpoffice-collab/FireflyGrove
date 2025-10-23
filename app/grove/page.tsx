@@ -132,73 +132,90 @@ export default function GrovePage() {
             )}
           </div>
 
-          {/* Trees Grid */}
-          <div className="mb-6 flex items-center justify-between">
-            <h2 className="text-2xl font-light text-text-soft">Your Trees</h2>
-            <button
-              onClick={() => router.push('/grove/new-tree')}
-              disabled={isAtCapacity || grove.status === 'canceled'}
-              className="px-4 py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded font-medium transition-soft disabled:opacity-50 disabled:cursor-not-allowed"
-              title={
-                isAtCapacity
-                  ? 'You\'ve reached your tree capacity. Upgrade to add more.'
-                  : grove.status === 'canceled'
-                  ? 'Reactivate your subscription to create trees'
-                  : 'Create a new tree'
+          {/* Trees Grid - Olive Grove Style */}
+          <div className="mb-6">
+            <h2 className="text-2xl font-light text-text-soft mb-2">Your Grove</h2>
+            <p className="text-text-muted text-sm">
+              {isAtCapacity
+                ? `All ${grove.treeLimit} trees planted`
+                : `${grove.treeLimit - treeCount} ${grove.treeLimit - treeCount === 1 ? 'slot' : 'slots'} available`
               }
-            >
-              + New Tree
-            </button>
+            </p>
           </div>
 
-          {grove.trees.length === 0 ? (
-            <div className="text-center py-16 border-2 border-dashed border-border-subtle rounded-lg">
-              <div className="text-6xl mb-4">🌳</div>
-              <h3 className="text-xl text-text-soft mb-2">No trees yet</h3>
-              <p className="text-text-muted mb-6">
-                Create your first tree to organize your family memories
-              </p>
-              <button
-                onClick={() => router.push('/grove/new-tree')}
-                disabled={grove.status === 'canceled'}
-                className="px-6 py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded font-medium transition-soft disabled:opacity-50"
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+            {/* Existing Trees */}
+            {grove.trees.map((tree) => (
+              <div
+                key={tree.id}
+                onClick={() => router.push(`/tree/${tree.id}`)}
+                className="flex flex-col items-center gap-3 p-4 rounded-lg hover:bg-bg-dark transition-soft cursor-pointer group"
               >
-                Create First Tree
-              </button>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {grove.trees.map((tree) => (
-                <div
-                  key={tree.id}
-                  onClick={() => router.push(`/tree/${tree.id}`)}
-                  className="bg-bg-dark border border-border-subtle rounded-lg p-6 hover:border-firefly-dim/50 transition-soft cursor-pointer group"
+                {/* Simple Olive Tree SVG */}
+                <svg
+                  width="80"
+                  height="80"
+                  viewBox="0 0 80 80"
+                  className="group-hover:scale-110 transition-transform"
                 >
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="text-3xl">🌳</div>
-                    {tree.status === 'ARCHIVED' && (
-                      <span className="px-2 py-1 text-xs rounded bg-text-muted/20 text-text-muted">
-                        Archived
-                      </span>
-                    )}
-                  </div>
-                  <h3 className="text-xl text-text-soft mb-2 group-hover:text-firefly-glow transition-soft">
+                  {/* Trunk */}
+                  <rect x="36" y="50" width="8" height="25" fill="#8B7355" />
+                  {/* Foliage - Olive tree style (organic, flowing) */}
+                  <ellipse cx="40" cy="35" rx="20" ry="15" fill="#9ca986" opacity="0.8" />
+                  <ellipse cx="30" cy="40" rx="15" ry="12" fill="#9ca986" opacity="0.9" />
+                  <ellipse cx="50" cy="40" rx="15" ry="12" fill="#9ca986" opacity="0.9" />
+                  <ellipse cx="40" cy="45" rx="18" ry="10" fill="#b8c5a6" opacity="0.7" />
+                  {/* Highlight */}
+                  <ellipse cx="35" cy="32" rx="8" ry="6" fill="#c5d4b3" opacity="0.5" />
+                </svg>
+
+                <div className="text-center">
+                  <div className="text-sm font-medium text-text-soft group-hover:text-firefly-glow transition-soft line-clamp-2 mb-1">
                     {tree.name}
-                  </h3>
-                  {tree.description && (
-                    <p className="text-text-muted text-sm mb-4 line-clamp-2">
-                      {tree.description}
-                    </p>
-                  )}
-                  <div className="flex items-center gap-4 text-sm text-text-muted">
-                    <span>{tree._count.branches} branches</span>
-                    <span>•</span>
-                    <span>
-                      Created {new Date(tree.createdAt).toLocaleDateString()}
-                    </span>
+                  </div>
+                  <div className="text-xs text-text-muted">
+                    {tree._count.branches} {tree._count.branches === 1 ? 'branch' : 'branches'}
                   </div>
                 </div>
-              ))}
+              </div>
+            ))}
+
+            {/* Empty Slots */}
+            {Array.from({ length: grove.treeLimit - treeCount }).map((_, index) => (
+              <div
+                key={`empty-${index}`}
+                onClick={() => grove.status !== 'canceled' && router.push('/grove/new-tree')}
+                className={`flex flex-col items-center gap-3 p-4 rounded-lg border-2 border-dashed transition-soft ${
+                  grove.status === 'canceled'
+                    ? 'border-border-subtle cursor-not-allowed opacity-50'
+                    : 'border-border-subtle hover:border-firefly-dim/50 cursor-pointer group'
+                }`}
+              >
+                {/* Empty Tree Outline */}
+                <svg
+                  width="80"
+                  height="80"
+                  viewBox="0 0 80 80"
+                  className="group-hover:scale-110 transition-transform opacity-30"
+                >
+                  <rect x="36" y="50" width="8" height="25" fill="currentColor" className="text-text-muted" />
+                  <ellipse cx="40" cy="40" rx="20" ry="20" fill="none" stroke="currentColor" strokeWidth="2" strokeDasharray="4 4" className="text-text-muted" />
+                </svg>
+
+                <div className="text-center">
+                  <div className="text-sm text-text-muted">
+                    Available
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {grove.trees.length === 0 && (
+            <div className="text-center mt-8 p-8 bg-bg-dark border border-border-subtle rounded-lg">
+              <p className="text-text-muted mb-4">
+                Click an empty tree slot above to plant your first tree
+              </p>
             </div>
           )}
 
