@@ -35,18 +35,19 @@ async function migrate() {
       console.log(`Processing user: ${user.email}`)
 
       // Check if user already has a Grove
-      let grove = await prisma.grove.findFirst({
-        where: { ownerId: user.id },
+      let grove = await prisma.grove.findUnique({
+        where: { userId: user.id },
       })
 
       if (!grove) {
         // Create default Grove for user
         grove = await prisma.grove.create({
           data: {
-            ownerId: user.id,
+            userId: user.id,
             name: `${user.name}'s Grove`,
             planType: 'family', // Default to family plan
             treeLimit: 10,
+            treeCount: 0,
             status: 'active',
           },
         })
