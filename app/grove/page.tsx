@@ -213,6 +213,27 @@ export default function GrovePage() {
             )}
           </div>
 
+          {/* Legacy Tree CTA */}
+          <div className="mb-8 bg-[var(--legacy-amber)]/10 border border-[var(--legacy-amber)]/30 rounded-lg p-6">
+            <div className="flex items-start gap-4">
+              <div className="text-4xl">🕯️</div>
+              <div className="flex-1">
+                <h3 className="text-lg text-[var(--legacy-text)] mb-2">
+                  Create a Legacy Tree
+                </h3>
+                <p className="text-text-muted text-sm mb-4">
+                  Honor the memory of a loved one. Free public memorial or private in your grove.
+                </p>
+                <button
+                  onClick={() => router.push('/legacy-tree/create')}
+                  className="px-6 py-2 bg-[var(--legacy-amber)] hover:bg-[var(--legacy-glow)] text-bg-dark rounded font-medium transition-soft"
+                >
+                  Create Legacy Tree
+                </button>
+              </div>
+            </div>
+          </div>
+
           {/* Trees Grid - Olive Grove Style */}
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
             {/* Existing Trees */}
