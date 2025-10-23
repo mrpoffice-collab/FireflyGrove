@@ -7,6 +7,15 @@ function MemorialCreatedContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const name = searchParams.get('name') || 'your loved one'
+  const birthDate = searchParams.get('birthDate')
+  const deathDate = searchParams.get('deathDate')
+
+  // Format dates for display
+  const formatDate = (dateStr: string | null) => {
+    if (!dateStr) return ''
+    const date = new Date(dateStr)
+    return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+  }
 
   return (
     <div className="min-h-screen bg-bg-darker">
@@ -30,9 +39,17 @@ function MemorialCreatedContent() {
             Memorial Created
           </h1>
 
-          <p className="text-text-muted text-lg mb-8">
-            You've created a memorial for <span className="text-[var(--legacy-text)]">{name}</span>
-          </p>
+          {/* Grave Marker Style Display */}
+          <div className="mb-8 py-8 px-6 bg-bg-dark border border-[var(--legacy-amber)]/30 rounded-lg">
+            <div className="text-2xl font-light text-[var(--legacy-text)] mb-3">
+              {name}
+            </div>
+            {birthDate && deathDate && (
+              <div className="text-text-muted text-sm">
+                {formatDate(birthDate)} – {formatDate(deathDate)}
+              </div>
+            )}
+          </div>
 
           <div className="bg-bg-dark border border-[var(--legacy-amber)]/30 rounded-lg p-8 mb-8">
             <h2 className="text-xl text-text-soft mb-4">What's Next?</h2>
