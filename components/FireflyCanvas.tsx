@@ -41,6 +41,12 @@ export default function FireflyCanvas({ branches }: FireflyCanvasProps) {
       brightness: 0.5 + (branch._count.entries / 10) * 0.5,
       size: 3 + Math.min(branch._count.entries, 10) * 0.5,
       phase: Math.random() * Math.PI * 2,
+      // Blinking behavior
+      blinkPhase: Math.random() * Math.PI * 2,
+      blinkSpeed: 0.03 + Math.random() * 0.02, // Vary blink speed
+      nextBlinkIn: Math.random() * 200 + 100, // Random time until next blink
+      isBlinking: false,
+      blinkDuration: 0,
     }))
 
     let animationId: number
@@ -49,7 +55,7 @@ export default function FireflyCanvas({ branches }: FireflyCanvasProps) {
       ctx.clearRect(0, 0, canvas.offsetWidth, canvas.offsetHeight)
 
       fireflies.forEach((firefly, i) => {
-        // Update position
+        // Update position (fireflies keep moving even when blinking off)
         firefly.x += firefly.vx
         firefly.y += firefly.vy
 
@@ -61,33 +67,65 @@ export default function FireflyCanvas({ branches }: FireflyCanvasProps) {
         firefly.x = Math.max(0, Math.min(canvas.offsetWidth, firefly.x))
         firefly.y = Math.max(0, Math.min(canvas.offsetHeight, firefly.y))
 
-        // Pulsing glow
+        // Blinking logic
+        if (!firefly.isBlinking) {
+          firefly.nextBlinkIn--
+          if (firefly.nextBlinkIn <= 0) {
+            // Start blinking
+            firefly.isBlinking = true
+            firefly.blinkDuration = 20 + Math.random() * 20 // Blink for 20-40 frames
+            firefly.blinkPhase = 0
+          }
+        } else {
+          firefly.blinkDuration--
+          if (firefly.blinkDuration <= 0) {
+            // Stop blinking
+            firefly.isBlinking = false
+            firefly.nextBlinkIn = 80 + Math.random() * 120 // Wait 80-200 frames before next blink
+          }
+        }
+
+        // Pulsing glow (continuous, subtle)
         firefly.phase += 0.02
-        const glow = 0.5 + Math.sin(firefly.phase) * 0.5
+        const basePulse = 0.7 + Math.sin(firefly.phase) * 0.3
 
-        // Draw glow
-        const gradient = ctx.createRadialGradient(
-          firefly.x,
-          firefly.y,
-          0,
-          firefly.x,
-          firefly.y,
-          firefly.size * 3
-        )
-        gradient.addColorStop(0, `rgba(255, 217, 102, ${firefly.brightness * glow})`)
-        gradient.addColorStop(0.5, `rgba(255, 217, 102, ${firefly.brightness * glow * 0.3})`)
-        gradient.addColorStop(1, 'rgba(255, 217, 102, 0)')
+        // Blink effect (rapid fade in/out)
+        let blinkAlpha = 1
+        if (firefly.isBlinking) {
+          firefly.blinkPhase += firefly.blinkSpeed
+          // Sharp blink curve - goes to 0 then back to 1
+          blinkAlpha = Math.abs(Math.sin(firefly.blinkPhase))
+        }
 
-        ctx.fillStyle = gradient
-        ctx.beginPath()
-        ctx.arc(firefly.x, firefly.y, firefly.size * 3, 0, Math.PI * 2)
-        ctx.fill()
+        // Combine base pulse with blink
+        const finalAlpha = basePulse * blinkAlpha
 
-        // Draw core
-        ctx.fillStyle = `rgba(255, 217, 102, ${0.8 + glow * 0.2})`
-        ctx.beginPath()
-        ctx.arc(firefly.x, firefly.y, firefly.size, 0, Math.PI * 2)
-        ctx.fill()
+        // Only draw if alpha > 0.05 (firefly completely disappears during blink)
+        if (finalAlpha > 0.05) {
+          // Draw glow
+          const gradient = ctx.createRadialGradient(
+            firefly.x,
+            firefly.y,
+            0,
+            firefly.x,
+            firefly.y,
+            firefly.size * 3
+          )
+          gradient.addColorStop(0, `rgba(255, 217, 102, ${firefly.brightness * finalAlpha})`)
+          gradient.addColorStop(0.5, `rgba(255, 217, 102, ${firefly.brightness * finalAlpha * 0.3})`)
+          gradient.addColorStop(1, 'rgba(255, 217, 102, 0)')
+
+          ctx.fillStyle = gradient
+          ctx.beginPath()
+          ctx.arc(firefly.x, firefly.y, firefly.size * 3, 0, Math.PI * 2)
+          ctx.fill()
+
+          // Draw core
+          ctx.fillStyle = `rgba(255, 217, 102, ${0.8 * finalAlpha})`
+          ctx.beginPath()
+          ctx.arc(firefly.x, firefly.y, firefly.size, 0, Math.PI * 2)
+          ctx.fill()
+        }
       })
 
       animationId = requestAnimationFrame(animate)
