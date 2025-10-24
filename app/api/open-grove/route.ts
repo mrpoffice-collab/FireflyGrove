@@ -85,15 +85,6 @@ export async function GET(req: NextRequest) {
       prisma.person.count({ where }),
     ])
 
-    // Debug logging
-    console.log('Open Grove API - Found memorials:', memorials.length)
-    memorials.forEach((person) => {
-      console.log(`Person: ${person.name}, ID: ${person.id}, Branches: ${person.branches.length}`)
-      if (person.branches.length > 0) {
-        console.log(`  Branch ID: ${person.branches[0].id}`)
-      }
-    })
-
     return NextResponse.json({
       memorials: memorials.map((person) => ({
         id: person.id,

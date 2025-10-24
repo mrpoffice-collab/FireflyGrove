@@ -44,10 +44,6 @@ export default function OpenGrovePage() {
       const res = await fetch(`/api/open-grove?${params}`)
       if (res.ok) {
         const data = await res.json()
-        console.log('Open Grove - Received memorials:', data.memorials.length)
-        data.memorials.forEach((m: Memorial) => {
-          console.log(`Memorial: ${m.name}, BranchID: ${m.branchId || 'NONE'}`)
-        })
         setMemorials(data.memorials)
         setTotal(data.pagination.total)
         setHasMore(data.pagination.hasMore)
@@ -156,8 +152,6 @@ export default function OpenGrovePage() {
                   onClick={() => {
                     if (memorial.branchId) {
                       router.push(`/branch/${memorial.branchId}`)
-                    } else {
-                      console.log('No branch ID for memorial:', memorial.name, memorial.id)
                     }
                   }}
                   className={`bg-bg-dark border border-[var(--legacy-amber)]/30 rounded-lg p-6 hover:border-[var(--legacy-glow)]/50 transition-soft group ${
