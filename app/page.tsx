@@ -80,10 +80,16 @@ export default function HomePage() {
             Enter Your Grove
           </Link>
           <Link
+            href="/open-grove"
+            className="block w-full max-w-xs mx-auto py-3 bg-border-subtle hover:bg-text-muted/20 text-[var(--legacy-text)] border border-[var(--legacy-amber)]/30 rounded-lg font-medium transition-soft"
+          >
+            🕯️ Browse Open Grove
+          </Link>
+          <Link
             href="/memorial/create"
             className="block w-full max-w-xs mx-auto py-3 bg-[var(--legacy-amber)]/20 hover:bg-[var(--legacy-amber)]/30 text-[var(--legacy-text)] border border-[var(--legacy-amber)]/30 rounded-lg font-medium transition-soft"
           >
-            🕯️ Create a Free Memorial
+            Create a Free Memorial
           </Link>
           <p className="text-text-muted text-sm">
             A quiet place to remember what matters most
