@@ -36,7 +36,7 @@ export default function RootLayout({
             pointerEvents: 'none',
           }}
         />
-        {/* Dark overlay - 85% opacity */}
+        {/* Dark overlay layer 1 - primary tint */}
         <div
           style={{
             position: 'fixed',
@@ -44,8 +44,21 @@ export default function RootLayout({
             left: 0,
             right: 0,
             bottom: 0,
-            backgroundColor: 'rgba(10, 14, 20, 0.85)',
+            backgroundColor: 'rgba(10, 14, 20, 0.90)',
             zIndex: 1,
+            pointerEvents: 'none',
+          }}
+        />
+        {/* Dark overlay layer 2 - subtle warm tint */}
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(5, 8, 16, 0.05)',
+            zIndex: 2,
             pointerEvents: 'none',
           }}
         />
