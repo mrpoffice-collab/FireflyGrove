@@ -89,7 +89,7 @@ export default function InvitePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-bg-darker">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-text-muted">Loading invitation...</div>
       </div>
     )
@@ -97,7 +97,7 @@ export default function InvitePage() {
 
   if (error || !invite) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-bg-darker px-4">
+      <div className="min-h-screen flex items-center justify-center px-4">
         <div className="max-w-md w-full text-center">
           <div className="text-4xl mb-4">❌</div>
           <h1 className="text-2xl font-light text-text-soft mb-4">
@@ -119,7 +119,7 @@ export default function InvitePage() {
 
   if (invite.expired) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-bg-darker px-4">
+      <div className="min-h-screen flex items-center justify-center px-4">
         <div className="max-w-md w-full text-center">
           <div className="text-4xl mb-4">⏰</div>
           <h1 className="text-2xl font-light text-text-soft mb-4">
@@ -140,7 +140,7 @@ export default function InvitePage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-bg-darker px-4">
+    <div className="min-h-screen flex items-center justify-center px-4">
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
           <h1 className="text-4xl font-light mb-2 text-firefly-glow">

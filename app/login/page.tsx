@@ -52,7 +52,7 @@ export default function LoginPage() {
   const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === 'true'
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-bg-darker px-4">
+    <div className="min-h-screen flex items-center justify-center px-4">
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
           <h1 className="text-4xl font-light mb-2 text-firefly-glow">

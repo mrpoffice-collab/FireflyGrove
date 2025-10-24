@@ -19,7 +19,7 @@ function MemorialCreatedContent() {
   }
 
   return (
-    <div className="min-h-screen bg-bg-darker">
+    <div className="min-h-screen">
       {/* Simple Header */}
       <div className="border-b border-border-subtle bg-bg-dark">
         <div className="container mx-auto px-4 py-4">
@@ -127,7 +127,7 @@ function MemorialCreatedContent() {
 export default function MemorialCreatedPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-bg-darker flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-text-muted">Loading...</div>
       </div>
     }>

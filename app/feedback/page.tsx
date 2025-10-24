@@ -32,7 +32,7 @@ export default function FeedbackPage() {
 
   if (submitted) {
     return (
-      <div className="min-h-screen bg-bg-darker">
+      <div className="min-h-screen">
         {session && <Header userName={session.user?.name || ''} />}
 
         <div className="container mx-auto px-4 py-16">
@@ -56,7 +56,7 @@ export default function FeedbackPage() {
   }
 
   return (
-    <div className="min-h-screen bg-bg-darker">
+    <div className="min-h-screen">
       {session && <Header userName={session.user?.name || ''} />}
 
       <div className="container mx-auto px-4 py-16">

@@ -88,7 +88,7 @@ export default function GrovePage() {
 
   if (status === 'loading' || loading) {
     return (
-      <div className="min-h-screen bg-bg-darker flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-text-muted">Loading grove...</div>
       </div>
     )
@@ -103,7 +103,7 @@ export default function GrovePage() {
   const isAtCapacity = treeCount >= grove.treeLimit
 
   return (
-    <div className="min-h-screen bg-bg-darker">
+    <div className="min-h-screen">
       <Header
         userName={session.user?.name || ''}
         groveInfo={{

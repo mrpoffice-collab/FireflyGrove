@@ -131,7 +131,7 @@ export default function TreePage() {
 
   if (status === 'loading' || loading) {
     return (
-      <div className="min-h-screen bg-bg-darker flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-text-muted">Loading tree...</div>
       </div>
     )
@@ -142,7 +142,7 @@ export default function TreePage() {
   }
 
   return (
-    <div className="min-h-screen bg-bg-darker">
+    <div className="min-h-screen">
       <Header userName={session.user?.name || ''} />
 
       <div className="container mx-auto px-4 py-8">

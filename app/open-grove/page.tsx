@@ -61,7 +61,7 @@ export default function OpenGrovePage() {
   }
 
   return (
-    <div className="min-h-screen bg-bg-darker">
+    <div className="min-h-screen">
       <Header />
 
       <div className="container mx-auto px-4 py-8">

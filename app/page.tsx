@@ -4,7 +4,7 @@ export default function HomePage() {
   const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === 'true'
 
   return (
-    <div className="min-h-screen bg-bg-darker flex items-center justify-center px-4">
+    <div className="min-h-screen flex items-center justify-center px-4">
       <div className="max-w-2xl text-center">
         <div className="mb-8">
           <div className="flex items-center justify-center gap-3 mb-4">

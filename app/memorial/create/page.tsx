@@ -210,7 +210,7 @@ export default function CreateMemorialPage() {
   const maxDeathDate = new Date().toISOString().split('T')[0]
 
   return (
-    <div className="min-h-screen bg-bg-darker">
+    <div className="min-h-screen">
       {/* Simple Header */}
       <div className="border-b border-border-subtle bg-bg-dark">
         <div className="container mx-auto px-4 py-4">
