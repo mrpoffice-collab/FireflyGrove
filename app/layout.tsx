@@ -18,30 +18,41 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} flex flex-col min-h-screen`}>
+      <body className={`${inter.className}`} style={{ position: 'relative', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
         {/* Background image layer */}
         <div
-          className="fixed inset-0 z-0 pointer-events-none"
           style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
             backgroundImage: 'url(/background.png?v=2)',
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
             backgroundAttachment: 'fixed',
+            zIndex: 0,
+            pointerEvents: 'none',
           }}
         />
-        {/* Dark overlay */}
+        {/* Dark overlay - 85% opacity */}
         <div
-          className="fixed inset-0 pointer-events-none"
           style={{
-            background: 'rgba(10, 14, 20, 0.85)',
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(10, 14, 20, 0.85)',
             zIndex: 1,
+            pointerEvents: 'none',
           }}
         />
         {/* Content */}
-        <div className="relative z-10 flex flex-col min-h-screen">
+        <div style={{ position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column', minHeight: '100vh', flex: 1 }}>
           <Providers>
-            <div className="flex-1">{children}</div>
+            <div style={{ flex: 1 }}>{children}</div>
             <Footer />
           </Providers>
         </div>
