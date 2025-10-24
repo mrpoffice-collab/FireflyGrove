@@ -34,7 +34,7 @@ export default function RootLayout({
         <div
           className="fixed inset-0 pointer-events-none"
           style={{
-            background: 'rgba(10, 14, 20, 0.30)',
+            background: 'rgba(10, 14, 20, 0.85)',
             zIndex: 1,
           }}
         />
