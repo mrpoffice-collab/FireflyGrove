@@ -6,6 +6,7 @@ interface Branch {
   id: string
   title: string
   personStatus: string
+  lastMemoryDate: string | null
   _count: {
     entries: number
   }
@@ -33,20 +34,87 @@ export default function FireflyCanvas({ branches }: FireflyCanvasProps) {
     }
     updateSize()
 
+    // Calculate recency-based brightness and behavior
+    const getRecencyState = (lastMemoryDate: string | null) => {
+      if (!lastMemoryDate) {
+        return {
+          recency: 'dormant',
+          brightness: 0.15, // Very dim
+          pulseSpeed: 0.005, // Very slow
+          flickerMode: true,
+        }
+      }
+
+      const now = Date.now()
+      const lastMemory = new Date(lastMemoryDate).getTime()
+      const daysSince = (now - lastMemory) / (1000 * 60 * 60 * 24)
+
+      if (daysSince <= 7) {
+        // New memory (within 7 days) - Bright golden light, slight pulsing
+        return {
+          recency: 'active',
+          brightness: 0.95,
+          pulseSpeed: 0.03,
+          flickerMode: false,
+        }
+      } else if (daysSince <= 90) {
+        // 1-3 months - Soft steady glow
+        return {
+          recency: 'warm',
+          brightness: 0.75,
+          pulseSpeed: 0.02,
+          flickerMode: false,
+        }
+      } else if (daysSince <= 365) {
+        // 3-12 months - Gentle dimming
+        return {
+          recency: 'quiet',
+          brightness: 0.55,
+          pulseSpeed: 0.015,
+          flickerMode: false,
+        }
+      } else if (daysSince <= 1095) {
+        // 1-3 years - Faint ember glow
+        return {
+          recency: 'ember',
+          brightness: 0.35,
+          pulseSpeed: 0.01,
+          flickerMode: false,
+        }
+      } else {
+        // >3 years - Occasional flicker
+        return {
+          recency: 'sleeping',
+          brightness: 0.2,
+          pulseSpeed: 0.005,
+          flickerMode: true,
+        }
+      }
+    }
+
     // Firefly data
     const fireflies = branches.map((branch, i) => {
       const isLegacy = branch.personStatus === 'legacy'
+      const recencyState = getRecencyState(branch.lastMemoryDate)
 
       return {
         x: Math.random() * canvas.offsetWidth,
         y: Math.random() * canvas.offsetHeight,
         vx: (Math.random() - 0.5) * (isLegacy ? 0.2 : 0.5), // Legacy moves slower
         vy: (Math.random() - 0.5) * (isLegacy ? 0.2 : 0.5),
-        brightness: 0.5 + (branch._count.entries / 10) * 0.5,
-        size: 3 + Math.min(branch._count.entries, 10) * 0.5,
+        brightness: recencyState.brightness,
+        baseBrightness: recencyState.brightness, // Store base for calculations
+        size: 3 + Math.min(branch._count.entries, 10) * 0.5, // Size still based on quantity
         phase: Math.random() * Math.PI * 2,
+        pulseSpeed: recencyState.pulseSpeed,
         isLegacy,
-        // Blinking behavior
+        recency: recencyState.recency,
+        flickerMode: recencyState.flickerMode,
+        // Flicker state for old memories
+        nextFlickerIn: Math.random() * 300 + 200, // 200-500 frames (3-8 seconds)
+        isFlickering: false,
+        flickerDuration: 0,
+        // Blinking behavior (separate from flicker)
         blinkPhase: Math.random() * Math.PI * 2,
         blinkSpeed: 0.03 + Math.random() * 0.02,
         nextBlinkIn: Math.random() * 400 + 300,
@@ -94,36 +162,63 @@ export default function FireflyCanvas({ branches }: FireflyCanvasProps) {
         firefly.x = Math.max(0, Math.min(canvas.offsetWidth, firefly.x))
         firefly.y = Math.max(0, Math.min(canvas.offsetHeight, firefly.y))
 
-        // Blinking logic
-        if (!firefly.isBlinking) {
-          firefly.nextBlinkIn--
-          if (firefly.nextBlinkIn <= 0) {
-            // Start blinking
-            firefly.isBlinking = true
-            firefly.blinkDuration = 30 + Math.random() * 30 // Blink for 30-60 frames (0.5-1 second)
-            firefly.blinkPhase = 0
+        // Flicker logic for old/dormant memories (>3 years or no memories)
+        if (firefly.flickerMode) {
+          if (!firefly.isFlickering) {
+            firefly.nextFlickerIn--
+            if (firefly.nextFlickerIn <= 0) {
+              // Start flickering
+              firefly.isFlickering = true
+              firefly.flickerDuration = 15 + Math.random() * 15 // Quick flicker (0.25-0.5 second)
+              firefly.blinkPhase = 0
+            }
+          } else {
+            firefly.blinkPhase += 0.15 // Very fast flicker
+            firefly.flickerDuration--
+            if (firefly.flickerDuration <= 0) {
+              // Stop flickering
+              firefly.isFlickering = false
+              firefly.nextFlickerIn = 200 + Math.random() * 300 // Wait 200-500 frames (3-8 seconds)
+            }
           }
         } else {
-          firefly.blinkPhase += 0.08 // Faster blink speed
-          firefly.blinkDuration--
-          if (firefly.blinkDuration <= 0) {
-            // Stop blinking
-            firefly.isBlinking = false
-            firefly.nextBlinkIn = 300 + Math.random() * 400 // Wait 300-700 frames before next blink (5-12 seconds)
+          // Normal blinking logic for active memories
+          if (!firefly.isBlinking) {
+            firefly.nextBlinkIn--
+            if (firefly.nextBlinkIn <= 0) {
+              // Start blinking
+              firefly.isBlinking = true
+              firefly.blinkDuration = 30 + Math.random() * 30 // Blink for 30-60 frames (0.5-1 second)
+              firefly.blinkPhase = 0
+            }
+          } else {
+            firefly.blinkPhase += 0.08 // Faster blink speed
+            firefly.blinkDuration--
+            if (firefly.blinkDuration <= 0) {
+              // Stop blinking
+              firefly.isBlinking = false
+              firefly.nextBlinkIn = 300 + Math.random() * 400 // Wait 300-700 frames before next blink (5-12 seconds)
+            }
           }
         }
 
-        // Pulsing glow (continuous, subtle)
-        // Legacy fireflies pulse slower and calmer
-        firefly.phase += firefly.isLegacy ? 0.01 : 0.02
-        const basePulse = firefly.isLegacy
-          ? 0.75 + Math.sin(firefly.phase) * 0.25  // Calmer, more stable
-          : 0.7 + Math.sin(firefly.phase) * 0.3
+        // Pulsing glow (continuous, subtle) - now based on recency
+        firefly.phase += firefly.pulseSpeed
 
-        // Blink effect - firefly disappears completely
+        // Adjust pulse amplitude based on recency
+        let pulseAmplitude = 0.3
+        if (firefly.recency === 'active') {
+          pulseAmplitude = 0.4 // More vibrant pulse for recent activity
+        } else if (firefly.recency === 'ember' || firefly.recency === 'sleeping') {
+          pulseAmplitude = 0.15 // Gentler pulse for old memories
+        }
+
+        const basePulse = firefly.baseBrightness + Math.sin(firefly.phase) * pulseAmplitude
+
+        // Blink/Flicker effect - firefly changes visibility
         let blinkAlpha = 1
-        if (firefly.isBlinking) {
-          // Create a sharp blink that goes fully to 0
+        if (firefly.isBlinking || firefly.isFlickering) {
+          // Create a sharp blink/flicker that goes fully to 0
           const blinkCycle = firefly.blinkPhase % (Math.PI * 2)
 
           if (blinkCycle < Math.PI) {
@@ -138,7 +233,7 @@ export default function FireflyCanvas({ branches }: FireflyCanvasProps) {
           blinkAlpha = Math.max(0, blinkAlpha) ** 2
         }
 
-        // Combine base pulse with blink
+        // Combine base pulse with blink/flicker
         const finalAlpha = basePulse * blinkAlpha
 
         // Only draw if alpha > 0.01 (firefly completely disappears during blink)

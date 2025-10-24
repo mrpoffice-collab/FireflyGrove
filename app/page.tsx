@@ -1,7 +1,29 @@
+'use client'
+
 import Link from 'next/link'
+import { useEffect, useState } from 'react'
+
+interface Stats {
+  groves: number
+  trees: number
+  branches: number
+  memories: number
+}
 
 export default function HomePage() {
   const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === 'true'
+  const [stats, setStats] = useState<Stats | null>(null)
+
+  useEffect(() => {
+    fetch('/api/stats')
+      .then((res) => res.json())
+      .then((data) => setStats(data))
+      .catch((err) => console.error('Failed to fetch stats:', err))
+  }, [])
+
+  const formatNumber = (num: number) => {
+    return num.toLocaleString()
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4">
@@ -18,11 +40,31 @@ export default function HomePage() {
             )}
           </div>
           <p className="text-xl text-text-soft mb-2">
-            Connecting generations through stories that never fade
+            Plant your first Tree and begin your Grove.
           </p>
           <p className="text-text-muted">
             Where memories take root and keep growing
           </p>
+
+          {stats && (
+            <div className="mt-6 flex flex-wrap items-center justify-center gap-2 text-text-muted text-sm">
+              <span className="flex items-center gap-1">
+                🌳 <span className="text-text-soft font-medium">{formatNumber(stats.groves)}</span> Groves
+              </span>
+              <span>·</span>
+              <span className="flex items-center gap-1">
+                🌲 <span className="text-text-soft font-medium">{formatNumber(stats.trees)}</span> Trees
+              </span>
+              <span>·</span>
+              <span className="flex items-center gap-1">
+                🌿 <span className="text-text-soft font-medium">{formatNumber(stats.branches)}</span> Branches
+              </span>
+              <span>·</span>
+              <span className="flex items-center gap-1">
+                ✨ <span className="text-text-soft font-medium">{formatNumber(stats.memories)}</span> Memories
+              </span>
+            </div>
+          )}
         </div>
 
         <div className="mb-12">

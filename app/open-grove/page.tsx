@@ -71,12 +71,20 @@ export default function OpenGrovePage() {
           <h1 className="text-4xl font-light text-[var(--legacy-text)] mb-2">
             Open Grove
           </h1>
-          <p className="text-text-muted max-w-2xl mx-auto">
-            A public memorial garden where every story finds a light. Browse memorials, share memories, and honor those who have passed.
+          <p className="text-text-muted max-w-2xl mx-auto mb-4">
+            A public garden where every story glows.<br />
+            Each candle a memory, each memory a life that still shines.
           </p>
-          <p className="text-text-muted text-sm mt-2">
-            {total} {total === 1 ? 'memorial' : 'memorials'} in the Open Grove
-          </p>
+          {/* Memorial Counter */}
+          <div className="inline-flex items-center gap-2 px-6 py-3 bg-[var(--legacy-amber)]/10 border border-[var(--legacy-amber)]/30 rounded-full backdrop-blur-sm">
+            <span className="text-2xl">🕯️</span>
+            <div className="flex items-baseline gap-2">
+              <span className="text-[var(--legacy-glow)] font-bold text-2xl">{total.toLocaleString()}</span>
+              <span className="text-[var(--legacy-text)] text-sm">
+                {total === 1 ? 'memorial' : 'memorials'} in the Open Grove
+              </span>
+            </div>
+          </div>
         </div>
 
         {/* Search and Filter */}

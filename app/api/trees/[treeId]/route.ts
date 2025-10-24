@@ -43,6 +43,15 @@ export async function GET(
                 name: true,
               },
             },
+            entries: {
+              select: {
+                createdAt: true,
+              },
+              orderBy: {
+                createdAt: 'desc',
+              },
+              take: 1,
+            },
             _count: {
               select: {
                 entries: true,
@@ -80,6 +89,7 @@ export async function GET(
         description: branch.description,
         personStatus: branch.personStatus,
         createdAt: branch.createdAt.toISOString(),
+        lastMemoryDate: branch.entries[0]?.createdAt?.toISOString() || null,
         owner: {
           id: branch.owner.id,
           name: branch.owner.name,

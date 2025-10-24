@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import { Providers } from './providers'
 import Footer from '@/components/Footer'
+import CommunityGoalBanner from '@/components/CommunityGoalBanner'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -65,6 +66,7 @@ export default function RootLayout({
         {/* Content */}
         <div style={{ position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column', minHeight: '100vh', flex: 1 }}>
           <Providers>
+            <CommunityGoalBanner />
             <div style={{ flex: 1 }}>{children}</div>
             <Footer />
           </Providers>

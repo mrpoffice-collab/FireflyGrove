@@ -12,6 +12,7 @@ interface Branch {
   description: string | null
   personStatus: string
   createdAt: string
+  lastMemoryDate: string | null
   owner: {
     id: string
     name: string
@@ -223,10 +224,33 @@ export default function TreePage() {
                   <p className="text-text-muted mb-2">{tree.description}</p>
                 )}
                 <p className="text-firefly-dim text-sm italic mt-3">
-                  Where stories take flight and memories glow bright.
+                  Every Tree you plant here can one day take root in its own Grove.
                 </p>
               </div>
             )}
+          </div>
+
+          {/* Tree Stats */}
+          <div className="mb-8 flex flex-wrap items-center justify-center gap-3 text-text-muted text-sm">
+            <span className="flex items-center gap-1">
+              🌲 <span className="text-text-soft font-medium">1</span> Tree
+            </span>
+            <span>·</span>
+            <span className="flex items-center gap-1">
+              🌿 <span className="text-text-soft font-medium">{tree.branches.length}</span> {tree.branches.length === 1 ? 'Branch' : 'Branches'}
+            </span>
+            <span>·</span>
+            <span className="flex items-center gap-1">
+              💫 <span className="text-text-soft font-medium">
+                {tree.branches.reduce((sum, b) => sum + b._count.entries, 0)}
+              </span> {tree.branches.reduce((sum, b) => sum + b._count.entries, 0) === 1 ? 'Memory' : 'Memories'}
+            </span>
+            <span>·</span>
+            <span className="flex items-center gap-1">
+              ✨ <span className="text-text-soft font-medium">
+                {tree.branches.filter(b => b._count.entries > 0).length}
+              </span> {tree.branches.filter(b => b._count.entries > 0).length === 1 ? 'Firefly' : 'Fireflies'}
+            </span>
           </div>
 
           {/* Firefly Visualization */}

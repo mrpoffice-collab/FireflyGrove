@@ -290,9 +290,9 @@ export default function BranchPage() {
           <div className="mb-8">
             <div className="flex justify-between items-start">
               <div className="flex-1">
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 mb-2">
                   <h1
-                    className={`text-3xl font-light mb-2 ${
+                    className={`text-3xl font-light ${
                       branch.personStatus === 'legacy'
                         ? 'text-[var(--legacy-text)]'
                         : 'text-text-soft'
@@ -300,26 +300,6 @@ export default function BranchPage() {
                   >
                     {branch.title}
                   </h1>
-                  {branch.personStatus === 'legacy' && (() => {
-                    // Use person dates if available (Person-based legacy), otherwise use branch dates (old legacy branches)
-                    const birthDate = branch.person?.birthDate || branch.birthDate
-                    const deathDate = branch.person?.deathDate || branch.deathDate
-
-                    const formatDate = (dateStr: string) => {
-                      const date = new Date(dateStr)
-                      return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
-                    }
-
-                    return (
-                      <>
-                        {birthDate && deathDate && (
-                          <div className="text-text-muted text-sm mb-2">
-                            {formatDate(birthDate)} ~ {formatDate(deathDate)}
-                          </div>
-                        )}
-                      </>
-                    )
-                  })()}
                   {branch.owner.id === (session.user as any)?.id && (
                     <button
                       onClick={handleEditBranch}
@@ -332,14 +312,31 @@ export default function BranchPage() {
                     </button>
                   )}
                 </div>
-                {branch.description && (
+                {branch.personStatus === 'legacy' && (() => {
+                  // Use person dates if available (Person-based legacy), otherwise use branch dates (old legacy branches)
+                  const birthDate = branch.person?.birthDate || branch.birthDate
+                  const deathDate = branch.person?.deathDate || branch.deathDate
+
+                  const formatDate = (dateStr: string) => {
+                    const date = new Date(dateStr)
+                    return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+                  }
+
+                  return (
+                    <>
+                      {birthDate && deathDate && (
+                        <div className="text-text-muted text-sm mb-2">
+                          {formatDate(birthDate)} — {formatDate(deathDate)}
+                        </div>
+                      )}
+                      <p className="text-[var(--legacy-silver)] text-sm italic mb-3">
+                        "Their light still flickers in every story we remember."
+                      </p>
+                    </>
+                  )
+                })()}
+                {!branch.personStatus && branch.description && (
                   <p className="text-text-muted">{branch.description}</p>
-                )}
-                {branch.personStatus === 'legacy' && branch.legacyEnteredAt && (
-                  <p className="text-[var(--legacy-silver)] text-sm mt-2">
-                    Entered legacy on{' '}
-                    {new Date(branch.legacyEnteredAt).toLocaleDateString()}
-                  </p>
                 )}
               </div>
               {branch.owner.id === (session.user as any)?.id && (
@@ -390,14 +387,21 @@ export default function BranchPage() {
                   : 'bg-firefly-dim hover:bg-firefly-glow text-bg-dark'
               }`}
             >
-              {isLegacy ? 'Add Memory of Them' : 'Add Memory'}
+              {isLegacy ? 'Light a Memory' : 'Add Memory'}
             </button>
           </div>
 
           <div className="space-y-6">
             {branch.entries.length === 0 ? (
-              <div className="text-center py-12 text-text-muted">
-                No memories yet. Add your first one above.
+              <div className={`text-center py-12 ${isLegacy ? 'text-[var(--legacy-text)]' : 'text-text-muted'}`}>
+                {isLegacy ? (
+                  <>
+                    Every light in the Grove begins with one memory.<br />
+                    Add your first below and let {branch.title.split(' ')[0]}'s story glow.
+                  </>
+                ) : (
+                  'No memories yet. Add your first one above.'
+                )}
               </div>
             ) : (
               branch.entries.map((entry) => (
