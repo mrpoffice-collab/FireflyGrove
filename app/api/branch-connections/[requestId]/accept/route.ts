@@ -27,9 +27,6 @@ export async function POST(
     // Get the connection request
     const request = await prisma.branchConnectionRequest.findUnique({
       where: { id: requestId },
-      include: {
-        // We don't have relations set up yet, so we'll query separately
-      },
     })
 
     if (!request) {
