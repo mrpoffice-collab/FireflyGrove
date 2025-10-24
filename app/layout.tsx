@@ -23,7 +23,7 @@ export default function RootLayout({
         <div
           className="fixed inset-0 z-0 pointer-events-none"
           style={{
-            backgroundImage: 'url(/background.png)',
+            backgroundImage: 'url(/background.png?v=2)',
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
