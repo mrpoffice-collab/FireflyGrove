@@ -115,12 +115,20 @@ export default function HomePage() {
         </div>
 
         <div className="space-y-4">
-          <Link
-            href="/login"
-            className="block w-full max-w-xs mx-auto py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg font-medium transition-soft"
-          >
-            Enter Your Grove
-          </Link>
+          <div className="flex gap-3 max-w-xs mx-auto">
+            <Link
+              href="/signup"
+              className="flex-1 py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg font-medium transition-soft text-center"
+            >
+              Sign Up
+            </Link>
+            <Link
+              href="/login"
+              className="flex-1 py-3 bg-border-subtle hover:bg-text-muted/20 text-text-soft border border-border-subtle rounded-lg font-medium transition-soft text-center"
+            >
+              Sign In
+            </Link>
+          </div>
           <Link
             href="/open-grove"
             className="block w-full max-w-xs mx-auto py-3 bg-border-subtle hover:bg-text-muted/20 text-[var(--legacy-text)] border border-[var(--legacy-amber)]/30 rounded-lg font-medium transition-soft"

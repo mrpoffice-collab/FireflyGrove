@@ -281,8 +281,9 @@ export default function BranchPage() {
   const handleEditPerson = () => {
     if (!branch?.person) return
     setPersonName(branch.person.name)
-    setPersonBirthDate(branch.person.birthDate ? new Date(branch.person.birthDate).toISOString().split('T')[0] : '')
-    setPersonDeathDate(branch.person.deathDate ? new Date(branch.person.deathDate).toISOString().split('T')[0] : '')
+    // Extract just the date part without timezone conversion
+    setPersonBirthDate(branch.person.birthDate ? branch.person.birthDate.split('T')[0] : '')
+    setPersonDeathDate(branch.person.deathDate ? branch.person.deathDate.split('T')[0] : '')
     setEditingPerson(true)
   }
 
@@ -480,7 +481,10 @@ export default function BranchPage() {
                   const deathDate = branch.person?.deathDate || branch.deathDate
 
                   const formatDate = (dateStr: string) => {
-                    const date = new Date(dateStr)
+                    // Parse date string directly without timezone conversion
+                    const datePart = dateStr.split('T')[0]
+                    const [year, month, day] = datePart.split('-')
+                    const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day))
                     return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
                   }
 
