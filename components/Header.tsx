@@ -105,6 +105,15 @@ export default function Header({ userName, groveInfo }: HeaderProps) {
                   </button>
                   <button
                     onClick={() => {
+                      router.push('/admin/beta-invites')
+                      setIsDropdownOpen(false)
+                    }}
+                    className="w-full text-left px-4 py-2 text-sm text-text-muted hover:bg-border-subtle hover:text-text-soft transition-soft"
+                  >
+                    📧 Send Beta Invite
+                  </button>
+                  <button
+                    onClick={() => {
                       router.push('/feedback')
                       setIsDropdownOpen(false)
                     }}
