@@ -41,7 +41,8 @@ export default function NewBranchPage() {
     if (status === 'unauthenticated') {
       router.push('/login')
     }
-  }, [status, router])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [status])
 
   // Debounced search for existing persons
   useEffect(() => {
@@ -161,7 +162,7 @@ export default function NewBranchPage() {
     )
   }
 
-  if (!session) {
+  if (status === 'unauthenticated' || !session) {
     return null
   }
 
