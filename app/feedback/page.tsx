@@ -18,16 +18,23 @@ export default function FeedbackPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    // In production, this would send to a support system
-    console.log('Feedback submitted:', {
-      ...formData,
-      userId: (session?.user as any)?.id,
-      userEmail: session?.user?.email,
-      timestamp: new Date().toISOString(),
-      buildVersion: process.env.NEXT_PUBLIC_BUILD_VERSION || 'dev',
-    })
+    try {
+      const response = await fetch('/api/feedback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      })
 
-    setSubmitted(true)
+      if (response.ok) {
+        setSubmitted(true)
+      } else {
+        const error = await response.json()
+        alert(`Failed to submit feedback: ${error.error || 'Unknown error'}`)
+      }
+    } catch (error) {
+      console.error('Failed to submit feedback:', error)
+      alert('Failed to submit feedback. Please try again.')
+    }
   }
 
   if (submitted) {
