@@ -461,3 +461,30 @@ model LegacyHeir {
   @@index([userId])
   @@index([role])
 }
+
+// Cross-grove branch connection requests
+// Enables two-sided consent when linking branches to shared Person entities
+model BranchConnectionRequest {
+  id              String   @id @default(cuid())
+  requesterId     String   // User requesting the connection
+  personId        String   // The Person entity they want to connect to
+  branchId        String   // The branch they want to link
+  targetUserId    String?  // User who owns the Person (if Person.userId exists)
+  status          String   @default("pending") // pending, accepted, declined, expired
+  message         String?  // Optional message from requester
+
+  // Response tracking
+  respondedAt     DateTime?
+  respondedBy     String?  // User who accepted/declined
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  expiresAt       DateTime // Auto-decline after 30 days
+
+  @@index([requesterId])
+  @@index([personId])
+  @@index([targetUserId])
+  @@index([status])
+  @@index([expiresAt])
+  @@index([createdAt])
+}
