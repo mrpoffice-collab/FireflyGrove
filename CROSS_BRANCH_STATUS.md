@@ -170,28 +170,106 @@ Need to build the **discovery and consent layer**:
 
 ---
 
-## Questions to Clarify
+## Design Decisions ✅
 
-1. **Branch vs Person Linking**: Your description mentions "branch to branch" linking, but the schema suggests "branch to Person" linking. Should branches link to:
-   - A) Other specific branches across users?
-   - B) A shared Person entity that appears in both users' groves?
+### 1️⃣ Linking Model: **Shared Person Entity (Option B)**
 
-2. **Permission Levels**: You mentioned:
-   - owner → full control
-   - co-sharer → edit caption/media, not delete
-   - viewer → read-only
+**Decision**: Branches link to a shared Person entity, not to other branches.
 
-   Who sets these roles? The original owner or both parties?
+**How it works**:
+- Person entity is global across all groves
+- Each user creates a Branch that references `person_id`
+- Branch is the "local view" of that Person within a specific grove
+- Same Person can have different branches in different groves with different permissions
 
-3. **Memory Origin**: When a memory is created in a cross-linked branch:
-   - Does it belong to the branch creator?
-   - Does it belong to the Person owner?
-   - Can both users see it by default?
+**Benefits**:
+- No data duplication
+- Universal recognition (Kim Kelley is the same person everywhere)
+- Enables future relationship/family network mapping
+- Prevents memory fragmentation
 
-4. **Discovery Scope**: Should search find:
-   - Only public/discoverable Persons?
-   - All Persons regardless of privacy settings?
-   - Only registered Users?
+**Example**:
+```
+Person: "Kim Kelley" (person_id: abc123)
+├─ Branch A in Meschelle's Grove (public)
+├─ Branch B in Kim's own Grove (private)
+└─ Branch C in John's Grove (shared)
+
+All reference the same Person entity.
+```
+
+---
+
+### 2️⃣ Permissions: **Creator-Based ("Owner-First" Policy)**
+
+**Decision**: Access control flows from the memory creator, not the branch owner.
+
+| Role | Permissions | Scope |
+|------|-------------|-------|
+| **Owner** (creator) | Full control: edit, delete, set visibility | Always retained by origin user |
+| **Co-sharer** (linked user) | Add related memories/comments | Only within their grove view |
+| **Viewer** | Read-only access | Determined by owner's share settings |
+
+**Key Rules**:
+- Memory creator = memory owner (always)
+- No one can silently remove or rewrite another user's content
+- Each grove owner defines their local branch visibility rules
+- Trustees inherit Owner permissions only when explicitly appointed
+
+**Example**:
+```
+Meschelle creates memory on Kim's Person → Meschelle owns it
+Kim sees the memory in her grove → Kim can comment/add related memories
+Kim cannot delete Meschelle's memory
+```
+
+---
+
+### 3️⃣ Memory Origin: **Creator Always Owns**
+
+**Decision**: The creator of the memory owns it — always.
+
+**Data Model**:
+```
+Entry (Memory) {
+  id: string
+  creatorId: string    // Memory owner
+  personId: string     // Who it's about
+  branchId: string     // Current view/context
+  text: string
+  visibility: string
+}
+```
+
+**Key Behaviors**:
+- Each memory has both `creatorId` and `personId`
+- Shared memories are referenced (not duplicated) across groves
+- Creator deletes → disappears from ALL linked groves
+- Co-sharers add new memories → they own their additions (under same `personId`)
+- Memory appears in all grove views of that Person (subject to visibility)
+
+**Example**:
+```
+Person: Kim Kelley
+├─ Memory 1: "Summer trip" (created by Meschelle)
+│   → Visible in Meschelle's grove AND Kim's grove
+├─ Memory 2: "Birthday party" (created by Kim)
+│   → Visible in Kim's grove AND Meschelle's grove
+└─ Memory 3: "College graduation" (created by John)
+    → Visible in all three groves
+
+If Meschelle deletes Memory 1 → disappears from Kim's grove too
+If Kim deletes Memory 2 → disappears from Meschelle's grove too
+```
+
+---
+
+## Discovery Scope (Still To Clarify)
+
+Should search find:
+- Only public/discoverable Persons?
+- All Persons regardless of privacy settings?
+- Only registered Users?
 
 ---
 
