@@ -68,11 +68,17 @@ export async function GET(req: NextRequest) {
             },
           },
           branches: {
+            where: {
+              status: 'ACTIVE',
+            },
             select: {
               id: true,
               title: true,
             },
             take: 1,
+            orderBy: {
+              createdAt: 'asc', // Get the first/primary branch
+            },
           },
         },
       }),

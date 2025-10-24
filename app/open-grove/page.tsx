@@ -152,9 +152,13 @@ export default function OpenGrovePage() {
                   onClick={() => {
                     if (memorial.branchId) {
                       router.push(`/branch/${memorial.branchId}`)
+                    } else {
+                      console.log('No branch ID for memorial:', memorial.name, memorial.id)
                     }
                   }}
-                  className="bg-bg-dark border border-[var(--legacy-amber)]/30 rounded-lg p-6 hover:border-[var(--legacy-glow)]/50 transition-soft cursor-pointer group"
+                  className={`bg-bg-dark border border-[var(--legacy-amber)]/30 rounded-lg p-6 hover:border-[var(--legacy-glow)]/50 transition-soft group ${
+                    memorial.branchId ? 'cursor-pointer' : 'cursor-not-allowed opacity-60'
+                  }`}
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
@@ -189,6 +193,13 @@ export default function OpenGrovePage() {
                           <span className="text-text-soft">{memorial.ownerName}</span>
                         </div>
                       </div>
+
+                      {/* No branch warning */}
+                      {!memorial.branchId && (
+                        <div className="mt-3 text-xs text-text-muted italic">
+                          Memorial setup incomplete - contact support
+                        </div>
+                      )}
                     </div>
 
                     {/* Action */}
