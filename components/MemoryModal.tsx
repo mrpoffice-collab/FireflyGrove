@@ -67,6 +67,14 @@ export default function MemoryModal({ onClose, onSave, prompt, currentBranchId }
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
+      // Validate file size (max 5MB for beta)
+      const maxSize = 5 * 1024 * 1024 // 5MB in bytes
+      if (file.size > maxSize) {
+        alert('Image file is too large. Please select an image under 5MB.')
+        e.target.value = '' // Reset input
+        return
+      }
+
       setImage(file)
       const reader = new FileReader()
       reader.onloadend = () => {
@@ -91,6 +99,15 @@ export default function MemoryModal({ onClose, onSave, prompt, currentBranchId }
 
       mediaRecorder.onstop = () => {
         const blob = new Blob(chunksRef.current, { type: 'audio/webm' })
+
+        // Validate audio size (max 10MB for beta)
+        const maxSize = 10 * 1024 * 1024 // 10MB in bytes
+        if (blob.size > maxSize) {
+          alert('Audio recording is too large. Please record a shorter clip (under 10MB).')
+          stream.getTracks().forEach((track) => track.stop())
+          return
+        }
+
         setAudioBlob(blob)
         const url = URL.createObjectURL(blob)
         setAudioUrl(url)
@@ -179,7 +196,7 @@ export default function MemoryModal({ onClose, onSave, prompt, currentBranchId }
 
           <div>
             <label className="block text-sm text-text-soft mb-2">
-              Add a Photo
+              Add a Photo <span className="text-text-muted text-xs">(max 5MB)</span>
             </label>
             <input
               type="file"
@@ -200,7 +217,7 @@ export default function MemoryModal({ onClose, onSave, prompt, currentBranchId }
 
           <div>
             <label className="block text-sm text-text-soft mb-2">
-              Record Audio
+              Record Audio <span className="text-text-muted text-xs">(max 10MB)</span>
             </label>
             <div className="flex gap-3">
               {!isRecording ? (
