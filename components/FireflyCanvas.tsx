@@ -185,7 +185,13 @@ export default function FireflyCanvas({ branches }: FireflyCanvasProps) {
   }, [branches])
 
   return (
-    <div className="relative w-full h-80 bg-bg-dark rounded-lg border border-border-subtle overflow-hidden">
+    <div
+      className="relative w-full h-80 rounded-lg overflow-hidden"
+      style={{
+        backgroundColor: 'rgba(255, 255, 255, 0.02)',
+        border: '1px solid rgba(255, 255, 255, 0.05)',
+      }}
+    >
       <canvas
         ref={canvasRef}
         className="w-full h-full"
