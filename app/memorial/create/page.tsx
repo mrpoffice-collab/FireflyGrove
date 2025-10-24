@@ -1,7 +1,19 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import DuplicateMemorialModal from '@/components/DuplicateMemorialModal'
+
+interface Match {
+  id: string
+  branchId: string | null
+  name: string
+  birthDate: string
+  deathDate: string
+  memoryCount: number
+  ownerName: string
+  discoveryEnabled: boolean
+}
 
 export default function CreateMemorialPage() {
   const router = useRouter()
@@ -20,6 +32,11 @@ export default function CreateMemorialPage() {
   const [creating, setCreating] = useState(false)
   const [error, setError] = useState('')
   const [step, setStep] = useState<'account' | 'memorial'>('account')
+
+  // Duplicate detection
+  const [duplicateMatches, setDuplicateMatches] = useState<Match[]>([])
+  const [showDuplicateModal, setShowDuplicateModal] = useState(false)
+  const [bypassDuplicateCheck, setBypassDuplicateCheck] = useState(false)
 
   const handleCheckAccount = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -106,10 +123,42 @@ export default function CreateMemorialPage() {
     }
   }
 
+  const checkForDuplicates = async () => {
+    if (!name || !deathDate || bypassDuplicateCheck) return false
+
+    try {
+      const res = await fetch('/api/legacy-tree/check-duplicate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, deathDate }),
+      })
+
+      if (res.ok) {
+        const data = await res.json()
+        if (data.hasDuplicates && data.matches.length > 0) {
+          setDuplicateMatches(data.matches)
+          setShowDuplicateModal(true)
+          return true
+        }
+      }
+    } catch (error) {
+      console.error('Failed to check for duplicates:', error)
+    }
+
+    return false
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
     setCreating(true)
+
+    // Check for duplicates first (unless bypassed)
+    const hasDuplicates = await checkForDuplicates()
+    if (hasDuplicates) {
+      setCreating(false)
+      return
+    }
 
     try {
       const res = await fetch('/api/legacy-tree/create', {
@@ -137,6 +186,25 @@ export default function CreateMemorialPage() {
     } finally {
       setCreating(false)
     }
+  }
+
+  const handleConnect = (personId: string) => {
+    // Navigate to the existing memorial's branch page
+    // In the future, this could create a connection request
+    router.push(`/branch/${personId}`)
+  }
+
+  const handleCreateNew = () => {
+    // User wants to create their own memorial despite duplicates
+    setBypassDuplicateCheck(true)
+    setShowDuplicateModal(false)
+    // Re-submit the form
+    setTimeout(() => {
+      const form = document.querySelector('form')
+      if (form) {
+        form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }))
+      }
+    }, 100)
   }
 
   const maxDeathDate = new Date().toISOString().split('T')[0]
@@ -440,6 +508,19 @@ export default function CreateMemorialPage() {
           </div>
         </div>
       </div>
+
+      {/* Duplicate Detection Modal */}
+      {showDuplicateModal && duplicateMatches.length > 0 && (
+        <DuplicateMemorialModal
+          matches={duplicateMatches}
+          onConnect={handleConnect}
+          onCreateNew={handleCreateNew}
+          onCancel={() => {
+            setShowDuplicateModal(false)
+            setCreating(false)
+          }}
+        />
+      )}
     </div>
   )
 }
