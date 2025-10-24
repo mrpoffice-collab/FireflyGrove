@@ -72,18 +72,48 @@ export default function BranchPage() {
   const [editDescription, setEditDescription] = useState('')
   const [adoptionPrompt, setAdoptionPrompt] = useState<string | null>(null)
   const [showAdoptionPrompt, setShowAdoptionPrompt] = useState(false)
+  const [currentPrompt, setCurrentPrompt] = useState('')
 
   useEffect(() => {
     if (status === 'unauthenticated') {
       router.push('/login')
     }
-  }, [status, router])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [status])
 
   useEffect(() => {
     if (status === 'authenticated' && branchId) {
       fetchBranch()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, branchId])
+
+  // Initialize prompt when branch data is loaded
+  useEffect(() => {
+    if (branch) {
+      const isLegacy = branch.personStatus === 'legacy'
+      const legacyPrompts = [
+        "What's a story they told that you never want to forget?",
+        "Describe a moment when their presence changed everything.",
+        "What did their hands look like? What did they create?",
+        "What would you want them to know, if you could tell them now?",
+        "Share a memory that makes you smile through the tears.",
+        "What's something they said that you still carry with you?",
+        "Describe the way they made you feel safe.",
+      ]
+      const livingPrompts = [
+        "Describe a small thing that made you laugh today.",
+        "What's a smell that brings you back?",
+        "Tell me about a time you felt truly seen.",
+        "What did they teach you without meaning to?",
+        "Capture a quiet moment you don't want to forget.",
+      ]
+      const promptList = isLegacy ? legacyPrompts : livingPrompts
+      if (!currentPrompt) {
+        setCurrentPrompt(promptList[Math.floor(Math.random() * promptList.length)])
+      }
+    }
+  }, [branch, currentPrompt])
 
   const fetchBranch = async () => {
     try {
@@ -240,44 +270,28 @@ export default function BranchPage() {
     setEditDescription('')
   }
 
-  if (status === 'loading' || loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-text-muted">Loading branch...</div>
-      </div>
-    )
-  }
-
-  if (!session || !branch) {
-    return null
-  }
-
-  const livingPrompts = [
-    "Describe a small thing that made you laugh today.",
-    "What's a smell that brings you back?",
-    "Tell me about a time you felt truly seen.",
-    "What did they teach you without meaning to?",
-    "Capture a quiet moment you don't want to forget.",
-  ]
-
-  const legacyPrompts = [
-    "What's a story they told that you never want to forget?",
-    "Describe a moment when their presence changed everything.",
-    "What did their hands look like? What did they create?",
-    "What would you want them to know, if you could tell them now?",
-    "Share a memory that makes you smile through the tears.",
-    "What's something they said that you still carry with you?",
-    "Describe the way they made you feel safe.",
-  ]
-
-  const isLegacy = branch?.personStatus === 'legacy'
-  const promptList = isLegacy ? legacyPrompts : livingPrompts
-
-  const [currentPrompt, setCurrentPrompt] = useState(() => {
-    return promptList[Math.floor(Math.random() * promptList.length)]
-  })
-
   const refreshPrompt = () => {
+    if (!branch) return
+
+    const isLegacy = branch.personStatus === 'legacy'
+    const legacyPrompts = [
+      "What's a story they told that you never want to forget?",
+      "Describe a moment when their presence changed everything.",
+      "What did their hands look like? What did they create?",
+      "What would you want them to know, if you could tell them now?",
+      "Share a memory that makes you smile through the tears.",
+      "What's something they said that you still carry with you?",
+      "Describe the way they made you feel safe.",
+    ]
+    const livingPrompts = [
+      "Describe a small thing that made you laugh today.",
+      "What's a smell that brings you back?",
+      "Tell me about a time you felt truly seen.",
+      "What did they teach you without meaning to?",
+      "Capture a quiet moment you don't want to forget.",
+    ]
+    const promptList = isLegacy ? legacyPrompts : livingPrompts
+
     const newPrompt = promptList[Math.floor(Math.random() * promptList.length)]
     // Make sure we get a different prompt if possible
     if (promptList.length > 1 && newPrompt === currentPrompt) {
@@ -287,6 +301,20 @@ export default function BranchPage() {
       setCurrentPrompt(newPrompt)
     }
   }
+
+  if (status === 'loading' || loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-text-muted">Loading branch...</div>
+      </div>
+    )
+  }
+
+  if (status === 'unauthenticated' || !session || !branch) {
+    return null
+  }
+
+  const isLegacy = branch.personStatus === 'legacy'
 
   return (
     <div className="min-h-screen">
