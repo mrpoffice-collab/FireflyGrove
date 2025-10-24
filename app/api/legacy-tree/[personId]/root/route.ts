@@ -103,13 +103,8 @@ export async function POST(
       )
     }
 
-    // Check grove capacity (if applicable)
-    if (grove.treeLimit !== null && grove.treeCount >= grove.treeLimit) {
-      return NextResponse.json(
-        { error: 'Grove has reached its tree limit' },
-        { status: 400 }
-      )
-    }
+    // NOTE: Rooted trees do NOT use tree slots, so no capacity check needed
+    // They are links to legacy trees that remain in Open Grove
 
     // Create the link (root) - tree stays in Open Grove AND links to private grove
     const membership = await prisma.groveTreeMembership.create({
@@ -122,13 +117,7 @@ export async function POST(
       },
     })
 
-    // Increment tree count in target grove
-    await prisma.grove.update({
-      where: { id: groveId },
-      data: {
-        treeCount: { increment: 1 },
-      },
-    })
+    // NOTE: Do NOT increment tree count - rooted trees don't use slots
 
     // Create audit log
     await prisma.audit.create({

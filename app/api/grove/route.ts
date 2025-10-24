@@ -41,12 +41,35 @@ export async function GET(req: NextRequest) {
             createdAt: 'desc',
           },
         },
+        memberships: {
+          where: {
+            status: 'active',
+          },
+          include: {
+            person: {
+              include: {
+                _count: {
+                  select: {
+                    branches: true,
+                  },
+                },
+              },
+            },
+          },
+          orderBy: {
+            createdAt: 'desc',
+          },
+        },
       },
     })
 
     if (!grove) {
       return NextResponse.json({ error: 'Grove not found' }, { status: 404 })
     }
+
+    // Separate original trees from rooted trees
+    const originalPersons = grove.memberships.filter(m => m.isOriginal)
+    const rootedPersons = grove.memberships.filter(m => !m.isOriginal && m.adoptionType === 'rooted')
 
     return NextResponse.json({
       id: grove.id,
@@ -62,6 +85,28 @@ export async function GET(req: NextRequest) {
         createdAt: tree.createdAt.toISOString(),
         _count: {
           branches: tree._count.branches,
+        },
+      })),
+      persons: originalPersons.map((membership) => ({
+        id: membership.person.id,
+        name: membership.person.name,
+        isLegacy: membership.person.isLegacy,
+        memoryCount: membership.person.memoryCount,
+        createdAt: membership.createdAt.toISOString(),
+        _count: {
+          branches: membership.person._count.branches,
+        },
+      })),
+      rootedPersons: rootedPersons.map((membership) => ({
+        id: membership.person.id,
+        name: membership.person.name,
+        isLegacy: membership.person.isLegacy,
+        memoryCount: membership.person.memoryCount,
+        birthDate: membership.person.birthDate?.toISOString() || null,
+        deathDate: membership.person.deathDate?.toISOString() || null,
+        createdAt: membership.createdAt.toISOString(),
+        _count: {
+          branches: membership.person._count.branches,
         },
       })),
     })

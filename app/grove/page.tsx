@@ -17,6 +17,19 @@ interface Tree {
   }
 }
 
+interface PersonTree {
+  id: string
+  name: string
+  isLegacy: boolean
+  memoryCount: number
+  birthDate?: string | null
+  deathDate?: string | null
+  createdAt: string
+  _count: {
+    branches: number
+  }
+}
+
 interface Grove {
   id: string
   name: string
@@ -24,6 +37,8 @@ interface Grove {
   treeLimit: number
   status: string
   trees: Tree[]
+  persons?: PersonTree[]
+  rootedPersons?: PersonTree[]
 }
 
 interface TransplantablePerson {
@@ -400,6 +415,49 @@ export default function GrovePage() {
               <p className="text-text-muted mb-4">
                 Click an empty tree slot above to plant your first tree
               </p>
+            </div>
+          )}
+
+          {/* Rooted Legacy Trees Section */}
+          {grove.rootedPersons && grove.rootedPersons.length > 0 && (
+            <div className="mt-12">
+              <div className="flex items-center gap-3 mb-6">
+                <h2 className="text-2xl text-text-soft">
+                  Rooted Legacy Trees
+                </h2>
+                <span className="px-3 py-1 bg-purple-500/20 text-purple-300 text-xs rounded-full">
+                  Don't use tree slots
+                </span>
+              </div>
+              <p className="text-text-muted text-sm mb-6">
+                Legacy trees from the Open Grove that you care for and manage. These don't count against your tree limit.
+              </p>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {grove.rootedPersons.map((person) => (
+                  <div
+                    key={person.id}
+                    onClick={() => router.push(`/tree/${person.id}`)}
+                    className="bg-bg-dark border border-purple-500/30 rounded-lg p-4 hover:border-purple-400/50 transition-soft cursor-pointer"
+                  >
+                    <div className="flex items-start justify-between mb-2">
+                      <h3 className="text-lg text-text-soft font-medium">{person.name}</h3>
+                      <span className="text-xs text-purple-300 bg-purple-500/20 px-2 py-1 rounded">
+                        Rooted
+                      </span>
+                    </div>
+                    {person.birthDate && person.deathDate && (
+                      <p className="text-sm text-text-muted mb-2">
+                        {new Date(person.birthDate).getFullYear()} — {new Date(person.deathDate).getFullYear()}
+                      </p>
+                    )}
+                    <div className="flex items-center gap-3 text-xs text-text-muted">
+                      <span>💫 {person.memoryCount} memories</span>
+                      <span>🌿 {person._count.branches} branches</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
 
