@@ -65,9 +65,30 @@ export default function FireflyCanvas({ branches }: FireflyCanvasProps) {
         firefly.x += firefly.vx
         firefly.y += firefly.vy
 
-        // Bounce off edges
-        if (firefly.x < 0 || firefly.x > canvas.offsetWidth) firefly.vx *= -1
-        if (firefly.y < 0 || firefly.y > canvas.offsetHeight) firefly.vy *= -1
+        // Random direction changes (more organic movement)
+        // Randomly change direction every ~100 frames (not just at edges)
+        if (Math.random() < 0.01) {
+          firefly.vx += (Math.random() - 0.5) * 0.2
+          firefly.vy += (Math.random() - 0.5) * 0.2
+
+          // Keep speed reasonable
+          const speed = Math.sqrt(firefly.vx ** 2 + firefly.vy ** 2)
+          const maxSpeed = firefly.isLegacy ? 0.5 : 1
+          if (speed > maxSpeed) {
+            firefly.vx = (firefly.vx / speed) * maxSpeed
+            firefly.vy = (firefly.vy / speed) * maxSpeed
+          }
+        }
+
+        // Gentle bounce off edges with random angle
+        if (firefly.x < 0 || firefly.x > canvas.offsetWidth) {
+          firefly.vx *= -1
+          firefly.vy += (Math.random() - 0.5) * 0.3 // Add randomness to bounce
+        }
+        if (firefly.y < 0 || firefly.y > canvas.offsetHeight) {
+          firefly.vy *= -1
+          firefly.vx += (Math.random() - 0.5) * 0.3 // Add randomness to bounce
+        }
 
         // Keep in bounds
         firefly.x = Math.max(0, Math.min(canvas.offsetWidth, firefly.x))

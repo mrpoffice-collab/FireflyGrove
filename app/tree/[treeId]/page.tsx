@@ -222,6 +222,9 @@ export default function TreePage() {
                 {tree.description && (
                   <p className="text-text-muted mb-2">{tree.description}</p>
                 )}
+                <p className="text-firefly-dim text-sm italic mt-3">
+                  Where stories take flight and memories glow bright.
+                </p>
               </div>
             )}
           </div>
