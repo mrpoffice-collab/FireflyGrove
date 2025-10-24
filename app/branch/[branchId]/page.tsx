@@ -272,7 +272,21 @@ export default function BranchPage() {
 
   const isLegacy = branch?.personStatus === 'legacy'
   const promptList = isLegacy ? legacyPrompts : livingPrompts
-  const randomPrompt = promptList[Math.floor(Math.random() * promptList.length)]
+
+  const [currentPrompt, setCurrentPrompt] = useState(() => {
+    return promptList[Math.floor(Math.random() * promptList.length)]
+  })
+
+  const refreshPrompt = () => {
+    const newPrompt = promptList[Math.floor(Math.random() * promptList.length)]
+    // Make sure we get a different prompt if possible
+    if (promptList.length > 1 && newPrompt === currentPrompt) {
+      const filtered = promptList.filter(p => p !== currentPrompt)
+      setCurrentPrompt(filtered[Math.floor(Math.random() * filtered.length)])
+    } else {
+      setCurrentPrompt(newPrompt)
+    }
+  }
 
   return (
     <div className="min-h-screen">
@@ -374,11 +388,26 @@ export default function BranchPage() {
               ? 'bg-[var(--legacy-amber)]/5 border border-[var(--legacy-amber)]/30'
               : 'bg-bg-dark border border-firefly-dim/30'
           }`}>
-            <p className={`text-sm italic mb-4 ${
-              isLegacy ? 'text-[var(--legacy-text)]' : 'text-text-muted'
-            }`}>
-              "{randomPrompt}"
-            </p>
+            <div className="flex items-start gap-3 mb-4">
+              <p className={`text-sm italic flex-1 ${
+                isLegacy ? 'text-[var(--legacy-text)]' : 'text-text-muted'
+              }`}>
+                "{currentPrompt}"
+              </p>
+              <button
+                onClick={refreshPrompt}
+                className={`flex-shrink-0 p-2 rounded transition-soft ${
+                  isLegacy
+                    ? 'text-[var(--legacy-amber)] hover:bg-[var(--legacy-amber)]/10'
+                    : 'text-firefly-dim hover:bg-firefly-dim/10'
+                }`}
+                title="Get a different prompt"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+              </button>
+            </div>
             <button
               onClick={() => setShowNewMemory(true)}
               className={`w-full py-3 rounded font-medium transition-soft ${
@@ -422,7 +451,7 @@ export default function BranchPage() {
         <MemoryModal
           onClose={() => setShowNewMemory(false)}
           onSave={handleCreateMemory}
-          prompt={randomPrompt}
+          prompt={currentPrompt}
         />
       )}
 
