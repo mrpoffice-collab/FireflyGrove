@@ -46,7 +46,7 @@ export default function NewBranchPage() {
 
   // Debounced search for existing persons
   useEffect(() => {
-    if (title.trim().length < 2) {
+    if (title.trim().length < 2 || selectedPerson) {
       setSearchResults(null)
       return
     }
@@ -64,10 +64,10 @@ export default function NewBranchPage() {
       } finally {
         setSearching(false)
       }
-    }, 500) // 500ms debounce
+    }, 500)
 
     return () => clearTimeout(timer)
-  }, [title])
+  }, [title, selectedPerson])
 
   const handleSelectPerson = (person: PersonSearchResult) => {
     setSelectedPerson(person)

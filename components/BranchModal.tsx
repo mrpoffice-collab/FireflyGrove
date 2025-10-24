@@ -32,7 +32,7 @@ export default function BranchModal({ onClose, onSave }: BranchModalProps) {
 
   // Debounced search for existing persons
   useEffect(() => {
-    if (title.trim().length < 2) {
+    if (title.trim().length < 2 || selectedPerson) {
       setSearchResults(null)
       return
     }
@@ -50,10 +50,10 @@ export default function BranchModal({ onClose, onSave }: BranchModalProps) {
       } finally {
         setSearching(false)
       }
-    }, 500) // 500ms debounce
+    }, 500)
 
     return () => clearTimeout(timer)
-  }, [title])
+  }, [title, selectedPerson])
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
