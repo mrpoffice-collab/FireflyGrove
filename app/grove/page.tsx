@@ -26,6 +26,23 @@ interface Grove {
   trees: Tree[]
 }
 
+interface TransplantablePerson {
+  id: string
+  name: string
+  isLegacy: boolean
+  birthDate: string | null
+  deathDate: string | null
+  memoryCount: number
+  currentGrove: {
+    id: string
+    name: string
+    owner: {
+      id: string
+      name: string
+    }
+  }
+}
+
 export default function GrovePage() {
   const { data: session, status } = useSession()
   const router = useRouter()
@@ -33,6 +50,8 @@ export default function GrovePage() {
   const [loading, setLoading] = useState(true)
   const [isEditingName, setIsEditingName] = useState(false)
   const [groveName, setGroveName] = useState('')
+  const [transplantable, setTransplantable] = useState<TransplantablePerson[]>([])
+  const [transplanting, setTransplanting] = useState<string | null>(null)
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -43,7 +62,9 @@ export default function GrovePage() {
   useEffect(() => {
     if (status === 'authenticated') {
       fetchGrove()
+      fetchTransplantable()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status])
 
   const fetchGrove = async () => {
@@ -58,6 +79,53 @@ export default function GrovePage() {
       console.error('Failed to fetch grove:', error)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const fetchTransplantable = async () => {
+    try {
+      const res = await fetch('/api/persons/transplantable')
+      if (res.ok) {
+        const data = await res.json()
+        setTransplantable(data.transplantable || [])
+      }
+    } catch (error) {
+      console.error('Failed to fetch transplantable trees:', error)
+    }
+  }
+
+  const handleTransplant = async (personId: string, personName: string) => {
+    if (!grove) return
+
+    const confirmed = confirm(
+      `Transplant "${personName}" to your grove?\n\nThis will move the tree from its current grove to yours. The original grove owner will get their tree slot back.`
+    )
+
+    if (!confirmed) return
+
+    setTransplanting(personId)
+
+    try {
+      const res = await fetch(`/api/persons/${personId}/transplant`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ destinationGroveId: grove.id }),
+      })
+
+      if (res.ok) {
+        // Refresh both lists
+        await fetchGrove()
+        await fetchTransplantable()
+        alert(`"${personName}" has been transplanted to your grove!`)
+      } else {
+        const error = await res.json()
+        alert(error.error || 'Failed to transplant tree')
+      }
+    } catch (error) {
+      console.error('Failed to transplant tree:', error)
+      alert('Failed to transplant tree')
+    } finally {
+      setTransplanting(null)
     }
   }
 
@@ -115,6 +183,51 @@ export default function GrovePage() {
 
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-5xl mx-auto">
+          {/* Transplantable Trees Section */}
+          {transplantable.length > 0 && (
+            <div className="mb-8 bg-firefly-dim/10 border border-firefly-dim/30 rounded-lg p-6">
+              <h2 className="text-xl text-firefly-glow font-medium mb-2 flex items-center gap-2">
+                <span>🌱</span>
+                <span>Trees You Can Transplant</span>
+              </h2>
+              <p className="text-text-muted text-sm mb-4">
+                These are your trees currently planted in other groves. You can transplant them to your own grove.
+              </p>
+              <div className="space-y-3">
+                {transplantable.map((person) => (
+                  <div
+                    key={person.id}
+                    className="bg-bg-dark border border-border-subtle rounded-lg p-4 flex items-center justify-between"
+                  >
+                    <div className="flex-1">
+                      <h3 className="text-lg text-text-soft font-medium">{person.name}</h3>
+                      <p className="text-sm text-text-muted">
+                        Currently in {person.currentGrove.name} (owned by {person.currentGrove.owner.name})
+                      </p>
+                      <p className="text-xs text-text-muted mt-1">
+                        {person.memoryCount} {person.memoryCount === 1 ? 'memory' : 'memories'}
+                        {person.isLegacy && ' • Legacy tree'}
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => handleTransplant(person.id, person.name)}
+                      disabled={transplanting === person.id || isAtCapacity}
+                      className="px-4 py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded font-medium transition-soft disabled:opacity-50 disabled:cursor-not-allowed"
+                      title={isAtCapacity ? 'Your grove is at capacity. Upgrade to add more trees.' : 'Transplant this tree to your grove'}
+                    >
+                      {transplanting === person.id ? 'Transplanting...' : 'Transplant to My Grove'}
+                    </button>
+                  </div>
+                ))}
+              </div>
+              {isAtCapacity && (
+                <p className="text-sm text-orange-400 mt-3">
+                  ⚠️ Your grove is at capacity ({grove.treeLimit} trees). Upgrade your plan to transplant more trees.
+                </p>
+              )}
+            </div>
+          )}
+
           {/* Grove Header */}
           <div className="mb-8 text-center">
             {isEditingName ? (
