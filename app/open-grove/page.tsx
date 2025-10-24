@@ -44,6 +44,10 @@ export default function OpenGrovePage() {
       const res = await fetch(`/api/open-grove?${params}`)
       if (res.ok) {
         const data = await res.json()
+        console.log('Open Grove - Received memorials:', data.memorials.length)
+        data.memorials.forEach((m: Memorial) => {
+          console.log(`Memorial: ${m.name}, BranchID: ${m.branchId || 'NONE'}`)
+        })
         setMemorials(data.memorials)
         setTotal(data.pagination.total)
         setHasMore(data.pagination.hasMore)
