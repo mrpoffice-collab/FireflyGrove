@@ -19,7 +19,7 @@ export default function BranchModal({ onClose, onSave }: BranchModalProps) {
   }
 
   return (
-    <div className="fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-50">
+    <div className="fixed inset-0 bg-black/30 flex items-center justify-center p-4 z-50 backdrop-blur-sm">
       <div className="bg-bg-dark border border-border-subtle rounded-lg max-w-md w-full p-6">
         <h2 className="text-2xl text-text-soft mb-6">Create New Branch</h2>
 

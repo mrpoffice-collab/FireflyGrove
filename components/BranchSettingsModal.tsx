@@ -79,11 +79,21 @@ export default function BranchSettingsModal({
   const [rooting, setRooting] = useState(false)
   const [rootError, setRootError] = useState('')
 
+  // Sharing preferences
+  const [sharingPrefs, setSharingPrefs] = useState({
+    canBeTagged: true,
+    requiresTagApproval: false,
+    visibleInCrossShares: true,
+  })
+  const [loadingPrefs, setLoadingPrefs] = useState(false)
+  const [savingPrefs, setSavingPrefs] = useState(false)
+
   useEffect(() => {
     fetchBranchInfo()
     fetchHeirs()
     fetchMembers()
     fetchPendingInvites()
+    fetchSharingPreferences()
   }, [])
 
   const fetchBranchInfo = async () => {
@@ -138,6 +148,47 @@ export default function BranchSettingsModal({
       }
     } catch (error) {
       console.error('Failed to fetch invites:', error)
+    }
+  }
+
+  const fetchSharingPreferences = async () => {
+    setLoadingPrefs(true)
+    try {
+      const res = await fetch(`/api/branches/${branchId}/preferences`)
+      if (res.ok) {
+        const data = await res.json()
+        setSharingPrefs({
+          canBeTagged: data.canBeTagged,
+          requiresTagApproval: data.requiresTagApproval,
+          visibleInCrossShares: data.visibleInCrossShares,
+        })
+      }
+    } catch (error) {
+      console.error('Failed to fetch sharing preferences:', error)
+    } finally {
+      setLoadingPrefs(false)
+    }
+  }
+
+  const updateSharingPreference = async (key: string, value: boolean) => {
+    setSavingPrefs(true)
+    try {
+      const res = await fetch(`/api/branches/${branchId}/preferences`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ [key]: value }),
+      })
+
+      if (res.ok) {
+        setSharingPrefs((prev) => ({ ...prev, [key]: value }))
+      } else {
+        const data = await res.json()
+        alert(data.error || 'Failed to update preference')
+      }
+    } catch (error) {
+      alert('Failed to update preference')
+    } finally {
+      setSavingPrefs(false)
     }
   }
 
@@ -460,7 +511,7 @@ export default function BranchSettingsModal({
   }
 
   return (
-    <div className="fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-50">
+    <div className="fixed inset-0 bg-black/30 flex items-center justify-center p-4 z-50 backdrop-blur-sm">
       <div className="bg-bg-dark border border-border-subtle rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         <div className="p-6 border-b border-border-subtle flex justify-between items-center">
           <h2 className="text-2xl font-light text-text-soft">
@@ -583,6 +634,104 @@ export default function BranchSettingsModal({
                       </div>
                     </div>
                   ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Sharing & Tagging Controls Section */}
+          <div className="mb-8">
+            <h3 className="text-lg text-text-soft mb-4">Tagging & Sharing Controls</h3>
+            <p className="text-text-muted text-sm mb-4">
+              Control whether others can share memories to this branch and whether you need to approve them first.
+            </p>
+
+            {loadingPrefs ? (
+              <div className="text-text-muted text-sm">Loading preferences...</div>
+            ) : (
+              <div className="space-y-4">
+                {/* Allow Shared Memories */}
+                <div className="bg-bg-darker border border-border-subtle rounded-lg p-4">
+                  <label className="flex items-center justify-between cursor-pointer">
+                    <div className="flex-1 pr-4">
+                      <div className="text-text-soft font-medium mb-1">
+                        Allow shared memories that include me
+                      </div>
+                      <div className="text-text-muted text-sm">
+                        Let others share memories to this branch. Turn off to opt out completely.
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => updateSharingPreference('canBeTagged', !sharingPrefs.canBeTagged)}
+                      disabled={savingPrefs}
+                      className={`relative inline-flex h-6 w-11 flex-shrink-0 rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-firefly-dim focus:ring-offset-2 disabled:opacity-50 ${
+                        sharingPrefs.canBeTagged ? 'bg-firefly-dim' : 'bg-border-subtle'
+                      }`}
+                    >
+                      <span
+                        className={`inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                          sharingPrefs.canBeTagged ? 'translate-x-5' : 'translate-x-0'
+                        }`}
+                      />
+                    </button>
+                  </label>
+                </div>
+
+                {/* Require Approval */}
+                <div className="bg-bg-darker border border-border-subtle rounded-lg p-4">
+                  <label className="flex items-center justify-between cursor-pointer">
+                    <div className="flex-1 pr-4">
+                      <div className="text-text-soft font-medium mb-1">
+                        Require my approval before shared memories appear
+                      </div>
+                      <div className="text-text-muted text-sm">
+                        Shared memories will be pending until you approve them.
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => updateSharingPreference('requiresTagApproval', !sharingPrefs.requiresTagApproval)}
+                      disabled={savingPrefs || !sharingPrefs.canBeTagged}
+                      className={`relative inline-flex h-6 w-11 flex-shrink-0 rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-firefly-dim focus:ring-offset-2 disabled:opacity-50 ${
+                        sharingPrefs.requiresTagApproval ? 'bg-firefly-dim' : 'bg-border-subtle'
+                      }`}
+                    >
+                      <span
+                        className={`inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                          sharingPrefs.requiresTagApproval ? 'translate-x-5' : 'translate-x-0'
+                        }`}
+                      />
+                    </button>
+                  </label>
+                </div>
+
+                {/* Visible in Cross-Shares */}
+                <div className="bg-bg-darker border border-border-subtle rounded-lg p-4">
+                  <label className="flex items-center justify-between cursor-pointer">
+                    <div className="flex-1 pr-4">
+                      <div className="text-text-soft font-medium mb-1">
+                        Visible in cross-branch contexts
+                      </div>
+                      <div className="text-text-muted text-sm">
+                        Show this branch name when memories are shared across branches.
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => updateSharingPreference('visibleInCrossShares', !sharingPrefs.visibleInCrossShares)}
+                      disabled={savingPrefs || !sharingPrefs.canBeTagged}
+                      className={`relative inline-flex h-6 w-11 flex-shrink-0 rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-firefly-dim focus:ring-offset-2 disabled:opacity-50 ${
+                        sharingPrefs.visibleInCrossShares ? 'bg-firefly-dim' : 'bg-border-subtle'
+                      }`}
+                    >
+                      <span
+                        className={`inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                          sharingPrefs.visibleInCrossShares ? 'translate-x-5' : 'translate-x-0'
+                        }`}
+                      />
+                    </button>
+                  </label>
                 </div>
               </div>
             )}

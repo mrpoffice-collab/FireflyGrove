@@ -1,7 +1,7 @@
 'use client'
 
 import { formatDistanceToNow } from 'date-fns'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
 
 interface MemoryCardProps {
@@ -18,18 +18,44 @@ interface MemoryCardProps {
     }
   }
   branchOwnerId?: string
+  branchId?: string
   onWithdraw?: (entryId: string) => void
   onHide?: (entryId: string) => void
+  onRemoveFromBranch?: (entryId: string) => void
 }
 
-export default function MemoryCard({ entry, branchOwnerId, onWithdraw, onHide }: MemoryCardProps) {
+export default function MemoryCard({ entry, branchOwnerId, branchId, onWithdraw, onHide, onRemoveFromBranch }: MemoryCardProps) {
   const { data: session } = useSession()
   const [showMenu, setShowMenu] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
+  const [sharingInfo, setSharingInfo] = useState<{
+    isShared: boolean
+    originBranch: string | null
+    sharedBranches: string[]
+  } | null>(null)
 
   const userId = (session?.user as any)?.id
   const isAuthor = entry.author.id === userId
   const isBranchOwner = branchOwnerId === userId
+
+  // Fetch sharing information
+  useEffect(() => {
+    if (!branchId) return
+
+    async function fetchSharingInfo() {
+      try {
+        const res = await fetch(`/api/memories/${entry.id}/sharing-info?branchId=${branchId}`)
+        if (res.ok) {
+          const data = await res.json()
+          setSharingInfo(data)
+        }
+      } catch (error) {
+        console.error('Failed to fetch sharing info:', error)
+      }
+    }
+
+    fetchSharingInfo()
+  }, [entry.id, branchId])
   const visibilityColors = {
     PRIVATE: 'text-text-muted',
     SHARED: 'text-blue-400',
@@ -96,12 +122,58 @@ export default function MemoryCard({ entry, branchOwnerId, onWithdraw, onHide }:
     }
   }
 
+  const handleRemoveFromBranch = async () => {
+    if (!confirm('Remove this memory from this branch? It will remain visible in other branches where it\'s shared.')) {
+      return
+    }
+
+    setIsProcessing(true)
+    setShowMenu(false)
+
+    try {
+      const res = await fetch(`/api/memories/${entry.id}/remove-from-branch`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ branchId }),
+      })
+
+      if (res.ok) {
+        onRemoveFromBranch?.(entry.id)
+      } else {
+        const data = await res.json()
+        alert(data.error || 'Failed to remove memory from branch')
+      }
+    } catch (error) {
+      console.error('Error removing memory from branch:', error)
+      alert('Failed to remove memory from branch')
+    } finally {
+      setIsProcessing(false)
+    }
+  }
+
   return (
     <div className="bg-bg-dark border border-border-subtle rounded-lg p-6 hover:border-firefly-dim/50 transition-soft">
       <div className="flex items-start justify-between mb-4">
-        <div className="flex items-center gap-2">
-          <span className="text-firefly-glow">✦</span>
-          <span className="text-text-soft text-sm">{entry.author.name}</span>
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center gap-2">
+            <span className="text-firefly-glow">✦</span>
+            <span className="text-text-soft text-sm">{entry.author.name}</span>
+            {sharingInfo?.isShared && (
+              <span className="chip-shared" title="This moment is shared with other branches">
+                Shared
+              </span>
+            )}
+          </div>
+          {sharingInfo?.originBranch && (
+            <div className="origin-branch-label ml-6">
+              From: {sharingInfo.originBranch}
+            </div>
+          )}
+          {sharingInfo?.sharedBranches && sharingInfo.sharedBranches.length > 0 && (
+            <div className="origin-branch-label ml-6">
+              Also in: {sharingInfo.sharedBranches.join(', ')}
+            </div>
+          )}
         </div>
         <div className="flex items-center gap-3">
           <span className={`text-xs ${visibilityColors[entry.visibility as keyof typeof visibilityColors]}`}>
@@ -131,7 +203,7 @@ export default function MemoryCard({ entry, branchOwnerId, onWithdraw, onHide }:
                     className="fixed inset-0 z-10"
                     onClick={() => setShowMenu(false)}
                   />
-                  <div className="absolute right-0 top-8 z-20 bg-bg-darker border border-border-subtle rounded-lg shadow-xl min-w-[160px]">
+                  <div className="absolute right-0 top-8 z-20 bg-bg-darker border border-border-subtle rounded-lg shadow-xl min-w-[180px]">
                     {isAuthor && (
                       <button
                         onClick={handleWithdraw}
@@ -157,6 +229,16 @@ export default function MemoryCard({ entry, branchOwnerId, onWithdraw, onHide }:
                         className="w-full text-left px-4 py-2 text-sm text-text-soft hover:bg-bg-dark transition-soft disabled:opacity-50"
                       >
                         Hide from Branch
+                      </button>
+                    )}
+                    {/* Show "Remove from this Branch" if shared */}
+                    {sharingInfo?.isShared && (isBranchOwner || isAuthor) && (
+                      <button
+                        onClick={handleRemoveFromBranch}
+                        disabled={isProcessing}
+                        className="w-full text-left px-4 py-2 text-sm text-text-soft hover:bg-bg-dark transition-soft disabled:opacity-50 border-t border-border-subtle"
+                      >
+                        Remove from this Branch
                       </button>
                     )}
                   </div>

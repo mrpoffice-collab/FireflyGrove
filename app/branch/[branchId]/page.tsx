@@ -440,7 +440,7 @@ export default function BranchPage() {
       )}
 
       {showAdoptionPrompt && adoptionPrompt && (
-        <div className="fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-50">
+        <div className="fixed inset-0 bg-black/30 flex items-center justify-center p-4 z-50 backdrop-blur-sm">
           <div className="bg-bg-dark border border-[var(--legacy-amber)]/50 rounded-lg max-w-lg w-full p-8">
             <div className="text-center mb-6">
               <div className="text-5xl mb-4">🌟</div>
@@ -478,7 +478,7 @@ export default function BranchPage() {
       )}
 
       {editingBranch && (
-        <div className="fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-50">
+        <div className="fixed inset-0 bg-black/30 flex items-center justify-center p-4 z-50 backdrop-blur-sm">
           <div className="bg-bg-dark border border-border-subtle rounded-lg max-w-md w-full p-6">
             <h2 className="text-2xl text-text-soft mb-6">Edit Branch</h2>
 

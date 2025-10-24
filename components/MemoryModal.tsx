@@ -1,6 +1,13 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
+
+interface Branch {
+  id: string
+  title: string
+  requiresApproval: boolean
+  canBeTagged: boolean
+}
 
 interface MemoryModalProps {
   onClose: () => void
@@ -10,11 +17,13 @@ interface MemoryModalProps {
     legacyFlag: boolean
     mediaUrl?: string
     audioUrl?: string
+    sharedBranchIds?: string[]
   }) => void
   prompt: string
+  currentBranchId?: string
 }
 
-export default function MemoryModal({ onClose, onSave, prompt }: MemoryModalProps) {
+export default function MemoryModal({ onClose, onSave, prompt, currentBranchId }: MemoryModalProps) {
   const [text, setText] = useState('')
   const [visibility, setVisibility] = useState('PRIVATE')
   const [legacyFlag, setLegacyFlag] = useState(false)
@@ -25,8 +34,35 @@ export default function MemoryModal({ onClose, onSave, prompt }: MemoryModalProp
   const [audioUrl, setAudioUrl] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
+  // Cross-branch sharing state
+  const [availableBranches, setAvailableBranches] = useState<Branch[]>([])
+  const [selectedBranchIds, setSelectedBranchIds] = useState<string[]>([])
+  const [loadingBranches, setLoadingBranches] = useState(false)
+
   const mediaRecorderRef = useRef<MediaRecorder | null>(null)
   const chunksRef = useRef<Blob[]>([])
+
+  // Fetch available branches for sharing
+  useEffect(() => {
+    async function fetchBranches() {
+      if (!currentBranchId) return
+
+      setLoadingBranches(true)
+      try {
+        const res = await fetch(`/api/branches/${currentBranchId}/shareable-branches`)
+        if (res.ok) {
+          const branches = await res.json()
+          setAvailableBranches(branches)
+        }
+      } catch (error) {
+        console.error('Failed to fetch branches:', error)
+      } finally {
+        setLoadingBranches(false)
+      }
+    }
+
+    fetchBranches()
+  }, [currentBranchId])
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -87,6 +123,7 @@ export default function MemoryModal({ onClose, onSave, prompt }: MemoryModalProp
       text: text.trim(),
       visibility,
       legacyFlag: visibility === 'LEGACY' || legacyFlag,
+      sharedBranchIds: selectedBranchIds,
     }
 
     if (imagePreview) {
@@ -109,8 +146,16 @@ export default function MemoryModal({ onClose, onSave, prompt }: MemoryModalProp
     // Note: setIsSubmitting is reset in parent component
   }
 
+  const toggleBranchSelection = (branchId: string) => {
+    setSelectedBranchIds((prev) =>
+      prev.includes(branchId)
+        ? prev.filter((id) => id !== branchId)
+        : [...prev, branchId]
+    )
+  }
+
   return (
-    <div className="fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-50 overflow-y-auto">
+    <div className="fixed inset-0 bg-black/30 flex items-center justify-center p-4 z-50 overflow-y-auto backdrop-blur-sm">
       <div className="bg-bg-dark border border-border-subtle rounded-lg max-w-2xl w-full p-6 my-8">
         <h2 className="text-2xl text-text-soft mb-2">New Memory</h2>
         <p className="text-text-muted text-sm italic mb-6">"{prompt}"</p>
@@ -185,6 +230,52 @@ export default function MemoryModal({ onClose, onSave, prompt }: MemoryModalProp
               </div>
             )}
           </div>
+
+          {/* Cross-Branch Sharing */}
+          {availableBranches.length > 0 && (
+            <div>
+              <label className="block text-sm text-text-soft mb-2">
+                Also share with... (optional)
+              </label>
+              <p className="text-text-muted text-xs mb-3">
+                Share this memory with other branches in your grove
+              </p>
+              <div className="space-y-2 max-h-40 overflow-y-auto p-2 bg-bg-darker rounded border border-border-subtle">
+                {loadingBranches ? (
+                  <div className="text-text-muted text-sm">Loading branches...</div>
+                ) : (
+                  availableBranches.map((branch) => (
+                    <label
+                      key={branch.id}
+                      className="flex items-start gap-2 cursor-pointer p-2 hover:bg-bg-dark rounded transition-soft"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={selectedBranchIds.includes(branch.id)}
+                        onChange={() => toggleBranchSelection(branch.id)}
+                        disabled={!branch.canBeTagged}
+                        className="mt-1"
+                      />
+                      <div className="flex-1">
+                        <div className="text-text-soft text-sm">{branch.title}</div>
+                        {!branch.canBeTagged && (
+                          <div className="text-orange-400 text-xs">Cannot be tagged</div>
+                        )}
+                        {branch.requiresApproval && branch.canBeTagged && (
+                          <div className="text-text-muted text-xs">Requires approval</div>
+                        )}
+                      </div>
+                    </label>
+                  ))
+                )}
+              </div>
+              {selectedBranchIds.length > 0 && (
+                <p className="text-firefly-glow text-xs mt-2">
+                  Will appear in {selectedBranchIds.length + 1} {selectedBranchIds.length === 0 ? 'branch' : 'branches'}
+                </p>
+              )}
+            </div>
+          )}
 
           <div>
             <label className="block text-sm text-text-soft mb-2">

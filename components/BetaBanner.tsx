@@ -11,17 +11,17 @@ export default function BetaBanner() {
   }
 
   return (
-    <div className="bg-firefly-dim/20 border-b border-firefly-dim/30 px-4 py-2">
+    <div className="bg-firefly-dim/50 border-b border-firefly-dim px-4 py-3 backdrop-blur-sm">
       <div className="container mx-auto flex items-center justify-between max-w-4xl">
         <div className="flex items-center gap-3">
-          <span className="text-firefly-glow text-sm font-medium">
+          <span className="bg-firefly-glow text-bg-dark px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
             Beta
           </span>
-          <p className="text-text-soft text-sm">
+          <p className="text-text-soft text-sm font-medium">
             Firefly Grove is in beta. Your memories are safe, but please{' '}
             <a
               href="/feedback"
-              className="underline hover:text-firefly-glow transition-soft"
+              className="underline hover:text-firefly-glow transition-soft font-semibold"
             >
               report any snags
             </a>
@@ -30,7 +30,7 @@ export default function BetaBanner() {
         </div>
         <button
           onClick={() => setDismissed(true)}
-          className="text-text-muted hover:text-text-soft text-sm transition-soft"
+          className="text-text-soft hover:text-firefly-glow text-lg font-bold transition-soft ml-4"
           aria-label="Dismiss banner"
         >
           ✕

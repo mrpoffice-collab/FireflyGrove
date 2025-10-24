@@ -34,7 +34,7 @@ export default function DuplicateMemorialModal({
   }
 
   return (
-    <div className="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50">
+    <div className="fixed inset-0 bg-black/30 flex items-center justify-center p-4 z-50 backdrop-blur-sm">
       <div className="bg-bg-dark border border-[var(--legacy-amber)]/30 rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         <div className="p-6">
           {/* Header */}
