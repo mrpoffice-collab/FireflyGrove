@@ -71,7 +71,7 @@ export const PLANS: Record<string, Plan> = {
   },
   institutional: {
     id: 'institutional',
-    name: 'Institutional Grove',
+    name: 'Community Grove',
     description: 'For organizations and large families',
     price: 9900, // $99/year
     interval: 'year',
@@ -81,7 +81,7 @@ export const PLANS: Record<string, Plan> = {
       'Unlimited Branches per Tree',
       'Unlimited Memories',
       'Photo & Audio uploads',
-      'Institutional features',
+      'Community features',
       'Bulk export',
       'Dedicated support',
       'Custom branding (coming soon)',

@@ -127,8 +127,8 @@ export default function CreateMemorialPage() {
       const data = await res.json()
 
       if (res.ok) {
-        // Redirect to the memorial page with name and dates
-        router.push(`/memorial/created?name=${encodeURIComponent(name)}&birthDate=${encodeURIComponent(birthDate)}&deathDate=${encodeURIComponent(deathDate)}`)
+        // Redirect to the memorial page with name, dates, and branch ID
+        router.push(`/memorial/created?name=${encodeURIComponent(name)}&birthDate=${encodeURIComponent(birthDate)}&deathDate=${encodeURIComponent(deathDate)}&branchId=${data.branch.id}`)
       } else {
         setError(data.error || 'Failed to create memorial')
       }

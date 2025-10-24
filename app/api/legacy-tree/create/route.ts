@@ -130,6 +130,34 @@ export async function POST(req: NextRequest) {
       },
     })
 
+    // Find the tree associated with this grove (or create one for Open Grove)
+    let tree = await prisma.tree.findFirst({
+      where: { groveId: targetGroveId },
+    })
+
+    if (!tree) {
+      // Create a tree for this grove if it doesn't exist
+      tree = await prisma.tree.create({
+        data: {
+          groveId: targetGroveId,
+          name: isOpenGroveTree ? 'Open Grove Memorials' : 'Family Tree',
+          status: 'ACTIVE',
+        },
+      })
+    }
+
+    // Create a branch for this person
+    const branch = await prisma.branch.create({
+      data: {
+        treeId: tree.id,
+        title: name.trim(),
+        personStatus: 'legacy',
+        ownerId: userId,
+        personId: person.id,
+        status: 'ACTIVE',
+      },
+    })
+
     // Create membership linking person to grove
     const membership = await prisma.groveTreeMembership.create({
       data: {
@@ -152,6 +180,8 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       success: true,
       person,
+      branch,
+      tree,
       membership,
       message: isOpenGroveTree
         ? 'Legacy tree created in Open Grove'

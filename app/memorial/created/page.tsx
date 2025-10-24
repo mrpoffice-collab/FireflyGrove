@@ -9,6 +9,7 @@ function MemorialCreatedContent() {
   const name = searchParams.get('name') || 'your loved one'
   const birthDate = searchParams.get('birthDate')
   const deathDate = searchParams.get('deathDate')
+  const branchId = searchParams.get('branchId')
 
   // Format dates for display
   const formatDate = (dateStr: string | null) => {
@@ -106,7 +107,7 @@ function MemorialCreatedContent() {
           </div>
 
           <button
-            onClick={() => router.push('/grove')}
+            onClick={() => router.push(branchId ? `/branch/${branchId}` : '/grove')}
             className="px-8 py-3 bg-[var(--legacy-amber)] hover:bg-[var(--legacy-glow)] text-bg-dark rounded-lg font-medium transition-soft text-lg"
           >
             Go to Memorial

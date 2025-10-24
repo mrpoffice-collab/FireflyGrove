@@ -75,6 +75,10 @@ export default function BranchSettingsModal({
   const [adopting, setAdopting] = useState(false)
   const [adoptError, setAdoptError] = useState('')
 
+  // Root (link) tree
+  const [rooting, setRooting] = useState(false)
+  const [rootError, setRootError] = useState('')
+
   useEffect(() => {
     fetchBranchInfo()
     fetchHeirs()
@@ -404,6 +408,54 @@ export default function BranchSettingsModal({
       setAdoptError('Failed to adopt tree')
     } finally {
       setAdopting(false)
+    }
+  }
+
+  const handleRootTree = async () => {
+    if (!branch?.person?.id) return
+
+    setRootError('')
+    setRooting(true)
+
+    const confirmed = confirm(
+      'Root (link) this tree to your private grove?\n\n✓ Keep it in Open Grove AND link to your grove\n✓ Access from both locations\n✓ Still subject to 100-memory limit (until adopted)\n✓ Uses one tree slot in your grove\n\nYou can adopt it later for unlimited memories.'
+    )
+
+    if (!confirmed) {
+      setRooting(false)
+      return
+    }
+
+    try {
+      // Get user's grove ID
+      const groveRes = await fetch('/api/grove')
+      if (!groveRes.ok) {
+        setRootError('Failed to fetch your grove')
+        setRooting(false)
+        return
+      }
+      const groveData = await groveRes.json()
+
+      const res = await fetch(`/api/legacy-tree/${branch.person.id}/root`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ groveId: groveData.id }),
+      })
+
+      const data = await res.json()
+
+      if (res.ok) {
+        alert(data.message || 'Tree rooted successfully!')
+        await fetchBranchInfo()
+        onBranchUpdate?.()
+        onClose()
+      } else {
+        setRootError(data.error || 'Failed to root tree')
+      }
+    } catch (error) {
+      setRootError('Failed to root tree')
+    } finally {
+      setRooting(false)
     }
   }
 
@@ -904,6 +956,68 @@ export default function BranchSettingsModal({
                   className="w-full py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded font-medium transition-soft disabled:opacity-50"
                 >
                   {adopting ? 'Adopting Tree...' : 'Adopt Into Your Grove'}
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Root (Link) Tree - Only for Person-based legacy trees in Open Grove with memory limit */}
+          {branch?.person?.isLegacy && branch.person.memoryLimit !== null && (
+            <div className="mb-8">
+              <h3 className="text-lg text-text-soft mb-4">Root (Link) This Tree</h3>
+              <p className="text-text-muted text-sm mb-4">
+                Keep this memorial in the Open Grove AND create a link to your private grove. Access from both places.
+              </p>
+
+              <div className="bg-border-subtle/30 border border-border-subtle rounded-lg p-4">
+                <div className="mb-4">
+                  <div className="text-text-soft text-sm font-medium mb-3">
+                    🔗 Benefits of Rooting
+                  </div>
+                  <div className="space-y-2 text-text-muted text-sm">
+                    <div className="flex items-start gap-2">
+                      <span>•</span>
+                      <span>Stay in Open Grove (public memorial)</span>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <span>•</span>
+                      <span>ALSO appears in your private grove</span>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <span>•</span>
+                      <span>Access from both locations</span>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <span>•</span>
+                      <span>Still has {branch.person.memoryLimit}-memory limit (adopt later for unlimited)</span>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <span>•</span>
+                      <span>Uses one tree slot in your grove</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mb-4 p-3 bg-blue-500/10 border border-blue-500/30 rounded">
+                  <div className="text-blue-400 text-xs font-medium mb-1">
+                    💡 When to Root vs Adopt
+                  </div>
+                  <div className="text-text-muted text-xs">
+                    <strong>Root:</strong> Keep memorial public while organizing it in your grove<br />
+                    <strong>Adopt:</strong> Move to your grove for unlimited memories and privacy
+                  </div>
+                </div>
+
+                {rootError && (
+                  <div className="text-red-400 text-sm mb-4">{rootError}</div>
+                )}
+
+                <button
+                  onClick={handleRootTree}
+                  disabled={rooting}
+                  className="w-full py-2 bg-border-subtle hover:bg-text-muted text-text-soft rounded font-medium transition-soft disabled:opacity-50"
+                >
+                  {rooting ? 'Rooting Tree...' : 'Root (Link) to Your Grove'}
                 </button>
               </div>
             </div>
