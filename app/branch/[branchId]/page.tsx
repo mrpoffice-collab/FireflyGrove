@@ -74,6 +74,14 @@ export default function BranchPage() {
   const [showAdoptionPrompt, setShowAdoptionPrompt] = useState(false)
   const [currentPrompt, setCurrentPrompt] = useState('')
 
+  // Person editing
+  const [editingPerson, setEditingPerson] = useState(false)
+  const [personName, setPersonName] = useState('')
+  const [personBirthDate, setPersonBirthDate] = useState('')
+  const [personDeathDate, setPersonDeathDate] = useState('')
+  const [updatingPerson, setUpdatingPerson] = useState(false)
+  const [deletingPerson, setDeletingPerson] = useState(false)
+
   useEffect(() => {
     if (status === 'unauthenticated') {
       router.push('/login')
@@ -270,6 +278,93 @@ export default function BranchPage() {
     setEditDescription('')
   }
 
+  const handleEditPerson = () => {
+    if (!branch?.person) return
+    setPersonName(branch.person.name)
+    setPersonBirthDate(branch.person.birthDate ? new Date(branch.person.birthDate).toISOString().split('T')[0] : '')
+    setPersonDeathDate(branch.person.deathDate ? new Date(branch.person.deathDate).toISOString().split('T')[0] : '')
+    setEditingPerson(true)
+  }
+
+  const handleSavePerson = async () => {
+    if (!branch?.person || !personName.trim()) {
+      alert('Memorial name cannot be empty')
+      return
+    }
+
+    setUpdatingPerson(true)
+
+    try {
+      const res = await fetch(`/api/persons/${branch.person.id}/update`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: personName.trim(),
+          birthDate: personBirthDate || null,
+          deathDate: personDeathDate || null,
+        }),
+      })
+
+      if (res.ok) {
+        await fetchBranch()
+        setEditingPerson(false)
+        alert('Memorial information updated successfully')
+      } else {
+        const data = await res.json()
+        alert(data.error || 'Failed to update memorial')
+      }
+    } catch (error) {
+      console.error('Failed to update person:', error)
+      alert('Failed to update memorial information')
+    } finally {
+      setUpdatingPerson(false)
+    }
+  }
+
+  const handleCancelPersonEdit = () => {
+    setEditingPerson(false)
+    setPersonName('')
+    setPersonBirthDate('')
+    setPersonDeathDate('')
+  }
+
+  const handleDeletePerson = async () => {
+    if (!branch?.person) return
+
+    // Check if there are any memories
+    if (branch.entries.length > 0) {
+      alert('Cannot delete memorial tree with memories. Please delete all memories first.')
+      return
+    }
+
+    const confirmed = confirm(
+      `Are you sure you want to delete "${branch.person.name}"?\n\nThis will permanently delete the memorial tree. This cannot be undone.`
+    )
+
+    if (!confirmed) return
+
+    setDeletingPerson(true)
+
+    try {
+      const res = await fetch(`/api/persons/${branch.person.id}`, {
+        method: 'DELETE',
+      })
+
+      if (res.ok) {
+        alert('Memorial tree deleted successfully')
+        router.push('/grove')
+      } else {
+        const data = await res.json()
+        alert(data.error || 'Failed to delete memorial')
+      }
+    } catch (error) {
+      console.error('Failed to delete person:', error)
+      alert('Failed to delete memorial tree')
+    } finally {
+      setDeletingPerson(false)
+    }
+  }
+
   const refreshPrompt = () => {
     if (!branch) return
 
@@ -352,6 +447,31 @@ export default function BranchPage() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                       </svg>
                     </button>
+                  )}
+                  {branch.person && (
+                    <>
+                      <button
+                        onClick={handleEditPerson}
+                        className="text-text-muted hover:text-[var(--legacy-amber)] transition-soft"
+                        title="Edit memorial information"
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        </svg>
+                      </button>
+                      {branch.entries.length === 0 && (
+                        <button
+                          onClick={handleDeletePerson}
+                          disabled={deletingPerson}
+                          className="text-text-muted hover:text-red-400 transition-soft disabled:opacity-50"
+                          title="Delete memorial tree"
+                        >
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          </svg>
+                        </button>
+                      )}
+                    </>
                   )}
                 </div>
                 {branch.personStatus === 'legacy' && (() => {
@@ -583,6 +703,70 @@ export default function BranchPage() {
                   className="flex-1 py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded font-medium transition-soft"
                 >
                   Save Changes
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {editingPerson && (
+        <div className="fixed inset-0 bg-black/30 flex items-center justify-center p-4 z-50 backdrop-blur-sm">
+          <div className="bg-bg-dark border border-[var(--legacy-amber)]/50 rounded-lg max-w-md w-full p-6">
+            <h2 className="text-2xl text-[var(--legacy-text)] mb-6">Edit Memorial Information</h2>
+
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm text-text-soft mb-2">
+                  Memorial Name
+                </label>
+                <input
+                  type="text"
+                  value={personName}
+                  onChange={(e) => setPersonName(e.target.value)}
+                  className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-[var(--legacy-amber)] transition-soft"
+                  placeholder="Enter memorial name"
+                  autoFocus
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm text-text-soft mb-2">
+                  Birth Date (optional)
+                </label>
+                <input
+                  type="date"
+                  value={personBirthDate}
+                  onChange={(e) => setPersonBirthDate(e.target.value)}
+                  className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-[var(--legacy-amber)] transition-soft"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm text-text-soft mb-2">
+                  Death Date (optional)
+                </label>
+                <input
+                  type="date"
+                  value={personDeathDate}
+                  onChange={(e) => setPersonDeathDate(e.target.value)}
+                  className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-[var(--legacy-amber)] transition-soft"
+                />
+              </div>
+
+              <div className="flex gap-3 pt-4">
+                <button
+                  onClick={handleCancelPersonEdit}
+                  className="flex-1 py-2 bg-bg-darker hover:bg-border-subtle text-text-soft rounded transition-soft"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleSavePerson}
+                  disabled={updatingPerson}
+                  className="flex-1 py-2 bg-[var(--legacy-amber)] hover:bg-[var(--legacy-glow)] text-bg-dark rounded font-medium transition-soft disabled:opacity-50"
+                >
+                  {updatingPerson ? 'Saving...' : 'Save Changes'}
                 </button>
               </div>
             </div>

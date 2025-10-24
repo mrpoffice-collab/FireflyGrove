@@ -223,9 +223,6 @@ export default function TreePage() {
                 {tree.description && (
                   <p className="text-text-muted mb-2">{tree.description}</p>
                 )}
-                <p className="text-firefly-dim text-sm italic mt-3">
-                  Every Tree you plant here can one day take root in its own Grove.
-                </p>
               </div>
             )}
           </div>
