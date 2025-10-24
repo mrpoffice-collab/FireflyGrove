@@ -19,10 +19,32 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className} flex flex-col min-h-screen`}>
-        <Providers>
-          <div className="flex-1">{children}</div>
-          <Footer />
-        </Providers>
+        {/* Background image layer */}
+        <div
+          className="fixed inset-0 z-0 pointer-events-none"
+          style={{
+            backgroundImage: 'url(/background.png)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            backgroundAttachment: 'fixed',
+          }}
+        />
+        {/* Dark overlay */}
+        <div
+          className="fixed inset-0 pointer-events-none"
+          style={{
+            background: 'rgba(10, 14, 20, 0.30)',
+            zIndex: 1,
+          }}
+        />
+        {/* Content */}
+        <div className="relative z-10 flex flex-col min-h-screen">
+          <Providers>
+            <div className="flex-1">{children}</div>
+            <Footer />
+          </Providers>
+        </div>
       </body>
     </html>
   )
