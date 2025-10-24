@@ -17,7 +17,7 @@ Firefly Grove is a digital memory preservation platform where users can:
 
 ### 1. **Access the Application**
 
-- **URL**: [Your deployed URL here]
+- **URL**: https://fireflygrove.app
 - **Test Accounts**: We recommend creating your own account to test the full sign-up flow
 
 ### 2. **Sign Up Flow**
@@ -133,23 +133,18 @@ Firefly Grove is a digital memory preservation platform where users can:
 
 ## 📧 How to Report Issues
 
-**Option 1**: Use the feedback form in the app
-- Click your name in the header → "Feedback"
-- Describe the issue
-- Include steps to reproduce
+**Option 1**: Use the feedback form in the app ⭐ **Easiest**
+- Click your name in the header → "🐛 Report an Issue"
+- Fill out the form with details
+- Your feedback will be emailed directly to me
 
 **Option 2**: Email directly
-- Send to: [your-email@example.com]
+- Send to: mrpoffice@gmail.com
 - Include:
   - What you were trying to do
   - What happened instead
   - Screenshots if relevant
   - Browser and device info
-
-**Option 3**: File an issue (if GitHub access)
-- Repository: [Your GitHub URL]
-- Use issue template
-- Add "beta-testing" label
 
 ---
 
@@ -249,9 +244,9 @@ A: You'll see an upgrade prompt to a paid plan. During beta, billing is in test 
 ## 📞 Support
 
 Need help? Reach out:
-- **Email**: [your-email@example.com]
+- **Email**: mrpoffice@gmail.com
+- **Feedback Form**: Click your name → "🐛 Report an Issue"
 - **Response Time**: Usually within 24 hours
-- **Best Time**: [Your timezone and availability]
 
 ---
 
@@ -265,5 +260,6 @@ Let's make memories last forever. 🌟
 
 ---
 
-**Last Updated**: [Current Date]
+**Last Updated**: October 24, 2025
 **Beta Version**: 0.1.0
+**App URL**: https://fireflygrove.app
