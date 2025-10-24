@@ -46,6 +46,11 @@ export async function POST(req: NextRequest) {
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10)
 
+    // Check if this email was invited as a beta tester
+    const betaInvite = await prisma.betaInvite.findUnique({
+      where: { email: email.toLowerCase() },
+    })
+
     // Create user
     const user = await prisma.user.create({
       data: {
@@ -53,13 +58,27 @@ export async function POST(req: NextRequest) {
         password: hashedPassword,
         name,
         status: 'ACTIVE',
+        isBetaTester: !!betaInvite, // Set to true if they were invited
       },
       select: {
         id: true,
         email: true,
         name: true,
+        isBetaTester: true,
       },
     })
+
+    // If they were invited, mark the invite as signed up
+    if (betaInvite) {
+      await prisma.betaInvite.update({
+        where: { email: email.toLowerCase() },
+        data: {
+          signedUp: true,
+          signedUpAt: new Date(),
+        },
+      })
+      console.log(`[Beta Signup] ${email} signed up as beta tester`)
+    }
 
     return NextResponse.json({
       success: true,

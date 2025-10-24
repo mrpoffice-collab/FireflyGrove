@@ -20,8 +20,8 @@ export async function GET(req: NextRequest) {
 
     const userId = (session.user as any).id
 
-    // Find user's grove
-    const grove = await prisma.grove.findUnique({
+    // Find or create user's grove
+    let grove = await prisma.grove.findUnique({
       where: { userId },
       include: {
         trees: {
@@ -64,7 +64,76 @@ export async function GET(req: NextRequest) {
     })
 
     if (!grove) {
-      return NextResponse.json({ error: 'Grove not found' }, { status: 404 })
+      // Create grove if it doesn't exist (first-time user)
+      const user = await prisma.user.findUnique({
+        where: { id: userId },
+      })
+
+      // Beta testers get Family Grove (10 trees), others get Trial (1 tree)
+      const planType = user?.isBetaTester ? 'family' : 'trial'
+      const treeLimit = user?.isBetaTester ? 10 : 1
+
+      grove = await prisma.grove.create({
+        data: {
+          userId,
+          name: `${user?.name}'s Grove`,
+          planType,
+          treeLimit,
+          treeCount: 0,
+          status: 'active',
+        },
+      })
+
+      if (user?.isBetaTester) {
+        console.log(`[Beta] Created Family Grove for beta tester ${user.email}`)
+      }
+
+      // Re-fetch with includes
+      grove = await prisma.grove.findUnique({
+        where: { userId },
+        include: {
+          trees: {
+            where: {
+              status: {
+                not: 'DELETED',
+              },
+            },
+            include: {
+              _count: {
+                select: {
+                  branches: true,
+                },
+              },
+            },
+            orderBy: {
+              createdAt: 'desc',
+            },
+          },
+          memberships: {
+            where: {
+              status: 'active',
+            },
+            include: {
+              person: {
+                include: {
+                  _count: {
+                    select: {
+                      branches: true,
+                    },
+                  },
+                },
+              },
+            },
+            orderBy: {
+              createdAt: 'desc',
+            },
+          },
+        },
+      })
+
+      if (!grove) {
+        return NextResponse.json({ error: 'Failed to create grove' }, { status: 500 })
+      }
     }
 
     // Separate original trees from rooted trees

@@ -58,16 +58,24 @@ export async function POST(req: NextRequest) {
         where: { id: userId },
       })
 
+      // Beta testers get Family Grove (10 trees), others get Trial (1 tree)
+      const planType = user?.isBetaTester ? 'family' : 'trial'
+      const treeLimit = user?.isBetaTester ? 10 : 1
+
       grove = await prisma.grove.create({
         data: {
           userId,
           name: `${user?.name}'s Grove`,
-          planType: 'trial',
-          treeLimit: 1,
+          planType,
+          treeLimit,
           treeCount: 0,
           status: 'active',
         },
       })
+
+      if (user?.isBetaTester) {
+        console.log(`[Beta] Created Family Grove for beta tester ${user.email}`)
+      }
     }
 
     // Get or create Stripe customer

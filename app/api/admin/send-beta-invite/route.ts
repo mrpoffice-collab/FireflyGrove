@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { resend, isResendConfigured, SENDER_EMAIL } from '@/lib/resend'
+import prisma from '@/lib/prisma'
 
 export const dynamic = 'force-dynamic'
 
@@ -52,6 +53,7 @@ export async function POST(req: NextRequest) {
     const customMessage = message?.trim() || ''
 
     try {
+      // Send the email
       await resend.emails.send({
         from: SENDER_EMAIL,
         to: email,
@@ -127,7 +129,7 @@ export async function POST(req: NextRequest) {
 
                 <div style="background: #fffbea; border: 1px solid #ffd700; border-radius: 5px; padding: 15px; margin-top: 25px;">
                   <p style="margin: 0; color: #666; font-size: 14px;">
-                    <strong>Beta Perks:</strong> Free access during beta, priority support, direct input on features, and founding member recognition!
+                    <strong>Beta Perks:</strong> Family Grove plan (10 trees) for free during beta, priority support, direct input on features, and founding member recognition!
                   </p>
                 </div>
               </div>
@@ -145,7 +147,24 @@ export async function POST(req: NextRequest) {
         `,
       })
 
-      console.log(`[Beta Invite] Sent to ${email}`)
+      // Save the invite to the database
+      await prisma.betaInvite.upsert({
+        where: { email: email.toLowerCase() },
+        update: {
+          name: inviteeName !== 'there' ? inviteeName : null,
+          message: customMessage || null,
+          sentBy: (session.user as any).id,
+          updatedAt: new Date(),
+        },
+        create: {
+          email: email.toLowerCase(),
+          name: inviteeName !== 'there' ? inviteeName : null,
+          message: customMessage || null,
+          sentBy: (session.user as any).id,
+        },
+      })
+
+      console.log(`[Beta Invite] Sent to ${email} and saved to database`)
 
       return NextResponse.json({
         success: true,

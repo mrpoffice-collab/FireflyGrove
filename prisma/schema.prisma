@@ -15,6 +15,7 @@ model User {
   name      String
   password  String
   status    String   @default("ACTIVE") // ACTIVE, LOCKED, LEGACY
+  isBetaTester Boolean @default(false) // Auto-upgraded to Family Grove
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -41,6 +42,7 @@ model User {
 
   @@index([email])
   @@index([status])
+  @@index([isBetaTester])
 }
 
 model Grove {
@@ -460,6 +462,25 @@ model LegacyHeir {
   @@index([branchId])
   @@index([userId])
   @@index([role])
+}
+
+// Beta invite tracking
+model BetaInvite {
+  id          String   @id @default(cuid())
+  email       String   // Email address invited
+  name        String?  // Optional name of invitee
+  message     String?  // Custom message from sender
+  sentBy      String   // User ID who sent the invite
+  signedUp    Boolean  @default(false) // True once they create account
+  signedUpAt  DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([email])
+  @@index([email])
+  @@index([sentBy])
+  @@index([signedUp])
+  @@index([createdAt])
 }
 
 // Cross-grove branch connection requests
