@@ -53,8 +53,8 @@ export async function GET(req: NextRequest) {
       orderBy = { memoryCount: 'desc' }
     }
 
-    // Fetch memorials
-    const [memorials, total] = await Promise.all([
+    // Fetch memorials and calculate total memories
+    const [memorials, total, allMemorials] = await Promise.all([
       prisma.person.findMany({
         where,
         orderBy,
@@ -83,7 +83,17 @@ export async function GET(req: NextRequest) {
         },
       }),
       prisma.person.count({ where }),
+      // Get all memorials to calculate total memory count
+      prisma.person.findMany({
+        where,
+        select: {
+          memoryCount: true,
+        },
+      }),
     ])
+
+    // Calculate total memories across all memorials
+    const totalMemories = allMemorials.reduce((sum, person) => sum + (person.memoryCount || 0), 0)
 
     return NextResponse.json({
       memorials: memorials.map((person) => ({
@@ -104,6 +114,7 @@ export async function GET(req: NextRequest) {
         offset,
         hasMore: offset + limit < total,
       },
+      totalMemories,
     })
   } catch (error: any) {
     console.error('Error fetching Open Grove memorials:', error)

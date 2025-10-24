@@ -26,6 +26,7 @@ export default function OpenGrovePage() {
   const [sortBy, setSortBy] = useState<'recent' | 'name' | 'memories'>('recent')
   const [hasMore, setHasMore] = useState(false)
   const [total, setTotal] = useState(0)
+  const [totalMemories, setTotalMemories] = useState(0)
 
   useEffect(() => {
     fetchMemorials()
@@ -46,6 +47,7 @@ export default function OpenGrovePage() {
         const data = await res.json()
         setMemorials(data.memorials)
         setTotal(data.pagination.total)
+        setTotalMemories(data.totalMemories || 0)
         setHasMore(data.pagination.hasMore)
       }
     } catch (error) {
@@ -75,16 +77,10 @@ export default function OpenGrovePage() {
             A public garden where every story glows.<br />
             Each candle a memory, each memory a life that still shines.
           </p>
-          {/* Memorial Counter */}
-          <div className="inline-flex items-center gap-2 px-6 py-3 bg-[var(--legacy-amber)]/10 border border-[var(--legacy-amber)]/30 rounded-full backdrop-blur-sm">
-            <span className="text-2xl">🕯️</span>
-            <div className="flex items-baseline gap-2">
-              <span className="text-[var(--legacy-glow)] font-bold text-2xl">{total.toLocaleString()}</span>
-              <span className="text-[var(--legacy-text)] text-sm">
-                {total === 1 ? 'memorial' : 'memorials'} in the Open Grove
-              </span>
-            </div>
-          </div>
+          {/* Memory Counter */}
+          <p className="text-[var(--legacy-text)] text-lg italic">
+            The Grove holds <span className="text-[var(--legacy-glow)] font-semibold">{totalMemories.toLocaleString()}</span> {totalMemories === 1 ? 'memory' : 'memories'} tonight.
+          </p>
         </div>
 
         {/* Search and Filter */}
