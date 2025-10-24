@@ -61,6 +61,8 @@ export default function BranchSettingsModal({
   const [deathDate, setDeathDate] = useState('')
   const [settingLegacy, setSettingLegacy] = useState(false)
   const [legacyError, setLegacyError] = useState('')
+  const [editingDates, setEditingDates] = useState(false)
+  const [updatingDates, setUpdatingDates] = useState(false)
 
   // Discovery toggle
   const [discoveryEnabled, setDiscoveryEnabled] = useState(true)
@@ -106,6 +108,16 @@ export default function BranchSettingsModal({
         // Set discovery toggle state if this is a Person-based legacy tree
         if (data.person?.isLegacy) {
           setDiscoveryEnabled(data.person.discoveryEnabled)
+        }
+
+        // Populate date fields if branch is already legacy
+        if (data.personStatus === 'legacy') {
+          if (data.birthDate) {
+            setBirthDate(new Date(data.birthDate).toISOString().split('T')[0])
+          }
+          if (data.deathDate) {
+            setDeathDate(new Date(data.deathDate).toISOString().split('T')[0])
+          }
         }
       }
     } catch (error) {
@@ -340,6 +352,44 @@ export default function BranchSettingsModal({
       setLegacyError('Failed to set legacy status')
     } finally {
       setSettingLegacy(false)
+    }
+  }
+
+  const handleUpdateDates = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setLegacyError('')
+    setUpdatingDates(true)
+
+    if (!deathDate) {
+      setLegacyError('Death date is required')
+      setUpdatingDates(false)
+      return
+    }
+
+    try {
+      const res = await fetch(`/api/branches/${branchId}/legacy`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          birthDate: birthDate || null,
+          deathDate,
+          updateDatesOnly: true,
+        }),
+      })
+
+      if (res.ok) {
+        alert('Dates updated successfully')
+        await fetchBranchInfo()
+        setEditingDates(false)
+        onBranchUpdate?.()
+      } else {
+        const data = await res.json()
+        setLegacyError(data.error || 'Failed to update dates')
+      }
+    } catch (error) {
+      setLegacyError('Failed to update dates')
+    } finally {
+      setUpdatingDates(false)
     }
   }
 
@@ -853,24 +903,109 @@ export default function BranchSettingsModal({
                 <div className="flex items-start gap-3 mb-3">
                   <span className="text-2xl">🕯️</span>
                   <div className="flex-1">
-                    <div className="text-[var(--legacy-text)] font-medium mb-2">
-                      This is a Legacy Branch
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="text-[var(--legacy-text)] font-medium">
+                        This is a Legacy Branch
+                      </div>
+                      {!editingDates && (
+                        <button
+                          onClick={() => setEditingDates(true)}
+                          className="text-text-muted hover:text-[var(--legacy-amber)] transition-soft text-sm"
+                          title="Edit dates"
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                          </svg>
+                        </button>
+                      )}
                     </div>
-                    {branch.birthDate && branch.deathDate && (
-                      <div className="text-[var(--legacy-silver)] text-sm">
-                        {new Date(branch.birthDate).getFullYear()} – {new Date(branch.deathDate).getFullYear()}
-                      </div>
-                    )}
-                    {branch.legacyEnteredAt && (
-                      <div className="text-text-muted text-xs mt-1">
-                        Entered legacy on {new Date(branch.legacyEnteredAt).toLocaleDateString()}
-                      </div>
+                    {!editingDates ? (
+                      <>
+                        {branch.birthDate && branch.deathDate && (
+                          <div className="text-[var(--legacy-silver)] text-sm">
+                            {new Date(branch.birthDate).toLocaleDateString()} – {new Date(branch.deathDate).toLocaleDateString()}
+                          </div>
+                        )}
+                        {!branch.birthDate && branch.deathDate && (
+                          <div className="text-[var(--legacy-silver)] text-sm">
+                            Passed: {new Date(branch.deathDate).toLocaleDateString()}
+                          </div>
+                        )}
+                        {branch.legacyEnteredAt && (
+                          <div className="text-text-muted text-xs mt-1">
+                            Entered legacy on {new Date(branch.legacyEnteredAt).toLocaleDateString()}
+                          </div>
+                        )}
+                      </>
+                    ) : (
+                      <form onSubmit={handleUpdateDates} className="space-y-3 mt-2">
+                        <div>
+                          <label className="block text-xs text-text-soft mb-1">
+                            Birth Date (optional)
+                          </label>
+                          <input
+                            type="date"
+                            value={birthDate}
+                            onChange={(e) => setBirthDate(e.target.value)}
+                            className="w-full px-3 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft text-sm focus:outline-none focus:border-[var(--legacy-amber)] transition-soft"
+                            disabled={updatingDates}
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs text-text-soft mb-1">
+                            Death Date <span className="text-red-400">*</span>
+                          </label>
+                          <input
+                            type="date"
+                            value={deathDate}
+                            onChange={(e) => setDeathDate(e.target.value)}
+                            max={new Date().toISOString().split('T')[0]}
+                            className="w-full px-3 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft text-sm focus:outline-none focus:border-[var(--legacy-amber)] transition-soft"
+                            required
+                            disabled={updatingDates}
+                          />
+                        </div>
+                        {legacyError && (
+                          <div className="text-red-400 text-xs">{legacyError}</div>
+                        )}
+                        <div className="flex gap-2">
+                          <button
+                            type="submit"
+                            disabled={updatingDates}
+                            className="flex-1 py-2 bg-[var(--legacy-amber)] hover:bg-[var(--legacy-glow)] text-bg-dark rounded text-sm font-medium transition-soft disabled:opacity-50"
+                          >
+                            {updatingDates ? 'Updating...' : 'Save Dates'}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setEditingDates(false)
+                              setLegacyError('')
+                              // Reset to original values
+                              if (branch.birthDate) {
+                                setBirthDate(new Date(branch.birthDate).toISOString().split('T')[0])
+                              } else {
+                                setBirthDate('')
+                              }
+                              if (branch.deathDate) {
+                                setDeathDate(new Date(branch.deathDate).toISOString().split('T')[0])
+                              }
+                            }}
+                            disabled={updatingDates}
+                            className="px-4 py-2 bg-bg-darker hover:bg-border-subtle text-text-muted rounded text-sm transition-soft disabled:opacity-50"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      </form>
                     )}
                   </div>
                 </div>
-                <div className="text-text-muted text-sm">
-                  Legacy status is permanent and cannot be changed.
-                </div>
+                {!editingDates && (
+                  <div className="text-text-muted text-sm">
+                    Legacy status is permanent and cannot be changed.
+                  </div>
+                )}
               </div>
             ) : (
               <form onSubmit={handleSetLegacy} className="space-y-4">

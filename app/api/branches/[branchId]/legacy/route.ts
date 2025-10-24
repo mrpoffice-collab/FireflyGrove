@@ -26,7 +26,7 @@ export async function PATCH(
     const branchId = params.branchId
     const body = await req.json()
 
-    const { birthDate, deathDate, proofUrl, affirmation } = body
+    const { birthDate, deathDate, proofUrl, affirmation, updateDatesOnly } = body
 
     // Find the branch
     const branch = await prisma.branch.findUnique({
@@ -48,7 +48,61 @@ export async function PATCH(
       )
     }
 
-    // Require either affirmation or proof (light-touch verification)
+    // If just updating dates for existing legacy branch, skip verification requirements
+    if (updateDatesOnly && branch.personStatus === 'legacy') {
+      // Validate death date if provided
+      if (deathDate) {
+        const deathDateObj = new Date(deathDate)
+        const birthDateObj = birthDate ? new Date(birthDate) : null
+
+        // Validate dates
+        if (birthDateObj && deathDateObj < birthDateObj) {
+          return NextResponse.json(
+            { error: 'Death date cannot be before birth date' },
+            { status: 400 }
+          )
+        }
+
+        if (deathDateObj > new Date()) {
+          return NextResponse.json(
+            { error: 'Death date cannot be in the future' },
+            { status: 400 }
+          )
+        }
+      }
+
+      // Update just the dates
+      const updatedBranch = await prisma.branch.update({
+        where: { id: branchId },
+        data: {
+          birthDate: birthDate ? new Date(birthDate) : null,
+          deathDate: deathDate ? new Date(deathDate) : null,
+        },
+      })
+
+      // Create audit log
+      await prisma.audit.create({
+        data: {
+          actorId: userId,
+          action: 'BRANCH_DATES_UPDATED',
+          targetType: 'BRANCH',
+          targetId: branchId,
+          metadata: JSON.stringify({
+            birthDate: birthDate || null,
+            deathDate: deathDate || null,
+            updatedAt: new Date().toISOString(),
+          }),
+        },
+      })
+
+      return NextResponse.json({
+        success: true,
+        branch: updatedBranch,
+        message: 'Dates updated successfully',
+      })
+    }
+
+    // Require either affirmation or proof (light-touch verification) for new legacy branches
     if (!affirmation && !proofUrl) {
       return NextResponse.json(
         {

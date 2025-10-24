@@ -14,7 +14,10 @@
       "Bash(npx ts-node:*)",
       "Bash(curl:*)",
       "Bash(npm run build:*)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(for file in app/billing/page.tsx app/feedback/page.tsx app/grove/page.tsx app/open-grove/page.tsx app/test-email/page.tsx)",
+      "Bash(do)",
+      "Bash(done)"
     ],
     "deny": [],
     "ask": []
