@@ -25,19 +25,14 @@
 }
 
 body {
-  background: var(--bg-dark);
   color: var(--text-soft);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  /* Subtle background image (1024x1024) */
-  background-image: url('/background.png');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
+  /* Background image with fallback color */
+  background: var(--bg-dark) url('/background.png') center/cover no-repeat fixed;
 
   /* Overlay to make it subtle */
   position: relative;
