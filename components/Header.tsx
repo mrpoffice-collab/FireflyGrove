@@ -117,6 +117,15 @@ export default function Header({ userName, groveInfo }: HeaderProps) {
                   </button>
                   <button
                     onClick={() => {
+                      router.push('/grove-exchange')
+                      setIsDropdownOpen(false)
+                    }}
+                    className="w-full text-left px-4 py-2 text-sm text-text-muted hover:bg-border-subtle hover:text-text-soft transition-soft"
+                  >
+                    🏪 The Grove Exchange
+                  </button>
+                  <button
+                    onClick={() => {
                       router.push('/admin/beta-invites')
                       setIsDropdownOpen(false)
                     }}
