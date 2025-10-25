@@ -117,9 +117,13 @@ export default function RootTreeModal({
         <div className="flex-1 overflow-y-auto p-6 space-y-6">
           {/* Explanation */}
           <div className="bg-firefly-dim/10 border border-firefly-dim/30 rounded p-4">
-            <p className="text-text-soft text-sm">
+            <p className="text-text-soft text-sm mb-2">
               Rooting connects two trees representing the same person across different groves.
               Memories added to either tree will appear in both.
+            </p>
+            <p className="text-text-muted text-xs">
+              Tip: Names don't need to match exactly. Search by any part of the name,
+              or use birth/death years to help identify the right person.
             </p>
           </div>
 
@@ -140,17 +144,27 @@ export default function RootTreeModal({
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-                placeholder="Enter person's name..."
+                placeholder="Try: first name, last name, or year (e.g., 1950)..."
                 className="flex-1 bg-bg-dark border border-border-subtle rounded px-4 py-3 text-text-soft focus:outline-none focus:border-firefly-dim/50 transition-soft"
               />
               <button
                 onClick={handleSearch}
                 disabled={searching}
-                className="px-6 py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded font-medium transition-soft disabled:opacity-50"
+                className="px-6 py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded font-medium transition-soft disabled:opacity-50 whitespace-nowrap"
               >
                 {searching ? 'Searching...' : 'Search'}
               </button>
             </div>
+            <button
+              onClick={() => {
+                setSearchQuery('*')
+                handleSearch()
+              }}
+              disabled={searching}
+              className="mt-2 text-xs text-text-muted hover:text-firefly-dim transition-soft"
+            >
+              Or browse all accessible trees
+            </button>
           </div>
 
           {/* Search Results */}

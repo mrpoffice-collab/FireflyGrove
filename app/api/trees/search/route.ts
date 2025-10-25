@@ -24,7 +24,10 @@ export async function GET(req: NextRequest) {
     const query = searchParams.get('q')
     const excludePersonId = searchParams.get('excludePersonId')
 
-    if (!query || query.trim().length < 2) {
+    // Allow "*" as a special wildcard to browse all trees
+    const isBrowseAll = query === '*'
+
+    if (!query || (!isBrowseAll && query.trim().length < 2)) {
       return NextResponse.json(
         { error: 'Search query must be at least 2 characters' },
         { status: 400 }
@@ -39,12 +42,15 @@ export async function GET(req: NextRequest) {
     const persons = await prisma.person.findMany({
       where: {
         AND: [
-          {
-            name: {
-              contains: query,
-              mode: 'insensitive',
-            },
-          },
+          // Skip name filter if browsing all
+          isBrowseAll
+            ? {}
+            : {
+                name: {
+                  contains: query,
+                  mode: 'insensitive',
+                },
+              },
           excludePersonId
             ? {
                 id: {
@@ -98,7 +104,10 @@ export async function GET(req: NextRequest) {
           take: 1, // Just get one membership to show grove info
         },
       },
-      take: 20, // Limit results
+      take: isBrowseAll ? 50 : 20, // Show more results when browsing all
+      orderBy: {
+        name: 'asc', // Sort alphabetically
+      },
     })
 
     const results = persons.map((person) => {
