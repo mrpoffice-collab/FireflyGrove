@@ -44,7 +44,7 @@ export default function GroveExchangePage() {
       description: 'Download a complete backup of your memories in multiple formats. Keep your legacy safe beyond the cloud.',
       icon: '📦',
       price: 'Included',
-      href: '/grove',
+      href: '/forever-kit',
       badge: 'Included',
       badgeColor: 'bg-firefly-dim/20 text-firefly-glow border-firefly-dim/30',
     },
