@@ -18,6 +18,7 @@
     "archiver": "^7.0.1",
     "bcryptjs": "^2.4.3",
     "date-fns": "^4.1.0",
+    "framer-motion": "^12.23.24",
     "next": "14.2.15",
     "next-auth": "^4.24.10",
     "pdfkit": "^0.15.0",

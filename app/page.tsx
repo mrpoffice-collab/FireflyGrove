@@ -2,6 +2,8 @@
 
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
+import { AnimatePresence } from 'framer-motion'
+import StoryModal from '@/components/StoryModal'
 
 interface Stats {
   groves: number
@@ -13,6 +15,7 @@ interface Stats {
 export default function HomePage() {
   const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === 'true'
   const [stats, setStats] = useState<Stats | null>(null)
+  const [showStory, setShowStory] = useState(false)
 
   useEffect(() => {
     fetch('/api/stats')
@@ -115,6 +118,13 @@ export default function HomePage() {
         </div>
 
         <div className="space-y-4">
+          <button
+            onClick={() => setShowStory(true)}
+            className="w-full max-w-xs mx-auto mb-4 py-3 bg-gradient-to-r from-firefly-dim/30 to-firefly-glow/30 hover:from-firefly-dim/50 hover:to-firefly-glow/50 text-firefly-glow border border-firefly-dim/50 rounded-lg font-medium transition-soft flex items-center justify-center gap-2"
+          >
+            ✨ Discover Our Story
+          </button>
+
           <div className="flex gap-3 max-w-xs mx-auto">
             <Link
               href="/signup"
@@ -172,6 +182,11 @@ export default function HomePage() {
           </div>
         </div>
       </div>
+
+      {/* Story Modal */}
+      <AnimatePresence>
+        {showStory && <StoryModal onClose={() => setShowStory(false)} />}
+      </AnimatePresence>
     </div>
   )
 }
