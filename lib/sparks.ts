@@ -25,8 +25,8 @@ export const fallGratitude: SparkCollection = {
   icon: '🍂',
   description: 'Reflect on the gifts, the people, and the moments that fill your heart this season',
   active: true,
-  startDate: '2024-10-01',
-  endDate: '2024-12-31',
+  startDate: '2025-10-01',
+  endDate: '2025-12-31',
   sparks: [
     {
       text: "Who taught you what gratitude means without ever saying the word?",
