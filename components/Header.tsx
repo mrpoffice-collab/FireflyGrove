@@ -36,15 +36,15 @@ export default function Header({ userName, isBetaTester, groveInfo }: HeaderProp
 
   return (
     <header className="bg-bg-dark border-b border-border-subtle">
-      <div className="container mx-auto px-4 py-4">
+      <div className="container mx-auto px-4 py-2">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-6">
-            <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-soft">
-              <span className="text-firefly-glow text-2xl">✦</span>
-              <h1 className="text-xl font-light text-text-soft">Firefly Grove</h1>
+          <div className="flex items-center gap-4">
+            <Link href="/" className="flex items-center gap-1.5 hover:opacity-80 transition-soft">
+              <span className="text-firefly-glow text-xl">✦</span>
+              <h1 className="text-lg font-light text-text-soft">Firefly Grove</h1>
             </Link>
 
-            <nav className="hidden md:flex items-center gap-4">
+            <nav className="hidden md:flex items-center gap-3">
               <Link
                 href="/grove"
                 className="text-text-muted hover:text-firefly-glow text-sm transition-soft"
@@ -60,14 +60,14 @@ export default function Header({ userName, isBetaTester, groveInfo }: HeaderProp
             </nav>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
             {/* Beta Feedback Button - Visible to all users */}
             <button
               onClick={() => setIsFeedbackOpen(true)}
-              className="px-3 py-1.5 bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 border border-blue-500/30 rounded text-xs font-medium transition-soft flex items-center gap-1.5"
+              className="px-2 py-1 bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 border border-blue-500/30 rounded text-xs font-medium transition-soft flex items-center gap-1"
             >
               <span>💬</span>
-              <span>Beta Feedback</span>
+              <span className="hidden sm:inline">Beta Feedback</span>
             </button>
 
             <div className="relative" ref={dropdownRef}>
@@ -89,9 +89,9 @@ export default function Header({ userName, isBetaTester, groveInfo }: HeaderProp
                   </button>
 
             {isDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-64 bg-bg-dark border border-border-subtle rounded-lg shadow-lg overflow-hidden z-50">
-                <div className="px-4 py-3 border-b border-border-subtle">
-                  <div className="text-text-soft text-sm font-medium mb-2">{userName}</div>
+              <div className="absolute right-0 mt-1 w-64 bg-bg-dark border border-border-subtle rounded-lg shadow-lg overflow-hidden z-50">
+                <div className="px-3 py-2 border-b border-border-subtle">
+                  <div className="text-text-soft text-sm font-medium mb-1.5">{userName}</div>
                   {groveInfo && (
                     <div className="space-y-1">
                       <div className="flex items-center justify-between text-xs">
@@ -106,13 +106,13 @@ export default function Header({ userName, isBetaTester, groveInfo }: HeaderProp
                   )}
                 </div>
 
-                <div className="py-1">
+                <div className="py-0.5">
                   <button
                     onClick={() => {
                       router.push('/billing')
                       setIsDropdownOpen(false)
                     }}
-                    className="w-full text-left px-4 py-2 text-sm text-text-muted hover:bg-border-subtle hover:text-text-soft transition-soft"
+                    className="w-full text-left px-3 py-1.5 text-sm text-text-muted hover:bg-border-subtle hover:text-text-soft transition-soft"
                   >
                     Manage Plan
                   </button>
@@ -121,7 +121,7 @@ export default function Header({ userName, isBetaTester, groveInfo }: HeaderProp
                       router.push('/grove-exchange')
                       setIsDropdownOpen(false)
                     }}
-                    className="w-full text-left px-4 py-2 text-sm text-text-muted hover:bg-border-subtle hover:text-text-soft transition-soft"
+                    className="w-full text-left px-3 py-1.5 text-sm text-text-muted hover:bg-border-subtle hover:text-text-soft transition-soft"
                   >
                     🏪 The Grove Exchange
                   </button>
@@ -131,7 +131,7 @@ export default function Header({ userName, isBetaTester, groveInfo }: HeaderProp
                         router.push('/admin/beta-invites')
                         setIsDropdownOpen(false)
                       }}
-                      className="w-full text-left px-4 py-2 text-sm text-text-muted hover:bg-border-subtle hover:text-text-soft transition-soft"
+                      className="w-full text-left px-3 py-1.5 text-sm text-text-muted hover:bg-border-subtle hover:text-text-soft transition-soft"
                     >
                       📧 Send Beta Invite
                     </button>
@@ -141,7 +141,7 @@ export default function Header({ userName, isBetaTester, groveInfo }: HeaderProp
                       setIsFeedbackOpen(true)
                       setIsDropdownOpen(false)
                     }}
-                    className="w-full text-left px-4 py-2 text-sm text-text-muted hover:bg-border-subtle hover:text-text-soft transition-soft"
+                    className="w-full text-left px-3 py-1.5 text-sm text-text-muted hover:bg-border-subtle hover:text-text-soft transition-soft"
                   >
                     🐛 Report an Issue
                   </button>
@@ -149,7 +149,7 @@ export default function Header({ userName, isBetaTester, groveInfo }: HeaderProp
                     onClick={() => {
                       signOut({ callbackUrl: '/login' })
                     }}
-                    className="w-full text-left px-4 py-2 text-sm text-text-muted hover:bg-border-subtle hover:text-text-soft transition-soft"
+                    className="w-full text-left px-3 py-1.5 text-sm text-text-muted hover:bg-border-subtle hover:text-text-soft transition-soft"
                   >
                     Sign Out
                   </button>
