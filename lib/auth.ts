@@ -36,6 +36,7 @@ export const authOptions: NextAuthOptions = {
           name: user.name,
           status: user.status,
           isBetaTester: user.isBetaTester,
+          isAdmin: user.isAdmin,
         }
       },
     }),
@@ -52,6 +53,7 @@ export const authOptions: NextAuthOptions = {
         token.id = user.id
         token.status = (user as any).status
         token.isBetaTester = (user as any).isBetaTester
+        token.isAdmin = (user as any).isAdmin
       }
       return token
     },
@@ -60,6 +62,7 @@ export const authOptions: NextAuthOptions = {
         (session.user as any).id = token.id as string
         (session.user as any).status = token.status as string
         (session.user as any).isBetaTester = token.isBetaTester as boolean
+        (session.user as any).isAdmin = token.isAdmin as boolean
       }
       return session
     },

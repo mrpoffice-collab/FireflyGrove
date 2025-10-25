@@ -1,12 +1,36 @@
 'use client'
 
-import { useRef, useState } from 'react'
+import { useRef, useState, useEffect } from 'react'
+import { signIn } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
 import FireflyParticles from '@/components/FireflyParticles'
 import Link from 'next/link'
 
 export default function FBPostPage() {
-  const [isMuted, setIsMuted] = useState(true)
+  const router = useRouter()
+  const [isMuted, setIsMuted] = useState(false)
   const audioRef = useRef<HTMLAudioElement>(null)
+
+  // Signup form state
+  const [showSignup, setShowSignup] = useState(false)
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+  const [success, setSuccess] = useState(false)
+
+  // Auto-play music on load
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.muted = false
+      audioRef.current.play().catch(error => {
+        console.log('Auto-play prevented:', error)
+        // If auto-play is blocked, mute it
+        setIsMuted(true)
+      })
+    }
+  }, [])
 
   const toggleMute = async () => {
     if (audioRef.current) {
@@ -21,6 +45,54 @@ export default function FBPostPage() {
         audioRef.current.muted = true
       }
       setIsMuted(!isMuted)
+    }
+  }
+
+  const handleSignup = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setError('')
+    setLoading(true)
+
+    try {
+      // Create the beta tester account
+      const res = await fetch('/api/beta-signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password, name }),
+      })
+
+      const data = await res.json()
+
+      if (res.ok) {
+        setSuccess(true)
+
+        // Automatically sign them in
+        const signInResult = await signIn('credentials', {
+          email,
+          password,
+          redirect: false,
+        })
+
+        if (signInResult?.ok) {
+          // Redirect to grove after a brief success message
+          setTimeout(() => {
+            router.push('/grove')
+          }, 1500)
+        } else {
+          // Account created but auto-login failed
+          setError('Account created! Please log in manually.')
+          setTimeout(() => {
+            router.push('/login')
+          }, 2000)
+        }
+      } else {
+        setError(data.error || 'Failed to create account')
+      }
+    } catch (err) {
+      console.error('Signup error:', err)
+      setError('Something went wrong. Please try again.')
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -56,7 +128,7 @@ export default function FBPostPage() {
       <div className="relative z-10 max-w-3xl mx-auto px-6 py-12 text-center">
         {/* Title */}
         <div className="mb-12">
-          <h1 className="text-5xl md:text-6xl font-light text-firefly-glow mb-4 leading-tight">
+          <h1 className="text-4xl md:text-5xl font-light text-firefly-glow mb-4 leading-tight">
             🌿
             <br />
             My Heart in a Grove of Light
@@ -105,14 +177,102 @@ export default function FBPostPage() {
           </p>
         </div>
 
-        {/* CTA */}
+        {/* CTA Section */}
         <div className="mb-12">
-          <Link
-            href="/"
-            className="inline-block px-8 py-4 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg font-medium text-lg transition-soft shadow-lg hover:shadow-firefly-glow/50"
-          >
-            Enter Firefly Grove
-          </Link>
+          {!showSignup ? (
+            <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
+              <Link
+                href="/"
+                className="inline-block px-8 py-4 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg font-medium text-lg transition-soft shadow-lg hover:shadow-firefly-glow/50"
+              >
+                Enter Firefly Grove
+              </Link>
+              <button
+                onClick={() => setShowSignup(true)}
+                className="px-8 py-4 bg-bg-dark hover:bg-border-subtle border-2 border-firefly-dim hover:border-firefly-glow text-firefly-dim hover:text-firefly-glow rounded-lg font-medium text-lg transition-soft"
+              >
+                Become a Beta Tester
+              </button>
+            </div>
+          ) : (
+            <div className="bg-bg-dark/50 border border-firefly-dim/30 rounded-lg p-6 max-w-md mx-auto">
+              <h3 className="text-xl font-light text-firefly-glow mb-4">Join as a Beta Tester</h3>
+              <p className="text-text-muted text-sm mb-6">
+                Get immediate access to Firefly Grove. No waiting, no approval needed.
+              </p>
+
+              {success ? (
+                <div className="bg-firefly-dim/20 border border-firefly-glow/50 rounded p-4 text-center">
+                  <p className="text-firefly-glow font-medium mb-2">✨ Welcome to Firefly Grove!</p>
+                  <p className="text-text-muted text-sm">Redirecting you to your grove...</p>
+                </div>
+              ) : (
+                <form onSubmit={handleSignup} className="space-y-4">
+                  <div>
+                    <label className="block text-sm text-text-muted mb-1">Name</label>
+                    <input
+                      type="text"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      required
+                      className="w-full bg-bg-dark border border-border-subtle rounded px-4 py-3 text-text-soft focus:outline-none focus:border-firefly-dim/50 transition-soft"
+                      placeholder="Your name"
+                      disabled={loading}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm text-text-muted mb-1">Email</label>
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                      className="w-full bg-bg-dark border border-border-subtle rounded px-4 py-3 text-text-soft focus:outline-none focus:border-firefly-dim/50 transition-soft"
+                      placeholder="your@email.com"
+                      disabled={loading}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm text-text-muted mb-1">Password</label>
+                    <input
+                      type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                      minLength={6}
+                      className="w-full bg-bg-dark border border-border-subtle rounded px-4 py-3 text-text-soft focus:outline-none focus:border-firefly-dim/50 transition-soft"
+                      placeholder="At least 6 characters"
+                      disabled={loading}
+                    />
+                  </div>
+
+                  {error && (
+                    <div className="bg-red-500/10 border border-red-500/30 rounded p-3">
+                      <p className="text-red-400 text-sm">{error}</p>
+                    </div>
+                  )}
+
+                  <div className="flex gap-3">
+                    <button
+                      type="submit"
+                      disabled={loading}
+                      className="flex-1 px-6 py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded font-medium transition-soft disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {loading ? 'Creating Account...' : 'Create Beta Account'}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setShowSignup(false)}
+                      disabled={loading}
+                      className="px-6 py-3 bg-bg-dark hover:bg-border-subtle text-text-muted rounded font-medium transition-soft"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </form>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Closing */}

@@ -16,6 +16,7 @@ model User {
   password  String
   status    String   @default("ACTIVE") // ACTIVE, LOCKED, LEGACY
   isBetaTester Boolean @default(false) // Auto-upgraded to Family Grove
+  isAdmin   Boolean @default(false) // Admin users see activity notifications
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
