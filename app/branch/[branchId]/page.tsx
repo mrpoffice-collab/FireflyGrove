@@ -717,7 +717,7 @@ export default function BranchPage() {
                   : 'bg-bg-dark border border-firefly-dim/30'
               }`}>
                 <div className="flex items-center gap-2 mb-3">
-                  <span className="text-xl">📝</span>
+                  <span className="text-xl">🪰</span>
                   <h4 className={`text-sm font-medium ${
                     isLegacy ? 'text-[var(--legacy-text)]' : 'text-text-soft'
                   }`}>
