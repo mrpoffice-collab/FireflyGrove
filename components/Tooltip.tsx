@@ -1,6 +1,6 @@
 'use client'
 
-import { ReactNode, useState, useRef, useEffect } from 'react'
+import { ReactNode, useState, useRef, useEffect, cloneElement, isValidElement } from 'react'
 
 interface TooltipProps {
   content: string
@@ -16,9 +16,9 @@ export default function Tooltip({
   delay = 300,
 }: TooltipProps) {
   const [isVisible, setIsVisible] = useState(false)
-  const [coords, setCoords] = useState({ x: 0, y: 0 })
+  const [tooltipStyle, setTooltipStyle] = useState<React.CSSProperties>({})
   const timeoutRef = useRef<NodeJS.Timeout>()
-  const triggerRef = useRef<HTMLDivElement>(null)
+  const triggerRef = useRef<HTMLElement | null>(null)
 
   useEffect(() => {
     return () => {
@@ -28,15 +28,44 @@ export default function Tooltip({
     }
   }, [])
 
-  const handleMouseEnter = () => {
+  const updateTooltipPosition = () => {
+    if (!triggerRef.current) return
+
+    const rect = triggerRef.current.getBoundingClientRect()
+    const offset = 8 // Distance from the element
+
+    let top = 0
+    let left = 0
+
+    switch (position) {
+      case 'top':
+        top = rect.top - offset
+        left = rect.left + rect.width / 2
+        break
+      case 'bottom':
+        top = rect.bottom + offset
+        left = rect.left + rect.width / 2
+        break
+      case 'left':
+        top = rect.top + rect.height / 2
+        left = rect.left - offset
+        break
+      case 'right':
+        top = rect.top + rect.height / 2
+        left = rect.right + offset
+        break
+    }
+
+    setTooltipStyle({
+      top: `${top}px`,
+      left: `${left}px`,
+    })
+  }
+
+  const handleMouseEnter = (e: React.MouseEvent) => {
+    triggerRef.current = e.currentTarget as HTMLElement
     timeoutRef.current = setTimeout(() => {
-      if (triggerRef.current) {
-        const rect = triggerRef.current.getBoundingClientRect()
-        setCoords({
-          x: rect.left + rect.width / 2,
-          y: rect.top,
-        })
-      }
+      updateTooltipPosition()
       setIsVisible(true)
     }, delay)
   }
@@ -48,67 +77,70 @@ export default function Tooltip({
     setIsVisible(false)
   }
 
-  const getPositionClasses = () => {
+  const getTransformOrigin = () => {
     switch (position) {
       case 'top':
-        return 'bottom-full left-1/2 -translate-x-1/2 mb-2'
+        return 'bottom center'
       case 'bottom':
-        return 'top-full left-1/2 -translate-x-1/2 mt-2'
+        return 'top center'
       case 'left':
-        return 'right-full top-1/2 -translate-y-1/2 mr-2'
+        return 'right center'
       case 'right':
-        return 'left-full top-1/2 -translate-y-1/2 ml-2'
+        return 'left center'
       default:
-        return 'bottom-full left-1/2 -translate-x-1/2 mb-2'
+        return 'bottom center'
     }
   }
 
-  const getArrowClasses = () => {
+  const getTransform = () => {
     switch (position) {
       case 'top':
-        return 'top-full left-1/2 -translate-x-1/2 border-t-bg-darker border-l-transparent border-r-transparent border-b-transparent'
+        return 'translate(-50%, -100%)'
       case 'bottom':
-        return 'bottom-full left-1/2 -translate-x-1/2 border-b-bg-darker border-l-transparent border-r-transparent border-t-transparent'
+        return 'translate(-50%, 0)'
       case 'left':
-        return 'left-full top-1/2 -translate-y-1/2 border-l-bg-darker border-t-transparent border-b-transparent border-r-transparent'
+        return 'translate(-100%, -50%)'
       case 'right':
-        return 'right-full top-1/2 -translate-y-1/2 border-r-bg-darker border-t-transparent border-b-transparent border-l-transparent'
+        return 'translate(0, -50%)'
       default:
-        return 'top-full left-1/2 -translate-x-1/2 border-t-bg-darker border-l-transparent border-r-transparent border-b-transparent'
+        return 'translate(-50%, -100%)'
     }
   }
+
+  // Clone the child element and add mouse event handlers
+  const wrappedChild = isValidElement(children)
+    ? cloneElement(children as React.ReactElement<any>, {
+        onMouseEnter: (e: React.MouseEvent) => {
+          handleMouseEnter(e)
+          // Call original handler if it exists
+          const originalOnMouseEnter = (children as any).props?.onMouseEnter
+          if (originalOnMouseEnter) originalOnMouseEnter(e)
+        },
+        onMouseLeave: (e: React.MouseEvent) => {
+          handleMouseLeave()
+          // Call original handler if it exists
+          const originalOnMouseLeave = (children as any).props?.onMouseLeave
+          if (originalOnMouseLeave) originalOnMouseLeave(e)
+        },
+      })
+    : children
 
   return (
-    <div
-      ref={triggerRef}
-      className="relative inline-block"
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-    >
-      {children}
-
+    <>
+      {wrappedChild}
       {isVisible && (
         <div
-          className={`
-            absolute z-50 px-3 py-2 text-sm
-            bg-bg-darker border border-firefly-dim/30
-            text-text-soft rounded-md shadow-lg
-            whitespace-nowrap pointer-events-none
-            animate-fadeIn
-            ${getPositionClasses()}
-          `}
+          className="fixed z-[9999] px-3 py-2 text-sm bg-bg-darker border border-firefly-dim/30 text-text-soft rounded-md shadow-lg whitespace-nowrap pointer-events-none animate-fadeIn"
+          style={{
+            ...tooltipStyle,
+            transform: getTransform(),
+            transformOrigin: getTransformOrigin(),
+          }}
           role="tooltip"
         >
           {content}
-          <div
-            className={`
-              absolute w-0 h-0
-              border-4
-              ${getArrowClasses()}
-            `}
-          />
         </div>
       )}
-    </div>
+    </>
   )
 }
