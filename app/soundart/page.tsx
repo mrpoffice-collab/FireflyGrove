@@ -3,13 +3,14 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { useSession } from 'next-auth/react'
+import SoundArtBuilder from '@/components/SoundArtBuilder'
 
 export default function SoundArtPage() {
   const { data: session } = useSession()
   const [started, setStarted] = useState(false)
 
   if (started) {
-    return <div>Builder coming soon...</div>
+    return <SoundArtBuilder />
   }
 
   return (
