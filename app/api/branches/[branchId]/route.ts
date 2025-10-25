@@ -67,26 +67,6 @@ export async function GET(
             },
           },
         },
-        entries: {
-          where: {
-            status: 'ACTIVE', // Only show active entries
-            OR: [
-              { authorId: userId },
-              { visibility: 'SHARED', approved: true },
-            ],
-          },
-          include: {
-            author: {
-              select: {
-                id: true,
-                name: true,
-              },
-            },
-          },
-          orderBy: {
-            createdAt: 'desc',
-          },
-        },
       },
     })
 
@@ -94,12 +74,49 @@ export async function GET(
       return NextResponse.json({ error: 'Branch not found' }, { status: 404 })
     }
 
+    // Check if user is owner to determine what entries to show
+    const isOwner = branch.ownerId === userId
+
+    // Fetch entries with appropriate filters
+    const entries = await prisma.entry.findMany({
+      where: {
+        branchId: branchId,
+        status: 'ACTIVE',
+        ...(isOwner
+          ? {} // Owner sees all active entries
+          : { // Members only see their own entries OR approved shared entries
+              OR: [
+                { authorId: userId },
+                { visibility: 'SHARED', approved: true },
+              ],
+            }
+        ),
+      },
+      include: {
+        author: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    })
+
+    // Add entries to branch object
+    const branchWithEntries = {
+      ...branch,
+      entries,
+    }
+
     // Check and expire trustee if needed (for Person-based legacy trees)
     if (branch.personId) {
       await checkAndExpireTrustee(branch.personId)
     }
 
-    return NextResponse.json(branch)
+    return NextResponse.json(branchWithEntries)
   } catch (error) {
     console.error('Error fetching branch:', error)
     return NextResponse.json(
