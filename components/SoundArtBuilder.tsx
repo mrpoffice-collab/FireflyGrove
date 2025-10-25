@@ -29,6 +29,11 @@ export default function SoundArtBuilder() {
   const [uniqueCode, setUniqueCode] = useState('')
   const [qrCodeDataUrl, setQrCodeDataUrl] = useState<string | null>(null)
 
+  // Upload state
+  const [isUploading, setIsUploading] = useState(false)
+  const [isSaved, setIsSaved] = useState(false)
+  const [playUrl, setPlayUrl] = useState<string | null>(null)
+
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
   // Extract waveform data from audio file
@@ -112,6 +117,55 @@ export default function SoundArtBuilder() {
     } catch (err) {
       console.error('Error generating QR code:', err)
       setError('Failed to generate QR code')
+    }
+  }
+
+  // Upload to API and save
+  const uploadToAPI = async () => {
+    if (!audioFile || !waveformData || !uniqueCode) {
+      setError('Please add a QR code before saving')
+      return
+    }
+
+    setIsUploading(true)
+    setError(null)
+
+    try {
+      // Prepare form data
+      const formData = new FormData()
+      formData.append('audio', audioFile)
+      formData.append('waveformData', JSON.stringify(waveformData.samples))
+      formData.append('uniqueCode', uniqueCode)
+      formData.append('audioDuration', waveformData.duration.toString())
+
+      if (title) formData.append('title', title)
+      formData.append('primaryColor', primaryColor)
+      formData.append('backgroundColor', backgroundColor)
+      formData.append('waveformStyle', waveformStyle)
+      formData.append('stylePreset', stylePreset)
+
+      // Upload to API
+      const response = await fetch('/api/soundart/upload', {
+        method: 'POST',
+        body: formData,
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Upload failed')
+      }
+
+      const data = await response.json()
+
+      setPlayUrl(data.soundArt.playUrl)
+      setIsSaved(true)
+      setIsUploading(false)
+
+      console.log('✓ Sound art saved successfully:', data.soundArt.playUrl)
+    } catch (err) {
+      console.error('Upload error:', err)
+      setError(err instanceof Error ? err.message : 'Failed to save sound art')
+      setIsUploading(false)
     }
   }
 
@@ -470,32 +524,81 @@ export default function SoundArtBuilder() {
                     />
                   </div>
 
-                  <div className="mt-6 flex gap-4">
+                  <div className="mt-6 space-y-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <button
+                        onClick={generateQRCode}
+                        disabled={showQRCode}
+                        className={`px-6 py-3 border rounded-lg font-medium transition-soft ${
+                          showQRCode
+                            ? 'bg-firefly-glow/20 text-firefly-glow border-firefly-glow cursor-not-allowed'
+                            : 'bg-firefly-dim/20 hover:bg-firefly-dim/40 text-firefly-glow border-firefly-dim/50'
+                        }`}
+                      >
+                        {showQRCode ? '✓ QR Code Added' : '+ Add QR Code'}
+                      </button>
+                      <button
+                        onClick={() => {
+                          if (canvasRef.current) {
+                            const link = document.createElement('a')
+                            link.download = `soundart-${Date.now()}.png`
+                            link.href = canvasRef.current.toDataURL()
+                            link.click()
+                          }
+                        }}
+                        className="px-6 py-3 bg-border-subtle hover:bg-text-muted/20 text-text-soft rounded-lg font-medium transition-soft"
+                      >
+                        📥 Download
+                      </button>
+                    </div>
+
                     <button
-                      onClick={generateQRCode}
-                      disabled={showQRCode}
-                      className={`flex-1 px-6 py-3 border rounded-lg font-medium transition-soft ${
-                        showQRCode
-                          ? 'bg-firefly-glow/20 text-firefly-glow border-firefly-glow cursor-not-allowed'
-                          : 'bg-firefly-dim/20 hover:bg-firefly-dim/40 text-firefly-glow border-firefly-dim/50'
+                      onClick={uploadToAPI}
+                      disabled={!showQRCode || isUploading || isSaved}
+                      className={`w-full px-6 py-3 rounded-lg font-medium transition-soft ${
+                        isSaved
+                          ? 'bg-green-500/20 text-green-400 border border-green-500/30 cursor-not-allowed'
+                          : isUploading
+                          ? 'bg-firefly-dim/40 text-text-soft cursor-wait'
+                          : showQRCode
+                          ? 'bg-firefly-dim hover:bg-firefly-glow text-bg-dark'
+                          : 'bg-border-subtle text-text-muted cursor-not-allowed'
                       }`}
                     >
-                      {showQRCode ? '✓ QR Code Added' : '+ Add QR Code'}
+                      {isSaved
+                        ? '✓ Saved & Ready to Share'
+                        : isUploading
+                        ? 'Uploading...'
+                        : '💾 Save & Share'}
                     </button>
-                    <button
-                      onClick={() => {
-                        // TODO: Export as high-res image
-                        if (canvasRef.current) {
-                          const link = document.createElement('a')
-                          link.download = `soundart-${Date.now()}.png`
-                          link.href = canvasRef.current.toDataURL()
-                          link.click()
-                        }
-                      }}
-                      className="flex-1 px-6 py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg font-medium transition-soft"
-                    >
-                      📥 Download Artwork
-                    </button>
+
+                    {isSaved && playUrl && (
+                      <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-4">
+                        <p className="text-green-400 text-sm font-medium mb-2">
+                          🎉 Your sound art is saved!
+                        </p>
+                        <p className="text-text-muted text-xs mb-2">
+                          Scan the QR code or share this link:
+                        </p>
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="text"
+                            readOnly
+                            value={`${window.location.origin}${playUrl}`}
+                            className="flex-1 px-3 py-2 bg-bg-dark border border-border-subtle rounded text-text-soft text-xs"
+                          />
+                          <button
+                            onClick={() => {
+                              navigator.clipboard.writeText(`${window.location.origin}${playUrl}`)
+                              alert('Link copied to clipboard!')
+                            }}
+                            className="px-3 py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded text-xs font-medium transition-soft"
+                          >
+                            Copy
+                          </button>
+                        </div>
+                      </div>
+                    )}
                   </div>
 
                   <p className="text-text-muted text-xs mt-4 text-center">
