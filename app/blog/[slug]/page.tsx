@@ -103,19 +103,117 @@ export default async function BlogPost({ params }: Props) {
         </header>
 
         {/* Content */}
-        <div
-          className="prose prose-invert prose-firefly max-w-none
-            prose-headings:text-text-soft prose-headings:font-light
-            prose-p:text-text-muted prose-p:leading-relaxed
-            prose-a:text-firefly-glow prose-a:no-underline hover:prose-a:text-firefly-bright
-            prose-strong:text-text-soft prose-strong:font-medium
-            prose-ul:text-text-muted prose-ol:text-text-muted
-            prose-li:my-2
-            prose-code:text-firefly-glow prose-code:bg-firefly-glow/10 prose-code:px-2 prose-code:py-1 prose-code:rounded
-            prose-pre:bg-bg-elevated prose-pre:border prose-pre:border-border-subtle
-            prose-blockquote:border-l-4 prose-blockquote:border-firefly-dim prose-blockquote:text-text-muted prose-blockquote:italic"
-          dangerouslySetInnerHTML={{ __html: post.content }}
-        />
+        <div className="blog-content">
+          <style jsx>{`
+            .blog-content {
+              color: #A8B3C0;
+              line-height: 1.8;
+              font-size: 1.125rem;
+            }
+
+            .blog-content h2 {
+              color: #E8EDF2;
+              font-size: 2rem;
+              font-weight: 300;
+              margin-top: 3rem;
+              margin-bottom: 1.5rem;
+              padding-bottom: 0.5rem;
+              border-bottom: 1px solid #2D3748;
+            }
+
+            .blog-content h3 {
+              color: #E8EDF2;
+              font-size: 1.5rem;
+              font-weight: 400;
+              margin-top: 2.5rem;
+              margin-bottom: 1rem;
+            }
+
+            .blog-content h4 {
+              color: #CBD5E0;
+              font-size: 1.25rem;
+              font-weight: 500;
+              margin-top: 2rem;
+              margin-bottom: 0.75rem;
+            }
+
+            .blog-content p {
+              margin-bottom: 1.5rem;
+              color: #A8B3C0;
+            }
+
+            .blog-content a {
+              color: #FFD966;
+              text-decoration: none;
+              border-bottom: 1px solid transparent;
+              transition: border-color 0.2s;
+            }
+
+            .blog-content a:hover {
+              color: #FFE599;
+              border-bottom-color: #FFD966;
+            }
+
+            .blog-content strong {
+              color: #CBD5E0;
+              font-weight: 600;
+            }
+
+            .blog-content ul, .blog-content ol {
+              margin-bottom: 1.5rem;
+              padding-left: 1.5rem;
+            }
+
+            .blog-content li {
+              margin-bottom: 0.75rem;
+              color: #A8B3C0;
+            }
+
+            .blog-content code {
+              background: rgba(255, 217, 102, 0.1);
+              color: #FFD966;
+              padding: 0.125rem 0.375rem;
+              border-radius: 0.25rem;
+              font-size: 0.9em;
+              font-family: 'Monaco', 'Courier New', monospace;
+            }
+
+            .blog-content pre {
+              background: #1A202C;
+              border: 1px solid #2D3748;
+              border-radius: 0.5rem;
+              padding: 1.5rem;
+              overflow-x: auto;
+              margin-bottom: 1.5rem;
+            }
+
+            .blog-content pre code {
+              background: transparent;
+              padding: 0;
+            }
+
+            .blog-content blockquote {
+              border-left: 4px solid #FFD966;
+              padding-left: 1.5rem;
+              margin-left: 0;
+              margin-bottom: 1.5rem;
+              font-style: italic;
+              color: #CBD5E0;
+            }
+
+            .blog-content hr {
+              border: none;
+              border-top: 1px solid #2D3748;
+              margin: 3rem 0;
+            }
+
+            .blog-content img {
+              border-radius: 0.5rem;
+              margin: 2rem 0;
+            }
+          `}</style>
+          <div dangerouslySetInnerHTML={{ __html: post.content }} />
+        </div>
 
         {/* Author */}
         <div className="mt-12 pt-8 border-t border-border-subtle">
