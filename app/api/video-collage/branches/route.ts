@@ -36,7 +36,10 @@ export async function GET(req: NextRequest) {
         ],
         archived: false,
       },
-      include: {
+      select: {
+        id: true,
+        name: true,
+        description: true,
         person: {
           select: {
             id: true,
