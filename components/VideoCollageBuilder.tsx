@@ -1,7 +1,8 @@
 'use client'
 
-import { useState, useCallback, useRef } from 'react'
+import { useState, useCallback, useRef, useEffect } from 'react'
 import { useDropzone } from 'react-dropzone'
+import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 import { VideoRenderer } from './VideoRenderer'
 
@@ -27,7 +28,24 @@ interface VideoSettings {
   defaultFilter: string
 }
 
+interface BranchData {
+  id: string
+  name: string
+  description: string | null
+  personName: string | null
+  birthDate: string | null
+  deathDate: string | null
+  photoCount: number
+  photos: {
+    id: string
+    url: string
+    caption: string
+    createdAt: string
+  }[]
+}
+
 export default function VideoCollageBuilder() {
+  const { data: session, status } = useSession()
   const [photos, setPhotos] = useState<Photo[]>([])
   const [settings, setSettings] = useState<VideoSettings>({
     introText: '',
@@ -46,6 +64,84 @@ export default function VideoCollageBuilder() {
   const [videoBlob, setVideoBlob] = useState<Blob | null>(null)
   const [error, setError] = useState<string | null>(null)
   const videoRendererRef = useRef<any>(null)
+
+  // Branch import state
+  const [branches, setBranches] = useState<BranchData[]>([])
+  const [selectedBranch, setSelectedBranch] = useState<string | null>(null)
+  const [loadingBranches, setLoadingBranches] = useState(false)
+
+  // Fetch branches when user is logged in
+  useEffect(() => {
+    if (session?.user) {
+      setLoadingBranches(true)
+      fetch('/api/video-collage/branches')
+        .then((res) => res.json())
+        .then((data) => {
+          setBranches(data)
+          setLoadingBranches(false)
+        })
+        .catch((err) => {
+          console.error('Failed to fetch branches:', err)
+          setLoadingBranches(false)
+        })
+    }
+  }, [session])
+
+  // Import photos from selected branch
+  const importFromBranch = async (branchId: string) => {
+    const branch = branches.find((b) => b.id === branchId)
+    if (!branch) return
+
+    try {
+      // Convert branch photos to Photo objects
+      const branchPhotos: Photo[] = await Promise.all(
+        branch.photos.map(async (photo) => {
+          // Fetch the image as a blob to create a File object
+          const response = await fetch(photo.url)
+          const blob = await response.blob()
+          const file = new File([blob], `photo-${photo.id}.jpg`, { type: blob.type })
+
+          return {
+            id: photo.id,
+            file,
+            url: photo.url,
+            duration: settings.photoDuration,
+            filter: settings.defaultFilter,
+            transition: settings.defaultTransition,
+            caption: photo.caption,
+          }
+        })
+      )
+
+      // Add photos to the list
+      setPhotos(branchPhotos)
+
+      // Auto-populate intro text with branch info
+      const introTitle = branch.personName
+        ? `In Loving Memory of ${branch.personName}`
+        : `In Loving Memory`
+
+      let introSubtext = ''
+      if (branch.personName && branch.birthDate && branch.deathDate) {
+        const birthYear = new Date(branch.birthDate).getFullYear()
+        const deathYear = new Date(branch.deathDate).getFullYear()
+        introSubtext = `${branch.personName} • ${birthYear} - ${deathYear}`
+      } else if (branch.personName) {
+        introSubtext = branch.personName
+      }
+
+      setSettings((prev) => ({
+        ...prev,
+        introText: introTitle,
+        introSubtext: introSubtext,
+      }))
+
+      setSelectedBranch(branchId)
+    } catch (error) {
+      console.error('Failed to import photos from branch:', error)
+      setError('Failed to import photos from branch')
+    }
+  }
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     const newPhotos: Photo[] = acceptedFiles.map((file) => ({
@@ -169,6 +265,79 @@ export default function VideoCollageBuilder() {
               <h2 className="text-2xl font-light text-text-soft mb-2">Upload Your Photos</h2>
               <p className="text-text-muted">Add at least 3 photos to create your memorial video</p>
             </div>
+
+            {/* Branch Import Section (only if user is logged in) */}
+            {session?.user && (
+              <div className="mb-8">
+                <div className="bg-firefly-dim/10 border border-firefly-dim/30 rounded-lg p-6">
+                  <div className="flex items-start gap-3 mb-4">
+                    <span className="text-2xl">🌳</span>
+                    <div className="flex-1">
+                      <h3 className="text-lg text-firefly-glow mb-1">
+                        Import from Your Memorial Trees
+                      </h3>
+                      <p className="text-text-muted text-sm">
+                        Select a memorial tree to automatically import all its photos
+                      </p>
+                    </div>
+                  </div>
+
+                  {loadingBranches ? (
+                    <div className="text-center py-4 text-text-muted">
+                      Loading your memorial trees...
+                    </div>
+                  ) : branches.length === 0 ? (
+                    <div className="text-center py-4 text-text-muted text-sm">
+                      No memorial trees with photos found.{' '}
+                      <Link href="/grove" className="text-firefly-glow hover:underline">
+                        Create your first memorial →
+                      </Link>
+                    </div>
+                  ) : (
+                    <div className="grid md:grid-cols-2 gap-3">
+                      {branches.map((branch) => (
+                        <button
+                          key={branch.id}
+                          onClick={() => importFromBranch(branch.id)}
+                          disabled={selectedBranch === branch.id}
+                          className={`text-left p-4 rounded-lg border transition-soft ${
+                            selectedBranch === branch.id
+                              ? 'bg-firefly-dim/20 border-firefly-glow text-firefly-glow'
+                              : 'bg-bg-elevated border-border-subtle text-text-soft hover:border-firefly-dim/50'
+                          }`}
+                        >
+                          <div className="font-medium mb-1">
+                            {branch.personName || branch.name}
+                          </div>
+                          <div className="text-sm text-text-muted">
+                            {branch.photoCount} photo{branch.photoCount !== 1 ? 's' : ''}
+                            {branch.birthDate && branch.deathDate && (
+                              <span className="ml-2">
+                                • {new Date(branch.birthDate).getFullYear()} -{' '}
+                                {new Date(branch.deathDate).getFullYear()}
+                              </span>
+                            )}
+                          </div>
+                          {selectedBranch === branch.id && (
+                            <div className="mt-2 text-xs text-firefly-glow">
+                              ✓ Selected
+                            </div>
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                <div className="text-center my-6">
+                  <div className="flex items-center gap-4">
+                    <div className="flex-1 h-px bg-border-subtle" />
+                    <span className="text-text-muted text-sm">or upload new photos</span>
+                    <div className="flex-1 h-px bg-border-subtle" />
+                  </div>
+                </div>
+              </div>
+            )}
 
             {/* Upload Zone */}
             <div
