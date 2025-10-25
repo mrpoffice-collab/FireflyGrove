@@ -17,7 +17,7 @@ export default function CommunityGoalBanner() {
       .catch((err) => console.error('Failed to fetch stats:', err))
   }, [])
 
-  if (!stats) return null
+  if (!stats || typeof stats.trees !== 'number') return null
 
   const percentage = (stats.trees / GOAL) * 100
   const formattedTrees = stats.trees.toLocaleString()
