@@ -39,6 +39,7 @@ model User {
   reports          Report[]       @relation("ReportedBy")
   audits           Audit[]        @relation("AuditActor")
   treeSubscriptions TreeSubscription[]
+  sentTreeTransfers TreeTransfer[] @relation("TreeTransferSender")
 
   @@index([email])
   @@index([status])
@@ -110,6 +111,7 @@ model Person {
   moderator    User?              @relation("PersonModerator", fields: [moderatorId], references: [id])
   memberships  GroveTreeMembership[]
   branches     Branch[]
+  treeTransfers TreeTransfer[]    @relation("TreeTransferPerson")
 
   @@index([userId])
   @@index([trusteeId])
@@ -532,5 +534,38 @@ model PersonRoot {
   @@index([personId1])
   @@index([personId2])
   @@index([status])
+  @@index([createdAt])
+}
+
+// Tree Transfer Requests
+// Enables transferring trees between users via email invitation
+model TreeTransfer {
+  id              String   @id @default(cuid())
+  personId        String   // The Person/Tree being transferred
+  senderUserId    String   // User sending the tree
+  recipientEmail  String   // Email of the recipient
+  message         String?  // Optional message from sender
+  status          String   @default("pending") // pending, accepted, declined, expired, cancelled
+  token           String   @unique // Unique token for acceptance link
+
+  // Acceptance tracking
+  acceptedAt      DateTime?
+  acceptedBy      String?  // User who accepted (after creating account if needed)
+  destinationGroveId String? // Grove where tree was placed after acceptance
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  expiresAt       DateTime // Auto-expire after 30 days
+
+  // Relations
+  person          Person   @relation("TreeTransferPerson", fields: [personId], references: [id], onDelete: Cascade)
+  sender          User     @relation("TreeTransferSender", fields: [senderUserId], references: [id], onDelete: Cascade)
+
+  @@index([personId])
+  @@index([senderUserId])
+  @@index([recipientEmail])
+  @@index([status])
+  @@index([token])
+  @@index([expiresAt])
   @@index([createdAt])
 }
