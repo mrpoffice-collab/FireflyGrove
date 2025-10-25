@@ -73,7 +73,7 @@ export async function GET(req: NextRequest) {
       const planType = user?.isBetaTester ? 'family' : 'trial'
       const treeLimit = user?.isBetaTester ? 10 : 1
 
-      grove = await prisma.grove.create({
+      await prisma.grove.create({
         data: {
           userId,
           name: `${user?.name}'s Grove`,
@@ -88,7 +88,7 @@ export async function GET(req: NextRequest) {
         console.log(`[Beta] Created Family Grove for beta tester ${user.email}`)
       }
 
-      // Re-fetch with includes
+      // Fetch the newly created grove with includes
       grove = await prisma.grove.findUnique({
         where: { userId },
         include: {
