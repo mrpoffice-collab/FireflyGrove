@@ -92,36 +92,59 @@ export default function StoryModal({ onClose }: StoryModalProps) {
       if (audioRef.current) {
         try {
           audioRef.current.volume = 0.3 // Start at 30% volume
-          await audioRef.current.play()
-          setIsPlaying(true)
+          audioRef.current.muted = false
+          const playPromise = audioRef.current.play()
+
+          if (playPromise !== undefined) {
+            playPromise
+              .then(() => {
+                setIsPlaying(true)
+                console.log('Music started playing')
+              })
+              .catch((error) => {
+                // Autoplay blocked - show unmute button to user
+                console.log('Autoplay blocked. Click the speaker icon to play music.')
+                setIsMuted(true)
+                audioRef.current!.muted = true
+              })
+          }
         } catch (error) {
-          // Autoplay blocked - user will need to click unmute
-          console.log('Autoplay blocked, waiting for user interaction')
+          console.log('Audio playback error:', error)
         }
       }
     }
-    playAudio()
+
+    // Small delay to ensure modal is visible before trying to play
+    const timer = setTimeout(playAudio, 300)
 
     return () => {
-      // Fade out and stop music when modal closes
+      clearTimeout(timer)
+      // Stop music when modal closes
       if (audioRef.current) {
         audioRef.current.pause()
+        audioRef.current.currentTime = 0
       }
     }
   }, [])
 
-  const toggleMute = () => {
+  const toggleMute = async () => {
     if (audioRef.current) {
       if (isMuted) {
         audioRef.current.muted = false
         if (!isPlaying) {
-          audioRef.current.play()
-          setIsPlaying(true)
+          try {
+            await audioRef.current.play()
+            setIsPlaying(true)
+            console.log('Music started after unmute')
+          } catch (error) {
+            console.log('Failed to start playback:', error)
+          }
         }
+        setIsMuted(false)
       } else {
         audioRef.current.muted = true
+        setIsMuted(true)
       }
-      setIsMuted(!isMuted)
     }
   }
 
