@@ -139,6 +139,71 @@ const VideoRenderer = forwardRef<{ renderVideo: () => void }, VideoRendererProps
     ctx.globalAlpha = 1
   }
 
+  const drawCaption = (
+    ctx: CanvasRenderingContext2D,
+    caption: string,
+    width: number,
+    height: number,
+    opacity: number = 1
+  ) => {
+    if (!caption || !caption.trim()) return
+
+    ctx.save()
+    ctx.globalAlpha = opacity
+
+    // Semi-transparent background bar at bottom
+    const barHeight = 120
+    const gradient = ctx.createLinearGradient(0, height - barHeight, 0, height)
+    gradient.addColorStop(0, 'rgba(0, 0, 0, 0)')
+    gradient.addColorStop(0.3, 'rgba(0, 0, 0, 0.7)')
+    gradient.addColorStop(1, 'rgba(0, 0, 0, 0.85)')
+    ctx.fillStyle = gradient
+    ctx.fillRect(0, height - barHeight, width, barHeight)
+
+    // Caption text
+    ctx.fillStyle = '#ffffff'
+    ctx.font = `${width * 0.024}px sans-serif` // Responsive font size
+    ctx.textAlign = 'center'
+    ctx.textBaseline = 'middle'
+
+    // Word wrap the caption
+    const maxWidth = width * 0.85
+    const words = caption.split(' ')
+    const lines: string[] = []
+    let currentLine = ''
+
+    words.forEach((word) => {
+      const testLine = currentLine ? `${currentLine} ${word}` : word
+      const metrics = ctx.measureText(testLine)
+
+      if (metrics.width > maxWidth && currentLine) {
+        lines.push(currentLine)
+        currentLine = word
+      } else {
+        currentLine = testLine
+      }
+    })
+    if (currentLine) {
+      lines.push(currentLine)
+    }
+
+    // Limit to 3 lines
+    const displayLines = lines.slice(0, 3)
+    if (lines.length > 3) {
+      displayLines[2] = displayLines[2] + '...'
+    }
+
+    // Draw lines
+    const lineHeight = width * 0.03
+    const startY = height - barHeight / 2 - ((displayLines.length - 1) * lineHeight) / 2
+
+    displayLines.forEach((line, index) => {
+      ctx.fillText(line, width / 2, startY + index * lineHeight)
+    })
+
+    ctx.restore()
+  }
+
   const drawPhotoWithTransition = async (
     ctx: CanvasRenderingContext2D,
     img: HTMLImageElement,
@@ -146,7 +211,8 @@ const VideoRenderer = forwardRef<{ renderVideo: () => void }, VideoRendererProps
     height: number,
     progress: number,
     transition: string,
-    filter: string
+    filter: string,
+    caption?: string
   ) => {
     ctx.save()
     applyFilter(ctx, filter)
@@ -211,6 +277,11 @@ const VideoRenderer = forwardRef<{ renderVideo: () => void }, VideoRendererProps
     }
 
     ctx.restore()
+
+    // Draw caption overlay if provided
+    if (caption) {
+      drawCaption(ctx, caption, width, height, 1)
+    }
   }
 
   const renderVideo = async () => {
@@ -358,7 +429,8 @@ const VideoRenderer = forwardRef<{ renderVideo: () => void }, VideoRendererProps
                 height,
                 1 - transitionProgress,
                 prevPhoto.transition,
-                prevPhoto.filter
+                prevPhoto.filter,
+                prevPhoto.caption
               )
             }
 
@@ -370,7 +442,8 @@ const VideoRenderer = forwardRef<{ renderVideo: () => void }, VideoRendererProps
               height,
               transitionProgress,
               photo.transition,
-              photo.filter
+              photo.filter,
+              photo.caption
             )
           }
         }
