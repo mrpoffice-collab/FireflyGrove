@@ -33,6 +33,17 @@ const slides: StorySlide[] = [
     ],
   },
   {
+    title: 'Trees That Hold Many Hearts',
+    icon: '🤲',
+    content: [
+      'Not every Tree must stand for one.',
+      'Some Trees grow to hold gatherings — the wine club that laughed through years, the kids who grew up side by side, the friends who became family.',
+      'A Tree can be a person, yes. But it can also be a circle. A season. A belonging.',
+      'Your grove bends to hold what matters most to you.',
+      'Because memory doesn\'t always live in one name — sometimes it lives in the spaces between us.',
+    ],
+  },
+  {
     title: 'The Firefly',
     icon: '✨',
     content: [
