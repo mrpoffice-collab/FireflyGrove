@@ -9,39 +9,27 @@ export default function Footer() {
             © 2025 Firefly Grove · Where memories take root and stories keep growing
           </p>
           <div className="flex flex-wrap justify-center gap-4 text-sm">
-            <Link
-              href="/about"
+            <a
+              href="/faq.txt"
+              target="_blank"
+              rel="noopener noreferrer"
               className="text-text-muted hover:text-firefly-glow transition-soft"
             >
-              About
+              FAQ
+            </a>
+            <span className="text-text-muted">·</span>
+            <Link
+              href="/open-grove"
+              className="text-text-muted hover:text-firefly-glow transition-soft"
+            >
+              Open Grove
             </Link>
             <span className="text-text-muted">·</span>
             <Link
-              href="/guide"
+              href="/feedback"
               className="text-text-muted hover:text-firefly-glow transition-soft"
             >
-              User Guide
-            </Link>
-            <span className="text-text-muted">·</span>
-            <Link
-              href="/privacy"
-              className="text-text-muted hover:text-firefly-glow transition-soft"
-            >
-              Privacy Policy
-            </Link>
-            <span className="text-text-muted">·</span>
-            <Link
-              href="/terms"
-              className="text-text-muted hover:text-firefly-glow transition-soft"
-            >
-              Terms of Use
-            </Link>
-            <span className="text-text-muted">·</span>
-            <Link
-              href="/contact"
-              className="text-text-muted hover:text-firefly-glow transition-soft"
-            >
-              Contact
+              Feedback
             </Link>
           </div>
         </div>
