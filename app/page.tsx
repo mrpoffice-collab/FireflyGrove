@@ -2,8 +2,10 @@
 
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
+import { useSession } from 'next-auth/react'
 import { AnimatePresence } from 'framer-motion'
 import StoryModal from '@/components/StoryModal'
+import Header from '@/components/Header'
 
 interface Stats {
   groves: number
@@ -13,6 +15,7 @@ interface Stats {
 }
 
 export default function HomePage() {
+  const { data: session } = useSession()
   const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === 'true'
   const [stats, setStats] = useState<Stats | null>(null)
   const [showStory, setShowStory] = useState(false)
@@ -29,8 +32,11 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4">
-      <div className="max-w-2xl text-center">
+    <div className="min-h-screen">
+      {session && <Header userName={session.user?.name || ''} />}
+
+      <div className="flex items-center justify-center px-4" style={{ minHeight: session ? 'calc(100vh - 73px)' : '100vh' }}>
+        <div className="max-w-2xl text-center">
         <div className="mb-8">
           <div className="flex items-center justify-center gap-3 mb-4">
             <h1 className="text-5xl font-light text-firefly-glow">
@@ -125,20 +131,31 @@ export default function HomePage() {
             ✨ Discover Our Story
           </button>
 
-          <div className="flex gap-3 max-w-xs mx-auto">
+          {!session && (
+            <div className="flex gap-3 max-w-xs mx-auto">
+              <Link
+                href="/signup"
+                className="flex-1 py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg font-medium transition-soft text-center"
+              >
+                Sign Up
+              </Link>
+              <Link
+                href="/login"
+                className="flex-1 py-3 bg-border-subtle hover:bg-text-muted/20 text-text-soft border border-border-subtle rounded-lg font-medium transition-soft text-center"
+              >
+                Sign In
+              </Link>
+            </div>
+          )}
+
+          {session && (
             <Link
-              href="/signup"
-              className="flex-1 py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg font-medium transition-soft text-center"
+              href="/grove"
+              className="block w-full max-w-xs mx-auto py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg font-medium transition-soft"
             >
-              Sign Up
+              Go to My Grove →
             </Link>
-            <Link
-              href="/login"
-              className="flex-1 py-3 bg-border-subtle hover:bg-text-muted/20 text-text-soft border border-border-subtle rounded-lg font-medium transition-soft text-center"
-            >
-              Sign In
-            </Link>
-          </div>
+          )}
           <Link
             href="/open-grove"
             className="block w-full max-w-xs mx-auto py-3 bg-border-subtle hover:bg-text-muted/20 text-[var(--legacy-text)] border border-[var(--legacy-amber)]/30 rounded-lg font-medium transition-soft"
@@ -180,6 +197,7 @@ export default function HomePage() {
               Share memories with loved ones when the time is right.
             </p>
           </div>
+        </div>
         </div>
       </div>
 
