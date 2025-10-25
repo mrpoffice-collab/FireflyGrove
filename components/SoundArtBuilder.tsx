@@ -903,7 +903,6 @@ export default function SoundArtBuilder() {
                   {(backgroundImage || waveformData || showQRCode) && (
                     <div className="mt-4 p-4 bg-bg-darker border border-border-subtle rounded-lg space-y-4">
                       <h4 className="text-sm text-text-soft font-medium">Position Controls</h4>
-                      {console.log('[Position Controls] waveformData:', !!waveformData, 'showQRCode:', showQRCode, 'backgroundImage:', !!backgroundImage)}
 
                       {/* Waveform Position */}
                       {waveformData && (
