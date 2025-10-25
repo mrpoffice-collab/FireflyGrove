@@ -230,9 +230,9 @@ export default function TreePage() {
                   <button
                     onClick={() => setShowTransplantModal(true)}
                     className="text-text-muted hover:text-firefly-glow transition-soft"
-                    title="Transplant tree to another grove"
+                    title="Transfer tree to another person"
                   >
-                    🌿
+                    🚚
                   </button>
                   <button
                     onClick={() => setShowRootModal(true)}
