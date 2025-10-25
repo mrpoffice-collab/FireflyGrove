@@ -82,6 +82,14 @@ export default function BranchSettingsModal({
   const [rooting, setRooting] = useState(false)
   const [rootError, setRootError] = useState('')
 
+  // Shareable link state
+  const [shareableLink, setShareableLink] = useState<{
+    url: string
+    expiresAt: string
+  } | null>(null)
+  const [generatingLink, setGeneratingLink] = useState(false)
+  const [linkCopied, setLinkCopied] = useState(false)
+
   // Sharing preferences
   const [sharingPrefs, setSharingPrefs] = useState({
     canBeTagged: true,
@@ -97,6 +105,7 @@ export default function BranchSettingsModal({
     fetchMembers()
     fetchPendingInvites()
     fetchSharingPreferences()
+    fetchShareableLink()
   }, [])
 
   const fetchBranchInfo = async () => {
@@ -161,6 +170,108 @@ export default function BranchSettingsModal({
       }
     } catch (error) {
       console.error('Failed to fetch invites:', error)
+    }
+  }
+
+  const fetchShareableLink = async () => {
+    // Check if a shareable link already exists
+    try {
+      const res = await fetch(`/api/branches/${branchId}/invites`)
+      if (res.ok) {
+        const invites = await res.json()
+        const shareable = invites.find((inv: any) => inv.email === 'shareable@link' && inv.status === 'PENDING')
+        if (shareable) {
+          setShareableLink({
+            url: `${window.location.origin}/invite/${shareable.token}`,
+            expiresAt: shareable.expiresAt
+          })
+        }
+      }
+    } catch (error) {
+      console.error('Failed to fetch shareable link:', error)
+    }
+  }
+
+  const handleGenerateShareableLink = async () => {
+    setGeneratingLink(true)
+    try {
+      const res = await fetch(`/api/branches/${branchId}/shareable-link`, {
+        method: 'POST'
+      })
+
+      if (res.ok) {
+        const data = await res.json()
+        setShareableLink({
+          url: data.invite.url,
+          expiresAt: data.invite.expiresAt
+        })
+      } else {
+        alert('Failed to generate shareable link')
+      }
+    } catch (error) {
+      console.error('Failed to generate shareable link:', error)
+      alert('Failed to generate shareable link')
+    } finally {
+      setGeneratingLink(false)
+    }
+  }
+
+  const handleDeleteShareableLink = async () => {
+    if (!confirm('Are you sure you want to delete this shareable link? Anyone with the link will no longer be able to use it.')) {
+      return
+    }
+
+    try {
+      const res = await fetch(`/api/branches/${branchId}/shareable-link`, {
+        method: 'DELETE'
+      })
+
+      if (res.ok) {
+        setShareableLink(null)
+      } else {
+        alert('Failed to delete shareable link')
+      }
+    } catch (error) {
+      console.error('Failed to delete shareable link:', error)
+      alert('Failed to delete shareable link')
+    }
+  }
+
+  const handleCopyLink = async () => {
+    if (!shareableLink) return
+
+    try {
+      await navigator.clipboard.writeText(shareableLink.url)
+      setLinkCopied(true)
+      setTimeout(() => setLinkCopied(false), 2000)
+    } catch (error) {
+      console.error('Failed to copy link:', error)
+      alert('Failed to copy link to clipboard')
+    }
+  }
+
+  const handleShareVia = (platform: string) => {
+    if (!shareableLink) return
+
+    const text = `You're invited to collaborate on "${branch?.title}" in Firefly Grove`
+    const url = shareableLink.url
+
+    switch (platform) {
+      case 'whatsapp':
+        window.open(`https://wa.me/?text=${encodeURIComponent(text + '\n\n' + url)}`, '_blank')
+        break
+      case 'messenger':
+        window.open(`https://www.facebook.com/dialog/send?link=${encodeURIComponent(url)}&app_id=YOUR_APP_ID&redirect_uri=${encodeURIComponent(window.location.origin)}`, '_blank')
+        break
+      case 'native':
+        if (navigator.share) {
+          navigator.share({
+            title: 'Firefly Grove Invitation',
+            text: text,
+            url: url
+          }).catch(err => console.log('Share cancelled or failed', err))
+        }
+        break
     }
   }
 
@@ -648,6 +759,85 @@ export default function BranchSettingsModal({
                 {invitingMember ? 'Inviting...' : 'Invite Member'}
               </button>
             </form>
+
+            {/* Shareable Link Section */}
+            <div className="mt-6 pt-6 border-t border-border-subtle">
+              <h4 className="text-md text-text-soft mb-3 flex items-center gap-2">
+                <span>🔗</span>
+                <span>Shareable Invitation Link</span>
+              </h4>
+              <p className="text-text-muted text-sm mb-4">
+                Create a link that can be shared via SMS, WhatsApp, Messenger, or any platform
+              </p>
+
+              {!shareableLink ? (
+                <button
+                  onClick={handleGenerateShareableLink}
+                  disabled={generatingLink}
+                  className="w-full py-2 bg-border-subtle hover:bg-text-muted/20 text-text-soft rounded font-medium transition-soft disabled:opacity-50"
+                >
+                  {generatingLink ? 'Generating Link...' : '+ Create Shareable Link'}
+                </button>
+              ) : (
+                <div className="space-y-3">
+                  {/* Link display with copy button */}
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={shareableLink.url}
+                      readOnly
+                      className="flex-1 px-3 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft text-sm"
+                    />
+                    <button
+                      onClick={handleCopyLink}
+                      className="px-4 py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded font-medium transition-soft"
+                    >
+                      {linkCopied ? '✓ Copied!' : 'Copy'}
+                    </button>
+                  </div>
+
+                  {/* Expiration info */}
+                  <p className="text-text-muted text-xs">
+                    Expires {new Date(shareableLink.expiresAt).toLocaleDateString()}
+                  </p>
+
+                  {/* Social share buttons */}
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => handleShareVia('whatsapp')}
+                      className="flex-1 py-2 px-3 bg-[#25D366] hover:bg-[#20BA5A] text-white rounded text-sm font-medium transition-soft flex items-center justify-center gap-2"
+                    >
+                      <span>📱</span>
+                      <span>WhatsApp</span>
+                    </button>
+                    <button
+                      onClick={() => handleShareVia('messenger')}
+                      className="flex-1 py-2 px-3 bg-[#0084FF] hover:bg-[#0073E6] text-white rounded text-sm font-medium transition-soft flex items-center justify-center gap-2"
+                    >
+                      <span>💬</span>
+                      <span>Messenger</span>
+                    </button>
+                    {navigator.share && (
+                      <button
+                        onClick={() => handleShareVia('native')}
+                        className="flex-1 py-2 px-3 bg-border-subtle hover:bg-text-muted/20 text-text-soft rounded text-sm font-medium transition-soft flex items-center justify-center gap-2"
+                      >
+                        <span>📤</span>
+                        <span>Share</span>
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Delete link button */}
+                  <button
+                    onClick={handleDeleteShareableLink}
+                    className="w-full py-2 text-red-400 hover:text-red-300 text-sm transition-soft"
+                  >
+                    Delete Link
+                  </button>
+                </div>
+              )}
+            </div>
 
             {/* Pending Invites */}
             {pendingInvites.length > 0 && (

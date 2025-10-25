@@ -31,6 +31,17 @@ export async function GET(req: NextRequest) {
         _count: {
           select: { entries: true },
         },
+        tree: {
+          include: {
+            grove: {
+              select: {
+                id: true,
+                name: true,
+                userId: true,
+              },
+            },
+          },
+        },
       },
       orderBy: {
         updatedAt: 'desc',

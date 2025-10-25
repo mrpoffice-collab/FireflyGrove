@@ -10,7 +10,7 @@ export async function POST(
 ) {
   try {
     const token = params.inviteId // This is actually a token, not an ID
-    const { name, password } = await req.json()
+    const { name, password, email } = await req.json()
 
     if (!name || !password) {
       return NextResponse.json(
@@ -54,9 +54,24 @@ export async function POST(
       )
     }
 
+    // Determine the email to use
+    const isShareableLink = invite.email === 'shareable@link'
+    let userEmail = invite.email
+
+    if (isShareableLink) {
+      // For shareable links, user must provide their email
+      if (!email) {
+        return NextResponse.json(
+          { error: 'Email is required' },
+          { status: 400 }
+        )
+      }
+      userEmail = email
+    }
+
     // Check if user already exists
     const existingUser = await prisma.user.findUnique({
-      where: { email: invite.email },
+      where: { email: userEmail },
     })
 
     if (existingUser) {
@@ -74,7 +89,7 @@ export async function POST(
       // Create user
       const user = await tx.user.create({
         data: {
-          email: invite.email,
+          email: userEmail,
           password: hashedPassword,
           name,
           status: 'ACTIVE',

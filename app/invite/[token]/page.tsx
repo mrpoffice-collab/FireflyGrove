@@ -8,8 +8,9 @@ import Link from 'next/link'
 interface InviteData {
   branchTitle: string
   inviterName: string
-  email: string
+  email: string | null
   expired: boolean
+  isShareableLink: boolean
 }
 
 export default function InvitePage() {
@@ -23,6 +24,7 @@ export default function InvitePage() {
 
   // Sign up form state
   const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [accepting, setAccepting] = useState(false)
 
@@ -52,11 +54,18 @@ export default function InvitePage() {
     setError('')
 
     try {
+      // For shareable links, user must provide email
+      const userEmail = invite?.isShareableLink ? email : invite?.email
+
       // Create account with invite acceptance
       const res = await fetch(`/api/invites/${token}/accept`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, password }),
+        body: JSON.stringify({
+          name,
+          password,
+          ...(invite?.isShareableLink && { email })
+        }),
       })
 
       const data = await res.json()
@@ -69,7 +78,7 @@ export default function InvitePage() {
 
       // Auto sign in
       const result = await signIn('credentials', {
-        email: invite!.email,
+        email: userEmail!,
         password,
         redirect: false,
       })
@@ -163,18 +172,36 @@ export default function InvitePage() {
         <div className="bg-bg-dark border border-border-subtle rounded-lg p-8">
           <h2 className="text-xl text-text-soft mb-4">Create Your Account</h2>
           <form onSubmit={handleAccept} className="space-y-6">
-            <div>
-              <label htmlFor="email" className="block text-sm text-text-soft mb-2">
-                Email (from invitation)
-              </label>
-              <input
-                id="email"
-                type="email"
-                value={invite.email}
-                disabled
-                className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-muted"
-              />
-            </div>
+            {invite.isShareableLink ? (
+              <div>
+                <label htmlFor="email" className="block text-sm text-text-soft mb-2">
+                  Your Email
+                </label>
+                <input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-dim transition-soft"
+                  required
+                  disabled={accepting}
+                  placeholder="you@example.com"
+                />
+              </div>
+            ) : (
+              <div>
+                <label htmlFor="email" className="block text-sm text-text-soft mb-2">
+                  Email (from invitation)
+                </label>
+                <input
+                  id="email"
+                  type="email"
+                  value={invite.email || ''}
+                  disabled
+                  className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-muted"
+                />
+              </div>
+            )}
 
             <div>
               <label htmlFor="name" className="block text-sm text-text-soft mb-2">

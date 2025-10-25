@@ -2,9 +2,11 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { useSession } from 'next-auth/react'
 import VideoCollageBuilder from '@/components/VideoCollageBuilder'
 
 export default function VideoCollagePage() {
+  const { data: session } = useSession()
   const [started, setStarted] = useState(false)
 
   if (started) {
@@ -21,12 +23,26 @@ export default function VideoCollagePage() {
               <span className="text-firefly-glow text-2xl">✦</span>
               <h1 className="text-xl font-light text-text-soft">Firefly Grove</h1>
             </Link>
-            <Link
-              href="/login"
-              className="text-text-muted hover:text-text-soft text-sm transition-soft"
-            >
-              Sign In
-            </Link>
+            {session ? (
+              <div className="flex items-center gap-4">
+                <span className="text-text-muted text-sm">
+                  {session.user?.name}
+                </span>
+                <Link
+                  href="/grove"
+                  className="px-4 py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded text-sm font-medium transition-soft"
+                >
+                  My Grove
+                </Link>
+              </div>
+            ) : (
+              <Link
+                href="/login"
+                className="text-text-muted hover:text-text-soft text-sm transition-soft"
+              >
+                Sign In
+              </Link>
+            )}
           </div>
         </div>
       </header>

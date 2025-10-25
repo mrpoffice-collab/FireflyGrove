@@ -5,10 +5,10 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import Header from '@/components/Header'
 
-interface Person {
+interface Tree {
   id: string
   name: string
-  isLegacy: boolean
+  description: string | null
   branches: Branch[]
 }
 
@@ -16,16 +16,24 @@ interface Branch {
   id: string
   title: string
   description: string | null
-  personStatus: string
+  personStatus?: string
   _count: {
     entries: number
+  }
+  tree?: {
+    id: string
+    name: string
+    grove: {
+      name: string
+    }
   }
 }
 
 export default function ForeverKitPage() {
   const { data: session, status } = useSession()
   const router = useRouter()
-  const [people, setPeople] = useState<Person[]>([])
+  const [trees, setTrees] = useState<Tree[]>([])
+  const [sharedBranches, setSharedBranches] = useState<Branch[]>([])
   const [loading, setLoading] = useState(true)
   const [downloading, setDownloading] = useState<string | null>(null)
 
@@ -37,17 +45,56 @@ export default function ForeverKitPage() {
 
   useEffect(() => {
     if (status === 'authenticated') {
-      fetchGrove()
+      fetchGroveAndBranches()
     }
   }, [status])
 
-  const fetchGrove = async () => {
+  const fetchGroveAndBranches = async () => {
     try {
-      const res = await fetch('/api/grove')
-      if (res.ok) {
-        const data = await res.json()
-        setPeople(data.people || [])
+      // Fetch grove info and all branches the user owns or has access to
+      const [groveRes, allBranchesRes] = await Promise.all([
+        fetch('/api/grove'),
+        fetch('/api/branches')
+      ])
+
+      if (!groveRes.ok) {
+        throw new Error('Failed to fetch grove')
       }
+
+      const groveData = await groveRes.json()
+      const userGroveId = groveData.id
+
+      // Get all branches user owns/has access to (already includes tree data)
+      const allBranches = allBranchesRes.ok ? await allBranchesRes.json() : []
+
+      // Group branches by tree
+      const treeMap = new Map<string, Tree>()
+      const shared: Branch[] = []
+
+      allBranches.forEach((branch: any) => {
+        if (!branch.tree) return
+
+        // Check if this branch is on a different grove (shared)
+        if (branch.tree.grove?.id && branch.tree.grove.id !== userGroveId) {
+          shared.push(branch)
+          return
+        }
+
+        // Group by tree
+        const treeId = branch.tree.id
+        if (!treeMap.has(treeId)) {
+          treeMap.set(treeId, {
+            id: branch.tree.id,
+            name: branch.tree.name,
+            description: branch.tree.description || null,
+            branches: []
+          })
+        }
+        treeMap.get(treeId)!.branches.push(branch)
+      })
+
+      setTrees(Array.from(treeMap.values()))
+      setSharedBranches(shared)
     } catch (error) {
       console.error('Failed to fetch grove:', error)
     } finally {
@@ -91,9 +138,9 @@ export default function ForeverKitPage() {
     )
   }
 
-  const totalMemories = people.reduce((sum, person) => {
-    return sum + person.branches.reduce((branchSum, branch) => branchSum + branch._count.entries, 0)
-  }, 0)
+  const totalMemories = trees.reduce((sum, tree) => {
+    return sum + tree.branches.reduce((branchSum, branch) => branchSum + branch._count.entries, 0)
+  }, 0) + sharedBranches.reduce((sum, branch) => sum + branch._count.entries, 0)
 
   return (
     <div className="min-h-screen">
@@ -113,7 +160,7 @@ export default function ForeverKitPage() {
               Download complete backups of your memories
             </p>
             <p className="text-text-muted text-sm">
-              {people.length} trees • {people.reduce((sum, p) => sum + p.branches.length, 0)} branches • {totalMemories} memories
+              {trees.length} trees • {trees.reduce((sum, t) => sum + t.branches.length, 0) + sharedBranches.length} branches • {totalMemories} memories
             </p>
           </div>
 
@@ -141,7 +188,7 @@ export default function ForeverKitPage() {
           </div>
 
           {/* Export List */}
-          {people.length === 0 ? (
+          {trees.length === 0 ? (
             <div className="text-center py-12">
               <div className="text-6xl mb-4">🌳</div>
               <p className="text-text-muted mb-6">
@@ -156,24 +203,24 @@ export default function ForeverKitPage() {
             </div>
           ) : (
             <div className="space-y-8">
-              {people.map((person) => (
-                <div key={person.id} className="bg-bg-dark border border-border-subtle rounded-lg p-6">
+              {trees.map((tree) => (
+                <div key={tree.id} className="bg-bg-dark border border-border-subtle rounded-lg p-6">
                   <div className="flex items-start gap-4 mb-6">
                     <div className="text-4xl">
-                      {person.isLegacy ? '🕯️' : '🌳'}
+                      🌳
                     </div>
                     <div className="flex-1">
                       <h3 className="text-xl text-text-soft font-medium mb-1">
-                        {person.name}
+                        {tree.name}
                       </h3>
                       <p className="text-text-muted text-sm">
-                        {person.branches.length} {person.branches.length === 1 ? 'branch' : 'branches'}
+                        {tree.branches.length} {tree.branches.length === 1 ? 'branch' : 'branches'}
                       </p>
                     </div>
                   </div>
 
                   <div className="space-y-3">
-                    {person.branches.map((branch) => (
+                    {tree.branches.map((branch) => (
                       <div
                         key={branch.id}
                         className="flex items-center justify-between bg-bg-darker border border-border-subtle rounded-lg p-4 hover:border-firefly-dim/30 transition-soft"
@@ -213,6 +260,75 @@ export default function ForeverKitPage() {
                   </div>
                 </div>
               ))}
+            </div>
+          )}
+
+          {/* Shared Branches Section */}
+          {sharedBranches.length > 0 && (
+            <div className="mt-12">
+              <div className="mb-6">
+                <h2 className="text-2xl text-text-soft mb-2 flex items-center gap-2">
+                  <span>🤝</span>
+                  <span>Shared Branches</span>
+                </h2>
+                <p className="text-text-muted text-sm">
+                  Branches on other people's trees where you've contributed memories
+                </p>
+              </div>
+
+              <div className="space-y-4">
+                {sharedBranches.map((branch) => (
+                  <div
+                    key={branch.id}
+                    className="bg-bg-dark border border-border-subtle rounded-lg p-4 hover:border-firefly-dim/30 transition-soft"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-text-soft font-medium">
+                            {branch.title}
+                          </span>
+                          <span className="text-xs text-text-muted">
+                            on {branch.tree?.name || 'Unknown Tree'}
+                          </span>
+                        </div>
+                        {branch.description && (
+                          <div className="text-text-muted text-sm mb-2">
+                            {branch.description}
+                          </div>
+                        )}
+                        <div className="flex items-center gap-3 text-xs text-text-muted">
+                          <span>
+                            {branch._count.entries} {branch._count.entries === 1 ? 'memory' : 'memories'}
+                          </span>
+                          {branch.tree?.grove?.name && (
+                            <span>
+                              in {branch.tree.grove.name}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+
+                      <button
+                        onClick={() => handleExport(branch.id, branch.title)}
+                        disabled={downloading === branch.id || branch._count.entries === 0}
+                        className="px-4 py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded font-medium transition-soft disabled:opacity-50 disabled:cursor-not-allowed ml-4"
+                      >
+                        {downloading === branch.id ? (
+                          'Preparing...'
+                        ) : branch._count.entries === 0 ? (
+                          'No memories'
+                        ) : (
+                          <>
+                            <span className="hidden sm:inline">Download </span>
+                            <span>📦</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
 

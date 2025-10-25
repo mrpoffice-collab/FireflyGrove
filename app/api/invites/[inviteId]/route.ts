@@ -37,12 +37,14 @@ export async function GET(
 
     // Check if expired
     const expired = invite.status !== 'PENDING' || new Date() > invite.expiresAt
+    const isShareableLink = invite.email === 'shareable@link'
 
     return NextResponse.json({
       branchTitle: invite.branch.title,
       inviterName: invite.inviter.name,
-      email: invite.email,
+      email: isShareableLink ? null : invite.email,
       expired,
+      isShareableLink,
     })
   } catch (error) {
     console.error('Error fetching invite:', error)
