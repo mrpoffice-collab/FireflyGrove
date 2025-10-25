@@ -4,6 +4,7 @@ import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import Header from '@/components/Header'
+import Tooltip from '@/components/Tooltip'
 import { getPlanById } from '@/lib/plans'
 
 interface Tree {
@@ -224,14 +225,18 @@ export default function GrovePage() {
                         {person.isLegacy && ' • Legacy tree'}
                       </p>
                     </div>
-                    <button
-                      onClick={() => handleTransplant(person.id, person.name)}
-                      disabled={transplanting === person.id || isAtCapacity}
-                      className="px-4 py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded font-medium transition-soft disabled:opacity-50 disabled:cursor-not-allowed"
-                      title={isAtCapacity ? 'Your grove is at capacity. Upgrade to add more trees.' : 'Transplant this tree to your grove'}
+                    <Tooltip
+                      content={isAtCapacity ? 'Your grove is at capacity. Upgrade to add more trees.' : 'Transplant this tree to your grove'}
+                      position="left"
                     >
-                      {transplanting === person.id ? 'Transplanting...' : 'Transplant to My Grove'}
-                    </button>
+                      <button
+                        onClick={() => handleTransplant(person.id, person.name)}
+                        disabled={transplanting === person.id || isAtCapacity}
+                        className="px-4 py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded font-medium transition-soft disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {transplanting === person.id ? 'Transplanting...' : 'Transplant to My Grove'}
+                      </button>
+                    </Tooltip>
                   </div>
                 ))}
               </div>
@@ -283,15 +288,16 @@ export default function GrovePage() {
                 <h1 className="text-4xl font-light text-text-soft">
                   {grove.name}
                 </h1>
-                <button
-                  onClick={() => setIsEditingName(true)}
-                  className="text-text-muted hover:text-firefly-glow transition-soft"
-                  title="Rename grove"
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                  </svg>
-                </button>
+                <Tooltip content="Rename your grove">
+                  <button
+                    onClick={() => setIsEditingName(true)}
+                    className="text-text-muted hover:text-firefly-glow transition-soft"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                    </svg>
+                  </button>
+                </Tooltip>
               </div>
             )}
 
@@ -381,32 +387,36 @@ export default function GrovePage() {
 
             {/* Empty Slots */}
             {Array.from({ length: grove.treeLimit - treeCount }).map((_, index) => (
-              <div
+              <Tooltip
                 key={`empty-${index}`}
-                onClick={() => grove.status !== 'canceled' && router.push('/grove/new-tree')}
-                className={`flex flex-col items-center gap-3 p-4 rounded-lg border-2 border-dashed transition-soft ${
-                  grove.status === 'canceled'
-                    ? 'border-border-subtle cursor-not-allowed opacity-50'
-                    : 'border-border-subtle hover:border-firefly-dim/50 cursor-pointer group'
-                }`}
+                content={grove.status === 'canceled' ? 'Reactivate your subscription to plant new trees' : 'Click to plant a new tree'}
               >
-                {/* Empty Tree Outline */}
-                <svg
-                  width="80"
-                  height="80"
-                  viewBox="0 0 80 80"
-                  className="group-hover:scale-110 transition-transform opacity-30"
+                <div
+                  onClick={() => grove.status !== 'canceled' && router.push('/grove/new-tree')}
+                  className={`flex flex-col items-center gap-3 p-4 rounded-lg border-2 border-dashed transition-soft ${
+                    grove.status === 'canceled'
+                      ? 'border-border-subtle cursor-not-allowed opacity-50'
+                      : 'border-border-subtle hover:border-firefly-dim/50 cursor-pointer group'
+                  }`}
                 >
-                  <rect x="36" y="50" width="8" height="25" fill="currentColor" className="text-text-muted" />
-                  <ellipse cx="40" cy="40" rx="20" ry="20" fill="none" stroke="currentColor" strokeWidth="2" strokeDasharray="4 4" className="text-text-muted" />
-                </svg>
+                  {/* Empty Tree Outline */}
+                  <svg
+                    width="80"
+                    height="80"
+                    viewBox="0 0 80 80"
+                    className="group-hover:scale-110 transition-transform opacity-30"
+                  >
+                    <rect x="36" y="50" width="8" height="25" fill="currentColor" className="text-text-muted" />
+                    <ellipse cx="40" cy="40" rx="20" ry="20" fill="none" stroke="currentColor" strokeWidth="2" strokeDasharray="4 4" className="text-text-muted" />
+                  </svg>
 
-                <div className="text-center">
-                  <div className="text-sm text-text-muted">
-                    Available
+                  <div className="text-center">
+                    <div className="text-sm text-text-muted">
+                      Available
+                    </div>
                   </div>
                 </div>
-              </div>
+              </Tooltip>
             ))}
           </div>
 

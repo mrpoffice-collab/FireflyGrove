@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Tooltip from './Tooltip'
 
 interface Heir {
   id: string
@@ -668,19 +669,22 @@ export default function BranchSettingsModal({
                         </div>
                       </div>
                       <div className="flex gap-2">
-                        <button
-                          onClick={() => handleResendInvite(invite.id)}
-                          className="px-3 py-1 text-xs bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded transition-soft"
-                          title="Resend invitation with new link"
-                        >
-                          Resend
-                        </button>
-                        <button
-                          onClick={() => handleCancelInvite(invite.id)}
-                          className="px-3 py-1 text-xs bg-red-600 hover:bg-red-700 text-white rounded transition-soft"
-                        >
-                          Cancel
-                        </button>
+                        <Tooltip content="Resend invitation with new link">
+                          <button
+                            onClick={() => handleResendInvite(invite.id)}
+                            className="px-3 py-1 text-xs bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded transition-soft"
+                          >
+                            Resend
+                          </button>
+                        </Tooltip>
+                        <Tooltip content="Cancel invitation">
+                          <button
+                            onClick={() => handleCancelInvite(invite.id)}
+                            className="px-3 py-1 text-xs bg-red-600 hover:bg-red-700 text-white rounded transition-soft"
+                          >
+                            Cancel
+                          </button>
+                        </Tooltip>
                       </div>
                     </div>
                   ))}
@@ -711,20 +715,22 @@ export default function BranchSettingsModal({
                         Let others share memories to this branch. Turn off to opt out completely.
                       </div>
                     </div>
-                    <button
-                      type="button"
-                      onClick={() => updateSharingPreference('canBeTagged', !sharingPrefs.canBeTagged)}
-                      disabled={savingPrefs}
-                      className={`relative inline-flex h-6 w-11 flex-shrink-0 rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-firefly-dim focus:ring-offset-2 disabled:opacity-50 ${
-                        sharingPrefs.canBeTagged ? 'bg-firefly-dim' : 'bg-border-subtle'
-                      }`}
-                    >
-                      <span
-                        className={`inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                          sharingPrefs.canBeTagged ? 'translate-x-5' : 'translate-x-0'
+                    <Tooltip content={sharingPrefs.canBeTagged ? 'Click to disable shared memories' : 'Click to allow shared memories'}>
+                      <button
+                        type="button"
+                        onClick={() => updateSharingPreference('canBeTagged', !sharingPrefs.canBeTagged)}
+                        disabled={savingPrefs}
+                        className={`relative inline-flex h-6 w-11 flex-shrink-0 rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-firefly-dim focus:ring-offset-2 disabled:opacity-50 ${
+                          sharingPrefs.canBeTagged ? 'bg-firefly-dim' : 'bg-border-subtle'
                         }`}
-                      />
-                    </button>
+                      >
+                        <span
+                          className={`inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                            sharingPrefs.canBeTagged ? 'translate-x-5' : 'translate-x-0'
+                          }`}
+                        />
+                      </button>
+                    </Tooltip>
                   </label>
                 </div>
 
@@ -908,15 +914,16 @@ export default function BranchSettingsModal({
                         This is a Legacy Branch
                       </div>
                       {!editingDates && (
-                        <button
-                          onClick={() => setEditingDates(true)}
-                          className="text-text-muted hover:text-[var(--legacy-amber)] transition-soft text-sm"
-                          title="Edit dates"
-                        >
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                          </svg>
-                        </button>
+                        <Tooltip content="Edit birth and death dates">
+                          <button
+                            onClick={() => setEditingDates(true)}
+                            className="text-text-muted hover:text-[var(--legacy-amber)] transition-soft text-sm"
+                          >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                            </svg>
+                          </button>
+                        </Tooltip>
                       )}
                     </div>
                     {!editingDates ? (
@@ -1075,20 +1082,22 @@ export default function BranchSettingsModal({
                         : 'This memorial is hidden from public search'}
                     </div>
                   </div>
-                  <button
-                    type="button"
-                    onClick={handleToggleDiscovery}
-                    disabled={togglingDiscovery}
-                    className={`relative inline-flex h-6 w-11 flex-shrink-0 rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-firefly-dim focus:ring-offset-2 disabled:opacity-50 ${
-                      discoveryEnabled ? 'bg-firefly-dim' : 'bg-border-subtle'
-                    }`}
-                  >
-                    <span
-                      className={`inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                        discoveryEnabled ? 'translate-x-5' : 'translate-x-0'
+                  <Tooltip content={discoveryEnabled ? 'Click to hide from public search' : 'Click to make searchable'}>
+                    <button
+                      type="button"
+                      onClick={handleToggleDiscovery}
+                      disabled={togglingDiscovery}
+                      className={`relative inline-flex h-6 w-11 flex-shrink-0 rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-firefly-dim focus:ring-offset-2 disabled:opacity-50 ${
+                        discoveryEnabled ? 'bg-firefly-dim' : 'bg-border-subtle'
                       }`}
-                    />
-                  </button>
+                    >
+                      <span
+                        className={`inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                          discoveryEnabled ? 'translate-x-5' : 'translate-x-0'
+                        }`}
+                      />
+                    </button>
+                  </Tooltip>
                 </label>
 
                 {branch.person.memoryLimit && (
@@ -1171,13 +1180,15 @@ export default function BranchSettingsModal({
                     <div className="text-red-400 text-sm">{transferError}</div>
                   )}
 
-                  <button
-                    type="submit"
-                    disabled={transferring}
-                    className="w-full py-2 bg-[var(--legacy-amber)] hover:bg-[var(--legacy-glow)] text-bg-dark rounded font-medium transition-soft disabled:opacity-50"
-                  >
-                    {transferring ? 'Transferring...' : 'Transfer Ownership'}
-                  </button>
+                  <Tooltip content="Transfer full control and ownership to a family member">
+                    <button
+                      type="submit"
+                      disabled={transferring}
+                      className="w-full py-2 bg-[var(--legacy-amber)] hover:bg-[var(--legacy-glow)] text-bg-dark rounded font-medium transition-soft disabled:opacity-50"
+                    >
+                      {transferring ? 'Transferring...' : 'Transfer Ownership'}
+                    </button>
+                  </Tooltip>
                 </form>
               </div>
             </div>
@@ -1234,13 +1245,15 @@ export default function BranchSettingsModal({
                   <div className="text-red-400 text-sm mb-4">{adoptError}</div>
                 )}
 
-                <button
-                  onClick={handleAdoptTree}
-                  disabled={adopting}
-                  className="w-full py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded font-medium transition-soft disabled:opacity-50"
-                >
-                  {adopting ? 'Adopting Tree...' : 'Adopt Into Your Grove'}
-                </button>
+                <Tooltip content="Move to your private grove for unlimited memories and enhanced privacy">
+                  <button
+                    onClick={handleAdoptTree}
+                    disabled={adopting}
+                    className="w-full py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded font-medium transition-soft disabled:opacity-50"
+                  >
+                    {adopting ? 'Adopting Tree...' : 'Adopt Into Your Grove'}
+                  </button>
+                </Tooltip>
               </div>
             </div>
           )}
@@ -1296,13 +1309,15 @@ export default function BranchSettingsModal({
                   <div className="text-red-400 text-sm mb-4">{rootError}</div>
                 )}
 
-                <button
-                  onClick={handleRootTree}
-                  disabled={rooting}
-                  className="w-full py-2 bg-border-subtle hover:bg-text-muted text-text-soft rounded font-medium transition-soft disabled:opacity-50"
-                >
-                  {rooting ? 'Rooting Tree...' : 'Root (Link) to Your Grove'}
-                </button>
+                <Tooltip content="Link to your grove while keeping memorial public">
+                  <button
+                    onClick={handleRootTree}
+                    disabled={rooting}
+                    className="w-full py-2 bg-border-subtle hover:bg-text-muted text-text-soft rounded font-medium transition-soft disabled:opacity-50"
+                  >
+                    {rooting ? 'Rooting Tree...' : 'Root (Link) to Your Grove'}
+                  </button>
+                </Tooltip>
               </div>
             </div>
           )}

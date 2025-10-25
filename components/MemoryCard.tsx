@@ -3,6 +3,7 @@
 import { formatDistanceToNow } from 'date-fns'
 import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
+import Tooltip from './Tooltip'
 
 interface MemoryCardProps {
   entry: {
@@ -159,9 +160,11 @@ export default function MemoryCard({ entry, branchOwnerId, branchId, onWithdraw,
             <span className="text-firefly-glow">✦</span>
             <span className="text-text-soft text-sm">{entry.author.name}</span>
             {sharingInfo?.isShared && (
-              <span className="chip-shared" title="This moment is shared with other branches">
-                Shared
-              </span>
+              <Tooltip content="This moment is shared with other branches">
+                <span className="chip-shared">
+                  Shared
+                </span>
+              </Tooltip>
             )}
           </div>
           {sharingInfo?.originBranch && (
@@ -186,16 +189,17 @@ export default function MemoryCard({ entry, branchOwnerId, branchId, onWithdraw,
           {/* Actions menu */}
           {(isAuthor || isBranchOwner) && (
             <div className="relative">
-              <button
-                onClick={() => setShowMenu(!showMenu)}
-                disabled={isProcessing}
-                className="text-text-muted hover:text-text-soft transition-soft disabled:opacity-50"
-                title="Actions"
-              >
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
-                </svg>
-              </button>
+              <Tooltip content="Memory actions">
+                <button
+                  onClick={() => setShowMenu(!showMenu)}
+                  disabled={isProcessing}
+                  className="text-text-muted hover:text-text-soft transition-soft disabled:opacity-50"
+                >
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
+                  </svg>
+                </button>
+              </Tooltip>
 
               {showMenu && (
                 <>
