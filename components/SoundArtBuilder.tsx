@@ -2,6 +2,7 @@
 
 import { useState, useRef, useCallback } from 'react'
 import { useDropzone } from 'react-dropzone'
+import QRCode from 'qrcode'
 
 interface WaveformData {
   samples: number[]
@@ -22,6 +23,11 @@ export default function SoundArtBuilder() {
   const [primaryColor, setPrimaryColor] = useState('#FFD966')
   const [backgroundColor, setBackgroundColor] = useState('#0A0E14')
   const [waveformStyle, setWaveformStyle] = useState('bars')
+
+  // QR Code
+  const [showQRCode, setShowQRCode] = useState(false)
+  const [uniqueCode, setUniqueCode] = useState('')
+  const [qrCodeDataUrl, setQrCodeDataUrl] = useState<string | null>(null)
 
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
@@ -78,6 +84,34 @@ export default function SoundArtBuilder() {
       console.error('Error processing audio:', err)
       setError('Failed to process audio file. Please try a different file.')
       setIsProcessing(false)
+    }
+  }
+
+  // Generate QR Code
+  const generateQRCode = async () => {
+    // Generate a unique code (6 characters)
+    const code = Math.random().toString(36).substring(2, 8).toUpperCase()
+    setUniqueCode(code)
+
+    // Generate QR code as data URL
+    try {
+      const url = `${window.location.origin}/soundart/play/${code}`
+      const qrDataUrl = await QRCode.toDataURL(url, {
+        width: 400,
+        margin: 1,
+        color: {
+          dark: primaryColor,
+          light: backgroundColor,
+        },
+      })
+      setQrCodeDataUrl(qrDataUrl)
+      setShowQRCode(true)
+
+      // Redraw with QR code
+      setTimeout(drawWaveform, 100)
+    } catch (err) {
+      console.error('Error generating QR code:', err)
+      setError('Failed to generate QR code')
     }
   }
 
@@ -192,6 +226,32 @@ export default function SoundArtBuilder() {
       ctx.font = '48px sans-serif'
       ctx.textAlign = 'center'
       ctx.fillText(title, canvas.width / 2, 80)
+    }
+
+    // Add QR code if enabled
+    if (showQRCode && qrCodeDataUrl) {
+      const qrImage = new Image()
+      qrImage.onload = () => {
+        // Position QR code in bottom right corner
+        const qrSize = 200
+        const padding = 40
+        const x = canvas.width - qrSize - padding
+        const y = canvas.height - qrSize - padding
+
+        // Draw white background for QR code
+        ctx.fillStyle = backgroundColor
+        ctx.fillRect(x - 10, y - 10, qrSize + 20, qrSize + 20)
+
+        // Draw QR code
+        ctx.drawImage(qrImage, x, y, qrSize, qrSize)
+
+        // Add "Scan to Play" text above QR code
+        ctx.fillStyle = primaryColor
+        ctx.font = '16px sans-serif'
+        ctx.textAlign = 'center'
+        ctx.fillText('Scan to Play', x + qrSize / 2, y - 20)
+      }
+      qrImage.src = qrCodeDataUrl
     }
   }
 
@@ -357,6 +417,19 @@ export default function SoundArtBuilder() {
                       </div>
                     </div>
                   </div>
+
+                  {/* QR Code Info */}
+                  {showQRCode && uniqueCode && (
+                    <div className="mt-4 p-3 bg-firefly-glow/10 border border-firefly-glow/30 rounded-lg">
+                      <div className="text-xs text-text-muted mb-1">Scan URL:</div>
+                      <div className="text-sm text-firefly-glow font-mono break-all">
+                        {window.location.origin}/soundart/play/{uniqueCode}
+                      </div>
+                      <div className="text-xs text-text-muted mt-2">
+                        Code: <span className="text-text-soft font-mono">{uniqueCode}</span>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 {/* Audio Preview */}
@@ -399,13 +472,15 @@ export default function SoundArtBuilder() {
 
                   <div className="mt-6 flex gap-4">
                     <button
-                      onClick={() => {
-                        // TODO: Generate QR code and add to artwork
-                        alert('QR code generation coming next!')
-                      }}
-                      className="flex-1 px-6 py-3 bg-firefly-dim/20 hover:bg-firefly-dim/40 text-firefly-glow border border-firefly-dim/50 rounded-lg font-medium transition-soft"
+                      onClick={generateQRCode}
+                      disabled={showQRCode}
+                      className={`flex-1 px-6 py-3 border rounded-lg font-medium transition-soft ${
+                        showQRCode
+                          ? 'bg-firefly-glow/20 text-firefly-glow border-firefly-glow cursor-not-allowed'
+                          : 'bg-firefly-dim/20 hover:bg-firefly-dim/40 text-firefly-glow border-firefly-dim/50'
+                      }`}
                     >
-                      Add QR Code
+                      {showQRCode ? '✓ QR Code Added' : '+ Add QR Code'}
                     </button>
                     <button
                       onClick={() => {
