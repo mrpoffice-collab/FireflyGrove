@@ -152,24 +152,27 @@ const VideoRenderer = forwardRef<{ renderVideo: () => void }, VideoRendererProps
     ctx.save()
     ctx.globalAlpha = opacity
 
-    // Much larger semi-transparent background bar - takes up bottom third of screen
-    const barHeight = Math.floor(height * 0.35) // 35% of screen height
-    const gradient = ctx.createLinearGradient(0, height - barHeight, 0, height)
-    gradient.addColorStop(0, 'rgba(0, 0, 0, 0)')
-    gradient.addColorStop(0.15, 'rgba(0, 0, 0, 0.85)')
+    // Caption panel on the right side - 35% of screen width
+    const panelWidth = Math.floor(width * 0.35)
+    const panelX = width - panelWidth
+
+    // Gradient from transparent on left to solid on right
+    const gradient = ctx.createLinearGradient(panelX, 0, width, 0)
+    gradient.addColorStop(0, 'rgba(0, 0, 0, 0.75)')
+    gradient.addColorStop(0.2, 'rgba(0, 0, 0, 0.9)')
     gradient.addColorStop(1, 'rgba(0, 0, 0, 0.95)')
     ctx.fillStyle = gradient
-    ctx.fillRect(0, height - barHeight, width, barHeight)
+    ctx.fillRect(panelX, 0, panelWidth, height)
 
-    // Larger caption text
+    // Caption text
     ctx.fillStyle = '#ffffff'
-    const fontSize = width * 0.032 // Increased from 0.024
+    const fontSize = Math.floor(width * 0.028) // Slightly smaller since we have more vertical space
     ctx.font = `${fontSize}px sans-serif`
-    ctx.textAlign = 'center'
+    ctx.textAlign = 'left'
     ctx.textBaseline = 'top'
 
-    // Word wrap the caption
-    const maxWidth = width * 0.9
+    // Word wrap the caption to fit panel width
+    const maxWidth = panelWidth - 60 // Leave margins
     const words = caption.split(' ')
     const lines: string[] = []
     let currentLine = ''
@@ -190,23 +193,23 @@ const VideoRenderer = forwardRef<{ renderVideo: () => void }, VideoRendererProps
     }
 
     // Calculate scroll effect
-    const lineHeight = fontSize * 1.5 // Slightly more line spacing
+    const lineHeight = fontSize * 1.6 // Good line spacing
     const totalTextHeight = lines.length * lineHeight
-    const visibleHeight = barHeight - 80 // More padding
+    const visibleHeight = height - 100 // Top and bottom padding
 
     // Calculate scroll offset based on progress
-    // Start with text at bottom, scroll up to show all content
     const maxScroll = Math.max(0, totalTextHeight - visibleHeight)
     const scrollOffset = maxScroll * scrollProgress
 
-    // Clip to the caption bar area
+    // Clip to the caption panel area
     ctx.save()
     ctx.beginPath()
-    ctx.rect(0, height - barHeight + 40, width, barHeight - 80)
+    ctx.rect(panelX + 30, 50, panelWidth - 60, height - 100)
     ctx.clip()
 
     // Draw all lines with scroll offset
-    const startY = height - barHeight + 60 - scrollOffset
+    const startY = 80 - scrollOffset
+    const textX = panelX + 30
 
     lines.forEach((line, index) => {
       const y = startY + index * lineHeight
@@ -217,7 +220,7 @@ const VideoRenderer = forwardRef<{ renderVideo: () => void }, VideoRendererProps
       ctx.shadowOffsetX = 0
       ctx.shadowOffsetY = 2
 
-      ctx.fillText(line, width / 2, y)
+      ctx.fillText(line, textX, y)
     })
 
     ctx.restore()
@@ -238,20 +241,24 @@ const VideoRenderer = forwardRef<{ renderVideo: () => void }, VideoRendererProps
     ctx.save()
     applyFilter(ctx, filter)
 
-    // Calculate aspect-fit dimensions
+    // Photo fits in left 65% of screen (leaving 35% for caption panel)
+    const photoAreaWidth = caption ? Math.floor(width * 0.65) : width
+    const photoAreaHeight = height
+
+    // Calculate aspect-fit dimensions for photo area
     const imgAspect = img.width / img.height
-    const canvasAspect = width / height
+    const photoAreaAspect = photoAreaWidth / photoAreaHeight
     let drawWidth, drawHeight, drawX, drawY
 
-    if (imgAspect > canvasAspect) {
-      drawWidth = width
-      drawHeight = width / imgAspect
+    if (imgAspect > photoAreaAspect) {
+      drawWidth = photoAreaWidth
+      drawHeight = photoAreaWidth / imgAspect
       drawX = 0
-      drawY = (height - drawHeight) / 2
+      drawY = (photoAreaHeight - drawHeight) / 2
     } else {
-      drawHeight = height
-      drawWidth = height * imgAspect
-      drawX = (width - drawWidth) / 2
+      drawHeight = photoAreaHeight
+      drawWidth = photoAreaHeight * imgAspect
+      drawX = (photoAreaWidth - drawWidth) / 2
       drawY = 0
     }
 
@@ -263,7 +270,7 @@ const VideoRenderer = forwardRef<{ renderVideo: () => void }, VideoRendererProps
         break
 
       case 'slide':
-        const slideX = drawX - (width * (1 - progress))
+        const slideX = drawX - (photoAreaWidth * (1 - progress))
         ctx.drawImage(img, slideX, drawY, drawWidth, drawHeight)
         break
 
@@ -282,7 +289,7 @@ const VideoRenderer = forwardRef<{ renderVideo: () => void }, VideoRendererProps
         const kbScale = 1 + (progress * 0.1)
         const kbWidth = drawWidth * kbScale
         const kbHeight = drawHeight * kbScale
-        const panX = progress * (width * 0.05)
+        const panX = progress * (photoAreaWidth * 0.05)
         const kbX = drawX - (kbWidth - drawWidth) / 2 + panX
         const kbY = drawY - (kbHeight - drawHeight) / 2
         ctx.drawImage(img, kbX, kbY, kbWidth, kbHeight)
