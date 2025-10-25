@@ -8,6 +8,7 @@ import MemoryCard from '@/components/MemoryCard'
 import MemoryModal from '@/components/MemoryModal'
 import BranchSettingsModal from '@/components/BranchSettingsModal'
 import UndoBanner from '@/components/UndoBanner'
+import { getActiveChallenge, getRandomSpark, getRandomSparkExcluding, SparkCollection } from '@/lib/sparks'
 
 interface Entry {
   id: string
@@ -74,6 +75,10 @@ export default function BranchPage() {
   const [showAdoptionPrompt, setShowAdoptionPrompt] = useState(false)
   const [currentSpark, setCurrentSpark] = useState('')
 
+  // Challenge Sparks
+  const [challengeCollection, setChallengeCollection] = useState<SparkCollection | null>(null)
+  const [currentChallengeSpark, setCurrentChallengeSpark] = useState('')
+
   // Person editing
   const [editingPerson, setEditingPerson] = useState(false)
   const [personName, setPersonName] = useState('')
@@ -122,6 +127,16 @@ export default function BranchPage() {
       }
     }
   }, [branch, currentSpark])
+
+  // Initialize challenge sparks
+  useEffect(() => {
+    const activeChallenge = getActiveChallenge()
+    if (activeChallenge && !challengeCollection) {
+      setChallengeCollection(activeChallenge)
+      const spark = getRandomSpark(activeChallenge)
+      setCurrentChallengeSpark(spark.text)
+    }
+  }, [challengeCollection])
 
   const fetchBranch = async () => {
     try {
@@ -398,6 +413,13 @@ export default function BranchPage() {
     }
   }
 
+  const refreshChallengeSpark = () => {
+    if (!challengeCollection) return
+
+    const spark = getRandomSparkExcluding(challengeCollection, currentChallengeSpark)
+    setCurrentChallengeSpark(spark.text)
+  }
+
   if (status === 'loading' || loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -591,35 +613,102 @@ export default function BranchPage() {
               </div>
 
               {/* Challenge Sparks - Admin/seasonal challenges */}
-              <div className={`rounded-lg p-4 ${
-                isLegacy
-                  ? 'bg-[var(--legacy-amber)]/5 border border-[var(--legacy-amber)]/30'
-                  : 'bg-bg-dark border border-firefly-dim/30'
-              }`}>
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="text-xl">🎯</span>
-                  <h4 className={`text-sm font-medium ${
-                    isLegacy ? 'text-[var(--legacy-text)]' : 'text-text-soft'
-                  }`}>
-                    Challenge Sparks
-                  </h4>
-                </div>
-                <p className={`text-xs italic mb-4 line-clamp-3 ${
-                  isLegacy ? 'text-[var(--legacy-text)]/80' : 'text-text-muted'
+              {challengeCollection ? (
+                <div className={`rounded-lg p-4 ${
+                  isLegacy
+                    ? 'bg-[var(--legacy-amber)]/5 border border-[var(--legacy-amber)]/30'
+                    : 'bg-bg-dark border border-firefly-dim/30'
                 }`}>
-                  "Coming soon: Seasonal challenges and themed spark collections"
-                </p>
-                <button
-                  disabled
-                  className={`w-full py-2 text-sm rounded font-medium transition-soft opacity-50 cursor-not-allowed ${
-                    isLegacy
-                      ? 'bg-[var(--legacy-amber)]/20 text-[var(--legacy-text)] border border-[var(--legacy-amber)]/40'
-                      : 'bg-firefly-dim text-bg-dark'
-                  }`}
-                >
-                  Coming Soon
-                </button>
-              </div>
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xl">{challengeCollection.icon}</span>
+                      <div>
+                        <div className="flex items-center gap-1">
+                          <h4 className={`text-sm font-medium ${
+                            isLegacy ? 'text-[var(--legacy-text)]' : 'text-text-soft'
+                          }`}>
+                            {challengeCollection.name}
+                          </h4>
+                          <span
+                            className={`text-xs cursor-help ${
+                              isLegacy ? 'text-[var(--legacy-text)]/60' : 'text-text-muted'
+                            }`}
+                            title={challengeCollection.description}
+                          >
+                            ⓘ
+                          </span>
+                        </div>
+                        <p className={`text-xs ${
+                          isLegacy ? 'text-[var(--legacy-text)]/60' : 'text-text-muted'
+                        }`}>
+                          Challenge Spark
+                        </p>
+                      </div>
+                    </div>
+                    <button
+                      onClick={refreshChallengeSpark}
+                      className={`p-1 rounded transition-soft ${
+                        isLegacy
+                          ? 'text-[var(--legacy-amber)] hover:bg-[var(--legacy-amber)]/10'
+                          : 'text-firefly-dim hover:bg-firefly-dim/10'
+                      }`}
+                      title="Get a different challenge spark"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                      </svg>
+                    </button>
+                  </div>
+                  <p className={`text-xs italic mb-4 line-clamp-3 ${
+                    isLegacy ? 'text-[var(--legacy-text)]/80' : 'text-text-muted'
+                  }`}>
+                    "{currentChallengeSpark}"
+                  </p>
+                  <button
+                    onClick={() => {
+                      setCurrentSpark(currentChallengeSpark)
+                      setShowNewMemory(true)
+                    }}
+                    className={`w-full py-2 text-sm rounded font-medium transition-soft ${
+                      isLegacy
+                        ? 'bg-[var(--legacy-amber)]/20 hover:bg-[var(--legacy-amber)]/30 text-[var(--legacy-text)] border border-[var(--legacy-amber)]/40'
+                        : 'bg-firefly-dim hover:bg-firefly-glow text-bg-dark'
+                    }`}
+                  >
+                    Light a Memory
+                  </button>
+                </div>
+              ) : (
+                <div className={`rounded-lg p-4 ${
+                  isLegacy
+                    ? 'bg-[var(--legacy-amber)]/5 border border-[var(--legacy-amber)]/30'
+                    : 'bg-bg-dark border border-firefly-dim/30'
+                }`}>
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="text-xl">🎯</span>
+                    <h4 className={`text-sm font-medium ${
+                      isLegacy ? 'text-[var(--legacy-text)]' : 'text-text-soft'
+                    }`}>
+                      Challenge Sparks
+                    </h4>
+                  </div>
+                  <p className={`text-xs italic mb-4 line-clamp-3 ${
+                    isLegacy ? 'text-[var(--legacy-text)]/80' : 'text-text-muted'
+                  }`}>
+                    "No active challenge at the moment. Check back soon!"
+                  </p>
+                  <button
+                    disabled
+                    className={`w-full py-2 text-sm rounded font-medium transition-soft opacity-50 cursor-not-allowed ${
+                      isLegacy
+                        ? 'bg-[var(--legacy-amber)]/20 text-[var(--legacy-text)] border border-[var(--legacy-amber)]/40'
+                        : 'bg-firefly-dim text-bg-dark'
+                    }`}
+                  >
+                    No Active Challenge
+                  </button>
+                </div>
+              )}
 
               {/* My Sparks - User's custom sparks */}
               <div className={`rounded-lg p-4 ${

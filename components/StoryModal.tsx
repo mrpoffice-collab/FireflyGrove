@@ -2,6 +2,7 @@
 
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useEffect, useRef } from 'react'
+import { useSession } from 'next-auth/react'
 import FireflyParticles from './FireflyParticles'
 import Link from 'next/link'
 
@@ -92,6 +93,7 @@ interface StoryModalProps {
 }
 
 export default function StoryModal({ onClose }: StoryModalProps) {
+  const { data: session } = useSession()
   const [currentSlide, setCurrentSlide] = useState(0)
   const [isMuted, setIsMuted] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
@@ -303,10 +305,10 @@ export default function StoryModal({ onClose }: StoryModalProps) {
 
           {isLastSlide ? (
             <Link
-              href="/signup"
+              href={session ? "/grove" : "/signup"}
               className="px-8 py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg font-medium transition-soft"
             >
-              Enter Your Grove →
+              {session ? "Go to Your Grove →" : "Enter Your Grove →"}
             </Link>
           ) : (
             <button
