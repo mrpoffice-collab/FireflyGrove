@@ -38,7 +38,7 @@ export async function GET(req: NextRequest) {
       },
       select: {
         id: true,
-        name: true,
+        title: true,
         description: true,
         person: {
           select: {
@@ -76,7 +76,7 @@ export async function GET(req: NextRequest) {
       .filter((branch) => branch.entries.length > 0)
       .map((branch) => ({
         id: branch.id,
-        name: branch.name,
+        name: branch.title, // Branch uses 'title' field
         description: branch.description,
         personName: branch.person?.name,
         birthDate: branch.person?.birthDate,
