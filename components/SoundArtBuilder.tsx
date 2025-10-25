@@ -801,7 +801,7 @@ export default function SoundArtBuilder() {
                         </button>
                       </div>
                       {backgroundImage && (
-                        <div className="mt-3 space-y-2">
+                        <div className="mt-3">
                           <button
                             onClick={() => {
                               setBackgroundImage(null)
@@ -811,51 +811,9 @@ export default function SoundArtBuilder() {
                           >
                             ✕ Remove image
                           </button>
-
-                          {/* Image positioning controls */}
-                          <div className="space-y-2 p-3 bg-bg-darker rounded-lg">
-                            <div>
-                              <label className="block text-xs text-text-muted mb-1">
-                                Scale: {bgImageScale}%
-                              </label>
-                              <input
-                                type="range"
-                                min="10"
-                                max="200"
-                                value={bgImageScale}
-                                onChange={(e) => setBgImageScale(Number(e.target.value))}
-                                className="w-full"
-                              />
-                            </div>
-                            <div className="grid grid-cols-2 gap-2">
-                              <div>
-                                <label className="block text-xs text-text-muted mb-1">
-                                  Position X: {bgImageX}px
-                                </label>
-                                <input
-                                  type="range"
-                                  min="-1000"
-                                  max="2000"
-                                  value={bgImageX}
-                                  onChange={(e) => setBgImageX(Number(e.target.value))}
-                                  className="w-full"
-                                />
-                              </div>
-                              <div>
-                                <label className="block text-xs text-text-muted mb-1">
-                                  Position Y: {bgImageY}px
-                                </label>
-                                <input
-                                  type="range"
-                                  min="-1000"
-                                  max="2000"
-                                  value={bgImageY}
-                                  onChange={(e) => setBgImageY(Number(e.target.value))}
-                                  className="w-full"
-                                />
-                              </div>
-                            </div>
-                          </div>
+                          <p className="text-xs text-text-muted mt-2">
+                            Adjust image position in the Preview panel →
+                          </p>
                         </div>
                       )}
                     </div>
@@ -928,6 +886,54 @@ export default function SoundArtBuilder() {
                       style={{ maxHeight: '500px' }}
                     />
                   </div>
+
+                  {/* Background Image Position Controls */}
+                  {backgroundImage && backgroundImageElement && (
+                    <div className="mt-4 p-4 bg-bg-darker border border-border-subtle rounded-lg space-y-3">
+                      <h4 className="text-sm text-text-soft font-medium mb-2">Adjust Background Image</h4>
+                      <div>
+                        <label className="block text-xs text-text-muted mb-1">
+                          Scale: {bgImageScale}%
+                        </label>
+                        <input
+                          type="range"
+                          min="10"
+                          max="200"
+                          value={bgImageScale}
+                          onChange={(e) => setBgImageScale(Number(e.target.value))}
+                          className="w-full"
+                        />
+                      </div>
+                      <div className="grid grid-cols-2 gap-3">
+                        <div>
+                          <label className="block text-xs text-text-muted mb-1">
+                            Position X: {bgImageX}px
+                          </label>
+                          <input
+                            type="range"
+                            min="-1000"
+                            max="2000"
+                            value={bgImageX}
+                            onChange={(e) => setBgImageX(Number(e.target.value))}
+                            className="w-full"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs text-text-muted mb-1">
+                            Position Y: {bgImageY}px
+                          </label>
+                          <input
+                            type="range"
+                            min="-1000"
+                            max="2000"
+                            value={bgImageY}
+                            onChange={(e) => setBgImageY(Number(e.target.value))}
+                            className="w-full"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  )}
 
                   <div className="mt-6 space-y-4">
                     <div className="grid grid-cols-2 gap-4">
