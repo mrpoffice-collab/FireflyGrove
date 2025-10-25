@@ -45,6 +45,17 @@ export default function SoundArtBuilder() {
   const [bgImageX, setBgImageX] = useState(0)
   const [bgImageY, setBgImageY] = useState(0)
 
+  // Photo gallery from branches
+  const [showPhotoGallery, setShowPhotoGallery] = useState(false)
+  const [branchPhotos, setBranchPhotos] = useState<Array<{
+    id: string
+    url: string
+    caption: string
+    branchTitle: string
+    createdAt: string
+  }>>([])
+  const [loadingPhotos, setLoadingPhotos] = useState(false)
+
   // Upload state
   const [isUploading, setIsUploading] = useState(false)
   const [isSaved, setIsSaved] = useState(false)
@@ -162,6 +173,39 @@ export default function SoundArtBuilder() {
       }
       reader.readAsDataURL(file)
     }
+  }
+
+  // Fetch photos from branches
+  const fetchBranchPhotos = async () => {
+    setLoadingPhotos(true)
+    try {
+      const response = await fetch('/api/memories/photos')
+      if (response.ok) {
+        const data = await response.json()
+        setBranchPhotos(data.photos || [])
+      } else {
+        console.error('Failed to fetch photos:', await response.text())
+        setError('Failed to load photos from your branches')
+      }
+    } catch (err) {
+      console.error('Error fetching photos:', err)
+      setError('Failed to load photos')
+    } finally {
+      setLoadingPhotos(false)
+    }
+  }
+
+  // Handle photo selection from gallery
+  const selectPhotoFromGallery = (photoUrl: string) => {
+    setBackgroundImage(photoUrl)
+
+    const img = new Image()
+    img.crossOrigin = 'anonymous' // Handle CORS if needed
+    img.onload = () => {
+      setBackgroundImageElement(img)
+      setShowPhotoGallery(false)
+    }
+    img.src = photoUrl
   }
 
   // Upload to API and save
@@ -652,12 +696,25 @@ export default function SoundArtBuilder() {
                     {/* Background Image */}
                     <div>
                       <label className="block text-sm text-text-muted mb-2">Background Image (Optional)</label>
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleBackgroundImageUpload}
-                        className="w-full px-4 py-2 bg-bg-dark border border-border-subtle rounded-lg text-text-soft text-sm file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-firefly-dim/20 file:text-firefly-glow hover:file:bg-firefly-dim/40 file:cursor-pointer"
-                      />
+                      <div className="space-y-2">
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={handleBackgroundImageUpload}
+                          className="w-full px-4 py-2 bg-bg-dark border border-border-subtle rounded-lg text-text-soft text-sm file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-firefly-dim/20 file:text-firefly-glow hover:file:bg-firefly-dim/40 file:cursor-pointer"
+                        />
+                        <button
+                          onClick={() => {
+                            setShowPhotoGallery(true)
+                            if (branchPhotos.length === 0) {
+                              fetchBranchPhotos()
+                            }
+                          }}
+                          className="w-full px-4 py-2 bg-bg-elevated hover:bg-bg-darker border border-border-subtle rounded-lg text-text-soft text-sm transition-soft"
+                        >
+                          📸 Choose from Your Branches
+                        </button>
+                      </div>
                       {backgroundImage && (
                         <div className="mt-3 space-y-2">
                           <button
@@ -873,6 +930,76 @@ export default function SoundArtBuilder() {
           )}
         </div>
       </div>
+
+      {/* Photo Gallery Modal */}
+      {showPhotoGallery && (
+        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
+          <div className="bg-bg-dark border border-border-subtle rounded-lg max-w-4xl w-full max-h-[80vh] overflow-hidden flex flex-col">
+            {/* Header */}
+            <div className="p-4 border-b border-border-subtle flex items-center justify-between">
+              <h3 className="text-lg text-text-soft font-medium">Choose Photo from Your Branches</h3>
+              <button
+                onClick={() => setShowPhotoGallery(false)}
+                className="text-text-muted hover:text-text-soft transition-soft text-2xl leading-none"
+              >
+                ×
+              </button>
+            </div>
+
+            {/* Photo Grid */}
+            <div className="p-4 overflow-y-auto">
+              {loadingPhotos ? (
+                <div className="flex items-center justify-center py-12">
+                  <div className="text-text-muted">Loading photos...</div>
+                </div>
+              ) : branchPhotos.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-12">
+                  <div className="text-4xl mb-4">📸</div>
+                  <div className="text-text-muted text-center">
+                    No photos found in your branches yet.
+                    <br />
+                    Upload some memories to use them as backgrounds!
+                  </div>
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                  {branchPhotos.map((photo) => (
+                    <button
+                      key={photo.id}
+                      onClick={() => selectPhotoFromGallery(photo.url)}
+                      className="group relative aspect-square rounded-lg overflow-hidden border-2 border-transparent hover:border-firefly-glow transition-soft"
+                    >
+                      <img
+                        src={photo.url}
+                        alt={photo.caption || 'Branch photo'}
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-soft flex flex-col items-center justify-center p-2">
+                        <div className="text-white text-xs font-medium mb-1 text-center line-clamp-2">
+                          {photo.caption || 'No caption'}
+                        </div>
+                        <div className="text-firefly-glow text-xs">
+                          {photo.branchTitle}
+                        </div>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Footer */}
+            <div className="p-4 border-t border-border-subtle">
+              <button
+                onClick={() => setShowPhotoGallery(false)}
+                className="w-full px-4 py-2 bg-border-subtle hover:bg-text-muted/20 text-text-soft rounded-lg transition-soft"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
