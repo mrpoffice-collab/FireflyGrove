@@ -17,6 +17,13 @@ export default function SoundArtBuilder() {
   const [isProcessing, setIsProcessing] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
+  // Recording state
+  const [isRecording, setIsRecording] = useState(false)
+  const [recordingTime, setRecordingTime] = useState(0)
+  const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null)
+  const [recordedChunks, setRecordedChunks] = useState<Blob[]>([])
+  const recordingIntervalRef = useRef<NodeJS.Timeout | null>(null)
+
   // Customization settings
   const [title, setTitle] = useState('')
   const [stylePreset, setStylePreset] = useState('modern')
@@ -166,6 +173,62 @@ export default function SoundArtBuilder() {
       console.error('Upload error:', err)
       setError(err instanceof Error ? err.message : 'Failed to save sound art')
       setIsUploading(false)
+    }
+  }
+
+  // Start recording audio
+  const startRecording = async () => {
+    try {
+      setError(null)
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+
+      const recorder = new MediaRecorder(stream)
+      const chunks: Blob[] = []
+
+      recorder.ondataavailable = (e) => {
+        if (e.data.size > 0) {
+          chunks.push(e.data)
+        }
+      }
+
+      recorder.onstop = () => {
+        const blob = new Blob(chunks, { type: 'audio/webm' })
+        const file = new File([blob], `recording-${Date.now()}.webm`, { type: 'audio/webm' })
+
+        setAudioFile(file)
+        setAudioUrl(URL.createObjectURL(file))
+        extractWaveform(file)
+
+        // Stop all tracks
+        stream.getTracks().forEach(track => track.stop())
+
+        // Clear recording state
+        setRecordingTime(0)
+        if (recordingIntervalRef.current) {
+          clearInterval(recordingIntervalRef.current)
+        }
+      }
+
+      recorder.start()
+      setMediaRecorder(recorder)
+      setIsRecording(true)
+      setRecordedChunks(chunks)
+
+      // Start timer
+      recordingIntervalRef.current = setInterval(() => {
+        setRecordingTime((prev) => prev + 1)
+      }, 1000)
+    } catch (err) {
+      console.error('Error starting recording:', err)
+      setError('Failed to access microphone. Please grant permission.')
+    }
+  }
+
+  // Stop recording
+  const stopRecording = () => {
+    if (mediaRecorder && isRecording) {
+      mediaRecorder.stop()
+      setIsRecording(false)
     }
   }
 
@@ -335,13 +398,37 @@ export default function SoundArtBuilder() {
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-6xl mx-auto">
           {/* Upload Section */}
-          {!audioFile && (
+          {!audioFile && !isRecording && (
             <div className="max-w-2xl mx-auto">
               <div className="text-center mb-8">
-                <h2 className="text-2xl font-light text-text-soft mb-2">Upload Your Audio</h2>
-                <p className="text-text-muted">MP3, WAV, M4A, or OGG • Up to 50MB</p>
+                <h2 className="text-2xl font-light text-text-soft mb-2">Add Your Audio</h2>
+                <p className="text-text-muted">Record your voice or upload an audio file</p>
               </div>
 
+              {/* Recording Interface */}
+              <div className="mb-6">
+                <button
+                  onClick={startRecording}
+                  className="w-full px-8 py-6 bg-gradient-to-r from-red-500/20 to-pink-500/20 hover:from-red-500/30 hover:to-pink-500/30 border-2 border-red-500/50 hover:border-red-500/70 text-text-soft rounded-lg font-medium text-lg transition-soft flex items-center justify-center gap-3"
+                >
+                  <span className="text-3xl">🎙️</span>
+                  <span>Record Audio</span>
+                </button>
+                <p className="text-text-muted text-xs text-center mt-2">
+                  Say "I love you", record a message, or capture any moment
+                </p>
+              </div>
+
+              <div className="relative my-6">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-border-subtle"></div>
+                </div>
+                <div className="relative flex justify-center text-xs">
+                  <span className="px-2 bg-bg-dark text-text-muted">OR</span>
+                </div>
+              </div>
+
+              {/* File Upload */}
               <div
                 {...getRootProps()}
                 className={`border-2 border-dashed rounded-lg p-12 text-center cursor-pointer transition-all ${
@@ -356,7 +443,7 @@ export default function SoundArtBuilder() {
                   {isDragActive ? 'Drop audio file here...' : 'Drag audio here or click to browse'}
                 </p>
                 <p className="text-text-muted text-sm">
-                  Voice recordings, music, or any audio file
+                  MP3, WAV, M4A, or OGG • Up to 50MB
                 </p>
               </div>
 
@@ -365,6 +452,31 @@ export default function SoundArtBuilder() {
                   <p className="text-red-400 text-sm">{error}</p>
                 </div>
               )}
+            </div>
+          )}
+
+          {/* Recording State */}
+          {isRecording && (
+            <div className="max-w-2xl mx-auto text-center py-12">
+              <div className="mb-6">
+                <div className="inline-block relative">
+                  <div className="text-8xl mb-4 animate-pulse">🎙️</div>
+                  <div className="absolute -top-2 -right-2 w-4 h-4 bg-red-500 rounded-full animate-pulse"></div>
+                </div>
+              </div>
+              <h3 className="text-2xl text-text-soft mb-2">Recording...</h3>
+              <p className="text-4xl text-firefly-glow font-mono mb-6">
+                {Math.floor(recordingTime / 60)}:{String(recordingTime % 60).padStart(2, '0')}
+              </p>
+              <button
+                onClick={stopRecording}
+                className="px-8 py-3 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium text-lg transition-soft"
+              >
+                ⏹ Stop Recording
+              </button>
+              <p className="text-text-muted text-sm mt-4">
+                Click stop when you're done, or let it run for up to 5 minutes
+              </p>
             </div>
           )}
 
