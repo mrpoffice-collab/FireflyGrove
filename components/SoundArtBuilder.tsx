@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useCallback } from 'react'
+import { useState, useRef, useCallback, useEffect } from 'react'
 import { useDropzone } from 'react-dropzone'
 import QRCode from 'qrcode'
 
@@ -376,11 +376,11 @@ export default function SoundArtBuilder() {
   }
 
   // Redraw whenever settings change
-  useState(() => {
+  useEffect(() => {
     if (waveformData) {
       drawWaveform()
     }
-  })
+  }, [waveformData, title, waveformStyle, primaryColor, backgroundColor, showQRCode, qrCodeImage])
 
   return (
     <div className="min-h-screen bg-bg-dark">
