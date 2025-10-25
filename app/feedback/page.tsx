@@ -2,7 +2,7 @@
 
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Header from '@/components/Header'
 
 export default function FeedbackPage() {
@@ -10,10 +10,31 @@ export default function FeedbackPage() {
   const router = useRouter()
   const [submitted, setSubmitted] = useState(false)
   const [formData, setFormData] = useState({
-    page: typeof window !== 'undefined' ? document.referrer : '',
+    page: '',
     description: '',
-    severity: 'minor',
+    severity: 'suggestion',
   })
+
+  // Capture the referring page on mount
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const referrer = document.referrer
+      const currentUrl = window.location.href
+
+      // Use referrer if available, otherwise use stored page from localStorage
+      let fromPage = referrer || localStorage.getItem('feedbackFromPage') || ''
+
+      // If referrer is the current page or empty, try to get from localStorage
+      if (!fromPage || fromPage === currentUrl) {
+        fromPage = localStorage.getItem('feedbackFromPage') || 'Direct navigation'
+      }
+
+      setFormData(prev => ({ ...prev, page: fromPage }))
+
+      // Clear the stored page after using it
+      localStorage.removeItem('feedbackFromPage')
+    }
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -69,11 +90,10 @@ export default function FeedbackPage() {
       <div className="container mx-auto px-4 py-16">
         <div className="max-w-2xl mx-auto">
           <h1 className="text-3xl font-light text-text-soft mb-2">
-            Report a Snag
+            Beta Feedback
           </h1>
           <p className="text-text-muted mb-8">
-            Let us know if something isn't working as expected.
-            We're here to help.
+            Help us improve Firefly Grove. Let us know about bugs, suggestions, or anything that could be better.
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -81,41 +101,46 @@ export default function FeedbackPage() {
               <div className="space-y-6">
                 <div>
                   <label className="block text-sm text-text-soft mb-2">
-                    What page were you on?
+                    Page (automatically captured)
                   </label>
                   <input
                     type="text"
                     value={formData.page}
                     onChange={(e) => setFormData({ ...formData, page: e.target.value })}
-                    placeholder="e.g., Branch detail page, Login page"
+                    placeholder="The page you were on will appear here"
                     className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-dim transition-soft"
                   />
+                  <p className="text-xs text-text-muted mt-1">
+                    You can edit this if needed
+                  </p>
                 </div>
 
                 <div>
                   <label className="block text-sm text-text-soft mb-2">
-                    How urgent is this?
+                    Type of feedback
                   </label>
                   <select
                     value={formData.severity}
                     onChange={(e) => setFormData({ ...formData, severity: e.target.value })}
                     className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-dim transition-soft"
                   >
-                    <option value="minor">Minor - Small annoyance</option>
-                    <option value="moderate">Moderate - Affects my experience</option>
-                    <option value="critical">Critical - Can't use the app</option>
-                    <option value="data-loss">Data loss - Lost a memory</option>
+                    <option value="suggestion">💡 Suggestion / Feature Request</option>
+                    <option value="minor">🐛 Bug - Minor (small annoyance)</option>
+                    <option value="moderate">⚠️ Bug - Moderate (affects experience)</option>
+                    <option value="critical">🚨 Bug - Critical (can't use app)</option>
+                    <option value="data-loss">💔 Data loss (lost a memory)</option>
+                    <option value="other">💬 Other feedback</option>
                   </select>
                 </div>
 
                 <div>
                   <label className="block text-sm text-text-soft mb-2">
-                    What happened?
+                    Details
                   </label>
                   <textarea
                     value={formData.description}
                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                    placeholder="Describe what you were trying to do and what went wrong..."
+                    placeholder="For bugs: What were you trying to do? What happened instead?&#10;For suggestions: What would you like to see? How would it help?"
                     className="w-full px-4 py-3 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-dim transition-soft resize-none"
                     rows={6}
                     required

@@ -57,23 +57,39 @@ export default function Header({ userName, groveInfo }: HeaderProps) {
             </nav>
           </div>
 
-          <div className="relative" ref={dropdownRef}>
-            {userName ? (
-              <>
-                <button
-                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                  className="flex items-center gap-2 text-text-muted hover:text-text-soft text-sm transition-soft"
-                >
-                  <span>{userName}</span>
-                  <svg
-                    className={`w-4 h-4 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`}
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
+          <div className="flex items-center gap-4">
+            {/* Beta Feedback Button - Visible to all users */}
+            <Link
+              href="/feedback"
+              onClick={() => {
+                // Store current page URL for feedback form
+                if (typeof window !== 'undefined') {
+                  localStorage.setItem('feedbackFromPage', window.location.href)
+                }
+              }}
+              className="px-3 py-1.5 bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 border border-blue-500/30 rounded text-xs font-medium transition-soft flex items-center gap-1.5"
+            >
+              <span>💬</span>
+              <span>Beta Feedback</span>
+            </Link>
+
+            <div className="relative" ref={dropdownRef}>
+              {userName ? (
+                <>
+                  <button
+                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                    className="flex items-center gap-2 text-text-muted hover:text-text-soft text-sm transition-soft"
                   >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </button>
+                    <span>{userName}</span>
+                    <svg
+                      className={`w-4 h-4 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`}
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
 
             {isDropdownOpen && (
               <div className="absolute right-0 mt-2 w-64 bg-bg-dark border border-border-subtle rounded-lg shadow-lg overflow-hidden z-50">
@@ -114,6 +130,10 @@ export default function Header({ userName, groveInfo }: HeaderProps) {
                   </button>
                   <button
                     onClick={() => {
+                      // Store current page URL for feedback form
+                      if (typeof window !== 'undefined') {
+                        localStorage.setItem('feedbackFromPage', window.location.href)
+                      }
                       router.push('/feedback')
                       setIsDropdownOpen(false)
                     }}
@@ -132,15 +152,16 @@ export default function Header({ userName, groveInfo }: HeaderProps) {
                 </div>
               </div>
             )}
-              </>
-            ) : (
-              <Link
-                href="/login"
-                className="px-4 py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded text-sm font-medium transition-soft"
-              >
-                Sign In
-              </Link>
-            )}
+                </>
+              ) : (
+                <Link
+                  href="/login"
+                  className="px-4 py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded text-sm font-medium transition-soft"
+                >
+                  Sign In
+                </Link>
+              )}
+            </div>
           </div>
         </div>
       </div>
