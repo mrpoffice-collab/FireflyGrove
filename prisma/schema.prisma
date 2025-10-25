@@ -41,6 +41,7 @@ model User {
   audits           Audit[]        @relation("AuditActor")
   treeSubscriptions TreeSubscription[]
   sentTreeTransfers TreeTransfer[] @relation("TreeTransferSender")
+  videoGenerations VideoGeneration[]
 
   @@index([email])
   @@index([status])
@@ -569,4 +570,43 @@ model TreeTransfer {
   @@index([token])
   @@index([expiresAt])
   @@index([createdAt])
+}
+
+// Video Generation Tracking
+// Tracks memorial videos created by users with tiered access controls
+model VideoGeneration {
+  id                String   @id @default(cuid())
+  userId            String   // User who generated the video
+  planType          String   // Plan at time of generation: free, family, ancestry, institutional, admin
+
+  // Video metadata
+  title             String?
+  photoCount        Int
+  durationSeconds   Int
+  sizeBytes         Int?
+
+  // Storage tracking
+  storageUrl        String?  // B2 or local storage URL (if we store them)
+  downloaded        Boolean  @default(false)
+  downloadedAt      DateTime?
+  downloadCount     Int      @default(0)
+
+  // Watermark flag (free tier gets watermark)
+  hasWatermark      Boolean  @default(false)
+
+  // Lifecycle
+  autoDeleteAt      DateTime? // Based on plan tier: 30/60/90 days or null for permanent
+  deletedAt         DateTime?
+
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  // Relations
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([planType])
+  @@index([createdAt])
+  @@index([autoDeleteAt])
+  @@index([deletedAt])
 }

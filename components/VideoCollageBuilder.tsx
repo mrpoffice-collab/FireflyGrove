@@ -5,6 +5,7 @@ import { useDropzone } from 'react-dropzone'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 import { VideoRenderer } from './VideoRenderer'
+import VideoLimitsDisplay from './VideoLimitsDisplay'
 
 interface Photo {
   id: string
@@ -64,6 +65,8 @@ export default function VideoCollageBuilder() {
   const [videoBlob, setVideoBlob] = useState<Blob | null>(null)
   const [error, setError] = useState<string | null>(null)
   const videoRendererRef = useRef<any>(null)
+  const [canGenerate, setCanGenerate] = useState(true)
+  const [limitsError, setLimitsError] = useState<string | null>(null)
 
   // Branch import state
   const [branches, setBranches] = useState<BranchData[]>([])
@@ -84,6 +87,23 @@ export default function VideoCollageBuilder() {
         .catch((err) => {
           console.error('Failed to fetch branches:', err)
           setLoadingBranches(false)
+        })
+    }
+  }, [session])
+
+  // Check video generation limits on load
+  useEffect(() => {
+    if (session?.user) {
+      fetch('/api/video-generation/check-limits')
+        .then((res) => res.json())
+        .then((data) => {
+          setCanGenerate(data.usage?.canGenerate !== false)
+          if (!data.usage?.canGenerate) {
+            setLimitsError(`You've reached your monthly limit (${data.tierConfig?.monthlyLimit} videos). Upgrade your plan for more videos.`)
+          }
+        })
+        .catch((err) => {
+          console.error('Failed to check video limits:', err)
         })
     }
   }, [session])
@@ -681,6 +701,11 @@ export default function VideoCollageBuilder() {
               </p>
             </div>
 
+            {/* Video Limits Display */}
+            <div className="mb-6">
+              <VideoLimitsDisplay />
+            </div>
+
             {/* Video Info */}
             <div className="bg-bg-elevated border border-border-subtle rounded-lg p-6 mb-6">
               <div className="grid md:grid-cols-3 gap-4 text-center">
@@ -794,18 +819,32 @@ export default function VideoCollageBuilder() {
                   <span className="text-sm">This process happens in your browser and may take 2-5 minutes.</span>
                 </p>
 
+                {limitsError && !canGenerate && (
+                  <div className="bg-red-900/20 border border-red-700/50 rounded-lg p-4 mb-6 text-sm text-red-400">
+                    {limitsError}
+                  </div>
+                )}
+
                 <div className="space-y-3">
                   <button
-                    onClick={() => {
+                    onClick={async () => {
+                      // Check limits before starting
+                      if (!canGenerate) {
+                        setError('You have reached your monthly video generation limit. Please upgrade your plan.')
+                        return
+                      }
+
                       setIsRendering(true)
                       setError(null)
                       setRenderProgress(0)
+
                       // Trigger rendering through ref
                       if (videoRendererRef.current) {
                         videoRendererRef.current.renderVideo()
                       }
                     }}
-                    className="block w-full max-w-md mx-auto px-8 py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg font-medium transition-soft"
+                    disabled={!canGenerate}
+                    className="block w-full max-w-md mx-auto px-8 py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg font-medium transition-soft disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     🎬 Generate Video
                   </button>
@@ -842,9 +881,37 @@ export default function VideoCollageBuilder() {
               photos={photos}
               settings={settings}
               onProgress={(progress) => setRenderProgress(progress)}
-              onComplete={(blob) => {
+              onComplete={async (blob) => {
                 setVideoBlob(blob)
                 setIsRendering(false)
+
+                // Record video generation
+                try {
+                  const durationSeconds = Math.ceil(photos.length * settings.photoDuration + 6)
+                  await fetch('/api/video-generation/record', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                      title: settings.introText || 'Memorial Video',
+                      photoCount: photos.length,
+                      durationSeconds,
+                      sizeBytes: blob.size,
+                    }),
+                  })
+                  console.log('[Video Generation] Recorded successfully')
+
+                  // Refresh limits display
+                  setCanGenerate(false) // Disable until we check again
+                  const limitsRes = await fetch('/api/video-generation/check-limits')
+                  const limitsData = await limitsRes.json()
+                  setCanGenerate(limitsData.usage?.canGenerate !== false)
+                  if (!limitsData.usage?.canGenerate) {
+                    setLimitsError(`You've reached your monthly limit (${limitsData.tierConfig?.monthlyLimit} videos). Upgrade your plan for more videos.`)
+                  }
+                } catch (error) {
+                  console.error('[Video Generation] Failed to record:', error)
+                  // Don't fail the video generation if recording fails
+                }
               }}
               onError={(err) => {
                 setError(err)
