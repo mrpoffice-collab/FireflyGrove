@@ -36,7 +36,7 @@ export default function CommunityGoalBanner() {
           </div>
           <div className="hidden sm:block text-text-muted">•</div>
           <div className="text-text-muted text-sm">
-            Community Goal: 1M by year's end
+            Community Goal: 1M by end of 2026
           </div>
         </div>
         {/* Progress bar */}
