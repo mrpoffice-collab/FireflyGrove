@@ -276,22 +276,31 @@ const VideoRenderer = forwardRef<{ renderVideo: () => void }, VideoRendererProps
       mediaRecorder.start(100) // Collect data every 100ms
       mediaRecorderRef.current = mediaRecorder
 
+      console.log('[VideoRenderer] Starting video generation with', photos.length, 'photos')
+
       // Load all images
       const loadedImages = await Promise.all(
         photos.map(
           (photo) =>
             new Promise<HTMLImageElement>((resolve, reject) => {
               const img = new Image()
+              img.crossOrigin = 'anonymous' // Enable CORS for external images
               img.onload = () => resolve(img)
-              img.onerror = reject
+              img.onerror = (error) => {
+                console.error('Failed to load image:', photo.url, error)
+                reject(new Error(`Failed to load image: ${photo.url}`))
+              }
               img.src = photo.url
             })
         )
       )
 
+      console.log('[VideoRenderer] All images loaded successfully')
+
       const fps = 30
       const frameDuration = 1000 / fps
       let currentFrame = 0
+      let isRendering = true // Use local flag instead of state
 
       // Calculate total frames
       const introFrames = 90 // 3 seconds
@@ -301,13 +310,20 @@ const VideoRenderer = forwardRef<{ renderVideo: () => void }, VideoRendererProps
       const totalPhotoFrames = photos.length * (photoFrames + transitionFrames)
       const totalFrames = introFrames + totalPhotoFrames + outroFrames
 
+      console.log('[VideoRenderer] Total frames:', totalFrames, '| Duration:', Math.ceil(totalFrames / fps), 'seconds')
+
       // Animation loop
       const renderFrame = () => {
-        if (!rendering) return
+        if (!isRendering) return
 
         currentFrame++
         const frameProgress = currentFrame / totalFrames
         onProgress(frameProgress * 100)
+
+        // Log progress every 30 frames (every second)
+        if (currentFrame % 30 === 0) {
+          console.log('[VideoRenderer] Progress:', Math.round(frameProgress * 100) + '%', '| Frame:', currentFrame, '/', totalFrames)
+        }
 
         // Clear canvas
         ctx.clearRect(0, 0, width, height)
@@ -379,6 +395,11 @@ const VideoRenderer = forwardRef<{ renderVideo: () => void }, VideoRendererProps
       console.error('Rendering error:', error)
       onError(error instanceof Error ? error.message : 'Failed to render video')
       setRendering(false)
+
+      // Stop media recorder if it was started
+      if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
+        mediaRecorderRef.current.stop()
+      }
     }
   }
 
