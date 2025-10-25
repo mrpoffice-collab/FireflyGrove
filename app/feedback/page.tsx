@@ -18,21 +18,37 @@ export default function FeedbackPage() {
   // Capture the referring page on mount
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const referrer = document.referrer
-      const currentUrl = window.location.href
+      // Prioritize localStorage (set when button is clicked)
+      const storedPage = localStorage.getItem('feedbackFromPage')
 
-      // Use referrer if available, otherwise use stored page from localStorage
-      let fromPage = referrer || localStorage.getItem('feedbackFromPage') || ''
+      let pagePath = ''
 
-      // If referrer is the current page or empty, try to get from localStorage
-      if (!fromPage || fromPage === currentUrl) {
-        fromPage = localStorage.getItem('feedbackFromPage') || 'Direct navigation'
+      if (storedPage) {
+        // Use the stored page and clear it
+        try {
+          const url = new URL(storedPage)
+          pagePath = url.pathname
+        } catch {
+          pagePath = storedPage
+        }
+        localStorage.removeItem('feedbackFromPage')
+      } else {
+        // Fallback to referrer if available
+        const referrer = document.referrer
+
+        if (referrer && !referrer.includes('/feedback')) {
+          try {
+            const url = new URL(referrer)
+            pagePath = url.pathname
+          } catch {
+            pagePath = referrer
+          }
+        } else {
+          pagePath = 'Direct navigation'
+        }
       }
 
-      setFormData(prev => ({ ...prev, page: fromPage }))
-
-      // Clear the stored page after using it
-      localStorage.removeItem('feedbackFromPage')
+      setFormData(prev => ({ ...prev, page: pagePath }))
     }
   }, [])
 
