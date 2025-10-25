@@ -22,6 +22,9 @@ interface Branch {
   _count: {
     entries: number
   }
+  // For rooted trees
+  isFromRootedTree?: boolean
+  rootedTreeName?: string | null
 }
 
 interface Tree {
@@ -318,11 +321,18 @@ export default function TreePage() {
                       <div className="text-3xl">
                         {branch.personStatus === 'legacy' ? '🕯️' : '🌿'}
                       </div>
-                      {branch.personStatus === 'legacy' && (
-                        <span className="px-2 py-1 text-xs rounded-full bg-[var(--legacy-amber)]/20 text-[var(--legacy-text)] border border-[var(--legacy-amber)]/30">
-                          Legacy
-                        </span>
-                      )}
+                      <div className="flex gap-2">
+                        {branch.personStatus === 'legacy' && (
+                          <span className="px-2 py-1 text-xs rounded-full bg-[var(--legacy-amber)]/20 text-[var(--legacy-text)] border border-[var(--legacy-amber)]/30">
+                            Legacy
+                          </span>
+                        )}
+                        {branch.isFromRootedTree && (
+                          <span className="px-2 py-1 text-xs rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30" title={`From ${branch.rootedTreeName}`}>
+                            🌱 Rooted
+                          </span>
+                        )}
+                      </div>
                     </div>
                     <h3
                       className={`text-xl mb-2 group-hover:text-firefly-glow transition-soft ${
