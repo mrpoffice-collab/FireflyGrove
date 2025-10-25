@@ -535,41 +535,123 @@ export default function BranchPage() {
             </div>
           </div>
 
-          <div className={`rounded-lg p-6 mb-8 ${
-            isLegacy
-              ? 'bg-[var(--legacy-amber)]/5 border border-[var(--legacy-amber)]/30'
-              : 'bg-bg-dark border border-firefly-dim/30'
-          }`}>
-            <div className="flex items-start gap-3 mb-4">
-              <p className={`text-sm italic flex-1 ${
-                isLegacy ? 'text-[var(--legacy-text)]' : 'text-text-muted'
-              }`}>
-                ✨ "{currentSpark}"
-              </p>
-              <button
-                onClick={refreshSpark}
-                className={`flex-shrink-0 p-2 rounded transition-soft ${
-                  isLegacy
-                    ? 'text-[var(--legacy-amber)] hover:bg-[var(--legacy-amber)]/10'
-                    : 'text-firefly-dim hover:bg-firefly-dim/10'
-                }`}
-                title="Get a different spark"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                </svg>
-              </button>
-            </div>
-            <button
-              onClick={() => setShowNewMemory(true)}
-              className={`w-full py-3 rounded font-medium transition-soft ${
+          {/* Story Sparks Section */}
+          <div className="mb-8">
+            <h3 className={`text-lg font-medium mb-4 ${
+              isLegacy ? 'text-[var(--legacy-text)]' : 'text-text-soft'
+            }`}>
+              Story Sparks
+            </h3>
+
+            <div className="grid md:grid-cols-3 gap-4">
+              {/* Story Spark - Rotating helpful prompts */}
+              <div className={`rounded-lg p-4 ${
                 isLegacy
-                  ? 'bg-[var(--legacy-amber)]/20 hover:bg-[var(--legacy-amber)]/30 text-[var(--legacy-text)] border border-[var(--legacy-amber)]/40'
-                  : 'bg-firefly-dim hover:bg-firefly-glow text-bg-dark'
-              }`}
-            >
-              {isLegacy ? 'Light a Memory' : 'Add Memory'}
-            </button>
+                  ? 'bg-[var(--legacy-amber)]/5 border border-[var(--legacy-amber)]/30'
+                  : 'bg-bg-dark border border-firefly-dim/30'
+              }`}>
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xl">✨</span>
+                    <h4 className={`text-sm font-medium ${
+                      isLegacy ? 'text-[var(--legacy-text)]' : 'text-text-soft'
+                    }`}>
+                      Story Spark
+                    </h4>
+                  </div>
+                  <button
+                    onClick={refreshSpark}
+                    className={`p-1 rounded transition-soft ${
+                      isLegacy
+                        ? 'text-[var(--legacy-amber)] hover:bg-[var(--legacy-amber)]/10'
+                        : 'text-firefly-dim hover:bg-firefly-dim/10'
+                    }`}
+                    title="Get a different spark"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                  </button>
+                </div>
+                <p className={`text-xs italic mb-4 line-clamp-3 ${
+                  isLegacy ? 'text-[var(--legacy-text)]/80' : 'text-text-muted'
+                }`}>
+                  "{currentSpark}"
+                </p>
+                <button
+                  onClick={() => setShowNewMemory(true)}
+                  className={`w-full py-2 text-sm rounded font-medium transition-soft ${
+                    isLegacy
+                      ? 'bg-[var(--legacy-amber)]/20 hover:bg-[var(--legacy-amber)]/30 text-[var(--legacy-text)] border border-[var(--legacy-amber)]/40'
+                      : 'bg-firefly-dim hover:bg-firefly-glow text-bg-dark'
+                  }`}
+                >
+                  Light a Memory
+                </button>
+              </div>
+
+              {/* Challenge Sparks - Admin/seasonal challenges */}
+              <div className={`rounded-lg p-4 ${
+                isLegacy
+                  ? 'bg-[var(--legacy-amber)]/5 border border-[var(--legacy-amber)]/30'
+                  : 'bg-bg-dark border border-firefly-dim/30'
+              }`}>
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="text-xl">🎯</span>
+                  <h4 className={`text-sm font-medium ${
+                    isLegacy ? 'text-[var(--legacy-text)]' : 'text-text-soft'
+                  }`}>
+                    Challenge Sparks
+                  </h4>
+                </div>
+                <p className={`text-xs italic mb-4 line-clamp-3 ${
+                  isLegacy ? 'text-[var(--legacy-text)]/80' : 'text-text-muted'
+                }`}>
+                  "Coming soon: Seasonal challenges and themed spark collections"
+                </p>
+                <button
+                  disabled
+                  className={`w-full py-2 text-sm rounded font-medium transition-soft opacity-50 cursor-not-allowed ${
+                    isLegacy
+                      ? 'bg-[var(--legacy-amber)]/20 text-[var(--legacy-text)] border border-[var(--legacy-amber)]/40'
+                      : 'bg-firefly-dim text-bg-dark'
+                  }`}
+                >
+                  Coming Soon
+                </button>
+              </div>
+
+              {/* My Sparks - User's custom sparks */}
+              <div className={`rounded-lg p-4 ${
+                isLegacy
+                  ? 'bg-[var(--legacy-amber)]/5 border border-[var(--legacy-amber)]/30'
+                  : 'bg-bg-dark border border-firefly-dim/30'
+              }`}>
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="text-xl">📝</span>
+                  <h4 className={`text-sm font-medium ${
+                    isLegacy ? 'text-[var(--legacy-text)]' : 'text-text-soft'
+                  }`}>
+                    My Sparks
+                  </h4>
+                </div>
+                <p className={`text-xs italic mb-4 line-clamp-3 ${
+                  isLegacy ? 'text-[var(--legacy-text)]/80' : 'text-text-muted'
+                }`}>
+                  "Create your own custom story sparks and save them for later"
+                </p>
+                <button
+                  disabled
+                  className={`w-full py-2 text-sm rounded font-medium transition-soft opacity-50 cursor-not-allowed ${
+                    isLegacy
+                      ? 'bg-[var(--legacy-amber)]/20 text-[var(--legacy-text)] border border-[var(--legacy-amber)]/40'
+                      : 'bg-firefly-dim text-bg-dark'
+                  }`}
+                >
+                  Coming Soon
+                </button>
+              </div>
+            </div>
           </div>
 
           <div className="space-y-6">
