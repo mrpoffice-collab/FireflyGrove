@@ -37,6 +37,14 @@ export default function SoundArtBuilder() {
   const [qrCodeDataUrl, setQrCodeDataUrl] = useState<string | null>(null)
   const [qrCodeImage, setQrCodeImage] = useState<HTMLImageElement | null>(null)
 
+  // Background customization
+  const [useTransparentBg, setUseTransparentBg] = useState(false)
+  const [backgroundImage, setBackgroundImage] = useState<string | null>(null)
+  const [backgroundImageElement, setBackgroundImageElement] = useState<HTMLImageElement | null>(null)
+  const [bgImageScale, setBgImageScale] = useState(100)
+  const [bgImageX, setBgImageX] = useState(0)
+  const [bgImageY, setBgImageY] = useState(0)
+
   // Upload state
   const [isUploading, setIsUploading] = useState(false)
   const [isSaved, setIsSaved] = useState(false)
@@ -134,6 +142,25 @@ export default function SoundArtBuilder() {
     } catch (err) {
       console.error('Error generating QR code:', err)
       setError('Failed to generate QR code')
+    }
+  }
+
+  // Handle background image upload
+  const handleBackgroundImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      const reader = new FileReader()
+      reader.onload = (event) => {
+        const dataUrl = event.target?.result as string
+        setBackgroundImage(dataUrl)
+
+        const img = new Image()
+        img.onload = () => {
+          setBackgroundImageElement(img)
+        }
+        img.src = dataUrl
+      }
+      reader.readAsDataURL(file)
     }
   }
 
@@ -275,9 +302,23 @@ export default function SoundArtBuilder() {
     canvas.width = 2000
     canvas.height = 1000
 
-    // Clear canvas
-    ctx.fillStyle = backgroundColor
-    ctx.fillRect(0, 0, canvas.width, canvas.height)
+    // Clear canvas - handle transparency
+    if (useTransparentBg) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
+    } else {
+      ctx.fillStyle = backgroundColor
+      ctx.fillRect(0, 0, canvas.width, canvas.height)
+    }
+
+    // Draw background image if provided
+    if (backgroundImageElement) {
+      const scale = bgImageScale / 100
+      const imgWidth = backgroundImageElement.width * scale
+      const imgHeight = backgroundImageElement.height * scale
+      const x = bgImageX
+      const y = bgImageY
+      ctx.drawImage(backgroundImageElement, x, y, imgWidth, imgHeight)
+    }
 
     const samples = waveformData.samples
     const barWidth = canvas.width / samples.length
@@ -384,7 +425,7 @@ export default function SoundArtBuilder() {
     } else {
       console.log('[Canvas] QR code NOT drawn - showQRCode:', showQRCode, 'qrCodeImage:', !!qrCodeImage)
     }
-  }, [waveformData, title, waveformStyle, primaryColor, backgroundColor, showQRCode, qrCodeImage])
+  }, [waveformData, title, waveformStyle, primaryColor, backgroundColor, showQRCode, qrCodeImage, useTransparentBg, backgroundImageElement, bgImageScale, bgImageX, bgImageY])
 
   // Redraw whenever settings change
   useEffect(() => {
@@ -575,7 +616,7 @@ export default function SoundArtBuilder() {
                     {/* Background Color */}
                     <div>
                       <label className="block text-sm text-text-muted mb-2">Background Color</label>
-                      <div className="flex gap-2">
+                      <div className="flex gap-2 mb-2">
                         <input
                           type="color"
                           value={backgroundColor}
@@ -584,6 +625,7 @@ export default function SoundArtBuilder() {
                             setTimeout(drawWaveform, 0)
                           }}
                           className="w-16 h-10 rounded cursor-pointer"
+                          disabled={useTransparentBg}
                         />
                         <input
                           type="text"
@@ -593,8 +635,87 @@ export default function SoundArtBuilder() {
                             setTimeout(drawWaveform, 0)
                           }}
                           className="flex-1 px-4 py-2 bg-bg-dark border border-border-subtle rounded-lg text-text-soft font-mono text-sm"
+                          disabled={useTransparentBg}
                         />
                       </div>
+                      <label className="flex items-center gap-2 text-xs text-text-muted cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={useTransparentBg}
+                          onChange={(e) => setUseTransparentBg(e.target.checked)}
+                          className="w-4 h-4"
+                        />
+                        Use transparent background (PNG only)
+                      </label>
+                    </div>
+
+                    {/* Background Image */}
+                    <div>
+                      <label className="block text-sm text-text-muted mb-2">Background Image (Optional)</label>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleBackgroundImageUpload}
+                        className="w-full px-4 py-2 bg-bg-dark border border-border-subtle rounded-lg text-text-soft text-sm file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-firefly-dim/20 file:text-firefly-glow hover:file:bg-firefly-dim/40 file:cursor-pointer"
+                      />
+                      {backgroundImage && (
+                        <div className="mt-3 space-y-2">
+                          <button
+                            onClick={() => {
+                              setBackgroundImage(null)
+                              setBackgroundImageElement(null)
+                            }}
+                            className="text-xs text-text-muted hover:text-red-400 transition-soft"
+                          >
+                            ✕ Remove image
+                          </button>
+
+                          {/* Image positioning controls */}
+                          <div className="space-y-2 p-3 bg-bg-darker rounded-lg">
+                            <div>
+                              <label className="block text-xs text-text-muted mb-1">
+                                Scale: {bgImageScale}%
+                              </label>
+                              <input
+                                type="range"
+                                min="10"
+                                max="200"
+                                value={bgImageScale}
+                                onChange={(e) => setBgImageScale(Number(e.target.value))}
+                                className="w-full"
+                              />
+                            </div>
+                            <div className="grid grid-cols-2 gap-2">
+                              <div>
+                                <label className="block text-xs text-text-muted mb-1">
+                                  Position X: {bgImageX}px
+                                </label>
+                                <input
+                                  type="range"
+                                  min="-1000"
+                                  max="2000"
+                                  value={bgImageX}
+                                  onChange={(e) => setBgImageX(Number(e.target.value))}
+                                  className="w-full"
+                                />
+                              </div>
+                              <div>
+                                <label className="block text-xs text-text-muted mb-1">
+                                  Position Y: {bgImageY}px
+                                </label>
+                                <input
+                                  type="range"
+                                  min="-1000"
+                                  max="2000"
+                                  value={bgImageY}
+                                  onChange={(e) => setBgImageY(Number(e.target.value))}
+                                  className="w-full"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
 
@@ -602,10 +723,26 @@ export default function SoundArtBuilder() {
                   {showQRCode && uniqueCode && (
                     <div className="mt-4 p-3 bg-firefly-glow/10 border border-firefly-glow/30 rounded-lg">
                       <div className="text-xs text-text-muted mb-1">Scan URL:</div>
-                      <div className="text-sm text-firefly-glow font-mono break-all">
-                        {window.location.origin}/soundart/play/{uniqueCode}
+                      <div className="flex items-center gap-2 mb-2">
+                        <a
+                          href={`${window.location.origin}/soundart/play/${uniqueCode}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex-1 text-sm text-firefly-glow hover:text-firefly-bright font-mono underline break-all transition-soft"
+                        >
+                          {window.location.origin}/soundart/play/{uniqueCode}
+                        </a>
+                        <button
+                          onClick={() => {
+                            navigator.clipboard.writeText(`${window.location.origin}/soundart/play/${uniqueCode}`)
+                            alert('Link copied to clipboard!')
+                          }}
+                          className="px-2 py-1 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded text-xs font-medium transition-soft shrink-0"
+                        >
+                          Copy
+                        </button>
                       </div>
-                      <div className="text-xs text-text-muted mt-2">
+                      <div className="text-xs text-text-muted">
                         Code: <span className="text-text-soft font-mono">{uniqueCode}</span>
                       </div>
                     </div>
