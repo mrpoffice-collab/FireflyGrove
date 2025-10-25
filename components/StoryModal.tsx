@@ -1,7 +1,7 @@
 'use client'
 
 import { motion, AnimatePresence } from 'framer-motion'
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import FireflyParticles from './FireflyParticles'
 import Link from 'next/link'
 
@@ -82,6 +82,48 @@ interface StoryModalProps {
 
 export default function StoryModal({ onClose }: StoryModalProps) {
   const [currentSlide, setCurrentSlide] = useState(0)
+  const [isMuted, setIsMuted] = useState(false)
+  const [isPlaying, setIsPlaying] = useState(false)
+  const audioRef = useRef<HTMLAudioElement>(null)
+
+  // Start music when modal opens
+  useEffect(() => {
+    const playAudio = async () => {
+      if (audioRef.current) {
+        try {
+          audioRef.current.volume = 0.3 // Start at 30% volume
+          await audioRef.current.play()
+          setIsPlaying(true)
+        } catch (error) {
+          // Autoplay blocked - user will need to click unmute
+          console.log('Autoplay blocked, waiting for user interaction')
+        }
+      }
+    }
+    playAudio()
+
+    return () => {
+      // Fade out and stop music when modal closes
+      if (audioRef.current) {
+        audioRef.current.pause()
+      }
+    }
+  }, [])
+
+  const toggleMute = () => {
+    if (audioRef.current) {
+      if (isMuted) {
+        audioRef.current.muted = false
+        if (!isPlaying) {
+          audioRef.current.play()
+          setIsPlaying(true)
+        }
+      } else {
+        audioRef.current.muted = true
+      }
+      setIsMuted(!isMuted)
+    }
+  }
 
   const nextSlide = () => {
     if (currentSlide < slides.length - 1) {
@@ -107,6 +149,16 @@ export default function StoryModal({ onClose }: StoryModalProps) {
     >
       <FireflyParticles count={30} />
 
+      {/* Background Audio */}
+      <audio
+        ref={audioRef}
+        loop
+        preload="auto"
+      >
+        <source src="/audio/story-background.mp3" type="audio/mpeg" />
+        <source src="/audio/story-background.ogg" type="audio/ogg" />
+      </audio>
+
       <motion.div
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
@@ -115,6 +167,16 @@ export default function StoryModal({ onClose }: StoryModalProps) {
         className="relative max-w-3xl mx-4 px-8 py-12 rounded-2xl bg-gradient-to-b from-bg-dark/80 to-bg-elevated/80 backdrop-blur-xl border border-firefly-dim/30 shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
+        {/* Audio control button */}
+        <button
+          onClick={toggleMute}
+          className="absolute top-4 left-4 text-text-muted hover:text-firefly-glow transition-soft text-2xl"
+          aria-label={isMuted ? 'Unmute music' : 'Mute music'}
+          title={isMuted ? 'Unmute music' : 'Mute music'}
+        >
+          {isMuted ? '🔇' : '🔊'}
+        </button>
+
         {/* Close button */}
         <button
           onClick={onClose}
