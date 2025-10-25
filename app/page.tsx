@@ -27,7 +27,8 @@ export default function HomePage() {
       .catch((err) => console.error('Failed to fetch stats:', err))
   }, [])
 
-  const formatNumber = (num: number) => {
+  const formatNumber = (num: number | undefined) => {
+    if (num === undefined || num === null) return '0'
     return num.toLocaleString()
   }
 
