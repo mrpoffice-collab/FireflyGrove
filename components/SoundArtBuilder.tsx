@@ -35,6 +35,7 @@ export default function SoundArtBuilder() {
   const [showQRCode, setShowQRCode] = useState(false)
   const [uniqueCode, setUniqueCode] = useState('')
   const [qrCodeDataUrl, setQrCodeDataUrl] = useState<string | null>(null)
+  const [qrCodeImage, setQrCodeImage] = useState<HTMLImageElement | null>(null)
 
   // Upload state
   const [isUploading, setIsUploading] = useState(false)
@@ -117,10 +118,16 @@ export default function SoundArtBuilder() {
         },
       })
       setQrCodeDataUrl(qrDataUrl)
-      setShowQRCode(true)
 
-      // Redraw with QR code
-      setTimeout(drawWaveform, 100)
+      // Pre-load the QR code image
+      const img = new Image()
+      img.onload = () => {
+        setQrCodeImage(img)
+        setShowQRCode(true)
+        // Redraw with QR code after image is loaded
+        setTimeout(drawWaveform, 50)
+      }
+      img.src = qrDataUrl
     } catch (err) {
       console.error('Error generating QR code:', err)
       setError('Failed to generate QR code')
@@ -345,30 +352,26 @@ export default function SoundArtBuilder() {
       ctx.fillText(title, canvas.width / 2, 80)
     }
 
-    // Add QR code if enabled
-    if (showQRCode && qrCodeDataUrl) {
-      const qrImage = new Image()
-      qrImage.onload = () => {
-        // Position QR code in bottom right corner
-        const qrSize = 200
-        const padding = 40
-        const x = canvas.width - qrSize - padding
-        const y = canvas.height - qrSize - padding
+    // Add QR code if enabled and loaded
+    if (showQRCode && qrCodeImage) {
+      // Position QR code in bottom right corner
+      const qrSize = 200
+      const padding = 40
+      const x = canvas.width - qrSize - padding
+      const y = canvas.height - qrSize - padding
 
-        // Draw white background for QR code
-        ctx.fillStyle = backgroundColor
-        ctx.fillRect(x - 10, y - 10, qrSize + 20, qrSize + 20)
+      // Draw background for QR code
+      ctx.fillStyle = backgroundColor
+      ctx.fillRect(x - 10, y - 10, qrSize + 20, qrSize + 20)
 
-        // Draw QR code
-        ctx.drawImage(qrImage, x, y, qrSize, qrSize)
+      // Draw QR code
+      ctx.drawImage(qrCodeImage, x, y, qrSize, qrSize)
 
-        // Add "Scan to Play" text above QR code
-        ctx.fillStyle = primaryColor
-        ctx.font = '16px sans-serif'
-        ctx.textAlign = 'center'
-        ctx.fillText('Scan to Play', x + qrSize / 2, y - 20)
-      }
-      qrImage.src = qrCodeDataUrl
+      // Add "Scan to Play" text above QR code
+      ctx.fillStyle = primaryColor
+      ctx.font = '16px sans-serif'
+      ctx.textAlign = 'center'
+      ctx.fillText('Scan to Play', x + qrSize / 2, y - 20)
     }
   }
 

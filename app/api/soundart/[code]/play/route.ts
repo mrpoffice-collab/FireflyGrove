@@ -12,11 +12,25 @@ export async function POST(
       return NextResponse.json({ error: 'Code is required' }, { status: 400 })
     }
 
-    // Increment play count and update last played timestamp
-    const soundArt = await prisma.soundArt.update({
+    // Find the sound art first
+    const existingSoundArt = await prisma.soundArt.findFirst({
       where: {
         uniqueCode: code.toUpperCase(),
         deletedAt: null,
+      },
+      select: {
+        id: true,
+      },
+    })
+
+    if (!existingSoundArt) {
+      return NextResponse.json({ error: 'Sound art not found' }, { status: 404 })
+    }
+
+    // Increment play count and update last played timestamp
+    const soundArt = await prisma.soundArt.update({
+      where: {
+        id: existingSoundArt.id,
       },
       data: {
         playCount: {

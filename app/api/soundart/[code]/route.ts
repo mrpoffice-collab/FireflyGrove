@@ -13,7 +13,7 @@ export async function GET(
     }
 
     // Fetch sound art by unique code
-    const soundArt = await prisma.soundArt.findUnique({
+    const soundArt = await prisma.soundArt.findFirst({
       where: {
         uniqueCode: code.toUpperCase(),
         deletedAt: null, // Only show non-deleted items
