@@ -903,6 +903,7 @@ export default function SoundArtBuilder() {
                   {(backgroundImage || waveformData || showQRCode) && (
                     <div className="mt-4 p-4 bg-bg-darker border border-border-subtle rounded-lg space-y-4">
                       <h4 className="text-sm text-text-soft font-medium">Position Controls</h4>
+                      {console.log('[Position Controls] waveformData:', !!waveformData, 'showQRCode:', showQRCode, 'backgroundImage:', !!backgroundImage)}
 
                       {/* Waveform Position */}
                       {waveformData && (
@@ -918,7 +919,10 @@ export default function SoundArtBuilder() {
                                 min="-1000"
                                 max="1000"
                                 value={waveformX}
-                                onChange={(e) => setWaveformX(Number(e.target.value))}
+                                onChange={(e) => {
+                                  setWaveformX(Number(e.target.value))
+                                  setTimeout(drawWaveform, 0)
+                                }}
                                 className="w-full"
                               />
                             </div>
@@ -931,7 +935,10 @@ export default function SoundArtBuilder() {
                                 min="-500"
                                 max="500"
                                 value={waveformY}
-                                onChange={(e) => setWaveformY(Number(e.target.value))}
+                                onChange={(e) => {
+                                  setWaveformY(Number(e.target.value))
+                                  setTimeout(drawWaveform, 0)
+                                }}
                                 className="w-full"
                               />
                             </div>
@@ -953,7 +960,10 @@ export default function SoundArtBuilder() {
                                 min="0"
                                 max="1800"
                                 value={qrX}
-                                onChange={(e) => setQrX(Number(e.target.value))}
+                                onChange={(e) => {
+                                  setQrX(Number(e.target.value))
+                                  setTimeout(drawWaveform, 0)
+                                }}
                                 className="w-full"
                               />
                             </div>
@@ -966,7 +976,10 @@ export default function SoundArtBuilder() {
                                 min="0"
                                 max="800"
                                 value={qrY}
-                                onChange={(e) => setQrY(Number(e.target.value))}
+                                onChange={(e) => {
+                                  setQrY(Number(e.target.value))
+                                  setTimeout(drawWaveform, 0)
+                                }}
                                 className="w-full"
                               />
                             </div>
@@ -987,7 +1000,10 @@ export default function SoundArtBuilder() {
                               min="10"
                               max="200"
                               value={bgImageScale}
-                              onChange={(e) => setBgImageScale(Number(e.target.value))}
+                              onChange={(e) => {
+                                setBgImageScale(Number(e.target.value))
+                                setTimeout(drawWaveform, 0)
+                              }}
                               className="w-full"
                             />
                           </div>
@@ -1001,7 +1017,10 @@ export default function SoundArtBuilder() {
                                 min="-1000"
                                 max="2000"
                                 value={bgImageX}
-                                onChange={(e) => setBgImageX(Number(e.target.value))}
+                                onChange={(e) => {
+                                  setBgImageX(Number(e.target.value))
+                                  setTimeout(drawWaveform, 0)
+                                }}
                                 className="w-full"
                               />
                             </div>
@@ -1014,7 +1033,10 @@ export default function SoundArtBuilder() {
                                 min="-1000"
                                 max="2000"
                                 value={bgImageY}
-                                onChange={(e) => setBgImageY(Number(e.target.value))}
+                                onChange={(e) => {
+                                  setBgImageY(Number(e.target.value))
+                                  setTimeout(drawWaveform, 0)
+                                }}
                                 className="w-full"
                               />
                             </div>

@@ -39,3 +39,4 @@ prisma/dev.db-journal
 
 # uploads (for local dev)
 /public/uploads
+nul
