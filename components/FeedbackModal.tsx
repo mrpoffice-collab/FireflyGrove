@@ -63,9 +63,9 @@ export default function FeedbackModal({ isOpen, onClose }: FeedbackModalProps) {
 
   return (
     <>
-      {/* Subtle backdrop */}
+      {/* Very subtle backdrop - minimal blur so text is readable */}
       <div
-        className="fixed inset-0 bg-black/40 z-[9998] backdrop-blur-[2px]"
+        className="fixed inset-0 bg-black/20 z-[9998]"
         onClick={handleClose}
       />
 
