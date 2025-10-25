@@ -56,6 +56,18 @@ export default function SoundArtBuilder() {
   }>>([])
   const [loadingPhotos, setLoadingPhotos] = useState(false)
 
+  // Save to branch
+  const [showSaveToBranchModal, setShowSaveToBranchModal] = useState(false)
+  const [userBranches, setUserBranches] = useState<Array<{
+    id: string
+    title: string
+    description: string | null
+  }>>([])
+  const [selectedBranchId, setSelectedBranchId] = useState('')
+  const [memoryCaption, setMemoryCaption] = useState('')
+  const [isSavingToBranch, setIsSavingToBranch] = useState(false)
+  const [savedToBranch, setSavedToBranch] = useState(false)
+
   // Upload state
   const [isUploading, setIsUploading] = useState(false)
   const [isSaved, setIsSaved] = useState(false)
@@ -206,6 +218,79 @@ export default function SoundArtBuilder() {
       setShowPhotoGallery(false)
     }
     img.src = photoUrl
+  }
+
+  // Fetch user's branches
+  const fetchUserBranches = async () => {
+    try {
+      const response = await fetch('/api/branches/list')
+      if (response.ok) {
+        const data = await response.json()
+        setUserBranches(data.branches || [])
+        if (data.branches.length > 0) {
+          setSelectedBranchId(data.branches[0].id)
+        }
+      } else {
+        console.error('Failed to fetch branches:', await response.text())
+        setError('Failed to load your branches')
+      }
+    } catch (err) {
+      console.error('Error fetching branches:', err)
+      setError('Failed to load branches')
+    }
+  }
+
+  // Save to branch
+  const saveToBranch = async () => {
+    if (!canvasRef.current || !selectedBranchId) {
+      setError('Please select a branch')
+      return
+    }
+
+    setIsSavingToBranch(true)
+    setError(null)
+
+    try {
+      // Convert canvas to blob
+      const canvas = canvasRef.current
+      const blob = await new Promise<Blob>((resolve) => {
+        canvas.toBlob((blob) => {
+          if (blob) resolve(blob)
+        }, 'image/png')
+      })
+
+      // Create form data
+      const formData = new FormData()
+      formData.append('branchId', selectedBranchId)
+      formData.append('text', memoryCaption || `Sound wave art: ${title || 'Untitled'}`)
+      formData.append('image', blob, `soundart-${Date.now()}.png`)
+
+      // Upload to API
+      const response = await fetch('/api/soundart/save-to-branch', {
+        method: 'POST',
+        body: formData,
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Failed to save to branch')
+      }
+
+      const data = await response.json()
+      console.log('✓ Saved to branch successfully:', data.entry.id)
+
+      setSavedToBranch(true)
+      setTimeout(() => {
+        setShowSaveToBranchModal(false)
+        setSavedToBranch(false)
+        setMemoryCaption('')
+      }, 2000)
+    } catch (err) {
+      console.error('Save to branch error:', err)
+      setError(err instanceof Error ? err.message : 'Failed to save to branch')
+    } finally {
+      setIsSavingToBranch(false)
+    }
   }
 
   // Upload to API and save
@@ -873,6 +958,18 @@ export default function SoundArtBuilder() {
                     </div>
 
                     <button
+                      onClick={() => {
+                        setShowSaveToBranchModal(true)
+                        if (userBranches.length === 0) {
+                          fetchUserBranches()
+                        }
+                      }}
+                      className="w-full px-6 py-3 bg-bg-elevated hover:bg-bg-darker border border-border-subtle text-text-soft rounded-lg font-medium transition-soft"
+                    >
+                      🌿 Save to Branch
+                    </button>
+
+                    <button
                       onClick={uploadToAPI}
                       disabled={!showQRCode || isUploading || isSaved}
                       className={`w-full px-6 py-3 rounded-lg font-medium transition-soft ${
@@ -996,6 +1093,104 @@ export default function SoundArtBuilder() {
               >
                 Cancel
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Save to Branch Modal */}
+      {showSaveToBranchModal && (
+        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
+          <div className="bg-bg-dark border border-border-subtle rounded-lg max-w-lg w-full">
+            {/* Header */}
+            <div className="p-4 border-b border-border-subtle flex items-center justify-between">
+              <h3 className="text-lg text-text-soft font-medium">Save to Branch</h3>
+              <button
+                onClick={() => setShowSaveToBranchModal(false)}
+                className="text-text-muted hover:text-text-soft transition-soft text-2xl leading-none"
+              >
+                ×
+              </button>
+            </div>
+
+            {/* Content */}
+            <div className="p-6 space-y-4">
+              {userBranches.length === 0 ? (
+                <div className="text-text-muted text-center py-6">
+                  <p>No branches found. Create a branch first to save your sound art!</p>
+                </div>
+              ) : (
+                <>
+                  {/* Branch Selector */}
+                  <div>
+                    <label className="block text-sm text-text-soft mb-2">Select Branch</label>
+                    <select
+                      value={selectedBranchId}
+                      onChange={(e) => setSelectedBranchId(e.target.value)}
+                      className="w-full px-4 py-2 bg-bg-elevated border border-border-subtle rounded-lg text-text-soft"
+                    >
+                      {userBranches.map((branch) => (
+                        <option key={branch.id} value={branch.id}>
+                          {branch.title}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Caption */}
+                  <div>
+                    <label className="block text-sm text-text-soft mb-2">Caption (Optional)</label>
+                    <textarea
+                      value={memoryCaption}
+                      onChange={(e) => setMemoryCaption(e.target.value)}
+                      placeholder={`Sound wave art: ${title || 'Untitled'}`}
+                      className="w-full px-4 py-2 bg-bg-elevated border border-border-subtle rounded-lg text-text-soft resize-none"
+                      rows={3}
+                    />
+                  </div>
+
+                  {/* Success message */}
+                  {savedToBranch && (
+                    <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-3">
+                      <p className="text-green-400 text-sm">
+                        ✓ Saved to branch successfully!
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Error message */}
+                  {error && (
+                    <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-3">
+                      <p className="text-red-400 text-sm">{error}</p>
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+
+            {/* Footer */}
+            <div className="p-4 border-t border-border-subtle flex gap-3">
+              <button
+                onClick={() => setShowSaveToBranchModal(false)}
+                className="flex-1 px-4 py-2 bg-border-subtle hover:bg-text-muted/20 text-text-soft rounded-lg transition-soft"
+              >
+                Cancel
+              </button>
+              {userBranches.length > 0 && (
+                <button
+                  onClick={saveToBranch}
+                  disabled={isSavingToBranch || savedToBranch}
+                  className={`flex-1 px-4 py-2 rounded-lg font-medium transition-soft ${
+                    savedToBranch
+                      ? 'bg-green-500/20 text-green-400 cursor-not-allowed'
+                      : isSavingToBranch
+                      ? 'bg-firefly-dim/40 text-text-soft cursor-wait'
+                      : 'bg-firefly-dim hover:bg-firefly-glow text-bg-dark'
+                  }`}
+                >
+                  {savedToBranch ? '✓ Saved!' : isSavingToBranch ? 'Saving...' : 'Save'}
+                </button>
+              )}
             </div>
           </div>
         </div>
