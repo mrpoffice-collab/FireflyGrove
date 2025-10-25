@@ -4,6 +4,7 @@ import { signOut } from 'next-auth/react'
 import Link from 'next/link'
 import { useState, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import FeedbackModal from './FeedbackModal'
 
 interface HeaderProps {
   userName?: string
@@ -17,6 +18,7 @@ interface HeaderProps {
 export default function Header({ userName, groveInfo }: HeaderProps) {
   const router = useRouter()
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+  const [isFeedbackOpen, setIsFeedbackOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
 
   // Close dropdown when clicking outside
@@ -59,19 +61,13 @@ export default function Header({ userName, groveInfo }: HeaderProps) {
 
           <div className="flex items-center gap-4">
             {/* Beta Feedback Button - Visible to all users */}
-            <Link
-              href="/feedback"
-              onClick={() => {
-                // Store current page URL for feedback form
-                if (typeof window !== 'undefined') {
-                  localStorage.setItem('feedbackFromPage', window.location.href)
-                }
-              }}
+            <button
+              onClick={() => setIsFeedbackOpen(true)}
               className="px-3 py-1.5 bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 border border-blue-500/30 rounded text-xs font-medium transition-soft flex items-center gap-1.5"
             >
               <span>💬</span>
               <span>Beta Feedback</span>
-            </Link>
+            </button>
 
             <div className="relative" ref={dropdownRef}>
               {userName ? (
@@ -130,11 +126,7 @@ export default function Header({ userName, groveInfo }: HeaderProps) {
                   </button>
                   <button
                     onClick={() => {
-                      // Store current page URL for feedback form
-                      if (typeof window !== 'undefined') {
-                        localStorage.setItem('feedbackFromPage', window.location.href)
-                      }
-                      router.push('/feedback')
+                      setIsFeedbackOpen(true)
                       setIsDropdownOpen(false)
                     }}
                     className="w-full text-left px-4 py-2 text-sm text-text-muted hover:bg-border-subtle hover:text-text-soft transition-soft"
@@ -165,6 +157,9 @@ export default function Header({ userName, groveInfo }: HeaderProps) {
           </div>
         </div>
       </div>
+
+      {/* Feedback Modal */}
+      <FeedbackModal isOpen={isFeedbackOpen} onClose={() => setIsFeedbackOpen(false)} />
     </header>
   )
 }
