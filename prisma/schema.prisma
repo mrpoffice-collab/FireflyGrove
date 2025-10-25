@@ -42,6 +42,7 @@ model User {
   treeSubscriptions TreeSubscription[]
   sentTreeTransfers TreeTransfer[] @relation("TreeTransferSender")
   videoGenerations VideoGeneration[]
+  soundArts SoundArt[] @relation("UserSoundArt")
 
   @@index([email])
   @@index([status])
@@ -608,5 +609,49 @@ model VideoGeneration {
   @@index([planType])
   @@index([createdAt])
   @@index([autoDeleteAt])
+  @@index([deletedAt])
+}
+
+// Sound Art - Audio waveform artwork generator
+model SoundArt {
+  id                String   @id @default(cuid())
+  userId            String?  // Optional - can create without login
+  uniqueCode        String   @unique // Short code for QR/URL (e.g., "a3f7k2")
+
+  // Audio storage
+  audioUrl          String   // Vercel Blob storage URL
+  audioFilename     String
+  audioSizeBytes    Int
+  audioDuration     Float    // Duration in seconds
+
+  // Generated artwork
+  artworkUrl        String?  // Generated image URL (if stored)
+  waveformData      String   // JSON array of waveform points
+
+  // Customization settings
+  title             String?
+  stylePreset       String   @default("modern") // modern, minimal, vintage, neon, etc.
+  primaryColor      String   @default("#FFD966") // Hex color
+  backgroundColor   String   @default("#0A0E14") // Hex color
+  waveformStyle     String   @default("bars") // bars, curve, mirror, circular
+
+  // Analytics
+  playCount         Int      @default(0)
+  downloadCount     Int      @default(0)
+  lastPlayedAt      DateTime?
+
+  // Lifecycle
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  expiresAt         DateTime? // Optional expiration for free tier
+  deletedAt         DateTime?
+
+  // Relations
+  user              User?    @relation("UserSoundArt", fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([uniqueCode])
+  @@index([createdAt])
+  @@index([expiresAt])
   @@index([deletedAt])
 }
