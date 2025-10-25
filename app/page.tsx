@@ -19,6 +19,8 @@ export default function HomePage() {
   const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === 'true'
   const [stats, setStats] = useState<Stats | null>(null)
   const [showStory, setShowStory] = useState(false)
+  const [email, setEmail] = useState('')
+  const [subscribed, setSubscribed] = useState(false)
 
   useEffect(() => {
     fetch('/api/stats')
@@ -30,6 +32,17 @@ export default function HomePage() {
   const formatNumber = (num: number | undefined) => {
     if (num === undefined || num === null) return '0'
     return num.toLocaleString()
+  }
+
+  const handleEmailSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    // TODO: Integrate with email service (Resend, ConvertKit, etc.)
+    console.log('Email submitted:', email)
+    setSubscribed(true)
+    setTimeout(() => {
+      setSubscribed(false)
+      setEmail('')
+    }, 3000)
   }
 
   return (
@@ -49,11 +62,12 @@ export default function HomePage() {
               </span>
             )}
           </div>
-          <p className="text-xl text-text-soft mb-2">
-            Plant your first Tree and begin your Grove.
+          <p className="text-xl md:text-2xl text-text-soft mb-2">
+            Preserve Your Family Legacy Forever
           </p>
-          <p className="text-text-muted">
-            Where memories take root and keep growing
+          <p className="text-lg text-text-muted mb-6">
+            Create memorial tributes, sound wave art, and organize memories beautifully.
+            <br />Where memories take root and keep growing.
           </p>
 
           {stats && (
@@ -133,20 +147,48 @@ export default function HomePage() {
           </button>
 
           {!session && (
-            <div className="flex gap-3 max-w-xs mx-auto">
-              <Link
-                href="/signup"
-                className="flex-1 py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg font-medium transition-soft text-center"
-              >
-                Sign Up
-              </Link>
-              <Link
-                href="/login"
-                className="flex-1 py-3 bg-border-subtle hover:bg-text-muted/20 text-text-soft border border-border-subtle rounded-lg font-medium transition-soft text-center"
-              >
-                Sign In
-              </Link>
-            </div>
+            <>
+              {/* Email Capture Form */}
+              <form onSubmit={handleEmailSubmit} className="max-w-md mx-auto mb-6">
+                <div className="flex gap-3">
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Enter your email"
+                    required
+                    className="flex-1 px-4 py-3 bg-bg-elevated border border-border-subtle rounded-lg text-text-soft focus:outline-none focus:border-firefly-dim placeholder:text-text-muted"
+                  />
+                  <button
+                    type="submit"
+                    className="px-6 py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg font-medium transition-soft whitespace-nowrap"
+                  >
+                    Get Started
+                  </button>
+                </div>
+                {subscribed && (
+                  <p className="text-green-400 text-sm mt-2 text-center">✓ Thanks! We'll be in touch soon.</p>
+                )}
+                <p className="text-text-muted text-xs mt-2 text-center">
+                  Free forever plan • No credit card required
+                </p>
+              </form>
+
+              <div className="flex gap-3 max-w-xs mx-auto">
+                <Link
+                  href="/signup"
+                  className="flex-1 py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg font-medium transition-soft text-center"
+                >
+                  Sign Up
+                </Link>
+                <Link
+                  href="/login"
+                  className="flex-1 py-3 bg-border-subtle hover:bg-text-muted/20 text-text-soft border border-border-subtle rounded-lg font-medium transition-soft text-center"
+                >
+                  Sign In
+                </Link>
+              </div>
+            </>
           )}
 
           {session && (
