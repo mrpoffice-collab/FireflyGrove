@@ -67,7 +67,8 @@ export default function VideoCollageBuilder() {
 
   // Branch import state
   const [branches, setBranches] = useState<BranchData[]>([])
-  const [selectedBranch, setSelectedBranch] = useState<string | null>(null)
+  const [showPhotoPicker, setShowPhotoPicker] = useState(false)
+  const [selectedPhotoIds, setSelectedPhotoIds] = useState<Set<string>>(new Set())
   const [loadingBranches, setLoadingBranches] = useState(false)
 
   // Fetch branches when user is logged in
@@ -87,59 +88,70 @@ export default function VideoCollageBuilder() {
     }
   }, [session])
 
-  // Import photos from selected branch
-  const importFromBranch = async (branchId: string) => {
-    const branch = branches.find((b) => b.id === branchId)
-    if (!branch) return
+  // Toggle photo selection
+  const togglePhotoSelection = (photoId: string) => {
+    const newSelected = new Set(selectedPhotoIds)
+    if (newSelected.has(photoId)) {
+      newSelected.delete(photoId)
+    } else {
+      newSelected.add(photoId)
+    }
+    setSelectedPhotoIds(newSelected)
+  }
+
+  // Import selected photos from branches
+  const importSelectedPhotos = async () => {
+    if (selectedPhotoIds.size === 0) return
 
     try {
-      // Convert branch photos to Photo objects
-      const branchPhotos: Photo[] = await Promise.all(
-        branch.photos.map(async (photo) => {
-          // Fetch the image as a blob to create a File object
-          const response = await fetch(photo.url)
-          const blob = await response.blob()
-          const file = new File([blob], `photo-${photo.id}.jpg`, { type: blob.type })
+      // Collect all selected photos from all branches
+      const selectedPhotos: Photo[] = []
 
-          return {
-            id: photo.id,
-            file,
-            url: photo.url,
-            duration: settings.photoDuration,
-            filter: settings.defaultFilter,
-            transition: settings.defaultTransition,
-            caption: photo.caption,
+      for (const branch of branches) {
+        for (const photo of branch.photos) {
+          if (selectedPhotoIds.has(photo.id)) {
+            // Fetch the image as a blob to create a File object
+            const response = await fetch(photo.url)
+            const blob = await response.blob()
+            const file = new File([blob], `photo-${photo.id}.jpg`, { type: blob.type })
+
+            selectedPhotos.push({
+              id: photo.id,
+              file,
+              url: photo.url,
+              duration: settings.photoDuration,
+              filter: settings.defaultFilter,
+              transition: settings.defaultTransition,
+              caption: photo.caption, // Include the text/story from the entry
+            })
           }
-        })
-      )
-
-      // Add photos to the list
-      setPhotos(branchPhotos)
-
-      // Auto-populate intro text with branch info
-      const introTitle = branch.personName
-        ? `In Loving Memory of ${branch.personName}`
-        : `In Loving Memory`
-
-      let introSubtext = ''
-      if (branch.personName && branch.birthDate && branch.deathDate) {
-        const birthYear = new Date(branch.birthDate).getFullYear()
-        const deathYear = new Date(branch.deathDate).getFullYear()
-        introSubtext = `${branch.personName} • ${birthYear} - ${deathYear}`
-      } else if (branch.personName) {
-        introSubtext = branch.personName
+        }
       }
 
-      setSettings((prev) => ({
-        ...prev,
-        introText: introTitle,
-        introSubtext: introSubtext,
-      }))
+      // Add photos to the list
+      setPhotos((prev) => [...prev, ...selectedPhotos])
 
-      setSelectedBranch(branchId)
+      // Auto-populate intro text if we have branches with person info
+      const branchWithPerson = branches.find(b => b.personName && b.birthDate && b.deathDate)
+      if (branchWithPerson && !settings.introText) {
+        const introTitle = `In Loving Memory of ${branchWithPerson.personName}`
+        const birthYear = new Date(branchWithPerson.birthDate!).getFullYear()
+        const deathYear = new Date(branchWithPerson.deathDate!).getFullYear()
+        const introSubtext = `${branchWithPerson.personName} • ${birthYear} - ${deathYear}`
+
+        setSettings((prev) => ({
+          ...prev,
+          introText: introTitle,
+          introSubtext: introSubtext,
+        }))
+      }
+
+      // Close picker and clear selection
+      setShowPhotoPicker(false)
+      setSelectedPhotoIds(new Set())
     } catch (error) {
-      console.error('Failed to import photos from branch:', error)
-      setError('Failed to import photos from branch')
+      console.error('Failed to import photos from branches:', error)
+      setError('Failed to import photos from branches')
     }
   }
 
@@ -269,73 +281,161 @@ export default function VideoCollageBuilder() {
             {/* Branch Import Section (only if user is logged in) */}
             {session?.user && (
               <div className="mb-8">
-                <div className="bg-firefly-dim/10 border border-firefly-dim/30 rounded-lg p-6">
-                  <div className="flex items-start gap-3 mb-4">
-                    <span className="text-2xl">🌳</span>
-                    <div className="flex-1">
-                      <h3 className="text-lg text-firefly-glow mb-1">
-                        Import from Your Memorial Trees
-                      </h3>
-                      <p className="text-text-muted text-sm">
-                        Select a memorial tree to automatically import all its photos
-                      </p>
+                {!showPhotoPicker ? (
+                  <div className="bg-firefly-dim/10 border border-firefly-dim/30 rounded-lg p-6 text-center">
+                    <div className="text-4xl mb-3">🌳</div>
+                    <h3 className="text-lg text-firefly-glow mb-2">
+                      Import from Your Memorial Trees
+                    </h3>
+                    <p className="text-text-muted text-sm mb-4">
+                      Select photos from your existing memorials
+                    </p>
+
+                    {loadingBranches ? (
+                      <div className="py-4 text-text-muted">
+                        Loading your memorial trees...
+                      </div>
+                    ) : branches.length === 0 ? (
+                      <div className="py-4 text-text-muted text-sm">
+                        No memorial trees with photos found.{' '}
+                        <Link href="/grove" className="text-firefly-glow hover:underline">
+                          Create your first memorial →
+                        </Link>
+                      </div>
+                    ) : (
+                      <button
+                        onClick={() => setShowPhotoPicker(true)}
+                        className="px-6 py-3 bg-firefly-dim/20 hover:bg-firefly-dim/40 text-firefly-glow border border-firefly-dim/50 rounded-lg font-medium transition-soft"
+                      >
+                        Browse {branches.reduce((sum, b) => sum + b.photoCount, 0)} Photos from {branches.length} Memorial{branches.length !== 1 ? 's' : ''}
+                      </button>
+                    )}
+
+                    <div className="text-center my-6">
+                      <div className="flex items-center gap-4">
+                        <div className="flex-1 h-px bg-border-subtle" />
+                        <span className="text-text-muted text-sm">or upload new photos</span>
+                        <div className="flex-1 h-px bg-border-subtle" />
+                      </div>
                     </div>
                   </div>
+                ) : (
+                  <div className="bg-bg-elevated border border-border-subtle rounded-lg p-6">
+                    <div className="flex items-center justify-between mb-6">
+                      <div>
+                        <h3 className="text-lg text-text-soft mb-1">
+                          Select Photos from Your Memorials
+                        </h3>
+                        <p className="text-sm text-text-muted">
+                          {selectedPhotoIds.size} photo{selectedPhotoIds.size !== 1 ? 's' : ''} selected
+                        </p>
+                      </div>
+                      <button
+                        onClick={() => {
+                          setShowPhotoPicker(false)
+                          setSelectedPhotoIds(new Set())
+                        }}
+                        className="text-text-muted hover:text-text-soft transition-soft"
+                      >
+                        ✕ Close
+                      </button>
+                    </div>
 
-                  {loadingBranches ? (
-                    <div className="text-center py-4 text-text-muted">
-                      Loading your memorial trees...
-                    </div>
-                  ) : branches.length === 0 ? (
-                    <div className="text-center py-4 text-text-muted text-sm">
-                      No memorial trees with photos found.{' '}
-                      <Link href="/grove" className="text-firefly-glow hover:underline">
-                        Create your first memorial →
-                      </Link>
-                    </div>
-                  ) : (
-                    <div className="grid md:grid-cols-2 gap-3">
+                    {/* Photo Grid by Branch */}
+                    <div className="space-y-6 max-h-96 overflow-y-auto">
                       {branches.map((branch) => (
-                        <button
-                          key={branch.id}
-                          onClick={() => importFromBranch(branch.id)}
-                          disabled={selectedBranch === branch.id}
-                          className={`text-left p-4 rounded-lg border transition-soft ${
-                            selectedBranch === branch.id
-                              ? 'bg-firefly-dim/20 border-firefly-glow text-firefly-glow'
-                              : 'bg-bg-elevated border-border-subtle text-text-soft hover:border-firefly-dim/50'
-                          }`}
-                        >
-                          <div className="font-medium mb-1">
-                            {branch.personName || branch.name}
-                          </div>
-                          <div className="text-sm text-text-muted">
-                            {branch.photoCount} photo{branch.photoCount !== 1 ? 's' : ''}
-                            {branch.birthDate && branch.deathDate && (
-                              <span className="ml-2">
-                                • {new Date(branch.birthDate).getFullYear()} -{' '}
-                                {new Date(branch.deathDate).getFullYear()}
-                              </span>
-                            )}
-                          </div>
-                          {selectedBranch === branch.id && (
-                            <div className="mt-2 text-xs text-firefly-glow">
-                              ✓ Selected
+                        <div key={branch.id}>
+                          <div className="flex items-center justify-between mb-3 sticky top-0 bg-bg-elevated py-2 z-10">
+                            <div>
+                              <div className="font-medium text-text-soft">
+                                {branch.personName || branch.name}
+                              </div>
+                              <div className="text-xs text-text-muted">
+                                {branch.photoCount} photo{branch.photoCount !== 1 ? 's' : ''}
+                                {branch.birthDate && branch.deathDate && (
+                                  <span className="ml-2">
+                                    • {new Date(branch.birthDate).getFullYear()} - {new Date(branch.deathDate).getFullYear()}
+                                  </span>
+                                )}
+                              </div>
                             </div>
-                          )}
-                        </button>
+                            <button
+                              onClick={() => {
+                                const allBranchPhotoIds = branch.photos.map(p => p.id)
+                                const allSelected = allBranchPhotoIds.every(id => selectedPhotoIds.has(id))
+                                const newSelected = new Set(selectedPhotoIds)
+
+                                if (allSelected) {
+                                  allBranchPhotoIds.forEach(id => newSelected.delete(id))
+                                } else {
+                                  allBranchPhotoIds.forEach(id => newSelected.add(id))
+                                }
+                                setSelectedPhotoIds(newSelected)
+                              }}
+                              className="text-xs text-firefly-glow hover:text-firefly-dim transition-soft"
+                            >
+                              {branch.photos.every(p => selectedPhotoIds.has(p.id)) ? 'Deselect All' : 'Select All'}
+                            </button>
+                          </div>
+
+                          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
+                            {branch.photos.map((photo) => (
+                              <button
+                                key={photo.id}
+                                onClick={() => togglePhotoSelection(photo.id)}
+                                className="relative group"
+                              >
+                                <div className={`aspect-square rounded-lg overflow-hidden border-2 transition-all ${
+                                  selectedPhotoIds.has(photo.id)
+                                    ? 'border-firefly-glow ring-2 ring-firefly-glow/30'
+                                    : 'border-transparent hover:border-firefly-dim/50'
+                                }`}>
+                                  <img
+                                    src={photo.url}
+                                    alt={photo.caption || 'Photo'}
+                                    className="w-full h-full object-cover"
+                                  />
+                                  {selectedPhotoIds.has(photo.id) && (
+                                    <div className="absolute inset-0 bg-firefly-glow/20 flex items-center justify-center">
+                                      <div className="w-8 h-8 bg-firefly-glow rounded-full flex items-center justify-center text-bg-dark">
+                                        ✓
+                                      </div>
+                                    </div>
+                                  )}
+                                </div>
+                                {photo.caption && (
+                                  <div className="mt-1 text-xs text-text-muted line-clamp-2">
+                                    {photo.caption}
+                                  </div>
+                                )}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
                       ))}
                     </div>
-                  )}
-                </div>
 
-                <div className="text-center my-6">
-                  <div className="flex items-center gap-4">
-                    <div className="flex-1 h-px bg-border-subtle" />
-                    <span className="text-text-muted text-sm">or upload new photos</span>
-                    <div className="flex-1 h-px bg-border-subtle" />
+                    {/* Import Button */}
+                    <div className="mt-6 flex gap-3">
+                      <button
+                        onClick={importSelectedPhotos}
+                        disabled={selectedPhotoIds.size === 0}
+                        className="flex-1 px-6 py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg font-medium transition-soft disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        Import {selectedPhotoIds.size} Photo{selectedPhotoIds.size !== 1 ? 's' : ''}
+                      </button>
+                      <button
+                        onClick={() => {
+                          setShowPhotoPicker(false)
+                          setSelectedPhotoIds(new Set())
+                        }}
+                        className="px-6 py-3 bg-border-subtle hover:bg-text-muted/20 text-text-soft rounded-lg transition-soft"
+                      >
+                        Cancel
+                      </button>
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
             )}
 
