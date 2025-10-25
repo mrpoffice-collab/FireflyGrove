@@ -144,6 +144,7 @@ const VideoRenderer = forwardRef<{ renderVideo: () => void }, VideoRendererProps
     caption: string,
     width: number,
     height: number,
+    scrollProgress: number = 0, // 0 to 1, controls scroll position
     opacity: number = 1
   ) => {
     if (!caption || !caption.trim()) return
@@ -151,23 +152,24 @@ const VideoRenderer = forwardRef<{ renderVideo: () => void }, VideoRendererProps
     ctx.save()
     ctx.globalAlpha = opacity
 
-    // Semi-transparent background bar at bottom
-    const barHeight = 120
+    // Larger semi-transparent background bar at bottom
+    const barHeight = 200
     const gradient = ctx.createLinearGradient(0, height - barHeight, 0, height)
     gradient.addColorStop(0, 'rgba(0, 0, 0, 0)')
-    gradient.addColorStop(0.3, 'rgba(0, 0, 0, 0.7)')
-    gradient.addColorStop(1, 'rgba(0, 0, 0, 0.85)')
+    gradient.addColorStop(0.2, 'rgba(0, 0, 0, 0.8)')
+    gradient.addColorStop(1, 'rgba(0, 0, 0, 0.95)')
     ctx.fillStyle = gradient
     ctx.fillRect(0, height - barHeight, width, barHeight)
 
-    // Caption text
+    // Larger caption text
     ctx.fillStyle = '#ffffff'
-    ctx.font = `${width * 0.024}px sans-serif` // Responsive font size
+    const fontSize = width * 0.032 // Increased from 0.024
+    ctx.font = `${fontSize}px sans-serif`
     ctx.textAlign = 'center'
-    ctx.textBaseline = 'middle'
+    ctx.textBaseline = 'top'
 
     // Word wrap the caption
-    const maxWidth = width * 0.85
+    const maxWidth = width * 0.9
     const words = caption.split(' ')
     const lines: string[] = []
     let currentLine = ''
@@ -187,20 +189,38 @@ const VideoRenderer = forwardRef<{ renderVideo: () => void }, VideoRendererProps
       lines.push(currentLine)
     }
 
-    // Limit to 3 lines
-    const displayLines = lines.slice(0, 3)
-    if (lines.length > 3) {
-      displayLines[2] = displayLines[2] + '...'
-    }
+    // Calculate scroll effect
+    const lineHeight = fontSize * 1.4 // Line spacing
+    const totalTextHeight = lines.length * lineHeight
+    const visibleHeight = barHeight - 40 // Leave padding
 
-    // Draw lines
-    const lineHeight = width * 0.03
-    const startY = height - barHeight / 2 - ((displayLines.length - 1) * lineHeight) / 2
+    // Calculate scroll offset based on progress
+    // Start with text at bottom, scroll up to show all content
+    const maxScroll = Math.max(0, totalTextHeight - visibleHeight)
+    const scrollOffset = maxScroll * scrollProgress
 
-    displayLines.forEach((line, index) => {
-      ctx.fillText(line, width / 2, startY + index * lineHeight)
+    // Clip to the caption bar area
+    ctx.save()
+    ctx.beginPath()
+    ctx.rect(0, height - barHeight + 20, width, barHeight - 40)
+    ctx.clip()
+
+    // Draw all lines with scroll offset
+    const startY = height - barHeight + 30 - scrollOffset
+
+    lines.forEach((line, index) => {
+      const y = startY + index * lineHeight
+
+      // Add subtle text shadow for better readability
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.8)'
+      ctx.shadowBlur = 4
+      ctx.shadowOffsetX = 0
+      ctx.shadowOffsetY = 2
+
+      ctx.fillText(line, width / 2, y)
     })
 
+    ctx.restore()
     ctx.restore()
   }
 
@@ -212,7 +232,8 @@ const VideoRenderer = forwardRef<{ renderVideo: () => void }, VideoRendererProps
     progress: number,
     transition: string,
     filter: string,
-    caption?: string
+    caption?: string,
+    photoDisplayProgress: number = 0 // 0 to 1, how long photo has been displayed
   ) => {
     ctx.save()
     applyFilter(ctx, filter)
@@ -278,9 +299,16 @@ const VideoRenderer = forwardRef<{ renderVideo: () => void }, VideoRendererProps
 
     ctx.restore()
 
-    // Draw caption overlay if provided
+    // Draw caption overlay with scrolling if provided
     if (caption) {
-      drawCaption(ctx, caption, width, height, 1)
+      // Calculate scroll progress based on how long photo has been displayed
+      // Delay scroll start by 20%, then scroll during middle 60%, hold at end
+      let scrollProgress = 0
+      if (photoDisplayProgress > 0.2) {
+        scrollProgress = Math.min(1, (photoDisplayProgress - 0.2) / 0.6)
+      }
+
+      drawCaption(ctx, caption, width, height, scrollProgress, 1)
     }
   }
 
@@ -418,6 +446,10 @@ const VideoRenderer = forwardRef<{ renderVideo: () => void }, VideoRendererProps
               ? frameInPhoto / transitionFrames
               : 1
 
+            // Calculate how long the photo has been displayed (0 to 1)
+            // This is used for scrolling the caption
+            const photoDisplayProgress = frameInPhoto / (photoFrames + transitionFrames)
+
             // Draw previous photo fading out during transition
             if (isTransitioning && currentPhotoIndex > 0) {
               const prevImg = loadedImages[currentPhotoIndex - 1]
@@ -430,7 +462,8 @@ const VideoRenderer = forwardRef<{ renderVideo: () => void }, VideoRendererProps
                 1 - transitionProgress,
                 prevPhoto.transition,
                 prevPhoto.filter,
-                prevPhoto.caption
+                prevPhoto.caption,
+                1 // Previous photo is fully displayed
               )
             }
 
@@ -443,7 +476,8 @@ const VideoRenderer = forwardRef<{ renderVideo: () => void }, VideoRendererProps
               transitionProgress,
               photo.transition,
               photo.filter,
-              photo.caption
+              photo.caption,
+              photoDisplayProgress
             )
           }
         }
