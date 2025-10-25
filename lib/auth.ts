@@ -35,6 +35,7 @@ export const authOptions: NextAuthOptions = {
           email: user.email,
           name: user.name,
           status: user.status,
+          isBetaTester: user.isBetaTester,
         }
       },
     }),
@@ -50,6 +51,7 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         token.id = user.id
         token.status = (user as any).status
+        token.isBetaTester = (user as any).isBetaTester
       }
       return token
     },
@@ -57,6 +59,7 @@ export const authOptions: NextAuthOptions = {
       if (session?.user && token) {
         (session.user as any).id = token.id as string
         (session.user as any).status = token.status as string
+        (session.user as any).isBetaTester = token.isBetaTester as boolean
       }
       return session
     },

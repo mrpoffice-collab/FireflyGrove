@@ -190,6 +190,7 @@ export default function GrovePage() {
     <div className="min-h-screen">
       <Header
         userName={session.user?.name || ''}
+        isBetaTester={(session.user as any)?.isBetaTester || false}
         groveInfo={{
           planName: plan.name,
           treeCount,

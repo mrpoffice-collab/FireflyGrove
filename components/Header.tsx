@@ -8,6 +8,7 @@ import FeedbackModal from './FeedbackModal'
 
 interface HeaderProps {
   userName?: string
+  isBetaTester?: boolean
   groveInfo?: {
     planName: string
     treeCount: number
@@ -15,7 +16,7 @@ interface HeaderProps {
   }
 }
 
-export default function Header({ userName, groveInfo }: HeaderProps) {
+export default function Header({ userName, isBetaTester, groveInfo }: HeaderProps) {
   const router = useRouter()
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const [isFeedbackOpen, setIsFeedbackOpen] = useState(false)
@@ -124,15 +125,17 @@ export default function Header({ userName, groveInfo }: HeaderProps) {
                   >
                     🏪 The Grove Exchange
                   </button>
-                  <button
-                    onClick={() => {
-                      router.push('/admin/beta-invites')
-                      setIsDropdownOpen(false)
-                    }}
-                    className="w-full text-left px-4 py-2 text-sm text-text-muted hover:bg-border-subtle hover:text-text-soft transition-soft"
-                  >
-                    📧 Send Beta Invite
-                  </button>
+                  {isBetaTester && (
+                    <button
+                      onClick={() => {
+                        router.push('/admin/beta-invites')
+                        setIsDropdownOpen(false)
+                      }}
+                      className="w-full text-left px-4 py-2 text-sm text-text-muted hover:bg-border-subtle hover:text-text-soft transition-soft"
+                    >
+                      📧 Send Beta Invite
+                    </button>
+                  )}
                   <button
                     onClick={() => {
                       setIsFeedbackOpen(true)

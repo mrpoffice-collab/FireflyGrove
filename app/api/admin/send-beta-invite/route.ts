@@ -19,8 +19,20 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    // Only allow specific users to send invites (add your user ID check here if needed)
-    // For now, any logged-in user can send invites (you can restrict this later)
+    const userId = (session.user as any).id
+
+    // Only allow beta testers to send invites
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { isBetaTester: true },
+    })
+
+    if (!user?.isBetaTester) {
+      return NextResponse.json(
+        { error: 'Only beta testers can send beta invitations' },
+        { status: 403 }
+      )
+    }
 
     const body = await req.json()
     const { email, name, message } = body
