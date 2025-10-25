@@ -63,108 +63,79 @@ export default function FeedbackModal({ isOpen, onClose }: FeedbackModalProps) {
 
   return (
     <>
-      {/* Backdrop */}
+      {/* Subtle backdrop */}
       <div
-        className="fixed inset-0 bg-black/80 z-[9998] backdrop-blur-sm"
+        className="fixed inset-0 bg-black/40 z-[9998] backdrop-blur-[2px]"
         onClick={handleClose}
       />
 
-      {/* Modal */}
-      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 pointer-events-none">
+      {/* Compact panel - bottom right */}
+      <div className="fixed bottom-6 right-6 z-[9999] w-full max-w-sm pointer-events-none">
         <div
-          className="bg-bg-dark border border-border-subtle rounded-lg shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto pointer-events-auto"
+          className="bg-bg-dark/95 backdrop-blur-md border border-border-subtle rounded-lg shadow-2xl pointer-events-auto"
           onClick={(e) => e.stopPropagation()}
         >
           {submitted ? (
-            <div className="p-8 text-center">
-              <div className="text-firefly-glow text-5xl mb-4">✓</div>
-              <h2 className="text-2xl text-text-soft mb-2">Thank you!</h2>
-              <p className="text-text-muted">
-                We've received your feedback and will review it carefully.
-              </p>
+            <div className="p-6 text-center">
+              <div className="text-firefly-glow text-4xl mb-3">✓</div>
+              <h3 className="text-lg text-text-soft mb-1">Thank you!</h3>
+              <p className="text-text-muted text-sm">Feedback received</p>
             </div>
           ) : (
             <>
               {/* Header */}
-              <div className="flex items-center justify-between p-6 border-b border-border-subtle">
-                <div>
-                  <h2 className="text-2xl font-light text-text-soft">Beta Feedback</h2>
-                  <p className="text-text-muted text-sm mt-1">
-                    Help us improve Firefly Grove
-                  </p>
+              <div className="flex items-center justify-between px-4 py-3 border-b border-border-subtle">
+                <div className="flex items-center gap-2">
+                  <span className="text-blue-400">💬</span>
+                  <h3 className="text-sm font-medium text-text-soft">Beta Feedback</h3>
                 </div>
                 <button
                   onClick={handleClose}
                   className="text-text-muted hover:text-text-soft transition-soft"
                 >
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </button>
               </div>
 
               {/* Form */}
-              <form onSubmit={handleSubmit} className="p-6">
-                <div className="space-y-4">
+              <form onSubmit={handleSubmit} className="p-4">
+                <div className="space-y-3">
                   <div>
-                    <label className="block text-sm text-text-soft mb-2">
-                      Page
-                    </label>
-                    <input
-                      type="text"
-                      value={formData.page}
-                      onChange={(e) => setFormData({ ...formData, page: e.target.value })}
-                      placeholder="Current page"
-                      className="w-full px-3 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-dim transition-soft text-sm"
-                      readOnly
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm text-text-soft mb-2">
-                      Type of feedback
-                    </label>
                     <select
                       value={formData.severity}
                       onChange={(e) => setFormData({ ...formData, severity: e.target.value })}
                       className="w-full px-3 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-dim transition-soft text-sm"
                     >
-                      <option value="suggestion">💡 Suggestion / Feature Request</option>
-                      <option value="minor">🐛 Bug - Minor (small annoyance)</option>
-                      <option value="moderate">⚠️ Bug - Moderate (affects experience)</option>
-                      <option value="critical">🚨 Bug - Critical (can't use app)</option>
-                      <option value="data-loss">💔 Data loss (lost a memory)</option>
-                      <option value="other">💬 Other feedback</option>
+                      <option value="suggestion">💡 Suggestion</option>
+                      <option value="minor">🐛 Bug - Minor</option>
+                      <option value="moderate">⚠️ Bug - Moderate</option>
+                      <option value="critical">🚨 Bug - Critical</option>
+                      <option value="data-loss">💔 Data loss</option>
+                      <option value="other">💬 Other</option>
                     </select>
                   </div>
 
                   <div>
-                    <label className="block text-sm text-text-soft mb-2">
-                      Details *
-                    </label>
                     <textarea
                       value={formData.description}
                       onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                      placeholder="For bugs: What were you trying to do? What happened instead?&#10;For suggestions: What would you like to see? How would it help?"
+                      placeholder="What happened? What would you like to see?"
                       className="w-full px-3 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-dim transition-soft resize-none text-sm"
-                      rows={5}
+                      rows={4}
                       required
                     />
                   </div>
 
                   {session && (
-                    <div className="text-xs text-text-muted bg-bg-darker rounded p-3">
-                      <p className="mb-1 font-medium">Includes:</p>
-                      <ul className="space-y-0.5">
-                        <li>• Email: {session.user?.email}</li>
-                        <li>• User ID: {(session.user as any)?.id}</li>
-                        <li>• Timestamp: {new Date().toLocaleString()}</li>
-                      </ul>
+                    <div className="text-xs text-text-muted">
+                      From: {formData.page}
                     </div>
                   )}
                 </div>
 
-                <div className="flex gap-3 mt-6">
+                <div className="flex gap-2 mt-4">
                   <button
                     type="button"
                     onClick={handleClose}
@@ -175,9 +146,9 @@ export default function FeedbackModal({ isOpen, onClose }: FeedbackModalProps) {
                   <button
                     type="submit"
                     disabled={!formData.description}
-                    className="flex-1 py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded font-medium transition-soft disabled:opacity-50 text-sm"
+                    className="flex-1 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded font-medium transition-soft disabled:opacity-50 text-sm"
                   >
-                    Send Feedback
+                    Send
                   </button>
                 </div>
               </form>
