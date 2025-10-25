@@ -45,6 +45,14 @@ export default function SoundArtBuilder() {
   const [bgImageX, setBgImageX] = useState(0)
   const [bgImageY, setBgImageY] = useState(0)
 
+  // Waveform positioning
+  const [waveformX, setWaveformX] = useState(0)
+  const [waveformY, setWaveformY] = useState(0)
+
+  // QR code positioning
+  const [qrX, setQrX] = useState(1760) // Default: bottom right (2000 - 200 - 40)
+  const [qrY, setQrY] = useState(760)  // Default: bottom right (1000 - 200 - 40)
+
   // Photo gallery from branches
   const [showPhotoGallery, setShowPhotoGallery] = useState(false)
   const [branchPhotos, setBranchPhotos] = useState<Array<{
@@ -449,6 +457,10 @@ export default function SoundArtBuilder() {
       ctx.drawImage(backgroundImageElement, x, y, imgWidth, imgHeight)
     }
 
+    // Save context for waveform positioning
+    ctx.save()
+    ctx.translate(waveformX, waveformY)
+
     const samples = waveformData.samples
     const barWidth = canvas.width / samples.length
     const centerY = canvas.height / 2
@@ -527,34 +539,34 @@ export default function SoundArtBuilder() {
       ctx.fillText(title, canvas.width / 2, 80)
     }
 
+    // Restore context after waveform
+    ctx.restore()
+
     // Add QR code if enabled and loaded
     if (showQRCode && qrCodeImage) {
-      console.log('[Canvas] Drawing QR code at bottom right')
+      console.log('[Canvas] Drawing QR code at position:', qrX, qrY)
 
-      // Position QR code in bottom right corner
+      // Use custom QR code position
       const qrSize = 200
-      const padding = 40
-      const x = canvas.width - qrSize - padding
-      const y = canvas.height - qrSize - padding
 
       // Draw background for QR code
       ctx.fillStyle = backgroundColor
-      ctx.fillRect(x - 10, y - 10, qrSize + 20, qrSize + 20)
+      ctx.fillRect(qrX - 10, qrY - 10, qrSize + 20, qrSize + 20)
 
       // Draw QR code
-      ctx.drawImage(qrCodeImage, x, y, qrSize, qrSize)
+      ctx.drawImage(qrCodeImage, qrX, qrY, qrSize, qrSize)
 
       // Add "Scan to Play" text above QR code
       ctx.fillStyle = primaryColor
       ctx.font = '16px sans-serif'
       ctx.textAlign = 'center'
-      ctx.fillText('Scan to Play', x + qrSize / 2, y - 20)
+      ctx.fillText('Scan to Play', qrX + qrSize / 2, qrY - 20)
 
       console.log('[Canvas] QR code drawn successfully')
     } else {
       console.log('[Canvas] QR code NOT drawn - showQRCode:', showQRCode, 'qrCodeImage:', !!qrCodeImage)
     }
-  }, [waveformData, title, waveformStyle, primaryColor, backgroundColor, showQRCode, qrCodeImage, useTransparentBg, backgroundImageElement, bgImageScale, bgImageX, bgImageY])
+  }, [waveformData, title, waveformStyle, primaryColor, backgroundColor, showQRCode, qrCodeImage, useTransparentBg, backgroundImageElement, bgImageScale, bgImageX, bgImageY, waveformX, waveformY, qrX, qrY])
 
   // Redraw whenever settings change
   useEffect(() => {
@@ -887,51 +899,128 @@ export default function SoundArtBuilder() {
                     />
                   </div>
 
-                  {/* Background Image Position Controls */}
-                  {backgroundImage && backgroundImageElement && (
-                    <div className="mt-4 p-4 bg-bg-darker border border-border-subtle rounded-lg space-y-3">
-                      <h4 className="text-sm text-text-soft font-medium mb-2">Adjust Background Image</h4>
-                      <div>
-                        <label className="block text-xs text-text-muted mb-1">
-                          Scale: {bgImageScale}%
-                        </label>
-                        <input
-                          type="range"
-                          min="10"
-                          max="200"
-                          value={bgImageScale}
-                          onChange={(e) => setBgImageScale(Number(e.target.value))}
-                          className="w-full"
-                        />
-                      </div>
-                      <div className="grid grid-cols-2 gap-3">
-                        <div>
-                          <label className="block text-xs text-text-muted mb-1">
-                            Position X: {bgImageX}px
-                          </label>
-                          <input
-                            type="range"
-                            min="-1000"
-                            max="2000"
-                            value={bgImageX}
-                            onChange={(e) => setBgImageX(Number(e.target.value))}
-                            className="w-full"
-                          />
+                  {/* Position Controls */}
+                  {(backgroundImage || waveformData || showQRCode) && (
+                    <div className="mt-4 p-4 bg-bg-darker border border-border-subtle rounded-lg space-y-4">
+                      <h4 className="text-sm text-text-soft font-medium">Position Controls</h4>
+
+                      {/* Waveform Position */}
+                      {waveformData && (
+                        <div className="space-y-2">
+                          <div className="text-xs text-text-muted font-medium">Waveform</div>
+                          <div className="grid grid-cols-2 gap-3">
+                            <div>
+                              <label className="block text-xs text-text-muted mb-1">
+                                X: {waveformX}px
+                              </label>
+                              <input
+                                type="range"
+                                min="-1000"
+                                max="1000"
+                                value={waveformX}
+                                onChange={(e) => setWaveformX(Number(e.target.value))}
+                                className="w-full"
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-xs text-text-muted mb-1">
+                                Y: {waveformY}px
+                              </label>
+                              <input
+                                type="range"
+                                min="-500"
+                                max="500"
+                                value={waveformY}
+                                onChange={(e) => setWaveformY(Number(e.target.value))}
+                                className="w-full"
+                              />
+                            </div>
+                          </div>
                         </div>
-                        <div>
-                          <label className="block text-xs text-text-muted mb-1">
-                            Position Y: {bgImageY}px
-                          </label>
-                          <input
-                            type="range"
-                            min="-1000"
-                            max="2000"
-                            value={bgImageY}
-                            onChange={(e) => setBgImageY(Number(e.target.value))}
-                            className="w-full"
-                          />
+                      )}
+
+                      {/* QR Code Position */}
+                      {showQRCode && (
+                        <div className="space-y-2">
+                          <div className="text-xs text-text-muted font-medium">QR Code</div>
+                          <div className="grid grid-cols-2 gap-3">
+                            <div>
+                              <label className="block text-xs text-text-muted mb-1">
+                                X: {qrX}px
+                              </label>
+                              <input
+                                type="range"
+                                min="0"
+                                max="1800"
+                                value={qrX}
+                                onChange={(e) => setQrX(Number(e.target.value))}
+                                className="w-full"
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-xs text-text-muted mb-1">
+                                Y: {qrY}px
+                              </label>
+                              <input
+                                type="range"
+                                min="0"
+                                max="800"
+                                value={qrY}
+                                onChange={(e) => setQrY(Number(e.target.value))}
+                                className="w-full"
+                              />
+                            </div>
+                          </div>
                         </div>
-                      </div>
+                      )}
+
+                      {/* Background Image */}
+                      {backgroundImage && backgroundImageElement && (
+                        <div className="space-y-2">
+                          <div className="text-xs text-text-muted font-medium">Background Image</div>
+                          <div>
+                            <label className="block text-xs text-text-muted mb-1">
+                              Scale: {bgImageScale}%
+                            </label>
+                            <input
+                              type="range"
+                              min="10"
+                              max="200"
+                              value={bgImageScale}
+                              onChange={(e) => setBgImageScale(Number(e.target.value))}
+                              className="w-full"
+                            />
+                          </div>
+                          <div className="grid grid-cols-2 gap-3">
+                            <div>
+                              <label className="block text-xs text-text-muted mb-1">
+                                X: {bgImageX}px
+                              </label>
+                              <input
+                                type="range"
+                                min="-1000"
+                                max="2000"
+                                value={bgImageX}
+                                onChange={(e) => setBgImageX(Number(e.target.value))}
+                                className="w-full"
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-xs text-text-muted mb-1">
+                                Y: {bgImageY}px
+                              </label>
+                              <input
+                                type="range"
+                                min="-1000"
+                                max="2000"
+                                value={bgImageY}
+                                onChange={(e) => setBgImageY(Number(e.target.value))}
+                                className="w-full"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   )}
 
