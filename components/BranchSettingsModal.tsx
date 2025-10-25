@@ -817,7 +817,7 @@ export default function BranchSettingsModal({
                       <span>💬</span>
                       <span>Messenger</span>
                     </button>
-                    {typeof navigator !== 'undefined' && navigator.share && (
+                    {typeof navigator !== 'undefined' && 'share' in navigator && (
                       <button
                         onClick={() => handleShareVia('native')}
                         className="flex-1 py-2 px-3 bg-border-subtle hover:bg-text-muted/20 text-text-soft rounded text-sm font-medium transition-soft flex items-center justify-center gap-2"
