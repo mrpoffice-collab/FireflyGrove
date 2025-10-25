@@ -1,8 +1,9 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useRef } from 'react'
 import { useDropzone } from 'react-dropzone'
 import Link from 'next/link'
+import { VideoRenderer } from './VideoRenderer'
 
 interface Photo {
   id: string
@@ -40,6 +41,11 @@ export default function VideoCollageBuilder() {
     defaultFilter: 'none',
   })
   const [currentStep, setCurrentStep] = useState<'upload' | 'arrange' | 'customize' | 'preview'>('upload')
+  const [isRendering, setIsRendering] = useState(false)
+  const [renderProgress, setRenderProgress] = useState(0)
+  const [videoBlob, setVideoBlob] = useState<Blob | null>(null)
+  const [error, setError] = useState<string | null>(null)
+  const videoRendererRef = useRef<any>(null)
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     const newPhotos: Photo[] = acceptedFiles.map((file) => ({
@@ -398,30 +404,183 @@ export default function VideoCollageBuilder() {
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-8">
               <h2 className="text-2xl font-light text-text-soft mb-2">Preview & Export</h2>
-              <p className="text-text-muted">Review your video and download when ready</p>
+              <p className="text-text-muted">
+                {videoBlob
+                  ? 'Your video is ready to download!'
+                  : 'Generate your memorial video'}
+              </p>
             </div>
 
-            <div className="bg-bg-elevated border border-border-subtle rounded-lg p-8 text-center">
-              <div className="text-6xl mb-4">🎬</div>
-              <p className="text-text-muted mb-6">
-                Preview and export functionality coming next...
-                <br />
-                Your video will be {Math.ceil(photos.length * settings.photoDuration / 60)} minutes long with {photos.length} photos.
-              </p>
-
-              <div className="space-y-3">
-                <button className="block w-full max-w-md mx-auto px-8 py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg font-medium transition-soft">
-                  Generate & Download Video
-                </button>
-
-                <button
-                  onClick={prevStep}
-                  className="block w-full max-w-md mx-auto px-6 py-3 bg-border-subtle hover:bg-text-muted/20 text-text-soft rounded-lg transition-soft"
-                >
-                  ← Back to Customize
-                </button>
+            {/* Video Info */}
+            <div className="bg-bg-elevated border border-border-subtle rounded-lg p-6 mb-6">
+              <div className="grid md:grid-cols-3 gap-4 text-center">
+                <div>
+                  <div className="text-firefly-glow text-2xl mb-1">{photos.length}</div>
+                  <div className="text-text-muted text-sm">Photos</div>
+                </div>
+                <div>
+                  <div className="text-firefly-glow text-2xl mb-1">
+                    {Math.ceil((photos.length * settings.photoDuration + 6) / 60)}min
+                  </div>
+                  <div className="text-text-muted text-sm">Duration</div>
+                </div>
+                <div>
+                  <div className="text-firefly-glow text-2xl mb-1">1080p</div>
+                  <div className="text-text-muted text-sm">Quality</div>
+                </div>
               </div>
             </div>
+
+            {/* Rendering Progress */}
+            {isRendering && (
+              <div className="bg-bg-elevated border border-border-subtle rounded-lg p-8 mb-6">
+                <div className="text-center mb-6">
+                  <div className="text-4xl mb-4 animate-pulse">🎬</div>
+                  <h3 className="text-lg text-text-soft mb-2">Creating Your Video...</h3>
+                  <p className="text-text-muted text-sm">
+                    This may take a few minutes. Please don't close this window.
+                  </p>
+                </div>
+
+                {/* Progress Bar */}
+                <div className="w-full bg-bg-darker rounded-full h-3 overflow-hidden mb-2">
+                  <div
+                    className="bg-gradient-to-r from-firefly-dim to-firefly-glow h-3 rounded-full transition-all duration-300"
+                    style={{ width: `${renderProgress}%` }}
+                  />
+                </div>
+                <div className="text-center text-sm text-firefly-glow">
+                  {renderProgress.toFixed(0)}% complete
+                </div>
+              </div>
+            )}
+
+            {/* Error Message */}
+            {error && (
+              <div className="bg-red-900/20 border border-red-700/50 rounded-lg p-4 mb-6">
+                <p className="text-red-400 text-sm">{error}</p>
+              </div>
+            )}
+
+            {/* Video Preview/Download */}
+            {videoBlob && !isRendering && (
+              <div className="bg-bg-elevated border border-border-subtle rounded-lg p-8 mb-6">
+                <div className="text-center mb-6">
+                  <div className="text-6xl mb-4">✅</div>
+                  <h3 className="text-xl text-firefly-glow mb-2">Video Ready!</h3>
+                  <p className="text-text-muted text-sm">
+                    Your memorial video has been created successfully.
+                  </p>
+                </div>
+
+                {/* Video Preview */}
+                <div className="max-w-2xl mx-auto mb-6">
+                  <video
+                    src={URL.createObjectURL(videoBlob)}
+                    controls
+                    className="w-full rounded-lg border border-border-subtle"
+                  />
+                </div>
+
+                {/* Download Button */}
+                <div className="text-center">
+                  <a
+                    href={URL.createObjectURL(videoBlob)}
+                    download={`memorial-video-${Date.now()}.webm`}
+                    className="inline-block px-8 py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg font-medium transition-soft"
+                  >
+                    📥 Download Video
+                  </a>
+                  <p className="text-text-muted text-xs mt-2">
+                    File size: {(videoBlob.size / 1024 / 1024).toFixed(2)} MB
+                  </p>
+                </div>
+
+                {/* Firefly Grove CTA */}
+                <div className="mt-8 p-6 bg-gradient-to-r from-firefly-dim/10 to-firefly-glow/10 border border-firefly-dim/30 rounded-lg text-center">
+                  <p className="text-text-soft mb-3">
+                    💛 Want to preserve these memories forever?
+                  </p>
+                  <p className="text-text-muted text-sm mb-4">
+                    Create a lasting memorial at Firefly Grove where family can add stories, photos, and keep the light alive.
+                  </p>
+                  <Link
+                    href="/"
+                    className="inline-block px-6 py-3 bg-firefly-dim/20 hover:bg-firefly-dim/40 text-firefly-glow border border-firefly-dim/50 rounded-lg font-medium transition-soft"
+                  >
+                    Create a Memorial Grove →
+                  </Link>
+                </div>
+              </div>
+            )}
+
+            {/* Action Buttons */}
+            {!isRendering && !videoBlob && (
+              <div className="bg-bg-elevated border border-border-subtle rounded-lg p-8 text-center">
+                <div className="text-6xl mb-4">🎬</div>
+                <p className="text-text-muted mb-6">
+                  Ready to create your {Math.ceil((photos.length * settings.photoDuration + 6) / 60)}-minute memorial video?
+                  <br />
+                  <span className="text-sm">This process happens in your browser and may take 2-5 minutes.</span>
+                </p>
+
+                <div className="space-y-3">
+                  <button
+                    onClick={() => {
+                      setIsRendering(true)
+                      setError(null)
+                      setRenderProgress(0)
+                      // Trigger rendering through ref
+                      if (videoRendererRef.current) {
+                        videoRendererRef.current.renderVideo()
+                      }
+                    }}
+                    className="block w-full max-w-md mx-auto px-8 py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg font-medium transition-soft"
+                  >
+                    🎬 Generate Video
+                  </button>
+
+                  <button
+                    onClick={prevStep}
+                    className="block w-full max-w-md mx-auto px-6 py-3 bg-border-subtle hover:bg-text-muted/20 text-text-soft rounded-lg transition-soft"
+                  >
+                    ← Back to Customize
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Create New Video */}
+            {videoBlob && !isRendering && (
+              <div className="text-center mt-6">
+                <button
+                  onClick={() => {
+                    setVideoBlob(null)
+                    setRenderProgress(0)
+                    setError(null)
+                  }}
+                  className="text-text-muted hover:text-text-soft text-sm transition-soft"
+                >
+                  ← Create Another Video
+                </button>
+              </div>
+            )}
+
+            {/* Hidden Video Renderer */}
+            <VideoRenderer
+              ref={videoRendererRef}
+              photos={photos}
+              settings={settings}
+              onProgress={(progress) => setRenderProgress(progress)}
+              onComplete={(blob) => {
+                setVideoBlob(blob)
+                setIsRendering(false)
+              }}
+              onError={(err) => {
+                setError(err)
+                setIsRendering(false)
+              }}
+            />
           </div>
         )}
       </div>
