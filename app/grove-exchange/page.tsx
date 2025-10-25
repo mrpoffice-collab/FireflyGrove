@@ -39,6 +39,16 @@ export default function GroveExchangePage() {
       badgeColor: 'bg-green-500/20 text-green-400 border-green-500/30',
     },
     {
+      id: 'sound-wave-art',
+      name: 'Sound Wave Art',
+      description: 'Turn voices, music, or special moments into beautiful scannable artwork. Perfect for gifts and keepsakes.',
+      icon: '🎵',
+      price: 'Free',
+      href: '/soundart',
+      badge: 'Free',
+      badgeColor: 'bg-green-500/20 text-green-400 border-green-500/30',
+    },
+    {
       id: 'forever-kit',
       name: 'Forever Kit Export',
       description: 'Download a complete backup of your memories in multiple formats. Keep your legacy safe beyond the cloud.',
