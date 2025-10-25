@@ -88,7 +88,7 @@ export async function POST(
     }
 
     // Handle the three different acceptance options
-    let destinationGroveId: string
+    let destinationGroveId = ''
     let checkoutUrl: string | null = null
 
     if (option === 'grove') {
