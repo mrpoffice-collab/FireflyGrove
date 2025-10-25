@@ -53,6 +53,19 @@ export async function GET(req: NextRequest) {
                     branches: true,
                   },
                 },
+                branches: {
+                  include: {
+                    _count: {
+                      select: {
+                        entries: {
+                          where: {
+                            status: 'ACTIVE'
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
               },
             },
           },
@@ -121,6 +134,19 @@ export async function GET(req: NextRequest) {
                       branches: true,
                     },
                   },
+                  branches: {
+                    include: {
+                      _count: {
+                        select: {
+                          entries: {
+                            where: {
+                              status: 'ACTIVE'
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
                 },
               },
             },
@@ -160,7 +186,7 @@ export async function GET(req: NextRequest) {
         id: membership.person.id,
         name: membership.person.name,
         isLegacy: membership.person.isLegacy,
-        memoryCount: membership.person.memoryCount,
+        memoryCount: membership.person.branches.reduce((total, branch) => total + branch._count.entries, 0),
         createdAt: membership.createdAt.toISOString(),
         _count: {
           branches: membership.person._count.branches,
@@ -170,7 +196,7 @@ export async function GET(req: NextRequest) {
         id: membership.person.id,
         name: membership.person.name,
         isLegacy: membership.person.isLegacy,
-        memoryCount: membership.person.memoryCount,
+        memoryCount: membership.person.branches.reduce((total, branch) => total + branch._count.entries, 0),
         birthDate: membership.person.birthDate?.toISOString() || null,
         deathDate: membership.person.deathDate?.toISOString() || null,
         createdAt: membership.createdAt.toISOString(),
