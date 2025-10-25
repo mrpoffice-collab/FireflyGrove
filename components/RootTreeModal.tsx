@@ -121,6 +121,10 @@ export default function RootTreeModal({
               Rooting connects two trees representing the same person across different groves.
               Memories added to either tree will appear in both.
             </p>
+            <p className="text-text-muted text-xs mb-2">
+              You can only root with trees where you've been invited as a contributor.
+              This protects privacy while allowing families to share memories.
+            </p>
             <p className="text-text-muted text-xs">
               Tip: Names don't need to match exactly. Search by any part of the name,
               or use birth/death years to help identify the right person.

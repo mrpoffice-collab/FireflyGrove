@@ -35,9 +35,10 @@ export async function GET(req: NextRequest) {
     }
 
     // Search for Person entities where:
-    // 1. The user has access through GroveTreeMembership
-    // 2. OR the Person is in the Open Grove (discoveryEnabled = true)
-    // 3. Exclude the current person if specified
+    // 1. The user has access through GroveTreeMembership (own groves)
+    // 2. OR the user has been invited at the branch level (BranchMember)
+    // 3. OR the Person is in the Open Grove (discoveryEnabled = true)
+    // 4. Exclude the current person if specified
 
     const persons = await prisma.person.findMany({
       where: {
@@ -66,6 +67,18 @@ export async function GET(req: NextRequest) {
                   some: {
                     grove: {
                       userId,
+                    },
+                  },
+                },
+              },
+              // Trees where user has branch-level access (invited as contributor)
+              {
+                branches: {
+                  some: {
+                    members: {
+                      some: {
+                        userId,
+                      },
                     },
                   },
                 },
