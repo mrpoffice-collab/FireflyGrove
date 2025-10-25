@@ -5,6 +5,7 @@ import { useRouter, useParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import Header from '@/components/Header'
 import FireflyCanvas from '@/components/FireflyCanvas'
+import TransplantTreeModal from '@/components/TransplantTreeModal'
 
 interface Branch {
   id: string
@@ -28,6 +29,10 @@ interface Tree {
   description: string | null
   status: string
   createdAt: string
+  grove: {
+    id: string
+    name: string
+  }
   branches: Branch[]
 }
 
@@ -43,6 +48,7 @@ export default function TreePage() {
   const [treeName, setTreeName] = useState('')
   const [treeDescription, setTreeDescription] = useState('')
   const [deletingBranchId, setDeletingBranchId] = useState<string | null>(null)
+  const [showTransplantModal, setShowTransplantModal] = useState(false)
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -219,6 +225,13 @@ export default function TreePage() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                     </svg>
                   </button>
+                  <button
+                    onClick={() => setShowTransplantModal(true)}
+                    className="text-text-muted hover:text-firefly-glow transition-soft"
+                    title="Transplant tree to another grove"
+                  >
+                    🌿
+                  </button>
                 </div>
                 {tree.description && (
                   <p className="text-text-muted mb-2">{tree.description}</p>
@@ -353,6 +366,22 @@ export default function TreePage() {
           )}
         </div>
       </div>
+
+      {/* Transplant Tree Modal */}
+      {showTransplantModal && tree && (
+        <TransplantTreeModal
+          treeId={tree.id}
+          treeName={tree.name}
+          currentGroveId={tree.grove.id}
+          currentGroveName={tree.grove.name}
+          isLegacyTree={tree.branches.some(b => b.personStatus === 'legacy')}
+          onClose={() => setShowTransplantModal(false)}
+          onSuccess={() => {
+            setShowTransplantModal(false)
+            router.push('/grove')
+          }}
+        />
+      )}
     </div>
   )
 }

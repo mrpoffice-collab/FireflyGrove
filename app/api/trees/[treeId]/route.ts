@@ -83,6 +83,10 @@ export async function GET(
       description: tree.description,
       status: tree.status,
       createdAt: tree.createdAt.toISOString(),
+      grove: {
+        id: tree.grove.id,
+        name: tree.grove.name,
+      },
       branches: tree.branches.map((branch) => ({
         id: branch.id,
         title: branch.title,
