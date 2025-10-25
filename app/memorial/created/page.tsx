@@ -14,7 +14,9 @@ function MemorialCreatedContent() {
   // Format dates for display
   const formatDate = (dateStr: string | null) => {
     if (!dateStr) return ''
-    const date = new Date(dateStr)
+    // Extract just the date part without timezone conversion
+    const [year, month, day] = dateStr.split('T')[0].split('-')
+    const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day))
     return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
   }
 
