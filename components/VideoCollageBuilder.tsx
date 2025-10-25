@@ -53,7 +53,7 @@ export default function VideoCollageBuilder() {
     outroText: 'Forever in our hearts',
     outroSubtext: 'Created with love at FireflyGrove.app',
     musicFile: null,
-    photoDuration: 4,
+    photoDuration: 6, // Increased from 4 to give more time to read captions
     transitionDuration: 1,
     defaultTransition: 'fade',
     defaultFilter: 'none',
@@ -587,11 +587,12 @@ export default function VideoCollageBuilder() {
                   <div>
                     <label className="block text-sm text-text-muted mb-2">
                       Photo Duration: {settings.photoDuration} seconds
+                      <span className="text-xs text-text-muted ml-2">(longer = more time to read captions)</span>
                     </label>
                     <input
                       type="range"
-                      min="2"
-                      max="8"
+                      min="3"
+                      max="12"
                       step="0.5"
                       value={settings.photoDuration}
                       onChange={(e) => setSettings({ ...settings, photoDuration: parseFloat(e.target.value) })}

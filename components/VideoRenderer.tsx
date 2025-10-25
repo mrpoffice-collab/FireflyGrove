@@ -152,11 +152,11 @@ const VideoRenderer = forwardRef<{ renderVideo: () => void }, VideoRendererProps
     ctx.save()
     ctx.globalAlpha = opacity
 
-    // Larger semi-transparent background bar at bottom
-    const barHeight = 200
+    // Much larger semi-transparent background bar - takes up bottom third of screen
+    const barHeight = Math.floor(height * 0.35) // 35% of screen height
     const gradient = ctx.createLinearGradient(0, height - barHeight, 0, height)
     gradient.addColorStop(0, 'rgba(0, 0, 0, 0)')
-    gradient.addColorStop(0.2, 'rgba(0, 0, 0, 0.8)')
+    gradient.addColorStop(0.15, 'rgba(0, 0, 0, 0.85)')
     gradient.addColorStop(1, 'rgba(0, 0, 0, 0.95)')
     ctx.fillStyle = gradient
     ctx.fillRect(0, height - barHeight, width, barHeight)
@@ -190,9 +190,9 @@ const VideoRenderer = forwardRef<{ renderVideo: () => void }, VideoRendererProps
     }
 
     // Calculate scroll effect
-    const lineHeight = fontSize * 1.4 // Line spacing
+    const lineHeight = fontSize * 1.5 // Slightly more line spacing
     const totalTextHeight = lines.length * lineHeight
-    const visibleHeight = barHeight - 40 // Leave padding
+    const visibleHeight = barHeight - 80 // More padding
 
     // Calculate scroll offset based on progress
     // Start with text at bottom, scroll up to show all content
@@ -202,11 +202,11 @@ const VideoRenderer = forwardRef<{ renderVideo: () => void }, VideoRendererProps
     // Clip to the caption bar area
     ctx.save()
     ctx.beginPath()
-    ctx.rect(0, height - barHeight + 20, width, barHeight - 40)
+    ctx.rect(0, height - barHeight + 40, width, barHeight - 80)
     ctx.clip()
 
     // Draw all lines with scroll offset
-    const startY = height - barHeight + 30 - scrollOffset
+    const startY = height - barHeight + 60 - scrollOffset
 
     lines.forEach((line, index) => {
       const y = startY + index * lineHeight
@@ -302,10 +302,10 @@ const VideoRenderer = forwardRef<{ renderVideo: () => void }, VideoRendererProps
     // Draw caption overlay with scrolling if provided
     if (caption) {
       // Calculate scroll progress based on how long photo has been displayed
-      // Delay scroll start by 20%, then scroll during middle 60%, hold at end
+      // Small delay at start (10%), then slow scroll during most of time (85%)
       let scrollProgress = 0
-      if (photoDisplayProgress > 0.2) {
-        scrollProgress = Math.min(1, (photoDisplayProgress - 0.2) / 0.6)
+      if (photoDisplayProgress > 0.1) {
+        scrollProgress = Math.min(1, (photoDisplayProgress - 0.1) / 0.85)
       }
 
       drawCaption(ctx, caption, width, height, scrollProgress, 1)
