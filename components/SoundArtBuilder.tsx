@@ -122,10 +122,13 @@ export default function SoundArtBuilder() {
       // Pre-load the QR code image
       const img = new Image()
       img.onload = () => {
+        console.log('✓ QR code image loaded successfully')
         setQrCodeImage(img)
         setShowQRCode(true)
-        // Redraw with QR code after image is loaded
-        setTimeout(drawWaveform, 50)
+      }
+      img.onerror = (e) => {
+        console.error('❌ QR code image failed to load:', e)
+        setError('Failed to load QR code image')
       }
       img.src = qrDataUrl
     } catch (err) {
@@ -259,12 +262,14 @@ export default function SoundArtBuilder() {
   })
 
   // Draw waveform on canvas
-  const drawWaveform = () => {
+  const drawWaveform = useCallback(() => {
     if (!waveformData || !canvasRef.current) return
 
     const canvas = canvasRef.current
     const ctx = canvas.getContext('2d')
     if (!ctx) return
+
+    console.log('[Canvas] Drawing waveform. QR Code:', showQRCode ? 'enabled' : 'disabled', 'Image loaded:', qrCodeImage ? 'yes' : 'no')
 
     // Set canvas size (high res for export)
     canvas.width = 2000
@@ -354,6 +359,8 @@ export default function SoundArtBuilder() {
 
     // Add QR code if enabled and loaded
     if (showQRCode && qrCodeImage) {
+      console.log('[Canvas] Drawing QR code at bottom right')
+
       // Position QR code in bottom right corner
       const qrSize = 200
       const padding = 40
@@ -372,15 +379,19 @@ export default function SoundArtBuilder() {
       ctx.font = '16px sans-serif'
       ctx.textAlign = 'center'
       ctx.fillText('Scan to Play', x + qrSize / 2, y - 20)
+
+      console.log('[Canvas] QR code drawn successfully')
+    } else {
+      console.log('[Canvas] QR code NOT drawn - showQRCode:', showQRCode, 'qrCodeImage:', !!qrCodeImage)
     }
-  }
+  }, [waveformData, title, waveformStyle, primaryColor, backgroundColor, showQRCode, qrCodeImage])
 
   // Redraw whenever settings change
   useEffect(() => {
     if (waveformData) {
       drawWaveform()
     }
-  }, [waveformData, title, waveformStyle, primaryColor, backgroundColor, showQRCode, qrCodeImage])
+  }, [waveformData, drawWaveform])
 
   return (
     <div className="min-h-screen bg-bg-dark">
