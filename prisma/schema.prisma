@@ -509,3 +509,28 @@ model BranchConnectionRequest {
   @@index([expiresAt])
   @@index([createdAt])
 }
+
+// Person-to-Person Root Connections
+// Links two Person entities (trees) representing the same individual across groves
+// Enables bidirectional memory sharing without duplication
+model PersonRoot {
+  id              String   @id @default(cuid())
+  personId1       String   // First person in the root connection
+  personId2       String   // Second person in the root connection
+  status          String   @default("active") // active, disconnected
+
+  // Creation tracking
+  createdBy       String   // User who initiated the root
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Optional: Disconnection tracking
+  disconnectedAt  DateTime?
+  disconnectedBy  String?
+
+  @@unique([personId1, personId2])
+  @@index([personId1])
+  @@index([personId2])
+  @@index([status])
+  @@index([createdAt])
+}

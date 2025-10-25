@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react'
 import Header from '@/components/Header'
 import FireflyCanvas from '@/components/FireflyCanvas'
 import TransplantTreeModal from '@/components/TransplantTreeModal'
+import RootTreeModal from '@/components/RootTreeModal'
 
 interface Branch {
   id: string
@@ -49,6 +50,7 @@ export default function TreePage() {
   const [treeDescription, setTreeDescription] = useState('')
   const [deletingBranchId, setDeletingBranchId] = useState<string | null>(null)
   const [showTransplantModal, setShowTransplantModal] = useState(false)
+  const [showRootModal, setShowRootModal] = useState(false)
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -232,6 +234,13 @@ export default function TreePage() {
                   >
                     🌿
                   </button>
+                  <button
+                    onClick={() => setShowRootModal(true)}
+                    className="text-text-muted hover:text-firefly-glow transition-soft"
+                    title="Root with another tree"
+                  >
+                    🌱
+                  </button>
                 </div>
                 {tree.description && (
                   <p className="text-text-muted mb-2">{tree.description}</p>
@@ -379,6 +388,19 @@ export default function TreePage() {
           onSuccess={() => {
             setShowTransplantModal(false)
             router.push('/grove')
+          }}
+        />
+      )}
+
+      {/* Root Tree Modal */}
+      {showRootModal && tree && (
+        <RootTreeModal
+          personId={tree.id}
+          treeName={tree.name}
+          onClose={() => setShowRootModal(false)}
+          onSuccess={() => {
+            setShowRootModal(false)
+            fetchTree() // Refresh to show the new root connection
           }}
         />
       )}
