@@ -74,6 +74,20 @@ export async function POST(
       )
     }
 
+    // Get branch with person info to check if we need to decrement memory count
+    const branch = await prisma.branch.findUnique({
+      where: { id: entry.branchId },
+      include: {
+        person: {
+          select: {
+            id: true,
+            isLegacy: true,
+            memoryLimit: true,
+          }
+        }
+      }
+    })
+
     // Withdraw the entry in a transaction
     await prisma.$transaction(async (tx) => {
       // Update entry status
@@ -84,6 +98,14 @@ export async function POST(
           withdrawnAt: new Date(),
         },
       })
+
+      // Decrement memory count for Person-based legacy trees
+      if (branch?.person?.isLegacy && branch.person.memoryLimit !== null) {
+        await tx.person.update({
+          where: { id: branch.person.id },
+          data: { memoryCount: { decrement: 1 } },
+        })
+      }
 
       // Create audit log
       await tx.audit.create({

@@ -29,7 +29,13 @@ export async function GET(req: NextRequest) {
       },
       include: {
         _count: {
-          select: { entries: true },
+          select: {
+            entries: {
+              where: {
+                status: 'ACTIVE'
+              }
+            }
+          },
         },
         tree: {
           include: {

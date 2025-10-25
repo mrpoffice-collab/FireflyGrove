@@ -90,6 +90,20 @@ export async function POST(
       )
     }
 
+    // Get branch with person info to check if we need to increment memory count
+    const branch = await prisma.branch.findUnique({
+      where: { id: entry.branchId },
+      include: {
+        person: {
+          select: {
+            id: true,
+            isLegacy: true,
+            memoryLimit: true,
+          }
+        }
+      }
+    })
+
     // Restore the entry in a transaction
     await prisma.$transaction(async (tx) => {
       // Update entry status back to ACTIVE
@@ -103,6 +117,14 @@ export async function POST(
           hiddenBy: null,
         },
       })
+
+      // Increment memory count for Person-based legacy trees
+      if (branch?.person?.isLegacy && branch.person.memoryLimit !== null) {
+        await tx.person.update({
+          where: { id: branch.person.id },
+          data: { memoryCount: { increment: 1 } },
+        })
+      }
 
       // Create audit log
       await tx.audit.create({
