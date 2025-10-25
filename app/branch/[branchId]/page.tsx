@@ -72,7 +72,7 @@ export default function BranchPage() {
   const [editDescription, setEditDescription] = useState('')
   const [adoptionPrompt, setAdoptionPrompt] = useState<string | null>(null)
   const [showAdoptionPrompt, setShowAdoptionPrompt] = useState(false)
-  const [currentPrompt, setCurrentPrompt] = useState('')
+  const [currentSpark, setCurrentSpark] = useState('')
 
   // Person editing
   const [editingPerson, setEditingPerson] = useState(false)
@@ -96,11 +96,11 @@ export default function BranchPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, branchId])
 
-  // Initialize prompt when branch data is loaded
+  // Initialize spark when branch data is loaded
   useEffect(() => {
     if (branch) {
       const isLegacy = branch.personStatus === 'legacy'
-      const legacyPrompts = [
+      const legacySparks = [
         "What's a story they told that you never want to forget?",
         "Describe a moment when their presence changed everything.",
         "What did their hands look like? What did they create?",
@@ -109,19 +109,19 @@ export default function BranchPage() {
         "What's something they said that you still carry with you?",
         "Describe the way they made you feel safe.",
       ]
-      const livingPrompts = [
+      const livingSparks = [
         "Describe a small thing that made you laugh today.",
         "What's a smell that brings you back?",
         "Tell me about a time you felt truly seen.",
         "What did they teach you without meaning to?",
         "Capture a quiet moment you don't want to forget.",
       ]
-      const promptList = isLegacy ? legacyPrompts : livingPrompts
-      if (!currentPrompt) {
-        setCurrentPrompt(promptList[Math.floor(Math.random() * promptList.length)])
+      const sparkList = isLegacy ? legacySparks : livingSparks
+      if (!currentSpark) {
+        setCurrentSpark(sparkList[Math.floor(Math.random() * sparkList.length)])
       }
     }
-  }, [branch, currentPrompt])
+  }, [branch, currentSpark])
 
   const fetchBranch = async () => {
     try {
@@ -366,11 +366,11 @@ export default function BranchPage() {
     }
   }
 
-  const refreshPrompt = () => {
+  const refreshSpark = () => {
     if (!branch) return
 
     const isLegacy = branch.personStatus === 'legacy'
-    const legacyPrompts = [
+    const legacySparks = [
       "What's a story they told that you never want to forget?",
       "Describe a moment when their presence changed everything.",
       "What did their hands look like? What did they create?",
@@ -379,22 +379,22 @@ export default function BranchPage() {
       "What's something they said that you still carry with you?",
       "Describe the way they made you feel safe.",
     ]
-    const livingPrompts = [
+    const livingSparks = [
       "Describe a small thing that made you laugh today.",
       "What's a smell that brings you back?",
       "Tell me about a time you felt truly seen.",
       "What did they teach you without meaning to?",
       "Capture a quiet moment you don't want to forget.",
     ]
-    const promptList = isLegacy ? legacyPrompts : livingPrompts
+    const sparkList = isLegacy ? legacySparks : livingSparks
 
-    const newPrompt = promptList[Math.floor(Math.random() * promptList.length)]
-    // Make sure we get a different prompt if possible
-    if (promptList.length > 1 && newPrompt === currentPrompt) {
-      const filtered = promptList.filter(p => p !== currentPrompt)
-      setCurrentPrompt(filtered[Math.floor(Math.random() * filtered.length)])
+    const newSpark = sparkList[Math.floor(Math.random() * sparkList.length)]
+    // Make sure we get a different spark if possible
+    if (sparkList.length > 1 && newSpark === currentSpark) {
+      const filtered = sparkList.filter(s => s !== currentSpark)
+      setCurrentSpark(filtered[Math.floor(Math.random() * filtered.length)])
     } else {
-      setCurrentPrompt(newPrompt)
+      setCurrentSpark(newSpark)
     }
   }
 
@@ -544,16 +544,16 @@ export default function BranchPage() {
               <p className={`text-sm italic flex-1 ${
                 isLegacy ? 'text-[var(--legacy-text)]' : 'text-text-muted'
               }`}>
-                "{currentPrompt}"
+                ✨ "{currentSpark}"
               </p>
               <button
-                onClick={refreshPrompt}
+                onClick={refreshSpark}
                 className={`flex-shrink-0 p-2 rounded transition-soft ${
                   isLegacy
                     ? 'text-[var(--legacy-amber)] hover:bg-[var(--legacy-amber)]/10'
                     : 'text-firefly-dim hover:bg-firefly-dim/10'
                 }`}
-                title="Get a different prompt"
+                title="Get a different spark"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -603,7 +603,7 @@ export default function BranchPage() {
         <MemoryModal
           onClose={() => setShowNewMemory(false)}
           onSave={handleCreateMemory}
-          prompt={currentPrompt}
+          spark={currentSpark}
         />
       )}
 

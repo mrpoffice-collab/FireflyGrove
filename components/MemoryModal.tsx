@@ -19,11 +19,11 @@ interface MemoryModalProps {
     audioUrl?: string
     sharedBranchIds?: string[]
   }) => void
-  prompt: string
+  spark: string
   currentBranchId?: string
 }
 
-export default function MemoryModal({ onClose, onSave, prompt, currentBranchId }: MemoryModalProps) {
+export default function MemoryModal({ onClose, onSave, spark, currentBranchId }: MemoryModalProps) {
   const [text, setText] = useState('')
   const [visibility, setVisibility] = useState('PRIVATE')
   const [legacyFlag, setLegacyFlag] = useState(false)
@@ -175,7 +175,7 @@ export default function MemoryModal({ onClose, onSave, prompt, currentBranchId }
     <div className="fixed inset-0 bg-black/30 flex items-center justify-center p-4 z-50 overflow-y-auto backdrop-blur-sm">
       <div className="bg-bg-dark border border-border-subtle rounded-lg max-w-2xl w-full p-6 my-8">
         <h2 className="text-2xl text-text-soft mb-2">New Memory</h2>
-        <p className="text-text-muted text-sm italic mb-6">"{prompt}"</p>
+        <p className="text-text-muted text-sm italic mb-6">✨ "{spark}"</p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
