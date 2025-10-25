@@ -124,61 +124,57 @@ export default function FBPostPage() {
         )}
       </button>
 
-      {/* Content */}
-      <div className="relative z-10 max-w-3xl mx-auto px-4 py-6 md:py-12 text-center">
-        {/* Title */}
-        <div className="mb-6 md:mb-12">
-          <h1 className="text-3xl md:text-5xl font-light text-firefly-glow mb-3 md:mb-4 leading-tight">
-            🌿
-            <br />
-            My Heart in a Grove of Light
-          </h1>
-        </div>
-
-        {/* Main Content */}
-        <div className="space-y-4 md:space-y-6 text-base md:text-xl text-text-soft mb-8 md:mb-12 leading-relaxed">
-          <p className="font-light">
-            This might be one of the most meaningful things I've ever made —{' '}
-            <span className="text-firefly-glow">right up there with being a mom, a nana, and a foster mom.</span>
-          </p>
-
-          <p className="text-lg md:text-2xl font-light text-firefly-glow">
-            It's called Firefly Grove
-          </p>
-
-          <p>
-            A place where memories take root and light never fades.
-          </p>
-
-          <p>
-            You plant a tree for someone you love — past or present — and each memory you add becomes a tiny firefly that glows in their light.
-          </p>
-
-          <div className="flex items-center justify-center gap-3 md:gap-4 text-firefly-dim my-6 md:my-8">
-            <span className="text-xl md:text-2xl">✦</span>
-            <span className="text-base md:text-lg">Gentle</span>
-            <span className="text-xl md:text-2xl">•</span>
-            <span className="text-base md:text-lg">Private</span>
-            <span className="text-xl md:text-2xl">•</span>
-            <span className="text-base md:text-lg">Alive</span>
-            <span className="text-xl md:text-2xl">✦</span>
+      {/* Content - Compact single-screen layout */}
+      <div className="relative z-10 max-w-5xl mx-auto px-4 text-center flex items-center justify-center" style={{ minHeight: '100vh' }}>
+        <div className="py-8">
+          {/* Title */}
+          <div className="mb-6">
+            <div className="text-5xl mb-3">🌿</div>
+            <h1 className="text-4xl md:text-5xl font-light text-firefly-glow mb-3 leading-tight">
+              My Heart in a Grove of Light
+            </h1>
           </div>
 
-          <p>
-            We have a small group of early caretakers testing it right now, and I would love to open that circle just a little wider — especially to the people who know me best.
-          </p>
+          {/* Main Content - More compact */}
+          <div className="space-y-3 text-lg text-text-soft mb-8 leading-relaxed max-w-3xl mx-auto">
+            <p className="font-light">
+              This might be one of the most meaningful things I've ever made —{' '}
+              <span className="text-firefly-glow">right up there with being a mom, a nana, and a foster mom.</span>
+            </p>
 
-          <p className="text-text-muted text-base">
-            Take your time. There's soft music, a slideshow, and a story to walk through.
-          </p>
+            <p className="text-2xl font-light text-firefly-glow my-4">
+              It's called Firefly Grove
+            </p>
 
-          <p className="text-text-muted text-base">
-            And if it stirs something in you… maybe plant a tree of your own.
-          </p>
-        </div>
+            <p>
+              A place where memories take root and light never fades.
+            </p>
 
-        {/* CTA Section */}
-        <div className="mb-8 md:mb-12">
+            <p>
+              You plant a tree for someone you love — past or present — and each memory you add becomes a tiny firefly that glows in their light.
+            </p>
+
+            <div className="flex items-center justify-center gap-3 text-firefly-dim my-5">
+              <span className="text-xl">✦</span>
+              <span>Gentle</span>
+              <span className="text-xl">•</span>
+              <span>Private</span>
+              <span className="text-xl">•</span>
+              <span>Alive</span>
+              <span className="text-xl">✦</span>
+            </div>
+
+            <p className="text-base">
+              We have a small group of early caretakers testing it right now, and I would love to open that circle just a little wider — especially to the people who know me best.
+            </p>
+
+            <p className="text-text-muted text-sm">
+              Take your time. There's soft music, a slideshow, and a story to walk through. And if it stirs something in you… maybe plant a tree of your own.
+            </p>
+          </div>
+
+          {/* CTA Section */}
+          <div className="mb-6">
           {!showSignup ? (
             <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
               <Link
@@ -275,17 +271,16 @@ export default function FBPostPage() {
           )}
         </div>
 
-        {/* Closing */}
-        <p className="text-xl md:text-3xl font-light text-firefly-glow leading-relaxed">
-          Because every story deserves a light
-          <br />
-          — even if it shines twice 💫
-        </p>
+          {/* Closing */}
+          <p className="text-2xl font-light text-firefly-glow leading-relaxed mb-4">
+            Because every story deserves a light — even if it shines twice 💫
+          </p>
 
-        {/* URL */}
-        <p className="mt-6 md:mt-8 text-text-muted text-sm">
-          fireflygrove.app
-        </p>
+          {/* URL */}
+          <p className="text-text-muted text-sm">
+            fireflygrove.app
+          </p>
+        </div>
       </div>
     </div>
   )
