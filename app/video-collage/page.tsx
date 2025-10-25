@@ -1,13 +1,48 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useSession } from 'next-auth/react'
 import VideoCollageBuilder from '@/components/VideoCollageBuilder'
 
+interface VideoLimits {
+  planType: string
+  tierConfig: {
+    monthlyLimit: number | string
+    storageDays: number | null
+    hasWatermark: boolean
+    displayName: string
+  }
+  usage: {
+    monthlyCount: number
+    remaining: number | string
+    canGenerate: boolean
+  }
+}
+
 export default function VideoCollagePage() {
   const { data: session } = useSession()
   const [started, setStarted] = useState(false)
+  const [limits, setLimits] = useState<VideoLimits | null>(null)
+  const [loadingLimits, setLoadingLimits] = useState(true)
+
+  // Fetch video limits if user is logged in
+  useEffect(() => {
+    if (session?.user) {
+      fetch('/api/video-generation/check-limits')
+        .then((res) => res.json())
+        .then((data) => {
+          setLimits(data)
+          setLoadingLimits(false)
+        })
+        .catch((err) => {
+          console.error('Failed to fetch video limits:', err)
+          setLoadingLimits(false)
+        })
+    } else {
+      setLoadingLimits(false)
+    }
+  }, [session])
 
   if (started) {
     return <VideoCollageBuilder />
@@ -59,7 +94,7 @@ export default function VideoCollagePage() {
               Create beautiful tribute videos for memorial services
             </p>
             <p className="text-text-muted">
-              Completely free. No watermarks. Professional quality.
+              Simple, elegant, and meaningful — ready in minutes.
             </p>
           </div>
 
@@ -122,16 +157,52 @@ export default function VideoCollagePage() {
             Create Your Video — Free Forever
           </button>
 
+          {/* Video Limits Caveat */}
+          {session && limits && !loadingLimits && (
+            <div className="mt-4 text-sm text-text-muted max-w-md mx-auto">
+              <p>
+                {limits.tierConfig.displayName} Plan:{' '}
+                <span className="text-text-soft font-medium">
+                  {limits.usage.remaining === 'Unlimited'
+                    ? 'Unlimited videos'
+                    : `${limits.usage.remaining} of ${limits.tierConfig.monthlyLimit} videos remaining this month`}
+                </span>
+                {limits.tierConfig.hasWatermark && (
+                  <span className="text-yellow-400"> • Includes watermark</span>
+                )}
+                {limits.tierConfig.storageDays && (
+                  <span> • Stored for {limits.tierConfig.storageDays} days</span>
+                )}
+              </p>
+              {!limits.usage.canGenerate && (
+                <p className="text-red-400 mt-2">
+                  ⚠ Monthly limit reached.{' '}
+                  <Link href="/billing" className="underline hover:text-red-300">
+                    Upgrade for more videos
+                  </Link>
+                </p>
+              )}
+              {limits.usage.canGenerate && typeof limits.usage.remaining === 'number' && limits.usage.remaining <= 1 && (
+                <p className="text-yellow-400 mt-2">
+                  💡 Tip: You have {limits.usage.remaining} video{limits.usage.remaining !== 1 ? 's' : ''} left this month. Consider upgrading for unlimited videos!{' '}
+                  <Link href="/billing" className="underline hover:text-yellow-300">
+                    View plans
+                  </Link>
+                </p>
+              )}
+            </div>
+          )}
+
           {/* Trust Indicators */}
           <div className="mt-12 pt-8 border-t border-border-subtle">
             <div className="flex flex-wrap items-center justify-center gap-6 text-text-muted text-sm">
               <div className="flex items-center gap-2">
                 <span className="text-green-400">✓</span>
-                <span>100% Free</span>
+                <span>Free to Start</span>
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-green-400">✓</span>
-                <span>No Watermarks</span>
+                <span>Professional Quality</span>
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-green-400">✓</span>
