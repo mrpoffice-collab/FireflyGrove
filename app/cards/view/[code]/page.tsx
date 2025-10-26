@@ -75,38 +75,67 @@ export default function ViewCardPage() {
           <div className="bg-bg-elevated border border-border-subtle rounded-lg overflow-hidden shadow-2xl">
             <div className="bg-gradient-to-br from-bg-dark to-bg-darker p-6">
               <p className="text-xs text-text-muted mb-4 text-center uppercase tracking-wide">Front</p>
-              <div className="aspect-[5/7] flex flex-col items-center justify-center p-6 space-y-6">
-                {/* Photos on Front */}
+              <div className="aspect-[5/7] flex flex-col items-center justify-center p-8 space-y-6">
+                {/* Photos on Front - Elegant Layout */}
                 {photos.length > 0 && (
-                  <div className={`grid gap-3 w-full ${
-                    photos.length === 1 ? 'grid-cols-1' :
-                    photos.length === 2 ? 'grid-cols-2' :
-                    'grid-cols-2'
-                  }`}>
-                    {photos.slice(0, 3).map((url: string, index: number) => (
-                      <div
-                        key={index}
-                        className={`rounded-lg overflow-hidden ${
-                          photos.length === 1 ? 'aspect-video' :
-                          photos.length === 3 && index === 0 ? 'col-span-2 aspect-video' :
-                          'aspect-square'
-                        }`}
-                      >
-                        <img
-                          src={url}
-                          alt={`Memory ${index + 1}`}
-                          className="w-full h-full object-cover"
-                        />
+                  <div className="w-full flex items-center justify-center mb-4">
+                    {photos.length === 1 ? (
+                      // Single photo - Large polaroid style
+                      <div className="relative">
+                        <div className="bg-white p-3 shadow-lg transform hover:scale-105 transition-transform">
+                          <div className="aspect-[4/5] w-56 overflow-hidden">
+                            <img
+                              src={photos[0]}
+                              alt="Memory"
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                        </div>
                       </div>
-                    ))}
+                    ) : photos.length === 2 ? (
+                      // Two photos - Overlapping polaroids
+                      <div className="relative w-full max-w-sm h-48">
+                        <div className="absolute left-8 top-0 bg-white p-2 shadow-lg transform -rotate-3">
+                          <div className="aspect-[3/2] w-40 overflow-hidden">
+                            <img src={photos[0]} alt="Memory 1" className="w-full h-full object-cover" />
+                          </div>
+                        </div>
+                        <div className="absolute right-8 top-4 bg-white p-2 shadow-lg transform rotate-3">
+                          <div className="aspect-[3/2] w-40 overflow-hidden">
+                            <img src={photos[1]} alt="Memory 2" className="w-full h-full object-cover" />
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      // Three photos - Artistic collage
+                      <div className="relative w-full max-w-md h-52">
+                        <div className="absolute left-4 top-0 bg-white p-2 shadow-md transform -rotate-2">
+                          <div className="aspect-[4/5] w-28 overflow-hidden">
+                            <img src={photos[0]} alt="Memory 1" className="w-full h-full object-cover" />
+                          </div>
+                        </div>
+                        <div className="absolute left-1/2 -translate-x-1/2 top-8 bg-white p-2 shadow-lg z-10">
+                          <div className="aspect-[3/2] w-36 overflow-hidden">
+                            <img src={photos[1]} alt="Memory 2" className="w-full h-full object-cover" />
+                          </div>
+                        </div>
+                        <div className="absolute right-4 top-2 bg-white p-2 shadow-md transform rotate-2">
+                          <div className="aspect-[4/5] w-28 overflow-hidden">
+                            <img src={photos[2]} alt="Memory 3" className="w-full h-full object-cover" />
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
 
-                {/* Cover Message */}
+                {/* Cover Message - Elegant and Prominent */}
                 {order.template.coverMessage && (
-                  <p className="text-text-soft text-lg leading-relaxed text-center italic flex-1 flex items-center">
-                    {order.template.coverMessage}
-                  </p>
+                  <div className="flex-1 flex items-center justify-center px-4">
+                    <p className="text-text-soft text-2xl leading-loose text-center italic font-light max-w-md">
+                      {order.template.coverMessage}
+                    </p>
+                  </div>
                 )}
               </div>
             </div>
@@ -116,38 +145,40 @@ export default function ViewCardPage() {
           <div className="bg-bg-elevated border border-border-subtle rounded-lg overflow-hidden shadow-2xl">
             <div className="bg-gradient-to-br from-bg-dark to-bg-darker p-6">
               <p className="text-xs text-text-muted mb-4 text-center uppercase tracking-wide">Inside</p>
-              <div className="aspect-[5/7] flex flex-col justify-center p-6 space-y-6">
-                {/* Inside Message from Firefly Grove */}
+              <div className="aspect-[5/7] flex flex-col justify-between p-10 py-12">
+                {/* Inside Message from Firefly Grove - Elegant Typography */}
                 {order.template.insideMessage && (
-                  <div className="bg-firefly-dim/5 border border-firefly-dim/20 rounded-lg p-5">
-                    <p className="text-text-soft text-base leading-relaxed text-center">
-                      {order.template.insideMessage}
-                    </p>
+                  <div className="flex-1 flex items-center justify-center">
+                    <div className="max-w-md">
+                      <p className="text-text-soft text-xl leading-loose text-center font-light whitespace-pre-line">
+                        {order.template.insideMessage}
+                      </p>
+                    </div>
                   </div>
                 )}
 
-                {/* Personal Message */}
+                {/* Personal Message - Larger and Prominent */}
                 {order.customMessage && (
-                  <div className="text-center">
-                    <p className="text-text-soft text-base leading-relaxed whitespace-pre-wrap">
+                  <div className="text-center my-8">
+                    <p className="text-text-soft text-base leading-relaxed whitespace-pre-wrap max-w-md mx-auto">
                       {order.customMessage}
                     </p>
                   </div>
                 )}
 
-                {/* Signature */}
+                {/* Signature - Elegant */}
                 {(order.signature || order.senderName) && (
-                  <div className="text-center mt-auto">
+                  <div className="text-center mt-auto mb-6">
                     {order.signature ? (
                       <p
-                        className="text-text-soft text-xl italic"
+                        className="text-text-soft text-2xl italic"
                         style={{ fontFamily: '"Brush Script MT", "Lucida Handwriting", cursive' }}
                       >
                         {order.signature}
                       </p>
                     ) : order.senderName && (
                       <>
-                        <p className="text-text-muted text-xs mb-1">With love,</p>
+                        <p className="text-text-muted text-xs mb-2">With love,</p>
                         <p className="text-text-soft text-base font-medium">
                           {order.senderName}
                         </p>

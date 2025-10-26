@@ -32,38 +32,67 @@ export default function CardPreview({
         <div className="bg-bg-elevated rounded-lg overflow-hidden border border-border-subtle">
           <div className="bg-gradient-to-br from-bg-dark to-bg-darker p-6">
             <p className="text-xs text-text-muted mb-2 text-center">FRONT</p>
-            <div className="aspect-[5/7] flex items-center justify-center p-8">
-              {/* Photos on Front */}
+            <div className="aspect-[5/7] flex flex-col items-center justify-center p-8 space-y-6">
+              {/* Photos on Front - Elegant Layout */}
               {selectedPhotos.length > 0 && (
-                <div className={`grid gap-2 mb-4 w-full ${
-                  selectedPhotos.length === 1 ? 'grid-cols-1' :
-                  selectedPhotos.length === 2 ? 'grid-cols-2' :
-                  'grid-cols-2'
-                }`}>
-                  {selectedPhotos.slice(0, 3).map((url, index) => (
-                    <div
-                      key={index}
-                      className={`rounded overflow-hidden ${
-                        selectedPhotos.length === 1 ? 'aspect-video' :
-                        selectedPhotos.length === 3 && index === 0 ? 'col-span-2 aspect-video' :
-                        'aspect-square'
-                      }`}
-                    >
-                      <img
-                        src={url}
-                        alt={`Preview ${index + 1}`}
-                        className="w-full h-full object-cover"
-                      />
+                <div className="w-full flex items-center justify-center mb-4">
+                  {selectedPhotos.length === 1 ? (
+                    // Single photo - Large polaroid style
+                    <div className="relative">
+                      <div className="bg-white p-3 shadow-lg transform hover:scale-105 transition-transform">
+                        <div className="aspect-[4/5] w-56 overflow-hidden">
+                          <img
+                            src={selectedPhotos[0]}
+                            alt="Memory"
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                      </div>
                     </div>
-                  ))}
+                  ) : selectedPhotos.length === 2 ? (
+                    // Two photos - Overlapping polaroids
+                    <div className="relative w-full max-w-sm h-48">
+                      <div className="absolute left-8 top-0 bg-white p-2 shadow-lg transform -rotate-3">
+                        <div className="aspect-[3/2] w-40 overflow-hidden">
+                          <img src={selectedPhotos[0]} alt="Memory 1" className="w-full h-full object-cover" />
+                        </div>
+                      </div>
+                      <div className="absolute right-8 top-4 bg-white p-2 shadow-lg transform rotate-3">
+                        <div className="aspect-[3/2] w-40 overflow-hidden">
+                          <img src={selectedPhotos[1]} alt="Memory 2" className="w-full h-full object-cover" />
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    // Three photos - Artistic collage
+                    <div className="relative w-full max-w-md h-52">
+                      <div className="absolute left-4 top-0 bg-white p-2 shadow-md transform -rotate-2">
+                        <div className="aspect-[4/5] w-28 overflow-hidden">
+                          <img src={selectedPhotos[0]} alt="Memory 1" className="w-full h-full object-cover" />
+                        </div>
+                      </div>
+                      <div className="absolute left-1/2 -translate-x-1/2 top-8 bg-white p-2 shadow-lg z-10">
+                        <div className="aspect-[3/2] w-36 overflow-hidden">
+                          <img src={selectedPhotos[1]} alt="Memory 2" className="w-full h-full object-cover" />
+                        </div>
+                      </div>
+                      <div className="absolute right-4 top-2 bg-white p-2 shadow-md transform rotate-2">
+                        <div className="aspect-[4/5] w-28 overflow-hidden">
+                          <img src={selectedPhotos[2]} alt="Memory 3" className="w-full h-full object-cover" />
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
 
-              {/* Cover Message */}
+              {/* Cover Message - Elegant and Prominent */}
               {template.coverMessage ? (
-                <p className="text-text-soft text-lg leading-relaxed text-center italic">
-                  {template.coverMessage}
-                </p>
+                <div className="flex-1 flex items-center justify-center px-4">
+                  <p className="text-text-soft text-2xl leading-loose text-center italic font-light max-w-md">
+                    {template.coverMessage}
+                  </p>
+                </div>
               ) : (
                 <p className="text-text-muted text-sm italic text-center">
                   Cover message will appear here
@@ -77,20 +106,22 @@ export default function CardPreview({
         <div className="bg-bg-elevated rounded-lg overflow-hidden border border-border-subtle">
           <div className="bg-gradient-to-br from-bg-dark to-bg-darker p-6">
             <p className="text-xs text-text-muted mb-2 text-center">INSIDE</p>
-            <div className="aspect-[5/7] flex flex-col justify-center p-8 space-y-6">
-              {/* Inside Message from Firefly Grove */}
+            <div className="aspect-[5/7] flex flex-col justify-between p-10 py-12">
+              {/* Inside Message from Firefly Grove - Elegant Typography */}
               {template.insideMessage && (
-                <div className="bg-firefly-dim/5 border border-firefly-dim/20 rounded-lg p-4">
-                  <p className="text-text-soft text-sm leading-relaxed text-center">
-                    {template.insideMessage}
-                  </p>
+                <div className="flex-1 flex items-center justify-center">
+                  <div className="max-w-md">
+                    <p className="text-text-soft text-xl leading-loose text-center font-light whitespace-pre-line">
+                      {template.insideMessage}
+                    </p>
+                  </div>
                 </div>
               )}
 
-              {/* Personal Message */}
-              <div className="text-center">
+              {/* Personal Message - Larger and Prominent */}
+              <div className="text-center my-8">
                 {customMessage ? (
-                  <p className="text-text-soft text-sm leading-relaxed whitespace-pre-wrap">
+                  <p className="text-text-soft text-base leading-relaxed whitespace-pre-wrap max-w-md mx-auto">
                     {customMessage}
                   </p>
                 ) : (
@@ -100,28 +131,31 @@ export default function CardPreview({
                 )}
               </div>
 
-              {/* Signature */}
+              {/* Signature - Elegant */}
               {(signature || senderName) && (
-                <div className="text-center mt-auto">
+                <div className="text-center mt-auto mb-6">
                   {signature ? (
                     <p
-                      className="text-text-soft text-base italic"
+                      className="text-text-soft text-2xl italic"
                       style={{ fontFamily: '"Brush Script MT", "Lucida Handwriting", cursive' }}
                     >
                       {signature}
                     </p>
                   ) : senderName && (
-                    <p className="text-text-soft text-sm">
-                      {senderName}
-                    </p>
+                    <>
+                      <p className="text-text-muted text-xs mb-2">With love,</p>
+                      <p className="text-text-soft text-base font-medium">
+                        {senderName}
+                      </p>
+                    </>
                   )}
                 </div>
               )}
 
               {/* Firefly Grove Branding */}
-              <div className="text-center pt-3 border-t border-border-subtle">
+              <div className="text-center pt-4 border-t border-border-subtle/50">
                 <p className="text-text-muted text-xs flex items-center justify-center gap-1">
-                  <span className="text-firefly-glow">✦</span>
+                  <span className="text-firefly-glow text-sm">✦</span>
                   Firefly Grove
                 </p>
               </div>

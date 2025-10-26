@@ -1654,3 +1654,9 @@ Error: You cannot use different slug names for the same dynamic path ('id' !== '
     at Watchpack.<anonymous> (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-utils\setup-dev-bundler.js:558:65)
  ✓ Compiled in 256ms (907 modules)
 <w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: invalid stored block lengths
+ ✓ Compiled in 996ms (907 modules)
+ ✓ Compiled in 961ms (907 modules)
+ ✓ Compiled in 196ms (907 modules)
+ ✓ Compiled in 1429ms (1623 modules)
+ ✓ Compiled in 367ms (1623 modules)
+ ✓ Compiled in 496ms (1623 modules)
