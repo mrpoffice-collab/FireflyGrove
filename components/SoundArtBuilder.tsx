@@ -458,23 +458,24 @@ export default function SoundArtBuilder() {
       ctx.drawImage(backgroundImageElement, x, y, imgWidth, imgHeight)
     }
 
-    // Save context for waveform positioning and scaling
+    // Save context for waveform positioning
     ctx.save()
     ctx.translate(waveformX, waveformY)
-    // Apply uniform scale (maintains proportions)
-    const scale = waveformScale / 100
-    ctx.scale(scale, scale)
 
     const samples = waveformData.samples
-    const barWidth = canvas.width / samples.length
-    const centerY = canvas.height / 2
+    // Apply uniform scale to dimensions (maintains proportions)
+    const scale = waveformScale / 100
+    const scaledWidth = canvas.width * scale
+    const scaledHeight = canvas.height * scale
+    const barWidth = scaledWidth / samples.length
+    const centerY = scaledHeight / 2
 
     ctx.fillStyle = primaryColor
 
     if (waveformStyle === 'bars') {
       // Vertical bars
       samples.forEach((sample, i) => {
-        const barHeight = sample * (canvas.height * 0.8)
+        const barHeight = sample * (scaledHeight * 0.8)
         const x = i * barWidth
         const y = centerY - barHeight / 2
 
@@ -484,11 +485,11 @@ export default function SoundArtBuilder() {
       // Smooth curve
       ctx.beginPath()
       ctx.strokeStyle = primaryColor
-      ctx.lineWidth = 4
+      ctx.lineWidth = 4 * scale
 
       samples.forEach((sample, i) => {
         const x = i * barWidth
-        const y = centerY - (sample * (canvas.height * 0.4))
+        const y = centerY - (sample * (scaledHeight * 0.4))
 
         if (i === 0) {
           ctx.moveTo(x, y)
@@ -501,7 +502,7 @@ export default function SoundArtBuilder() {
     } else if (waveformStyle === 'mirror') {
       // Mirrored bars
       samples.forEach((sample, i) => {
-        const barHeight = sample * (canvas.height * 0.4)
+        const barHeight = sample * (scaledHeight * 0.4)
         const x = i * barWidth
 
         // Top half
@@ -511,16 +512,16 @@ export default function SoundArtBuilder() {
       })
     } else if (waveformStyle === 'circular') {
       // Circular waveform
-      const radius = Math.min(canvas.width, canvas.height) * 0.35
-      const centerX = canvas.width / 2
+      const radius = Math.min(scaledWidth, scaledHeight) * 0.35
+      const centerX = scaledWidth / 2
 
       ctx.beginPath()
       ctx.strokeStyle = primaryColor
-      ctx.lineWidth = 3
+      ctx.lineWidth = 3 * scale
 
       samples.forEach((sample, i) => {
         const angle = (i / samples.length) * Math.PI * 2 - Math.PI / 2
-        const r = radius + sample * 100
+        const r = radius + sample * 100 * scale
         const x = centerX + Math.cos(angle) * r
         const y = centerY + Math.sin(angle) * r
 
@@ -538,9 +539,9 @@ export default function SoundArtBuilder() {
     // Add title if provided
     if (title) {
       ctx.fillStyle = primaryColor
-      ctx.font = '48px sans-serif'
+      ctx.font = `${48 * scale}px sans-serif`
       ctx.textAlign = 'center'
-      ctx.fillText(title, canvas.width / 2, 80)
+      ctx.fillText(title, scaledWidth / 2, 80 * scale)
     }
 
     // Restore context after waveform
@@ -570,7 +571,7 @@ export default function SoundArtBuilder() {
     } else {
       console.log('[Canvas] QR code NOT drawn - showQRCode:', showQRCode, 'qrCodeImage:', !!qrCodeImage)
     }
-  }, [waveformData, title, waveformStyle, primaryColor, backgroundColor, showQRCode, qrCodeImage, useTransparentBg, backgroundImageElement, bgImageScale, bgImageX, bgImageY, waveformX, waveformY, qrX, qrY])
+  }, [waveformData, title, waveformStyle, primaryColor, backgroundColor, showQRCode, qrCodeImage, useTransparentBg, backgroundImageElement, bgImageScale, bgImageX, bgImageY, waveformX, waveformY, waveformScale, qrX, qrY])
 
   // Redraw whenever settings change
   useEffect(() => {
@@ -720,10 +721,7 @@ export default function SoundArtBuilder() {
                       <label className="block text-sm text-text-muted mb-2">Waveform Style</label>
                       <select
                         value={waveformStyle}
-                        onChange={(e) => {
-                          setWaveformStyle(e.target.value)
-                          setTimeout(drawWaveform, 0)
-                        }}
+                        onChange={(e) => setWaveformStyle(e.target.value)}
                         className="w-full px-4 py-2 bg-bg-dark border border-border-subtle rounded-lg text-text-soft"
                       >
                         <option value="bars">Vertical Bars</option>
@@ -797,13 +795,16 @@ export default function SoundArtBuilder() {
                     {/* Background Image */}
                     <div>
                       <label className="block text-sm text-text-muted mb-2">Background Image (Optional)</label>
-                      <div className="space-y-2">
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={handleBackgroundImageUpload}
-                          className="w-full px-4 py-2 bg-bg-dark border border-border-subtle rounded-lg text-text-soft text-sm file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-firefly-dim/20 file:text-firefly-glow hover:file:bg-firefly-dim/40 file:cursor-pointer"
-                        />
+                      <div className="grid grid-cols-2 gap-2">
+                        <label className="px-4 py-2 bg-bg-elevated hover:bg-bg-darker border border-border-subtle rounded-lg text-text-soft text-sm transition-soft cursor-pointer text-center">
+                          📁 Upload
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleBackgroundImageUpload}
+                            className="hidden"
+                          />
+                        </label>
                         <button
                           onClick={() => {
                             setShowPhotoGallery(true)
@@ -811,13 +812,13 @@ export default function SoundArtBuilder() {
                               fetchBranchPhotos()
                             }
                           }}
-                          className="w-full px-4 py-2 bg-bg-elevated hover:bg-bg-darker border border-border-subtle rounded-lg text-text-soft text-sm transition-soft"
+                          className="px-4 py-2 bg-bg-elevated hover:bg-bg-darker border border-border-subtle rounded-lg text-text-soft text-sm transition-soft"
                         >
-                          📸 Choose from Your Branches
+                          📸 From Branches
                         </button>
                       </div>
                       {backgroundImage && (
-                        <div className="mt-3">
+                        <div className="mt-2">
                           <button
                             onClick={() => {
                               setBackgroundImage(null)
@@ -827,9 +828,6 @@ export default function SoundArtBuilder() {
                           >
                             ✕ Remove image
                           </button>
-                          <p className="text-xs text-text-muted mt-2">
-                            Adjust image position in the Preview panel →
-                          </p>
                         </div>
                       )}
                     </div>
