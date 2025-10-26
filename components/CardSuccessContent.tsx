@@ -73,14 +73,34 @@ export default function CardSuccessContent() {
             </svg>
           </div>
 
-          <h1 className="text-4xl font-light text-firefly-glow mb-4">
-            Card Sent Successfully!
-          </h1>
-          <p className="text-text-muted text-lg">
-            {order?.deliveryType === 'digital'
-              ? 'Your digital card is on its way to the recipient\'s inbox!'
-              : 'Your greeting card has been created and is being processed.'}
-          </p>
+          {order?.deliveryType === 'digital' ? (
+            <>
+              <h1 className="text-4xl font-light text-firefly-glow mb-4">
+                Your Light Has Been Sent ✨
+              </h1>
+              <p className="text-text-muted text-lg">
+                Like a firefly carrying warmth across the night, your card is on its way to their inbox.
+              </p>
+            </>
+          ) : order?.deliveryType === 'physical' ? (
+            <>
+              <h1 className="text-4xl font-light text-firefly-glow mb-4">
+                Your Card Is Taking Flight 📮
+              </h1>
+              <p className="text-text-muted text-lg">
+                Your heartfelt message will soon arrive at their door, carrying your memories across the miles.
+              </p>
+            </>
+          ) : (
+            <>
+              <h1 className="text-4xl font-light text-firefly-glow mb-4">
+                Ready to Print & Share 🖨️
+              </h1>
+              <p className="text-text-muted text-lg">
+                Your card is ready to hold in your hands—a tangible piece of memory you can share in person.
+              </p>
+            </>
+          )}
         </div>
 
         {/* Order Details */}
@@ -97,7 +117,11 @@ export default function CardSuccessContent() {
               <div className="flex items-center justify-between pb-3 border-b border-border-subtle">
                 <span className="text-text-muted">Delivery Type</span>
                 <span className="text-text-soft">
-                  {order.deliveryType === 'digital' ? '📧 Digital' : '📮 Printed & Mailed'}
+                  {order.deliveryType === 'digital'
+                    ? '📧 Email Delivery'
+                    : order.deliveryType === 'physical'
+                    ? '📮 Mailed to Door'
+                    : '🖨️ Ready to Print'}
                 </span>
               </div>
 
@@ -119,41 +143,64 @@ export default function CardSuccessContent() {
         {/* What's Next */}
         <div className="bg-gradient-to-r from-firefly-dim/10 to-firefly-glow/10 border border-firefly-dim/30 rounded-lg p-6 mb-8">
           <h3 className="text-lg text-text-soft font-medium mb-3">
-            What's Next?
+            What Happens Next
           </h3>
 
           {order?.deliveryType === 'digital' ? (
-            <ul className="text-text-muted text-sm space-y-2">
+            <ul className="text-text-muted text-sm space-y-3">
               <li className="flex items-start gap-2">
-                <span className="text-firefly-glow mt-0.5">✓</span>
-                <span>Your digital card will be sent to the recipient's email shortly</span>
+                <span className="text-firefly-glow mt-0.5">✦</span>
+                <span>Your card is winging its way to their inbox as we speak</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-firefly-glow mt-0.5">✓</span>
-                <span>They'll receive a beautiful email with a link to view the card</span>
+                <span className="text-firefly-glow mt-0.5">✦</span>
+                <span>They'll receive a beautiful email inviting them to open their card</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-firefly-glow mt-0.5">✓</span>
-                <span>You can track when they open it in your order history</span>
+                <span className="text-firefly-glow mt-0.5">✦</span>
+                <span>When they click, fireflies will burst forth as your message is revealed</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-firefly-glow mt-0.5">✦</span>
+                <span>You can revisit this moment anytime in your card history</span>
+              </li>
+            </ul>
+          ) : order?.deliveryType === 'physical' ? (
+            <ul className="text-text-muted text-sm space-y-3">
+              <li className="flex items-start gap-2">
+                <span className="text-firefly-glow mt-0.5">✦</span>
+                <span>Your card is being lovingly printed on premium cardstock</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-firefly-glow mt-0.5">✦</span>
+                <span>It will be tucked into an envelope and sent within 1-3 days</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-firefly-glow mt-0.5">✦</span>
+                <span>Tracking details will appear in your card history once it ships</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-firefly-glow mt-0.5">✦</span>
+                <span>Expected to arrive in 3-5 business days, ready to be held and treasured</span>
               </li>
             </ul>
           ) : (
-            <ul className="text-text-muted text-sm space-y-2">
+            <ul className="text-text-muted text-sm space-y-3">
               <li className="flex items-start gap-2">
-                <span className="text-firefly-glow mt-0.5">✓</span>
-                <span>Your card is being sent to our print partner</span>
+                <span className="text-firefly-glow mt-0.5">✦</span>
+                <span>Download your card as a high-resolution PDF</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-firefly-glow mt-0.5">✓</span>
-                <span>It will be professionally printed and mailed within 1-3 days</span>
+                <span className="text-firefly-glow mt-0.5">✦</span>
+                <span>Print it at home or at your favorite print shop</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-firefly-glow mt-0.5">✓</span>
-                <span>USPS tracking will be available in your order history</span>
+                <span className="text-firefly-glow mt-0.5">✦</span>
+                <span>Fold it like a traditional card or frame it as a keepsake</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-firefly-glow mt-0.5">✓</span>
-                <span>Expected delivery: 3-5 business days</span>
+                <span className="text-firefly-glow mt-0.5">✦</span>
+                <span>Present it in person—sometimes the best delivery is hand-to-heart</span>
               </li>
             </ul>
           )}
