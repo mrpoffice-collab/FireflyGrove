@@ -1689,3 +1689,7 @@ Error: You cannot use different slug names for the same dynamic path ('id' !== '
  ✓ Compiled in 433ms (1623 modules)
  ✓ Compiled in 358ms (1623 modules)
  ✓ Compiled in 398ms (1623 modules)
+ ✓ Compiled in 345ms (907 modules)
+ ✓ Compiled in 156ms (907 modules)
+ ✓ Compiled in 158ms (907 modules)
+ ✓ Compiled in 223ms (907 modules)
