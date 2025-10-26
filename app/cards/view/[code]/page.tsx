@@ -55,6 +55,10 @@ export default function ViewCardPage() {
 
   const photos = order.selectedPhotos ? JSON.parse(order.selectedPhotos) : []
 
+  // Use sentiment messages if available, otherwise fall back to template
+  const coverMessage = order.sentiment?.coverMessage || order.template.coverMessage
+  const insideMessage = order.sentiment?.insideMessage || order.template.insideMessage
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-bg-dark to-bg-darker flex items-center justify-center p-4 overflow-hidden">
       {/* Animated Fireflies - Released when card opens */}
@@ -144,10 +148,10 @@ export default function ViewCardPage() {
                     )}
 
                     {/* Cover Message */}
-                    {order.template.coverMessage && (
+                    {coverMessage && (
                       <div className="flex-1 flex items-center justify-center px-4">
                         <p className="text-text-soft text-2xl leading-loose text-center italic font-light max-w-md">
-                          {order.template.coverMessage}
+                          {coverMessage}
                         </p>
                       </div>
                     )}
@@ -173,11 +177,11 @@ export default function ViewCardPage() {
                 <div className="bg-gradient-to-br from-bg-dark to-bg-darker p-8">
                   <div className="aspect-[5/7] flex flex-col justify-between p-10 py-12">
                     {/* Inside Message from Firefly Grove */}
-                    {order.template.insideMessage && (
+                    {insideMessage && (
                       <div className="flex-1 flex items-center justify-center">
                         <div className="max-w-md relative">
                           <p className="text-text-soft text-xl leading-loose text-center font-light whitespace-pre-line">
-                            {order.template.insideMessage}
+                            {insideMessage}
                           </p>
                         </div>
                       </div>

@@ -699,9 +699,31 @@ model CardCategory {
 
   // Relations
   templates     CardTemplate[]
+  sentiments    CardSentiment[]
 
   @@index([displayOrder])
   @@index([isActive])
+}
+
+// Greeting Card Sentiments - Library of messages for each category
+model CardSentiment {
+  id              String   @id @default(cuid())
+  categoryId      String
+  coverMessage    String   @db.Text // Front of card message
+  insideMessage   String   @db.Text // Inside message (can use \n for line breaks)
+  tags            String?  // Comma-separated tags for filtering (e.g., "formal,poetic,short")
+  displayOrder    Int      @default(0)
+  isActive        Boolean  @default(true)
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relations
+  category        CardCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@index([categoryId])
+  @@index([isActive])
+  @@index([displayOrder])
 }
 
 // Greeting Card Templates
@@ -743,6 +765,7 @@ model CardOrder {
   id                    String   @id @default(cuid())
   userId                String
   templateId            String
+  sentimentId           String?  // Selected sentiment from library
 
   // Delivery settings
   deliveryType          String   // "digital" or "physical"

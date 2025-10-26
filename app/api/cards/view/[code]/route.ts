@@ -31,6 +31,19 @@ export async function GET(
       )
     }
 
+    // Fetch sentiment if it exists
+    let sentiment = null
+    if (delivery.order.sentimentId) {
+      sentiment = await prisma.cardSentiment.findUnique({
+        where: { id: delivery.order.sentimentId },
+        select: {
+          id: true,
+          coverMessage: true,
+          insideMessage: true,
+        },
+      })
+    }
+
     // Track view (increment count and record first open)
     await prisma.cardDelivery.update({
       where: { id: delivery.id },
@@ -41,7 +54,11 @@ export async function GET(
       },
     })
 
-    return NextResponse.json(delivery.order)
+    // Return order with sentiment data
+    return NextResponse.json({
+      ...delivery.order,
+      sentiment,
+    })
   } catch (error) {
     console.error('Error fetching card:', error)
     return NextResponse.json(

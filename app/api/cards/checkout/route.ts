@@ -24,6 +24,7 @@ export async function POST(request: Request) {
 
     const {
       templateId,
+      sentimentId,
       deliveryType,
       customMessage,
       selectedPhotos,
@@ -64,6 +65,7 @@ export async function POST(request: Request) {
       data: {
         userId,
         templateId,
+        sentimentId: sentimentId || null,
         deliveryType,
         customMessage,
         selectedPhotos: selectedPhotos ? JSON.stringify(selectedPhotos) : null,

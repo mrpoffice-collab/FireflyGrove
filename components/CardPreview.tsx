@@ -1,5 +1,12 @@
 'use client'
 
+interface Sentiment {
+  id: string
+  coverMessage: string
+  insideMessage: string
+  tags: string | null
+}
+
 interface CardPreviewProps {
   template: any
   customMessage: string
@@ -7,6 +14,7 @@ interface CardPreviewProps {
   senderName: string
   signature?: string
   deliveryType: 'digital' | 'physical'
+  selectedSentiment?: Sentiment | null
 }
 
 export default function CardPreview({
@@ -16,7 +24,11 @@ export default function CardPreview({
   senderName,
   signature,
   deliveryType,
+  selectedSentiment,
 }: CardPreviewProps) {
+  // Use selected sentiment messages if available, otherwise fall back to template
+  const coverMessage = selectedSentiment?.coverMessage || template.coverMessage
+  const insideMessage = selectedSentiment?.insideMessage || template.insideMessage
   return (
     <div className="bg-bg-dark border border-border-subtle rounded-lg p-6">
       <div className="flex items-center justify-between mb-4">
@@ -93,10 +105,10 @@ export default function CardPreview({
               )}
 
               {/* Cover Message - Elegant and Prominent */}
-              {template.coverMessage ? (
+              {coverMessage ? (
                 <div className="flex-1 flex items-center justify-center px-4">
                   <p className="text-text-soft text-2xl leading-loose text-center italic font-light max-w-md">
-                    {template.coverMessage}
+                    {coverMessage}
                   </p>
                 </div>
               ) : (
@@ -114,14 +126,14 @@ export default function CardPreview({
             <p className="text-xs text-text-muted mb-2 text-center">INSIDE</p>
             <div className="aspect-[5/7] flex flex-col justify-between p-10 py-12">
               {/* Inside Message from Firefly Grove - Elegant Typography */}
-              {template.insideMessage && (
+              {insideMessage && (
                 <div className="flex-1 flex items-center justify-center">
                   <div className="max-w-md relative">
                     {/* Firefly decorative accents */}
                     <div className="absolute -left-8 top-1/2 w-1.5 h-1.5 bg-firefly-glow rounded-full blur-sm animate-pulse"></div>
                     <div className="absolute -right-8 top-1/3 w-1.5 h-1.5 bg-firefly-glow rounded-full blur-sm animate-pulse" style={{animationDelay: '1s'}}></div>
                     <p className="text-text-soft text-xl leading-loose text-center font-light whitespace-pre-line">
-                      {template.insideMessage}
+                      {insideMessage}
                     </p>
                   </div>
                 </div>

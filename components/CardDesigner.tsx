@@ -5,6 +5,14 @@ import { useRouter } from 'next/navigation'
 import CardPreview from './CardPreview'
 import CardMessageEditor from './CardMessageEditor'
 import GrovePhotoPicker from './GrovePhotoPicker'
+import SentimentPicker from './SentimentPicker'
+
+interface Sentiment {
+  id: string
+  coverMessage: string
+  insideMessage: string
+  tags: string | null
+}
 
 interface CardDesignerProps {
   template: any
@@ -14,6 +22,7 @@ export default function CardDesigner({ template }: CardDesignerProps) {
   const router = useRouter()
   const [customMessage, setCustomMessage] = useState('')
   const [selectedPhotos, setSelectedPhotos] = useState<string[]>([])
+  const [selectedSentiment, setSelectedSentiment] = useState<Sentiment | null>(null)
   const [senderName, setSenderName] = useState('')
   const [signature, setSignature] = useState('')
   const [recipientEmail, setRecipientEmail] = useState('')
@@ -62,6 +71,7 @@ export default function CardDesigner({ template }: CardDesignerProps) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           templateId: template.id,
+          sentimentId: selectedSentiment?.id || null,
           deliveryType,
           customMessage,
           selectedPhotos,
@@ -117,6 +127,13 @@ export default function CardDesigner({ template }: CardDesignerProps) {
               className="w-full px-4 py-2 bg-[#1a1a1a] border border-border-subtle rounded text-white focus:outline-none focus:border-firefly-dim placeholder:text-text-muted"
             />
           </div>
+
+          {/* Sentiment Picker */}
+          <SentimentPicker
+            categoryId={template.categoryId}
+            selectedSentiment={selectedSentiment}
+            onSelect={setSelectedSentiment}
+          />
 
           {/* Custom Message */}
           <CardMessageEditor
@@ -276,6 +293,7 @@ export default function CardDesigner({ template }: CardDesignerProps) {
           senderName={senderName}
           signature={signature}
           deliveryType={deliveryType}
+          selectedSentiment={selectedSentiment}
         />
       </div>
 
