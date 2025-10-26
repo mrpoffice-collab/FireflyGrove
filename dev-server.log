@@ -1,0 +1,275 @@
+
+> firefly-grove@0.1.0 dev
+> next dev
+
+  ▲ Next.js 14.2.15
+  - Local:        http://localhost:3000
+  - Environments: .env.local, .env
+
+ ✓ Starting...
+ ✓ Ready in 1372ms
+ ○ Compiling /blog ...
+ ✓ Compiled /blog in 3s (968 modules)
+ ✓ Compiled in 508ms (305 modules)
+ GET /blog 200 in 3598ms
+ ○ Compiling /icon.svg ...
+ ✓ Compiled /icon.svg in 2s (891 modules)
+ ✓ Compiled (920 modules)
+ GET /icon.svg?9f13d4b91f3b77de 200 in 1813ms
+[next-auth][warn][DEBUG_ENABLED] 
+https://next-auth.js.org/warnings#debug_enabled
+ GET /api/auth/session 200 in 2620ms
+ GET /api/auth/session 200 in 25ms
+ ✓ Compiled /api/admin/activity in 156ms (943 modules)
+[next-auth][warn][DEBUG_ENABLED] 
+https://next-auth.js.org/warnings#debug_enabled
+ GET /api/admin/activity 403 in 947ms
+ GET /api/admin/activity 403 in 118ms
+ ○ Compiling / ...
+ ✓ Compiled / in 1158ms (2026 modules)
+ GET / 200 in 1255ms
+ ✓ Compiled /blog/[slug] in 368ms (2033 modules)
+ GET /blog/how-to-preserve-family-memories 200 in 104ms
+[next-auth][warn][DEBUG_ENABLED] 
+https://next-auth.js.org/warnings#debug_enabled
+ GET /api/admin/activity 403 in 172ms
+ GET /blog/how-to-preserve-family-memories 200 in 131ms
+ GET /api/admin/activity 403 in 134ms
+ GET /api/admin/activity 403 in 91ms
+ GET /api/admin/activity 403 in 238ms
+ GET /api/admin/activity 403 in 174ms
+ GET /api/admin/activity 403 in 184ms
+ GET /api/admin/activity 403 in 179ms
+ GET /api/admin/activity 403 in 209ms
+ GET /api/admin/activity 403 in 193ms
+ GET /api/admin/activity 403 in 185ms
+ GET /api/admin/activity 403 in 727ms
+ GET /api/admin/activity 403 in 191ms
+ GET /api/admin/activity 403 in 192ms
+ ✓ Compiled /sparks in 488ms (1612 modules)
+ ✓ Compiled /api/sparks in 111ms (926 modules)
+[next-auth][warn][DEBUG_ENABLED] 
+https://next-auth.js.org/warnings#debug_enabled
+ GET /api/sparks 200 in 500ms
+ GET /api/sparks 200 in 214ms
+ GET /api/admin/activity 403 in 154ms
+ GET /api/admin/activity 403 in 202ms
+ GET /api/admin/activity 403 in 234ms
+ ✓ Compiled /grove in 447ms (1622 modules)
+ ✓ Compiled /api/persons/transplantable in 104ms (932 modules)
+ ✓ Compiled (934 modules)
+[next-auth][warn][DEBUG_ENABLED] 
+https://next-auth.js.org/warnings#debug_enabled
+ GET /api/persons/transplantable 200 in 479ms
+ GET /api/persons/transplantable 200 in 87ms
+Error fetching grove: PrismaClientKnownRequestError: 
+Invalid `prisma.grove.create()` invocation:
+
+
+Foreign key constraint violated: `Grove_userId_fkey (index)`
+    at $n.handleRequestError (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\@prisma\client\runtime\library.js:121:7315)
+    at $n.handleAndLogRequestError (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\@prisma\client\runtime\library.js:121:6623)
+    at $n.request (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\@prisma\client\runtime\library.js:121:6307)
+    at async l (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\@prisma\client\runtime\library.js:130:9633)
+    at async GET (webpack-internal:///(rsc)/./app/api/grove/route.ts:98:13)
+    at async C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:55778
+    at async eO.execute (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:46527)
+    at async eO.handle (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:57112)
+    at async doRender (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1352:42)
+    at async cacheEntry.responseCache.get.routeKind (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1574:28)
+    at async DevServer.renderToResponseWithComponentsImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1482:28)
+    at async DevServer.renderPageComponent (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1908:24)
+    at async DevServer.renderToResponseImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1946:32)
+    at async DevServer.pipeImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:921:25)
+    at async NextNodeServer.handleCatchallRenderRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\next-server.js:272:17)
+    at async DevServer.handleRequestImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:817:17)
+    at async C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\dev\next-dev-server.js:339:20
+    at async Span.traceAsyncFn (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\trace\trace.js:154:20)
+    at async DevServer.handleRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\dev\next-dev-server.js:336:24)
+    at async invokeRender (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:173:21)
+    at async handleRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:350:24)
+    at async requestHandlerImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:374:13)
+    at async Server.requestListener (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\start-server.js:141:13) {
+  code: 'P2003',
+  clientVersion: '5.22.0',
+  meta: { modelName: 'Grove', field_name: 'Grove_userId_fkey (index)' }
+}
+ GET /api/grove 500 in 1217ms
+Error fetching grove: PrismaClientKnownRequestError: 
+Invalid `prisma.grove.create()` invocation:
+
+
+Foreign key constraint violated: `Grove_userId_fkey (index)`
+    at $n.handleRequestError (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\@prisma\client\runtime\library.js:121:7315)
+    at $n.handleAndLogRequestError (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\@prisma\client\runtime\library.js:121:6623)
+    at $n.request (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\@prisma\client\runtime\library.js:121:6307)
+    at async l (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\@prisma\client\runtime\library.js:130:9633)
+    at async GET (webpack-internal:///(rsc)/./app/api/grove/route.ts:98:13)
+    at async C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:55778
+    at async eO.execute (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:46527)
+    at async eO.handle (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:57112)
+    at async doRender (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1352:42)
+    at async cacheEntry.responseCache.get.routeKind (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1574:28)
+    at async DevServer.renderToResponseWithComponentsImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1482:28)
+    at async DevServer.renderPageComponent (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1908:24)
+    at async DevServer.renderToResponseImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1946:32)
+    at async DevServer.pipeImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:921:25)
+    at async NextNodeServer.handleCatchallRenderRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\next-server.js:272:17)
+    at async DevServer.handleRequestImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:817:17)
+    at async C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\dev\next-dev-server.js:339:20
+    at async Span.traceAsyncFn (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\trace\trace.js:154:20)
+    at async DevServer.handleRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\dev\next-dev-server.js:336:24)
+    at async invokeRender (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:173:21)
+    at async handleRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:350:24)
+    at async requestHandlerImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:374:13)
+    at async Server.requestListener (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\start-server.js:141:13) {
+  code: 'P2003',
+  clientVersion: '5.22.0',
+  meta: { modelName: 'Grove', field_name: 'Grove_userId_fkey (index)' }
+}
+ GET /api/grove 500 in 252ms
+ GET /grove 200 in 82ms
+ ✓ Compiled /icon.svg in 293ms (936 modules)
+ ✓ Compiled (964 modules)
+ GET /icon.svg?9f13d4b91f3b77de 200 in 605ms
+[next-auth][warn][DEBUG_ENABLED] 
+https://next-auth.js.org/warnings#debug_enabled
+ GET /api/auth/session 200 in 622ms
+ GET /api/auth/session 200 in 12ms
+ GET /api/persons/transplantable 200 in 107ms
+Error fetching grove: PrismaClientKnownRequestError: 
+Invalid `prisma.grove.create()` invocation:
+
+
+Foreign key constraint violated: `Grove_userId_fkey (index)`
+    at $n.handleRequestError (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\@prisma\client\runtime\library.js:121:7315)
+    at $n.handleAndLogRequestError (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\@prisma\client\runtime\library.js:121:6623)
+    at $n.request (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\@prisma\client\runtime\library.js:121:6307)
+    at async l (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\@prisma\client\runtime\library.js:130:9633)
+    at async GET (webpack-internal:///(rsc)/./app/api/grove/route.ts:98:13)
+    at async C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:55778
+    at async eO.execute (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:46527)
+    at async eO.handle (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:57112)
+    at async doRender (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1352:42)
+    at async cacheEntry.responseCache.get.routeKind (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1574:28)
+    at async DevServer.renderToResponseWithComponentsImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1482:28)
+    at async DevServer.renderPageComponent (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1908:24)
+    at async DevServer.renderToResponseImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1946:32)
+    at async DevServer.pipeImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:921:25)
+    at async NextNodeServer.handleCatchallRenderRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\next-server.js:272:17)
+    at async DevServer.handleRequestImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:817:17)
+    at async C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\dev\next-dev-server.js:339:20
+    at async Span.traceAsyncFn (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\trace\trace.js:154:20)
+    at async DevServer.handleRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\dev\next-dev-server.js:336:24)
+    at async invokeRender (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:173:21)
+    at async handleRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:350:24)
+    at async requestHandlerImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:374:13)
+    at async Server.requestListener (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\start-server.js:141:13) {
+  code: 'P2003',
+  clientVersion: '5.22.0',
+  meta: { modelName: 'Grove', field_name: 'Grove_userId_fkey (index)' }
+}
+ GET /api/grove 500 in 230ms
+ GET /api/admin/activity 403 in 654ms
+ GET /api/admin/activity 403 in 109ms
+ ✓ Compiled /api/sparks in 182ms (966 modules)
+[next-auth][warn][DEBUG_ENABLED] 
+https://next-auth.js.org/warnings#debug_enabled
+ GET /api/sparks 200 in 415ms
+ GET /api/sparks 200 in 194ms
+ ✓ Compiled / in 366ms (1363 modules)
+ ✓ Compiled /api/stats in 174ms (1365 modules)
+ GET /api/stats 200 in 846ms
+ GET /api/stats 200 in 181ms
+[next-auth][warn][DEBUG_ENABLED] 
+https://next-auth.js.org/warnings#debug_enabled
+ GET /api/persons/transplantable 200 in 199ms
+ GET /api/persons/transplantable 200 in 116ms
+Error fetching grove: PrismaClientKnownRequestError: 
+Invalid `prisma.grove.create()` invocation:
+
+
+Foreign key constraint violated: `Grove_userId_fkey (index)`
+    at $n.handleRequestError (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\@prisma\client\runtime\library.js:121:7315)
+    at $n.handleAndLogRequestError (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\@prisma\client\runtime\library.js:121:6623)
+    at $n.request (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\@prisma\client\runtime\library.js:121:6307)
+    at async l (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\@prisma\client\runtime\library.js:130:9633)
+    at async GET (webpack-internal:///(rsc)/./app/api/grove/route.ts:98:13)
+    at async C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:55778
+    at async eO.execute (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:46527)
+    at async eO.handle (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:57112)
+    at async doRender (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1352:42)
+    at async cacheEntry.responseCache.get.routeKind (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1574:28)
+    at async DevServer.renderToResponseWithComponentsImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1482:28)
+    at async DevServer.renderPageComponent (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1908:24)
+    at async DevServer.renderToResponseImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1946:32)
+    at async DevServer.pipeImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:921:25)
+    at async NextNodeServer.handleCatchallRenderRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\next-server.js:272:17)
+    at async DevServer.handleRequestImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:817:17)
+    at async C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\dev\next-dev-server.js:339:20
+    at async Span.traceAsyncFn (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\trace\trace.js:154:20)
+    at async DevServer.handleRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\dev\next-dev-server.js:336:24)
+    at async invokeRender (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:173:21)
+    at async handleRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:350:24)
+    at async requestHandlerImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:374:13)
+    at async Server.requestListener (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\start-server.js:141:13) {
+  code: 'P2003',
+  clientVersion: '5.22.0',
+  meta: { modelName: 'Grove', field_name: 'Grove_userId_fkey (index)' }
+}
+ GET /api/grove 500 in 488ms
+Error fetching grove: PrismaClientKnownRequestError: 
+Invalid `prisma.grove.create()` invocation:
+
+
+Foreign key constraint violated: `Grove_userId_fkey (index)`
+    at $n.handleRequestError (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\@prisma\client\runtime\library.js:121:7315)
+    at $n.handleAndLogRequestError (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\@prisma\client\runtime\library.js:121:6623)
+    at $n.request (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\@prisma\client\runtime\library.js:121:6307)
+    at async l (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\@prisma\client\runtime\library.js:130:9633)
+    at async GET (webpack-internal:///(rsc)/./app/api/grove/route.ts:98:13)
+    at async C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:55778
+    at async eO.execute (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:46527)
+    at async eO.handle (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:57112)
+    at async doRender (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1352:42)
+    at async cacheEntry.responseCache.get.routeKind (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1574:28)
+    at async DevServer.renderToResponseWithComponentsImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1482:28)
+    at async DevServer.renderPageComponent (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1908:24)
+    at async DevServer.renderToResponseImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1946:32)
+    at async DevServer.pipeImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:921:25)
+    at async NextNodeServer.handleCatchallRenderRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\next-server.js:272:17)
+    at async DevServer.handleRequestImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:817:17)
+    at async C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\dev\next-dev-server.js:339:20
+    at async Span.traceAsyncFn (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\trace\trace.js:154:20)
+    at async DevServer.handleRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\dev\next-dev-server.js:336:24)
+    at async invokeRender (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:173:21)
+    at async handleRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:350:24)
+    at async requestHandlerImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:374:13)
+    at async Server.requestListener (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\start-server.js:141:13) {
+  code: 'P2003',
+  clientVersion: '5.22.0',
+  meta: { modelName: 'Grove', field_name: 'Grove_userId_fkey (index)' }
+}
+ GET /api/grove 500 in 245ms
+ GET /api/admin/activity 403 in 173ms
+ GET /api/admin/activity 403 in 209ms
+ GET /api/admin/activity 403 in 197ms
+ GET /api/admin/activity 403 in 174ms
+ GET /api/admin/activity 403 in 173ms
+ GET /api/admin/activity 403 in 197ms
+ ✓ Compiled in 930ms (2033 modules)
+[next-auth][warn][DEBUG_ENABLED] 
+https://next-auth.js.org/warnings#debug_enabled
+ GET /api/admin/activity 403 in 232ms
+ ✓ Compiled /api/auth/[...nextauth] in 239ms (1329 modules)
+[next-auth][warn][DEBUG_ENABLED] 
+https://next-auth.js.org/warnings#debug_enabled
+ GET /api/auth/session 200 in 293ms
+ GET /api/admin/activity 403 in 161ms
+ ✓ Compiled /open-grove in 319ms (2027 modules)
+ ✓ Compiled /api/open-grove in 151ms (1336 modules)
+ GET /api/open-grove?search=&sortBy=recent&limit=50&offset=0 200 in 934ms
+ GET /api/open-grove?search=&sortBy=recent&limit=50&offset=0 200 in 616ms
+ ✓ Compiled /login in 240ms (2036 modules)
+ ✓ Compiled /icon.svg in 264ms (1022 modules)
+ GET /icon.svg?9f13d4b91f3b77de 200 in 309ms

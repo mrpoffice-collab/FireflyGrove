@@ -715,10 +715,12 @@ model CardTemplate {
   htmlTemplate    String   @db.Text // HTML structure for the card
   cssStyles       String   @db.Text // CSS styling for the card
   previewImage    String?  // URL to preview image
+  prewrittenMessage String? @db.Text // Firefly Grove inspired message for the card
+  photoLayout     String?  @db.Text // JSON describing photo placement zones
 
   // Pricing
-  digitalPrice    Float    @default(0.99) // Price for digital delivery
-  physicalPrice   Float    @default(4.99) // Price for physical delivery (includes printing + postage)
+  digitalPrice    Float    @default(0.00) // Price for digital delivery (complimentary)
+  physicalPrice   Float    @default(0.00) // Price for physical delivery (complimentary)
 
   // Settings
   maxPhotos       Int      @default(3) // Maximum photos allowed on this template
@@ -751,6 +753,7 @@ model CardOrder {
   customMessage         String   @db.Text // User's personal message
   selectedPhotos        String?  @db.Text // JSON array of photo URLs from grove
   senderName            String?  // Name to display as sender
+  signature             String?  // Digital signature/closing line
 
   // Payment
   status                String   @default("pending") // pending, processing, completed, failed, cancelled

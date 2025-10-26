@@ -28,6 +28,7 @@ export async function POST(request: Request) {
       customMessage,
       selectedPhotos,
       senderName,
+      signature,
       recipientEmail,
       recipientName,
       recipientAddress,
@@ -58,7 +59,7 @@ export async function POST(request: Request) {
       ? template.digitalPrice
       : template.physicalPrice
 
-    // Create card order (pending payment)
+    // Create card order - complimentary for all members
     const order = await prisma.cardOrder.create({
       data: {
         userId,
@@ -67,57 +68,42 @@ export async function POST(request: Request) {
         customMessage,
         selectedPhotos: selectedPhotos ? JSON.stringify(selectedPhotos) : null,
         senderName,
+        signature,
         recipientEmail: deliveryType === 'digital' ? recipientEmail : null,
         recipientName: deliveryType === 'physical' ? recipientName : null,
         recipientAddress: deliveryType === 'physical' && recipientAddress
           ? JSON.stringify(recipientAddress)
           : null,
-        status: 'pending',
-        paymentStatus: 'pending',
-        totalAmount: amount,
+        status: 'processing', // Complimentary - skip payment
+        paymentStatus: 'paid', // Complimentary - no payment needed
+        totalAmount: amount, // $0.00
       },
     })
 
-    // Create Stripe checkout session
-    const checkoutSession = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
-      mode: 'payment',
-      line_items: [
-        {
-          price_data: {
-            currency: 'usd',
-            unit_amount: Math.round(amount * 100), // Convert to cents
-            product_data: {
-              name: `Greeting Card - ${template.name}`,
-              description: `${deliveryType === 'digital' ? 'Digital' : 'Printed & Mailed'} greeting card`,
-              images: template.previewImage ? [template.previewImage] : undefined,
-            },
-          },
-          quantity: 1,
-        },
-      ],
-      success_url: `${process.env.NEXTAUTH_URL}/cards/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.NEXTAUTH_URL}/cards/create`,
-      client_reference_id: order.id,
-      customer_email: session.user.email || undefined,
-      metadata: {
-        orderId: order.id,
-        userId,
-        deliveryType,
-      },
-    })
-
-    // Update order with Stripe session ID
-    await prisma.cardOrder.update({
-      where: { id: order.id },
+    // Create delivery record
+    const delivery = await prisma.cardDelivery.create({
       data: {
-        stripePaymentIntentId: checkoutSession.id,
+        orderId: order.id,
+        deliveryType: deliveryType,
+        status: 'pending',
       },
     })
 
+    // Trigger delivery immediately (complimentary)
+    if (deliveryType === 'digital') {
+      // Queue digital delivery
+      await fetch(`${process.env.NEXTAUTH_URL}/api/cards/send-digital`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orderId: order.id, deliveryId: delivery.id }),
+      }).catch(err => console.error('Failed to trigger digital delivery:', err))
+    }
+
+    // Return success - no Stripe checkout needed
     return NextResponse.json({
-      checkoutUrl: checkoutSession.url,
+      success: true,
       orderId: order.id,
+      message: 'Card created successfully!',
     })
   } catch (error) {
     console.error('Checkout error:', error)

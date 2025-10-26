@@ -17,7 +17,12 @@
       "Bash(find:*)",
       "Bash(for file in app/billing/page.tsx app/feedback/page.tsx app/grove/page.tsx app/open-grove/page.tsx app/test-email/page.tsx)",
       "Bash(do)",
-      "Bash(done)"
+      "Bash(done)",
+      "Bash(lsof:*)",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)",
+      "Bash(taskkill /F /PID 10092)",
+      "Bash(taskkill //F //PID 10092)"
     ],
     "deny": [],
     "ask": []

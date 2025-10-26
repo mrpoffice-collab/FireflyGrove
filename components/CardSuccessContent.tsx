@@ -10,14 +10,34 @@ export default function CardSuccessContent() {
   const [loading, setLoading] = useState(true)
 
   const sessionId = searchParams.get('session_id')
+  const orderId = searchParams.get('order_id')
 
   useEffect(() => {
-    if (sessionId) {
+    if (orderId) {
+      // Complimentary order - fetch directly
+      fetchOrder()
+    } else if (sessionId) {
+      // Legacy paid order - verify payment
       verifyPayment()
     } else {
       setLoading(false)
     }
-  }, [sessionId])
+  }, [sessionId, orderId])
+
+  const fetchOrder = async () => {
+    try {
+      const res = await fetch(`/api/cards/orders/${orderId}`)
+      const data = await res.json()
+
+      if (data.order) {
+        setOrder(data.order)
+      }
+    } catch (error) {
+      console.error('Failed to fetch order:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const verifyPayment = async () => {
     try {

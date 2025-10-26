@@ -15,6 +15,7 @@ export default function CardDesigner({ template }: CardDesignerProps) {
   const [customMessage, setCustomMessage] = useState('')
   const [selectedPhotos, setSelectedPhotos] = useState<string[]>([])
   const [senderName, setSenderName] = useState('')
+  const [signature, setSignature] = useState('')
   const [recipientEmail, setRecipientEmail] = useState('')
   const [recipientName, setRecipientName] = useState('')
   const [recipientAddress, setRecipientAddress] = useState({
@@ -65,6 +66,7 @@ export default function CardDesigner({ template }: CardDesignerProps) {
           customMessage,
           selectedPhotos,
           senderName,
+          signature,
           recipientEmail: deliveryType === 'digital' ? recipientEmail : null,
           recipientName: deliveryType === 'physical' ? recipientName : null,
           recipientAddress: deliveryType === 'physical' ? recipientAddress : null,
@@ -79,8 +81,11 @@ export default function CardDesigner({ template }: CardDesignerProps) {
         return
       }
 
-      // Redirect to Stripe checkout
-      if (data.checkoutUrl) {
+      // For complimentary cards, redirect directly to success page
+      if (data.success && data.orderId) {
+        router.push(`/cards/success?order_id=${data.orderId}`)
+      } else if (data.checkoutUrl) {
+        // Legacy path: redirect to Stripe checkout (if pricing is added back)
         window.location.href = data.checkoutUrl
       }
     } catch (error) {
@@ -119,6 +124,24 @@ export default function CardDesigner({ template }: CardDesignerProps) {
             onChange={setCustomMessage}
             maxLength={500}
           />
+
+          {/* Signature */}
+          <div className="mb-6">
+            <label className="block text-text-soft text-sm font-medium mb-2">
+              Signature (Optional)
+            </label>
+            <input
+              type="text"
+              value={signature}
+              onChange={(e) => setSignature(e.target.value)}
+              placeholder="e.g., With love, The Smith Family"
+              className="w-full px-4 py-2 bg-bg-elevated border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-dim italic"
+              style={{ fontFamily: '"Brush Script MT", cursive' }}
+            />
+            <p className="text-text-muted text-xs mt-1">
+              This will appear at the bottom of your card in a signature style
+            </p>
+          </div>
 
           {/* Photo Picker */}
           <div className="mb-6">
@@ -223,9 +246,9 @@ export default function CardDesigner({ template }: CardDesignerProps) {
           {/* Checkout Button */}
           <div className="pt-6 border-t border-border-subtle mt-6">
             <div className="flex items-center justify-between mb-4">
-              <span className="text-text-soft">Total</span>
+              <span className="text-text-soft">Price</span>
               <span className="text-2xl text-firefly-glow font-medium">
-                ${price.toFixed(2)}
+                Complimentary
               </span>
             </div>
 
@@ -234,11 +257,11 @@ export default function CardDesigner({ template }: CardDesignerProps) {
               disabled={processing}
               className="w-full py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg font-medium transition-soft disabled:opacity-50"
             >
-              {processing ? 'Processing...' : `Proceed to Payment`}
+              {processing ? 'Sending...' : `Send Card`}
             </button>
 
             <p className="text-text-muted text-xs text-center mt-3">
-              Secure payment via Stripe
+              Complimentary for all Firefly Grove members
             </p>
           </div>
         </div>
@@ -251,6 +274,7 @@ export default function CardDesigner({ template }: CardDesignerProps) {
           customMessage={customMessage}
           selectedPhotos={selectedPhotos}
           senderName={senderName}
+          signature={signature}
           deliveryType={deliveryType}
         />
       </div>

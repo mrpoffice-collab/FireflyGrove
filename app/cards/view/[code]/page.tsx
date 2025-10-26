@@ -96,20 +96,42 @@ export default function ViewCardPage() {
               </div>
             )}
 
-            {/* Message */}
+            {/* Prewritten Firefly Grove Message */}
+            {order.template.prewrittenMessage && (
+              <div className="mb-6">
+                <div className="bg-firefly-dim/5 border border-firefly-dim/20 rounded-lg p-6">
+                  <p className="text-text-soft text-base leading-relaxed text-center italic">
+                    {order.template.prewrittenMessage}
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* Personal Message */}
             <div className="bg-gradient-to-br from-bg-dark/50 to-bg-darker/50 rounded-lg p-8 mb-8">
               <p className="text-text-soft text-lg leading-relaxed whitespace-pre-wrap text-center">
                 {order.customMessage}
               </p>
             </div>
 
-            {/* Sender */}
-            {order.senderName && (
+            {/* Signature */}
+            {(order.signature || order.senderName) && (
               <div className="text-center mb-8">
-                <p className="text-text-muted text-sm mb-2">With love,</p>
-                <p className="text-text-soft text-xl font-medium">
-                  {order.senderName}
-                </p>
+                {order.signature ? (
+                  <p
+                    className="text-text-soft text-2xl italic"
+                    style={{ fontFamily: '"Brush Script MT", "Lucida Handwriting", cursive' }}
+                  >
+                    {order.signature}
+                  </p>
+                ) : order.senderName && (
+                  <>
+                    <p className="text-text-muted text-sm mb-2">With love,</p>
+                    <p className="text-text-soft text-xl font-medium">
+                      {order.senderName}
+                    </p>
+                  </>
+                )}
               </div>
             )}
 
