@@ -3,6 +3,7 @@ import path from 'path'
 import matter from 'gray-matter'
 import { remark } from 'remark'
 import html from 'remark-html'
+import remarkGfm from 'remark-gfm'
 
 const postsDirectory = path.join(process.cwd(), 'content/blog')
 
@@ -48,9 +49,10 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
     // Parse metadata
     const { data, content } = matter(fileContents)
 
-    // Convert markdown to HTML
+    // Convert markdown to HTML with enhanced formatting
     const processedContent = await remark()
-      .use(html)
+      .use(remarkGfm) // GitHub Flavored Markdown for better formatting
+      .use(html, { sanitize: false }) // Allow all HTML for better formatting
       .process(content)
     const contentHtml = processedContent.toString()
 

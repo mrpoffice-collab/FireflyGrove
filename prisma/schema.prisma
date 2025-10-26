@@ -43,6 +43,7 @@ model User {
   sentTreeTransfers TreeTransfer[] @relation("TreeTransferSender")
   videoGenerations VideoGeneration[]
   soundArts SoundArt[] @relation("UserSoundArt")
+  sparks Spark[] @relation("UserSparks")
 
   @@index([email])
   @@index([status])
@@ -654,4 +655,32 @@ model SoundArt {
   @@index([createdAt])
   @@index([expiresAt])
   @@index([deletedAt])
+}
+
+// Sparks - Memory prompts to inspire content creation
+model Spark {
+  id          String   @id @default(cuid())
+  userId      String?  // Null for admin-created global sparks
+  branchId    String?  // For custom user-uploaded sparks (branch-specific)
+  text        String   // The prompt text (e.g., "What was your first memory with this person?")
+  category    String?  // Category like "Childhood", "Family", "Career", "Hobbies", "Relationships", etc.
+  sparkType   String   @default("standard") // "standard" (system), "challenge" (seasonal), "custom" (user-uploaded)
+  isGlobal    Boolean  @default(false) // Admin-created sparks shown to all users
+  isActive    Boolean  @default(true) // Can be deactivated by user or admin
+  usageCount  Int      @default(0) // Track how often this prompt is used
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  user        User?    @relation("UserSparks", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([branchId])
+  @@index([sparkType])
+  @@index([isGlobal])
+  @@index([isActive])
+  @@index([category])
+  @@index([createdAt])
+  @@index([usageCount])
 }

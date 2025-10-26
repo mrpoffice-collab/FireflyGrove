@@ -79,6 +79,11 @@ export default function BranchPage() {
   const [challengeCollection, setChallengeCollection] = useState<SparkCollection | null>(null)
   const [currentChallengeSpark, setCurrentChallengeSpark] = useState('')
 
+  // My Sparks (custom user sparks)
+  const [customSparks, setCustomSparks] = useState<Array<{id: string, text: string}>>([])
+  const [currentCustomSpark, setCurrentCustomSpark] = useState('')
+  const [customSparksLoading, setCustomSparksLoading] = useState(true)
+
   // Person editing
   const [editingPerson, setEditingPerson] = useState(false)
   const [personName, setPersonName] = useState('')
@@ -137,6 +142,32 @@ export default function BranchPage() {
       setCurrentChallengeSpark(spark.text)
     }
   }, [challengeCollection])
+
+  // Fetch custom sparks
+  useEffect(() => {
+    async function fetchCustomSparks() {
+      try {
+        const response = await fetch('/api/sparks')
+        if (response.ok) {
+          const data = await response.json()
+          // Filter to only user's custom sparks (not global ones)
+          const userSparks = data.filter((spark: any) => !spark.isGlobal)
+          setCustomSparks(userSparks)
+          if (userSparks.length > 0 && !currentCustomSpark) {
+            setCurrentCustomSpark(userSparks[0].text)
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching custom sparks:', error)
+      } finally {
+        setCustomSparksLoading(false)
+      }
+    }
+
+    if (status === 'authenticated') {
+      fetchCustomSparks()
+    }
+  }, [status, currentCustomSpark])
 
   const fetchBranch = async () => {
     try {
@@ -418,6 +449,19 @@ export default function BranchPage() {
 
     const spark = getRandomSparkExcluding(challengeCollection, currentChallengeSpark)
     setCurrentChallengeSpark(spark.text)
+  }
+
+  const refreshCustomSpark = () => {
+    if (customSparks.length === 0) return
+
+    const availableSparks = customSparks.filter(s => s.text !== currentCustomSpark)
+    if (availableSparks.length === 0 && customSparks.length > 0) {
+      // If only one spark or we've cycled through all, start over
+      setCurrentCustomSpark(customSparks[0].text)
+    } else if (availableSparks.length > 0) {
+      const randomIndex = Math.floor(Math.random() * availableSparks.length)
+      setCurrentCustomSpark(availableSparks[randomIndex].text)
+    }
   }
 
   if (status === 'loading' || loading) {
@@ -716,29 +760,95 @@ export default function BranchPage() {
                   ? 'bg-[var(--legacy-amber)]/5 border border-[var(--legacy-amber)]/30'
                   : 'bg-bg-dark border border-firefly-dim/30'
               }`}>
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="text-xl">🪰</span>
-                  <h4 className={`text-sm font-medium ${
-                    isLegacy ? 'text-[var(--legacy-text)]' : 'text-text-soft'
-                  }`}>
-                    My Sparks
-                  </h4>
-                </div>
-                <p className={`text-xs italic mb-4 line-clamp-3 ${
-                  isLegacy ? 'text-[var(--legacy-text)]/80' : 'text-text-muted'
-                }`}>
-                  "Create your own custom story sparks and save them for later"
-                </p>
-                <button
-                  disabled
-                  className={`w-full py-2 text-sm rounded font-medium transition-soft opacity-50 cursor-not-allowed ${
-                    isLegacy
-                      ? 'bg-[var(--legacy-amber)]/20 text-[var(--legacy-text)] border border-[var(--legacy-amber)]/40'
-                      : 'bg-firefly-dim text-bg-dark'
-                  }`}
-                >
-                  Coming Soon
-                </button>
+                {customSparksLoading ? (
+                  <div className="text-center py-8">
+                    <p className="text-text-muted text-xs">Loading...</p>
+                  </div>
+                ) : customSparks.length === 0 ? (
+                  <>
+                    <div className="flex items-center gap-2 mb-3">
+                      <span className="text-xl">🪰</span>
+                      <h4 className={`text-sm font-medium ${
+                        isLegacy ? 'text-[var(--legacy-text)]' : 'text-text-soft'
+                      }`}>
+                        My Sparks
+                      </h4>
+                    </div>
+                    <p className={`text-xs italic mb-4 line-clamp-3 ${
+                      isLegacy ? 'text-[var(--legacy-text)]/80' : 'text-text-muted'
+                    }`}>
+                      "Create your own custom story sparks and save them for later"
+                    </p>
+                    <button
+                      disabled
+                      title="Custom spark upload coming soon!"
+                      className={`w-full py-2 text-sm rounded font-medium transition-soft opacity-50 cursor-not-allowed ${
+                        isLegacy
+                          ? 'bg-[var(--legacy-amber)]/20 text-[var(--legacy-text)] border border-[var(--legacy-amber)]/40'
+                          : 'bg-firefly-dim text-bg-dark'
+                      }`}
+                    >
+                      Create My First Spark
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xl">🪰</span>
+                        <h4 className={`text-sm font-medium ${
+                          isLegacy ? 'text-[var(--legacy-text)]' : 'text-text-soft'
+                        }`}>
+                          My Sparks
+                        </h4>
+                      </div>
+                      <button
+                        onClick={refreshCustomSpark}
+                        className={`p-1 rounded transition-soft ${
+                          isLegacy
+                            ? 'text-[var(--legacy-amber)] hover:bg-[var(--legacy-amber)]/10'
+                            : 'text-firefly-dim hover:bg-firefly-dim/10'
+                        }`}
+                        title="Get a different spark"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                        </svg>
+                      </button>
+                    </div>
+                    <p className={`text-xs italic mb-4 line-clamp-3 ${
+                      isLegacy ? 'text-[var(--legacy-text)]/80' : 'text-text-muted'
+                    }`}>
+                      "{currentCustomSpark}"
+                    </p>
+                    <div className="space-y-2">
+                      <button
+                        onClick={() => {
+                          setCurrentSpark(currentCustomSpark)
+                          setShowNewMemory(true)
+                        }}
+                        className={`w-full py-2 text-sm rounded font-medium transition-soft ${
+                          isLegacy
+                            ? 'bg-[var(--legacy-amber)]/20 hover:bg-[var(--legacy-amber)]/30 text-[var(--legacy-text)] border border-[var(--legacy-amber)]/40'
+                            : 'bg-firefly-dim hover:bg-firefly-glow text-bg-dark'
+                        }`}
+                      >
+                        Light a Memory
+                      </button>
+                      <button
+                        disabled
+                        title="Custom spark management coming soon!"
+                        className={`w-full py-1 text-xs rounded transition-soft opacity-50 cursor-not-allowed ${
+                          isLegacy
+                            ? 'text-[var(--legacy-text)]/60'
+                            : 'text-text-muted'
+                        }`}
+                      >
+                        Manage My Sparks ({customSparks.length})
+                      </button>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </div>

@@ -20,6 +20,7 @@ export default function Header({ userName, isBetaTester, groveInfo }: HeaderProp
   const router = useRouter()
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const [isFeedbackOpen, setIsFeedbackOpen] = useState(false)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
 
   // Close dropdown when clicking outside
@@ -35,10 +36,22 @@ export default function Header({ userName, isBetaTester, groveInfo }: HeaderProp
   }, [])
 
   return (
+    <>
     <header className="bg-bg-dark border-b border-border-subtle">
       <div className="container mx-auto px-4 py-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
+            {/* Hamburger Menu Button */}
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="text-text-muted hover:text-firefly-glow transition-soft p-1"
+              aria-label="Menu"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+
             <Link href="/" className="flex items-center gap-1.5 hover:opacity-80 transition-soft">
               <span className="text-firefly-glow text-xl">✦</span>
               <h1 className="text-lg font-light text-text-soft">Firefly Grove</h1>
@@ -56,6 +69,12 @@ export default function Header({ userName, isBetaTester, groveInfo }: HeaderProp
                 className="text-text-muted hover:text-[var(--legacy-glow)] text-sm transition-soft"
               >
                 🕯️ Open Grove
+              </Link>
+              <Link
+                href="/blog"
+                className="text-text-muted hover:text-firefly-glow text-sm transition-soft"
+              >
+                📖 Blog
               </Link>
             </nav>
           </div>
@@ -173,5 +192,120 @@ export default function Header({ userName, isBetaTester, groveInfo }: HeaderProp
       {/* Feedback Modal */}
       <FeedbackModal isOpen={isFeedbackOpen} onClose={() => setIsFeedbackOpen(false)} />
     </header>
+
+    {/* Mobile Menu Overlay */}
+    {isMobileMenuOpen && (
+      <div className="fixed inset-0 z-50 bg-bg-dark/95 backdrop-blur-sm">
+        <div className="container mx-auto px-4 py-6">
+          {/* Close button */}
+          <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center gap-2">
+              <span className="text-firefly-glow text-xl">✦</span>
+              <h2 className="text-lg font-light text-text-soft">Menu</h2>
+            </div>
+            <button
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="text-text-muted hover:text-firefly-glow transition-soft p-2"
+              aria-label="Close menu"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+
+          {/* Menu Items */}
+          <nav className="flex flex-col gap-4">
+            <Link
+              href="/grove"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="text-2xl font-light text-text-soft hover:text-firefly-glow transition-soft py-3 border-b border-border-subtle"
+            >
+              My Grove
+            </Link>
+            <Link
+              href="/open-grove"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="text-2xl font-light text-text-soft hover:text-[var(--legacy-glow)] transition-soft py-3 border-b border-border-subtle"
+            >
+              🕯️ Open Grove
+            </Link>
+            <Link
+              href="/blog"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="text-2xl font-light text-text-soft hover:text-firefly-glow transition-soft py-3 border-b border-border-subtle"
+            >
+              📖 Blog
+            </Link>
+
+            {userName ? (
+              <>
+                <Link
+                  href="/billing"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="text-xl font-light text-text-muted hover:text-text-soft transition-soft py-3 border-b border-border-subtle"
+                >
+                  Manage Plan
+                </Link>
+                <Link
+                  href="/grove-exchange"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="text-xl font-light text-text-muted hover:text-text-soft transition-soft py-3 border-b border-border-subtle"
+                >
+                  🏪 The Grove Exchange
+                </Link>
+                {isBetaTester && (
+                  <Link
+                    href="/admin/beta-invites"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="text-xl font-light text-text-muted hover:text-text-soft transition-soft py-3 border-b border-border-subtle"
+                  >
+                    📧 Send Beta Invite
+                  </Link>
+                )}
+                <button
+                  onClick={() => {
+                    setIsMobileMenuOpen(false)
+                    setIsFeedbackOpen(true)
+                  }}
+                  className="text-left text-xl font-light text-text-muted hover:text-text-soft transition-soft py-3 border-b border-border-subtle"
+                >
+                  🐛 Report an Issue
+                </button>
+                <button
+                  onClick={() => {
+                    setIsMobileMenuOpen(false)
+                    signOut({ callbackUrl: '/login' })
+                  }}
+                  className="text-left text-xl font-light text-text-muted hover:text-text-soft transition-soft py-3 border-b border-border-subtle"
+                >
+                  Sign Out
+                </button>
+              </>
+            ) : (
+              <Link
+                href="/login"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="text-xl font-light text-firefly-glow hover:text-firefly-bright transition-soft py-3"
+              >
+                Sign In
+              </Link>
+            )}
+          </nav>
+
+          {/* User info at bottom if logged in */}
+          {userName && groveInfo && (
+            <div className="mt-8 pt-6 border-t border-border-subtle">
+              <div className="text-text-soft font-medium mb-2">{userName}</div>
+              <div className="text-sm text-text-muted space-y-1">
+                <div>Plan: <span className="text-firefly-glow">{groveInfo.planName}</span></div>
+                <div>Trees: <span className="text-text-soft">{groveInfo.treeCount} / {groveInfo.treeLimit}</span></div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    )}
+    </>
   )
 }

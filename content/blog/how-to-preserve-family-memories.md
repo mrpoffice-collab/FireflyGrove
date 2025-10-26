@@ -5,7 +5,7 @@ excerpt: "Discover proven methods to preserve your family's precious memories, f
 author: "Firefly Grove Team"
 category: "Memory Preservation"
 readTime: "8 min read"
-image: "/blog/family-memories.jpg"
+image: "https://images.unsplash.com/photo-1551269901-5c5e14c25df7?w=1200&h=630&fit=crop"
 ---
 
 Your family's memories are irreplaceable. Whether it's your grandmother's voice, childhood photos, or handwritten letters from loved ones, these treasures deserve to be preserved for future generations.

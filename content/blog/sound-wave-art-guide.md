@@ -5,7 +5,7 @@ excerpt: "Discover how to transform meaningful voices and audio into stunning, s
 author: "Firefly Grove Team"
 category: "Sound Wave Art"
 readTime: "7 min read"
-image: "/blog/sound-wave-art.jpg"
+image: "https://images.unsplash.com/photo-1611532736579-6b16e2b50449?w=1200&h=630&fit=crop"
 ---
 
 Imagine turning "I love you" from your grandmother into a beautiful piece of wall art. Then, anytime you want to hear her voice, you simply scan the QR code.

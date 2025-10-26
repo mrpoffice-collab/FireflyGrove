@@ -5,7 +5,7 @@ excerpt: "Learn how to create a beautiful memorial tribute video to honor a love
 author: "Firefly Grove Team"
 category: "Memorial Tributes"
 readTime: "6 min read"
-image: "/blog/memorial-video.jpg"
+image: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=1200&h=630&fit=crop"
 ---
 
 Creating a memorial tribute video is one of the most meaningful ways to honor a loved one's memory. Whether for a funeral service, celebration of life, or personal keepsake, a well-crafted video can capture a lifetime of memories.
