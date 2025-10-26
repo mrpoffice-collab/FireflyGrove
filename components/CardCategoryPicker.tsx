@@ -51,7 +51,7 @@ export default function CardCategoryPicker({ onSelectCategory }: CardCategoryPic
           Create a Greeting Card
         </h1>
         <p className="text-text-muted text-lg">
-          Choose a category to get started
+          Choose the light you want to share
         </p>
       </div>
 
@@ -61,7 +61,7 @@ export default function CardCategoryPicker({ onSelectCategory }: CardCategoryPic
           <button
             key={category.id}
             onClick={() => onSelectCategory(category.id)}
-            className="bg-bg-dark border border-border-subtle rounded-lg p-6 hover:border-firefly-dim/50 transition-soft text-left group"
+            className="bg-bg-dark border border-border-subtle rounded-lg p-6 hover:border-firefly-dim/50 transition-soft text-center group"
           >
             <div className="text-5xl mb-4 transform group-hover:scale-110 transition-transform">
               {category.icon}
@@ -79,10 +79,10 @@ export default function CardCategoryPicker({ onSelectCategory }: CardCategoryPic
       {/* Info Section */}
       <div className="mt-12 bg-gradient-to-r from-firefly-dim/10 to-firefly-glow/10 border border-firefly-dim/30 rounded-lg p-6 text-center">
         <p className="text-text-muted text-sm">
-          ✨ All cards can be sent digitally or printed and mailed
+          ✨ All cards can be sent digitally or printed at home
         </p>
         <p className="text-text-muted text-sm mt-1">
-          💝 Add photos from your grove and customize with your personal message
+          💝 Add photos or soundwave art from your grove and customize with your personal message
         </p>
       </div>
     </div>

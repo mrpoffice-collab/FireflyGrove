@@ -57,10 +57,10 @@ export default function SoundArtPage() {
               Sound Wave Art
             </h2>
             <p className="text-xl text-text-soft mb-2">
-              Turn your voice, music, or special moments into beautiful scannable art
+              Transform voices, laughter, and moments into lasting light
             </p>
             <p className="text-text-muted">
-              Perfect for gifts, memorials, and keepsakes
+              Beautiful scannable art that holds the sounds that matter most
             </p>
           </div>
 

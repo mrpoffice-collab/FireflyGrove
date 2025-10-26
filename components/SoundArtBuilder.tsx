@@ -45,9 +45,10 @@ export default function SoundArtBuilder() {
   const [bgImageX, setBgImageX] = useState(0)
   const [bgImageY, setBgImageY] = useState(0)
 
-  // Waveform positioning
+  // Waveform positioning and scaling
   const [waveformX, setWaveformX] = useState(0)
   const [waveformY, setWaveformY] = useState(0)
+  const [waveformScale, setWaveformScale] = useState(100) // 100 = 100% scale
 
   // QR code positioning
   const [qrX, setQrX] = useState(1760) // Default: bottom right (2000 - 200 - 40)
@@ -457,9 +458,12 @@ export default function SoundArtBuilder() {
       ctx.drawImage(backgroundImageElement, x, y, imgWidth, imgHeight)
     }
 
-    // Save context for waveform positioning
+    // Save context for waveform positioning and scaling
     ctx.save()
     ctx.translate(waveformX, waveformY)
+    // Apply uniform scale (maintains proportions)
+    const scale = waveformScale / 100
+    ctx.scale(scale, scale)
 
     const samples = waveformData.samples
     const barWidth = canvas.width / samples.length
@@ -909,6 +913,23 @@ export default function SoundArtBuilder() {
                         <div className="space-y-2">
                           <div className="text-xs text-text-muted font-medium">Waveform</div>
                           <div className="grid grid-cols-2 gap-3">
+                            {/* Scale Control */}
+                            <div className="col-span-2">
+                              <label className="block text-xs text-text-muted mb-1">
+                                Scale: {waveformScale}%
+                              </label>
+                              <input
+                                type="range"
+                                min="25"
+                                max="200"
+                                value={waveformScale}
+                                onChange={(e) => {
+                                  setWaveformScale(Number(e.target.value))
+                                  setTimeout(drawWaveform, 0)
+                                }}
+                                className="w-full"
+                              />
+                            </div>
                             <div>
                               <label className="block text-xs text-text-muted mb-1">
                                 X: {waveformX}px
