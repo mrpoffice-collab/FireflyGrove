@@ -22,7 +22,6 @@ export default function SentimentPicker({
 }: SentimentPickerProps) {
   const [sentiments, setSentiments] = useState<Sentiment[]>([])
   const [loading, setLoading] = useState(true)
-  const [expanded, setExpanded] = useState(false)
 
   useEffect(() => {
     if (!categoryId) return
@@ -51,7 +50,7 @@ export default function SentimentPicker({
   if (loading) {
     return (
       <div className="mb-6">
-        <label className="block text-text-soft text-sm font-medium mb-2">
+        <label className="block text-text-soft text-sm font-medium mb-3">
           Firefly Grove Message
         </label>
         <div className="bg-bg-elevated border border-border-subtle rounded p-4 text-text-muted text-sm">
@@ -62,17 +61,28 @@ export default function SentimentPicker({
   }
 
   if (sentiments.length === 0) {
-    return null
+    return (
+      <div className="mb-6">
+        <label className="block text-text-soft text-sm font-medium mb-3">
+          Firefly Grove Message
+        </label>
+        <div className="bg-bg-elevated border border-border-subtle rounded p-6 text-center">
+          <p className="text-text-muted text-sm">
+            📝 Coming soon! We're crafting beautiful messages for this category.
+          </p>
+        </div>
+      </div>
+    )
   }
 
   return (
     <div className="mb-6">
-      <div className="flex items-center justify-between mb-2">
+      <div className="flex items-center justify-between mb-3">
         <label className="block text-text-soft text-sm font-medium">
           Firefly Grove Message
         </label>
         <span className="text-text-muted text-xs">
-          {sentiments.length} {sentiments.length === 1 ? 'option' : 'options'} available
+          {sentiments.length} {sentiments.length === 1 ? 'option' : 'options'}
         </span>
       </div>
 
@@ -80,72 +90,48 @@ export default function SentimentPicker({
         Choose the poetic message that will appear on your card
       </p>
 
-      {/* Selected Sentiment Preview */}
-      {selectedSentiment && (
-        <div className="bg-bg-elevated border border-border-subtle rounded p-4 mb-3">
-          <div className="mb-2">
-            <span className="text-xs text-text-muted uppercase tracking-wide">Front</span>
-            <p className="text-text-soft text-sm italic mt-1">{selectedSentiment.coverMessage}</p>
-          </div>
-          <div>
-            <span className="text-xs text-text-muted uppercase tracking-wide">Inside</span>
-            <p className="text-text-soft text-sm whitespace-pre-line mt-1">
-              {selectedSentiment.insideMessage}
-            </p>
-          </div>
-        </div>
-      )}
+      {/* All Sentiment Options - Show All Upfront */}
+      <div className="space-y-3 max-h-[600px] overflow-y-auto">
+        {sentiments.map((sentiment) => (
+          <button
+            key={sentiment.id}
+            onClick={() => onSelect(sentiment)}
+            className={`w-full text-left p-4 rounded-lg border-2 transition-all ${
+              selectedSentiment?.id === sentiment.id
+                ? 'bg-firefly-dim/10 border-firefly-dim shadow-lg'
+                : 'bg-bg-elevated border-border-subtle hover:border-firefly-dim/50 hover:bg-bg-elevated/80'
+            }`}
+          >
+            {/* Front Message */}
+            <div className="mb-3">
+              <span className="text-xs text-text-muted uppercase tracking-wide font-medium">
+                Front
+              </span>
+              <p className="text-text-soft text-base italic mt-1 leading-relaxed">
+                {sentiment.coverMessage}
+              </p>
+            </div>
 
-      {/* Change Selection Button */}
-      <button
-        onClick={() => setExpanded(!expanded)}
-        className="w-full py-2 bg-bg-dark border border-border-subtle rounded text-text-soft hover:border-firefly-dim transition-soft text-sm"
-      >
-        {expanded ? 'Close Options' : 'Choose Different Message'}
-      </button>
+            {/* Inside Message */}
+            <div>
+              <span className="text-xs text-text-muted uppercase tracking-wide font-medium">
+                Inside
+              </span>
+              <p className="text-text-soft text-sm whitespace-pre-line mt-1 leading-relaxed">
+                {sentiment.insideMessage}
+              </p>
+            </div>
 
-      {/* Sentiment Options */}
-      {expanded && (
-        <div className="mt-3 space-y-2 max-h-96 overflow-y-auto">
-          {sentiments.map((sentiment) => (
-            <button
-              key={sentiment.id}
-              onClick={() => {
-                onSelect(sentiment)
-                setExpanded(false)
-              }}
-              className={`w-full text-left p-4 rounded border transition-soft ${
-                selectedSentiment?.id === sentiment.id
-                  ? 'bg-firefly-dim/10 border-firefly-dim'
-                  : 'bg-bg-dark border-border-subtle hover:border-firefly-dim'
-              }`}
-            >
-              <div className="mb-2">
-                <span className="text-xs text-text-muted uppercase tracking-wide">Front</span>
-                <p className="text-text-soft text-sm italic mt-1">{sentiment.coverMessage}</p>
+            {/* Selection Indicator */}
+            {selectedSentiment?.id === sentiment.id && (
+              <div className="mt-3 flex items-center gap-2 text-firefly-glow text-xs font-medium">
+                <span>✓</span>
+                <span>Selected</span>
               </div>
-              <div>
-                <span className="text-xs text-text-muted uppercase tracking-wide">Inside</span>
-                <p className="text-text-soft text-sm whitespace-pre-line mt-1 line-clamp-3">
-                  {sentiment.insideMessage}
-                </p>
-              </div>
-              {sentiment.tags && (
-                <div className="mt-2 flex flex-wrap gap-1">
-                  {sentiment.tags.split(',').map((tag, i) => (
-                    <span
-                      key={i}
-                      className="text-xs px-2 py-0.5 bg-bg-elevated text-text-muted rounded"
-                    >
-                      {tag.trim()}
-                    </span>
-                  ))}
-                </div>
-              )}
-            </button>
-          ))}
-        </div>
-      )}
+            )}
+          </button>
+        ))}
+      </div>
     </div>
   )
 }
