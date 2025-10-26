@@ -1660,3 +1660,12 @@ Error: You cannot use different slug names for the same dynamic path ('id' !== '
  ✓ Compiled in 1429ms (1623 modules)
  ✓ Compiled in 367ms (1623 modules)
  ✓ Compiled in 496ms (1623 modules)
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, rename 'C:\Users\mrpof\APPS Homemade\Firefly Grove\.next\cache\webpack\client-development\0.pack.gz_' -> 'C:\Users\mrpof\APPS Homemade\Firefly Grove\.next\cache\webpack\client-development\0.pack.gz'
+ ✓ Compiled in 1276ms (1623 modules)
+ ✓ Compiled in 329ms (1623 modules)
+ ✓ Compiled in 564ms (1623 modules)
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, rename 'C:\Users\mrpof\APPS Homemade\Firefly Grove\.next\cache\webpack\client-development\0.pack.gz_' -> 'C:\Users\mrpof\APPS Homemade\Firefly Grove\.next\cache\webpack\client-development\0.pack.gz'
+ ✓ Compiled in 673ms (1623 modules)
+ ✓ Compiled in 456ms (1623 modules)
+ ✓ Compiled in 278ms (907 modules)
+ ✓ Compiled in 361ms (907 modules)
