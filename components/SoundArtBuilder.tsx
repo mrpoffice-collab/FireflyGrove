@@ -517,7 +517,7 @@ export default function SoundArtBuilder() {
 
       ctx.beginPath()
       ctx.strokeStyle = primaryColor
-      ctx.lineWidth = 3 * scale
+      ctx.lineWidth = 6 * scale
 
       samples.forEach((sample, i) => {
         const angle = (i / samples.length) * Math.PI * 2 - Math.PI / 2
@@ -536,12 +536,12 @@ export default function SoundArtBuilder() {
       ctx.stroke()
     } else if (waveformStyle === 'heart') {
       // Heart-shaped waveform using parametric equations
-      const size = Math.min(scaledWidth, scaledHeight) * 0.08
+      const size = Math.min(scaledWidth, scaledHeight) * 0.04
       const centerX = scaledWidth / 2
 
       ctx.beginPath()
       ctx.strokeStyle = primaryColor
-      ctx.lineWidth = 3 * scale
+      ctx.lineWidth = 6 * scale
 
       samples.forEach((sample, i) => {
         const t = (i / samples.length) * Math.PI * 2
@@ -570,7 +570,7 @@ export default function SoundArtBuilder() {
 
       ctx.beginPath()
       ctx.strokeStyle = primaryColor
-      ctx.lineWidth = 3 * scale
+      ctx.lineWidth = 6 * scale
 
       samples.forEach((sample, i) => {
         const t = (i / samples.length) * Math.PI * 12 // Full butterfly needs more cycles
@@ -598,7 +598,7 @@ export default function SoundArtBuilder() {
 
       ctx.beginPath()
       ctx.strokeStyle = primaryColor
-      ctx.lineWidth = 3 * scale
+      ctx.lineWidth = 6 * scale
 
       samples.forEach((sample, i) => {
         const t = (i / samples.length) * Math.PI * 4 // Use 4π for complete infinity loop
@@ -607,8 +607,8 @@ export default function SoundArtBuilder() {
         const infX = scale_factor * Math.cos(t)
         const infY = scale_factor * Math.sin(t) * Math.cos(t)
 
-        // Apply amplitude and scaling
-        const amplitude = 1 + sample * 0.3
+        // Apply amplitude and scaling (reduced amplitude for smoother shape)
+        const amplitude = 1 + sample * 0.1
         const x = centerX + infX * size * amplitude * scale
         const y = centerY + infY * size * amplitude * scale
 
