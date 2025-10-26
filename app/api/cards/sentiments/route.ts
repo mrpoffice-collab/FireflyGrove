@@ -41,24 +41,32 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Category not found' }, { status: 404 })
     }
 
-    // Filter sentiments by matching category name with CSV Category column or Tags
-    const categoryName = category.name.toLowerCase()
-    const categoryKeywords = categoryName.split(' ')
+    // Map database category names to CSV category names
+    const categoryMapping: Record<string, string> = {
+      'Sympathy & Condolence': 'In the Quiet of Loss',
+      'Birthday': 'Another Year of Light',
+      'Christmas & Holiday': 'Season of Warmth',
+      'Thank You': 'Gratitude in Bloom',
+      'Thinking of You': 'Under the Same Sky',
+      'Anniversary': 'Love, Still Growing',
+      'New Baby': 'New Light in the Grove',
+      'Graduation': 'Stepping Into the Light',
+      'Encouragement & Healing': 'Encouragement & Healing',
+      'Friendship & Connection': 'Friendship & Connection',
+      'Pet Remembrance': 'Pet Remembrance',
+      'Just Because': 'Just Because',
+    }
 
+    const csvCategoryName = categoryMapping[category.name]
+
+    if (!csvCategoryName) {
+      return NextResponse.json({ sentiments: [] })
+    }
+
+    // Filter sentiments by exact CSV Category match
     const sentiments = records
       .filter((record: any) => {
-        const csvCategory = (record.Category || '').toLowerCase()
-        const tags = (record.Tags || '').toLowerCase()
-
-        // Try exact match first (case-insensitive)
-        if (csvCategory.includes(categoryName) || categoryName.includes(csvCategory)) {
-          return true
-        }
-
-        // Try keyword matching in both Category and Tags
-        return categoryKeywords.some(keyword =>
-          keyword.length > 2 && (csvCategory.includes(keyword) || tags.includes(keyword))
-        )
+        return record.Category === csvCategoryName
       })
       .map((record: any, index: number) => ({
         id: `csv-${categoryId}-${index}`,
