@@ -1,45 +1,49 @@
-import { notFound } from 'next/navigation'
-import { prisma } from '@/lib/prisma'
+'use client'
+
+import { useEffect, useState } from 'react'
+import { useParams } from 'next/navigation'
 import Link from 'next/link'
 
-interface PageProps {
-  params: { code: string }
-}
+export default function ViewCardPage() {
+  const params = useParams()
+  const code = params.code as string
+  const [order, setOrder] = useState<any>(null)
+  const [loading, setLoading] = useState(true)
 
-export default async function ViewCardPage({ params }: PageProps) {
-  const { code } = params
+  useEffect(() => {
+    fetchCard()
+  }, [code])
 
-  // Fetch delivery and order info
-  const delivery = await prisma.cardDelivery.findUnique({
-    where: { viewCode: code },
-    include: {
-      order: {
-        include: {
-          template: {
-            include: {
-              category: true,
-            },
-          },
-        },
-      },
-    },
-  })
-
-  if (!delivery) {
-    notFound()
+  const fetchCard = async () => {
+    try {
+      const res = await fetch(`/api/cards/view/${code}`)
+      if (res.ok) {
+        const data = await res.json()
+        setOrder(data)
+      }
+    } catch (error) {
+      console.error('Failed to fetch card:', error)
+    } finally {
+      setLoading(false)
+    }
   }
 
-  // Track view (increment count and record first open)
-  await prisma.cardDelivery.update({
-    where: { id: delivery.id },
-    data: {
-      viewCount: { increment: 1 },
-      openedAt: delivery.openedAt || new Date(),
-      status: 'opened',
-    },
-  })
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-text-muted">Loading card...</div>
+      </div>
+    )
+  }
 
-  const { order } = delivery
+  if (!order) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-text-muted">Card not found</div>
+      </div>
+    )
+  }
+
   const photos = order.selectedPhotos ? JSON.parse(order.selectedPhotos) : []
 
   return (
