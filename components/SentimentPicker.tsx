@@ -1,5 +1,6 @@
 'use client'
 
+// Version: 2.0 - Large preview cards with icons
 import { useState, useEffect } from 'react'
 
 interface Sentiment {
