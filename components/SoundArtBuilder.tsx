@@ -48,6 +48,11 @@ export default function SoundArtBuilder() {
   // Waveform positioning and scaling
   const [waveformX, setWaveformX] = useState(0)
   const [waveformY, setWaveformY] = useState(0)
+
+  // Grove owner pricing
+  const [isGroveOwner, setIsGroveOwner] = useState<boolean | null>(null)
+  const [showCheckoutModal, setShowCheckoutModal] = useState(false)
+  const SOUNDART_PRICE = 2.99
   const [waveformScale, setWaveformScale] = useState(100) // 100 = 100% scale
 
   // QR code positioning
@@ -536,7 +541,7 @@ export default function SoundArtBuilder() {
       ctx.stroke()
     } else if (waveformStyle === 'heart') {
       // Heart-shaped waveform using parametric equations
-      const size = Math.min(scaledWidth, scaledHeight) * 0.04
+      const size = Math.min(scaledWidth, scaledHeight) * 0.032
       const centerX = scaledWidth / 2
 
       ctx.beginPath()
@@ -593,7 +598,7 @@ export default function SoundArtBuilder() {
       ctx.stroke()
     } else if (waveformStyle === 'infinity') {
       // Infinity symbol (lemniscate) waveform with better point distribution
-      const size = Math.min(scaledWidth, scaledHeight) * 0.2
+      const size = Math.min(scaledWidth, scaledHeight) * 0.4
       const centerX = scaledWidth / 2
 
       ctx.beginPath()
@@ -658,6 +663,22 @@ export default function SoundArtBuilder() {
       console.log('[Canvas] QR code NOT drawn - showQRCode:', showQRCode, 'qrCodeImage:', !!qrCodeImage)
     }
   }, [waveformData, title, waveformStyle, primaryColor, backgroundColor, showQRCode, qrCodeImage, useTransparentBg, backgroundImageElement, bgImageScale, bgImageX, bgImageY, waveformX, waveformY, waveformScale, qrX, qrY])
+
+  // Check grove owner status on mount
+  useEffect(() => {
+    const checkGroveOwner = async () => {
+      try {
+        const res = await fetch('/api/user/grove-status')
+        const data = await res.json()
+        setIsGroveOwner(data.isGroveOwner)
+      } catch (error) {
+        console.error('Failed to check grove status:', error)
+        setIsGroveOwner(false)
+      }
+    }
+
+    checkGroveOwner()
+  }, [])
 
   // Redraw whenever settings change
   useEffect(() => {
@@ -1168,16 +1189,23 @@ export default function SoundArtBuilder() {
                       </button>
                       <button
                         onClick={() => {
-                          if (canvasRef.current) {
-                            const link = document.createElement('a')
-                            link.download = `soundart-${Date.now()}.png`
-                            link.href = canvasRef.current.toDataURL()
-                            link.click()
+                          if (isGroveOwner) {
+                            // Grove owners get free download
+                            if (canvasRef.current) {
+                              const link = document.createElement('a')
+                              link.download = `soundart-${Date.now()}.png`
+                              link.href = canvasRef.current.toDataURL()
+                              link.click()
+                            }
+                          } else {
+                            // Non-grove owners need to checkout
+                            setShowCheckoutModal(true)
                           }
                         }}
-                        className="px-6 py-3 bg-border-subtle hover:bg-text-muted/20 text-text-soft rounded-lg font-medium transition-soft"
+                        disabled={isGroveOwner === null}
+                        className="px-6 py-3 bg-border-subtle hover:bg-text-muted/20 text-text-soft rounded-lg font-medium transition-soft disabled:opacity-50 disabled:cursor-not-allowed"
                       >
-                        📥 Download
+                        📥 Download {isGroveOwner === false && `($${SOUNDART_PRICE.toFixed(2)})`}
                       </button>
                     </div>
 
@@ -1415,6 +1443,80 @@ export default function SoundArtBuilder() {
                   {savedToBranch ? '✓ Saved!' : isSavingToBranch ? 'Saving...' : 'Save'}
                 </button>
               )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Checkout Modal for Non-Grove Owners */}
+      {showCheckoutModal && (
+        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
+          <div className="bg-bg-dark border border-border-subtle rounded-lg max-w-md w-full">
+            {/* Header */}
+            <div className="p-6 border-b border-border-subtle">
+              <h3 className="text-xl text-firefly-glow font-medium">Download Sound Art</h3>
+            </div>
+
+            {/* Content */}
+            <div className="p-6 space-y-4">
+              <div className="bg-bg-elevated border border-border-subtle rounded-lg p-4">
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-text-soft">Sound Wave Art (High-Res PNG)</span>
+                  <span className="text-firefly-glow font-medium text-xl">${SOUNDART_PRICE.toFixed(2)}</span>
+                </div>
+                <p className="text-text-muted text-sm">
+                  Print-ready 2000x2000px artwork with your custom soundwave
+                </p>
+              </div>
+
+              {/* Grove Owner Benefit Notice */}
+              <div className="bg-firefly-dim/10 border border-firefly-dim/30 rounded-lg p-4">
+                <p className="text-text-muted text-sm flex items-start gap-2">
+                  <span className="text-firefly-glow text-lg">✦</span>
+                  <span>
+                    <strong className="text-firefly-glow">Grove Owner Benefit:</strong> Create your first memory in Firefly Grove and unlock complimentary soundwave art downloads!
+                  </span>
+                </p>
+              </div>
+
+              {/* Buttons */}
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setShowCheckoutModal(false)}
+                  className="flex-1 px-4 py-2 bg-bg-elevated border border-border-subtle rounded-lg text-text-soft hover:border-firefly-dim transition-soft"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={async () => {
+                    // Create checkout session
+                    try {
+                      const res = await fetch('/api/soundart/checkout', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                          artworkData: canvasRef.current?.toDataURL(),
+                          title: title || 'Untitled',
+                        }),
+                      })
+                      const data = await res.json()
+                      if (data.checkoutUrl) {
+                        window.location.href = data.checkoutUrl
+                      }
+                    } catch (error) {
+                      console.error('Checkout error:', error)
+                      alert('Failed to process checkout. Please try again.')
+                    }
+                  }}
+                  className="flex-1 px-4 py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg font-medium transition-soft"
+                >
+                  Proceed to Payment
+                </button>
+              </div>
+
+              <p className="text-text-muted text-xs text-center">
+                Secure checkout powered by Stripe
+              </p>
             </div>
           </div>
         </div>

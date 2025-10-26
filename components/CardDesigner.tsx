@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import CardPreview from './CardPreview'
 import CardMessageEditor from './CardMessageEditor'
@@ -37,9 +37,26 @@ export default function CardDesigner({ template }: CardDesignerProps) {
   })
   const [showPhotoPicker, setShowPhotoPicker] = useState(false)
   const [processing, setProcessing] = useState(false)
+  const [isGroveOwner, setIsGroveOwner] = useState<boolean | null>(null)
 
   const deliveryType = template.deliveryType || 'digital'
   const price = deliveryType === 'digital' ? template.digitalPrice : template.physicalPrice
+
+  // Check if user is a grove owner on mount
+  useEffect(() => {
+    const checkGroveOwner = async () => {
+      try {
+        const res = await fetch('/api/user/grove-status')
+        const data = await res.json()
+        setIsGroveOwner(data.isGroveOwner)
+      } catch (error) {
+        console.error('Failed to check grove status:', error)
+        setIsGroveOwner(false)
+      }
+    }
+
+    checkGroveOwner()
+  }, [])
 
   const handlePhotoSelect = (photoUrls: string[]) => {
     setSelectedPhotos(photoUrls)
@@ -262,24 +279,49 @@ export default function CardDesigner({ template }: CardDesignerProps) {
 
           {/* Checkout Button */}
           <div className="pt-6 border-t border-border-subtle mt-6">
-            <div className="flex items-center justify-between mb-4">
-              <span className="text-text-soft">Price</span>
-              <span className="text-2xl text-firefly-glow font-medium">
-                Complimentary
-              </span>
-            </div>
+            {isGroveOwner === null ? (
+              <div className="text-center text-text-muted py-4">Loading pricing...</div>
+            ) : (
+              <>
+                <div className="flex items-center justify-between mb-4">
+                  <span className="text-text-soft">Price</span>
+                  <span className="text-2xl text-firefly-glow font-medium">
+                    {isGroveOwner ? 'Complimentary' : `$${price.toFixed(2)}`}
+                  </span>
+                </div>
 
-            <button
-              onClick={handleCheckout}
-              disabled={processing}
-              className="w-full py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg font-medium transition-soft disabled:opacity-50"
-            >
-              {processing ? 'Sending...' : `Send Card`}
-            </button>
+                {isGroveOwner && (
+                  <div className="mb-4 px-4 py-3 bg-firefly-dim/10 border border-firefly-dim/30 rounded-lg">
+                    <p className="text-text-soft text-sm flex items-center gap-2">
+                      <span className="text-firefly-glow">✦</span>
+                      <span><strong>Grove Owner Benefit:</strong> This card is complimentary</span>
+                    </p>
+                  </div>
+                )}
 
-            <p className="text-text-muted text-xs text-center mt-3">
-              Complimentary for all Firefly Grove members
-            </p>
+                {!isGroveOwner && (
+                  <div className="mb-4 px-4 py-3 bg-bg-elevated border border-border-subtle rounded-lg">
+                    <p className="text-text-muted text-sm">
+                      💡 <strong>Tip:</strong> Grove owners get complimentary cards. Create your first memory to unlock this benefit!
+                    </p>
+                  </div>
+                )}
+
+                <button
+                  onClick={handleCheckout}
+                  disabled={processing}
+                  className="w-full py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg font-medium transition-soft disabled:opacity-50"
+                >
+                  {processing ? 'Processing...' : (isGroveOwner ? 'Send Card' : 'Proceed to Payment')}
+                </button>
+
+                <p className="text-text-muted text-xs text-center mt-3">
+                  {isGroveOwner
+                    ? 'Thank you for being part of Firefly Grove'
+                    : 'Secure checkout powered by Stripe'}
+                </p>
+              </>
+            )}
           </div>
         </div>
       </div>

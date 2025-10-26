@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import fs from 'fs'
+import path from 'path'
+import { parse } from 'csv-parse/sync'
 
 export async function GET(request: NextRequest) {
   try {
@@ -17,22 +20,41 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Category ID is required' }, { status: 400 })
     }
 
-    // Fetch all active sentiments for this category
-    const sentiments = await prisma.cardSentiment.findMany({
-      where: {
-        categoryId,
-        isActive: true,
-      },
-      orderBy: {
-        displayOrder: 'asc',
-      },
-      select: {
-        id: true,
-        coverMessage: true,
-        insideMessage: true,
-        tags: true,
-      },
+    // Read sentiments from CSV file
+    const csvPath = path.join(process.cwd(), 'config', 'card-sentiments.csv')
+    const csvContent = fs.readFileSync(csvPath, 'utf-8')
+
+    // Parse CSV
+    const records = parse(csvContent, {
+      columns: true,
+      skip_empty_lines: true,
+      trim: true,
     })
+
+    // Get category name from categoryId (lookup from database)
+    const category = await prisma.cardCategory.findUnique({
+      where: { id: categoryId },
+      select: { name: true },
+    })
+
+    if (!category) {
+      return NextResponse.json({ error: 'Category not found' }, { status: 404 })
+    }
+
+    // Filter sentiments by matching tags with category name
+    const categoryKeywords = category.name.toLowerCase().split(' ')
+    const sentiments = records
+      .filter((record: any) => {
+        const tags = (record.Tags || '').toLowerCase()
+        // Match if any category keyword is in tags
+        return categoryKeywords.some(keyword => tags.includes(keyword))
+      })
+      .map((record: any, index: number) => ({
+        id: `csv-${index}`,
+        coverMessage: record.Front || record.Category, // Use Front, fallback to Category
+        insideMessage: record.Inside || '',
+        tags: record.Tags || '',
+      }))
 
     return NextResponse.json({ sentiments })
   } catch (error) {

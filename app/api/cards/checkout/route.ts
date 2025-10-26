@@ -55,12 +55,82 @@ export async function POST(request: Request) {
       )
     }
 
+    // Check if user is a grove owner (has branches or entries)
+    const userBranchCount = await prisma.branch.count({
+      where: { ownerId: userId, status: 'ACTIVE' }
+    })
+
+    const isGroveOwner = userBranchCount > 0
+
     // Calculate price based on delivery type
     const amount = deliveryType === 'digital'
       ? template.digitalPrice
       : template.physicalPrice
 
-    // Create card order - complimentary for all members
+    // If NOT a grove owner and price > 0, create Stripe checkout
+    if (!isGroveOwner && amount > 0) {
+      // Create pending order
+      const order = await prisma.cardOrder.create({
+        data: {
+          userId,
+          templateId,
+          sentimentId: sentimentId || null,
+          deliveryType,
+          customMessage,
+          selectedPhotos: selectedPhotos ? JSON.stringify(selectedPhotos) : null,
+          senderName,
+          signature,
+          recipientEmail: deliveryType === 'digital' ? recipientEmail : null,
+          recipientName: deliveryType === 'physical' ? recipientName : null,
+          recipientAddress: deliveryType === 'physical' && recipientAddress
+            ? JSON.stringify(recipientAddress)
+            : null,
+          status: 'pending_payment',
+          paymentStatus: 'pending',
+          totalAmount: amount,
+        },
+      })
+
+      // Create Stripe checkout session
+      const checkoutSession = await stripe.checkout.sessions.create({
+        payment_method_types: ['card'],
+        line_items: [
+          {
+            price_data: {
+              currency: 'usd',
+              product_data: {
+                name: `${template.name} - ${deliveryType === 'digital' ? 'Digital' : 'Printed & Mailed'}`,
+                description: customMessage.substring(0, 200),
+                images: template.previewImage ? [template.previewImage] : [],
+              },
+              unit_amount: Math.round(amount * 100), // Convert to cents
+            },
+            quantity: 1,
+          },
+        ],
+        mode: 'payment',
+        success_url: `${process.env.NEXTAUTH_URL}/cards/success?order_id=${order.id}`,
+        cancel_url: `${process.env.NEXTAUTH_URL}/cards/create`,
+        metadata: {
+          orderId: order.id,
+          userId: userId,
+          deliveryType,
+        },
+      })
+
+      // Store Stripe session ID
+      await prisma.cardOrder.update({
+        where: { id: order.id },
+        data: { stripeSessionId: checkoutSession.id },
+      })
+
+      return NextResponse.json({
+        checkoutUrl: checkoutSession.url,
+        orderId: order.id,
+      })
+    }
+
+    // Grove owner or free card - create and deliver immediately
     const order = await prisma.cardOrder.create({
       data: {
         userId,
@@ -78,7 +148,7 @@ export async function POST(request: Request) {
           : null,
         status: 'processing', // Complimentary - skip payment
         paymentStatus: 'paid', // Complimentary - no payment needed
-        totalAmount: amount, // $0.00
+        totalAmount: 0, // Free for grove owners
       },
     })
 
