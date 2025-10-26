@@ -151,7 +151,7 @@ export default function SoundArtPage() {
             onClick={() => setStarted(true)}
             className="px-12 py-4 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg font-medium text-lg transition-soft shadow-lg"
           >
-            Create Your Sound Art — Free
+            Create Your Sound Art — Complimentary
           </button>
 
           {/* Trust Indicators */}

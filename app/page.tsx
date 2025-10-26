@@ -170,7 +170,7 @@ export default function HomePage() {
                   <p className="text-green-400 text-sm mt-2 text-center">✓ Thanks! We'll be in touch soon.</p>
                 )}
                 <p className="text-text-muted text-xs mt-2 text-center">
-                  Free forever plan • No credit card required
+                  Complimentary forever • No credit card required
                 </p>
               </form>
 
@@ -209,7 +209,7 @@ export default function HomePage() {
             href="/memorial/create"
             className="block w-full max-w-xs mx-auto py-3 bg-[var(--legacy-amber)]/20 hover:bg-[var(--legacy-amber)]/30 text-[var(--legacy-text)] border border-[var(--legacy-amber)]/30 rounded-lg font-medium transition-soft"
           >
-            Create a Free Memorial
+            Create a Complimentary Memorial
           </Link>
           <p className="text-text-muted text-sm">
             A quiet place to remember what matters most

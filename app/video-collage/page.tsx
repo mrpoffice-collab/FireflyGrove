@@ -154,7 +154,7 @@ export default function VideoCollagePage() {
             onClick={() => setStarted(true)}
             className="px-12 py-4 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg font-medium text-lg transition-soft shadow-lg"
           >
-            Create Your Video — Free Forever
+            Create Your Video — Complimentary
           </button>
 
           {/* Video Limits Caveat */}
@@ -198,7 +198,7 @@ export default function VideoCollagePage() {
             <div className="flex flex-wrap items-center justify-center gap-6 text-text-muted text-sm">
               <div className="flex items-center gap-2">
                 <span className="text-green-400">✓</span>
-                <span>Free to Start</span>
+                <span>Complimentary Service</span>
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-green-400">✓</span>

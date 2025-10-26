@@ -33,9 +33,9 @@ export default function GroveExchangePage() {
       name: 'Memorial Video Collage',
       description: 'Create beautiful video tributes from your memories. Combine photos, stories, and music into a lasting memorial video.',
       icon: '🎬',
-      price: 'Free',
+      price: 'Complimentary',
       href: '/video-collage',
-      badge: 'Free',
+      badge: 'Complimentary',
       badgeColor: 'bg-green-500/20 text-green-400 border-green-500/30',
     },
     {
@@ -43,9 +43,9 @@ export default function GroveExchangePage() {
       name: 'Sound Wave Art',
       description: 'Turn voices, music, or special moments into beautiful scannable artwork. Perfect for gifts and keepsakes.',
       icon: '🎵',
-      price: 'Free',
+      price: 'Complimentary',
       href: '/soundart',
-      badge: 'Free',
+      badge: 'Complimentary',
       badgeColor: 'bg-green-500/20 text-green-400 border-green-500/30',
     },
     {
@@ -56,6 +56,16 @@ export default function GroveExchangePage() {
       price: 'Included',
       href: '/forever-kit',
       badge: 'Included',
+      badgeColor: 'bg-firefly-dim/20 text-firefly-glow border-firefly-dim/30',
+    },
+    {
+      id: 'greeting-cards',
+      name: 'Greeting Card Hub',
+      description: 'Send heartfelt digital cards via email. Physical printed cards coming soon with transparent pricing.',
+      icon: '💌',
+      price: '$0.99 - $2.99',
+      href: '/cards',
+      badge: 'New',
       badgeColor: 'bg-firefly-dim/20 text-firefly-glow border-firefly-dim/30',
     },
     {
@@ -103,7 +113,7 @@ export default function GroveExchangePage() {
               </h1>
             </div>
             <p className="text-text-muted text-lg">
-              Auxiliary products and tools to enhance your grove
+              Treasures born from memory — crafted to keep love glowing.
             </p>
           </div>
 

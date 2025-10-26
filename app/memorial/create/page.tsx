@@ -228,7 +228,7 @@ export default function CreateMemorialPage() {
           <div className="mb-8 text-center">
             <div className="text-5xl mb-4">🕯️</div>
             <h1 className="text-4xl font-light text-text-soft mb-2">
-              Create a Free Memorial
+              Create a Complimentary Memorial
             </h1>
             <p className="text-text-muted">
               Honor the memory of a loved one with a lasting digital memorial
@@ -375,7 +375,7 @@ export default function CreateMemorialPage() {
                       disabled={creating}
                       className="w-full py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded font-medium transition-soft disabled:opacity-50"
                     >
-                      {creating ? 'Creating account...' : 'Create Free Account'}
+                      {creating ? 'Creating account...' : 'Create Account'}
                     </button>
 
                     <button
@@ -479,7 +479,7 @@ export default function CreateMemorialPage() {
                     disabled={creating}
                     className="w-full py-3 bg-[var(--legacy-amber)] hover:bg-[var(--legacy-glow)] text-bg-dark rounded font-medium transition-soft disabled:opacity-50"
                   >
-                    {creating ? 'Creating Memorial...' : 'Create Free Memorial'}
+                    {creating ? 'Creating Memorial...' : 'Create Memorial'}
                   </button>
                 </form>
               </>
@@ -489,11 +489,11 @@ export default function CreateMemorialPage() {
           {/* Info Box */}
           <div className="mt-6 bg-firefly-dim/10 border border-firefly-dim/30 rounded-lg p-4">
             <div className="text-firefly-glow text-sm font-medium mb-2">
-              💡 About Free Memorial Trees
+              💡 About Complimentary Memorial Trees
             </div>
             <div className="text-text-muted text-sm space-y-2">
               <p>
-                Create a free public memorial with room for up to 100 cherished memories — photos, stories, and voice notes.
+                Create a complimentary public memorial with room for up to 100 cherished memories — photos, stories, and voice notes.
               </p>
               <p>
                 You'll serve as the trustee for the first 60 days — guiding family and friends to contribute.

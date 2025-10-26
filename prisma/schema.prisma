@@ -684,3 +684,138 @@ model Spark {
   @@index([createdAt])
   @@index([usageCount])
 }
+
+// Greeting Card Categories
+model CardCategory {
+  id            String   @id @default(cuid())
+  name          String   // e.g., "Sympathy", "Birthday", "Holiday", etc.
+  icon          String   // Emoji icon (🕯️, 🎂, 🎄, etc.)
+  description   String?  // Brief description
+  displayOrder  Int      @default(0) // Sort order in UI
+  isActive      Boolean  @default(true)
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relations
+  templates     CardTemplate[]
+
+  @@index([displayOrder])
+  @@index([isActive])
+}
+
+// Greeting Card Templates
+model CardTemplate {
+  id              String   @id @default(cuid())
+  categoryId      String
+  name            String   // e.g., "In Loving Memory", "Happy Birthday"
+  description     String?  // Brief description of the template
+
+  // Template content
+  htmlTemplate    String   @db.Text // HTML structure for the card
+  cssStyles       String   @db.Text // CSS styling for the card
+  previewImage    String?  // URL to preview image
+
+  // Pricing
+  digitalPrice    Float    @default(0.99) // Price for digital delivery
+  physicalPrice   Float    @default(4.99) // Price for physical delivery (includes printing + postage)
+
+  // Settings
+  maxPhotos       Int      @default(3) // Maximum photos allowed on this template
+  isActive        Boolean  @default(true)
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relations
+  category        CardCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  orders          CardOrder[]
+
+  @@index([categoryId])
+  @@index([isActive])
+}
+
+// Greeting Card Orders
+model CardOrder {
+  id                    String   @id @default(cuid())
+  userId                String
+  templateId            String
+
+  // Delivery settings
+  deliveryType          String   // "digital" or "physical"
+  recipientEmail        String?  // For digital cards
+  recipientName         String?  // For physical cards
+  recipientAddress      String?  @db.Text // JSON: {line1, line2, city, state, zip, country} for physical cards
+
+  // Customization
+  customMessage         String   @db.Text // User's personal message
+  selectedPhotos        String?  @db.Text // JSON array of photo URLs from grove
+  senderName            String?  // Name to display as sender
+
+  // Payment
+  status                String   @default("pending") // pending, processing, completed, failed, cancelled
+  paymentStatus         String   @default("pending") // pending, paid, failed, refunded
+  stripePaymentIntentId String?  @unique
+  totalAmount           Float    // Amount paid in USD
+
+  // Scheduling
+  scheduledSendDate     DateTime? // Optional: schedule for future delivery
+
+  // Fulfillment
+  sentAt                DateTime?
+  deliveredAt           DateTime?
+
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  // Relations
+  template              CardTemplate @relation(fields: [templateId], references: [id], onDelete: Restrict)
+  delivery              CardDelivery?
+
+  @@index([userId])
+  @@index([templateId])
+  @@index([status])
+  @@index([paymentStatus])
+  @@index([deliveryType])
+  @@index([scheduledSendDate])
+  @@index([createdAt])
+}
+
+// Card Delivery Tracking
+model CardDelivery {
+  id              String   @id @default(cuid())
+  orderId         String   @unique
+  deliveryType    String   // "digital" or "physical"
+  status          String   @default("pending") // pending, sent, delivered, failed, opened
+
+  // Digital delivery
+  viewCode        String?  @unique // Unique code for viewing digital card
+  viewUrl         String?  // Full URL to view card
+  emailSent       Boolean  @default(false)
+  emailSentAt     DateTime?
+  openedAt        DateTime? // When recipient viewed the card
+  viewCount       Int      @default(0) // Number of times viewed
+
+  // Physical delivery (Lob.com integration)
+  lobMailId       String?  @unique // Lob's mail ID
+  trackingId      String?  // USPS tracking number
+  trackingUrl     String?  // USPS tracking URL
+  expectedDelivery DateTime? // Expected delivery date from Lob
+
+  // Error handling
+  errorMessage    String?  @db.Text // Store error details if delivery fails
+  retryCount      Int      @default(0)
+  lastRetryAt     DateTime?
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relations
+  order           CardOrder @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([orderId])
+  @@index([viewCode])
+  @@index([lobMailId])
+  @@index([status])
+  @@index([createdAt])
+}
