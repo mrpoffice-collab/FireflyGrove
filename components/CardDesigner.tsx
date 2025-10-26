@@ -147,7 +147,7 @@ export default function CardDesigner({ template }: CardDesignerProps) {
           <div className="mb-6">
             <div className="flex items-center justify-between mb-2">
               <label className="block text-text-soft text-sm font-medium">
-                Photos from Grove (Optional)
+                Photos & Soundwaves from Grove (Optional)
               </label>
               <span className="text-text-muted text-xs">
                 {selectedPhotos.length} / {template.maxPhotos} selected
@@ -175,7 +175,7 @@ export default function CardDesigner({ template }: CardDesignerProps) {
               disabled={selectedPhotos.length >= template.maxPhotos}
               className="w-full py-2 bg-bg-elevated border border-border-subtle rounded text-text-soft hover:border-firefly-dim transition-soft disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {selectedPhotos.length === 0 ? 'Add Photos from Grove' : 'Change Photos'}
+              {selectedPhotos.length === 0 ? 'Add Photos or Soundwaves' : 'Change Selection'}
             </button>
           </div>
 

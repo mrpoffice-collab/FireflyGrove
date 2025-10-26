@@ -54,10 +54,10 @@ export default function GrovePhotoPicker({
         <div className="p-6 border-b border-border-subtle flex items-center justify-between">
           <div>
             <h3 className="text-xl text-text-soft font-medium">
-              Select Photos from Your Grove
+              Select Photos & Soundwaves
             </h3>
             <p className="text-text-muted text-sm mt-1">
-              Choose up to {maxPhotos} photo{maxPhotos !== 1 ? 's' : ''} ({selected.length} selected)
+              Choose up to {maxPhotos} image{maxPhotos !== 1 ? 's' : ''} from your grove ({selected.length} selected)
             </p>
           </div>
           <button
@@ -79,9 +79,9 @@ export default function GrovePhotoPicker({
           ) : photos.length === 0 ? (
             <div className="text-center py-12">
               <div className="text-4xl mb-4">📷</div>
-              <p className="text-text-muted">No photos found in your grove yet.</p>
+              <p className="text-text-muted">No photos or audio memories found in your grove yet.</p>
               <p className="text-text-muted text-sm mt-2">
-                Add memories with photos to use them in cards.
+                Add memories with photos or audio to use them in cards.
               </p>
             </div>
           ) : (
@@ -102,6 +102,17 @@ export default function GrovePhotoPicker({
                     alt={photo.branchName}
                     className="w-full h-full object-cover"
                   />
+
+                  {/* Type Badge */}
+                  {photo.type === 'soundwave' && (
+                    <div className="absolute top-2 left-2 px-2 py-1 bg-firefly-glow/90 text-bg-dark text-xs font-medium rounded flex items-center gap-1">
+                      <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 3v18M8 6v12M16 6v12M4 9v6M20 9v6" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                      </svg>
+                      Audio
+                    </div>
+                  )}
+
                   {selected.includes(photo.url) && (
                     <div className="absolute inset-0 bg-firefly-glow/20 flex items-center justify-center">
                       <div className="w-8 h-8 bg-firefly-glow text-bg-dark rounded-full flex items-center justify-center font-bold">
@@ -128,7 +139,7 @@ export default function GrovePhotoPicker({
             disabled={selected.length === 0}
             className="px-6 py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded font-medium transition-soft disabled:opacity-50"
           >
-            Use {selected.length} Photo{selected.length !== 1 ? 's' : ''}
+            Use {selected.length} Image{selected.length !== 1 ? 's' : ''}
           </button>
         </div>
       </div>

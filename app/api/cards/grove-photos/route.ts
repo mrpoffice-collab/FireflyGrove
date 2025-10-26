@@ -27,12 +27,16 @@ export async function GET() {
         title: true,
         entries: {
           where: {
-            mediaUrl: { not: null },
+            OR: [
+              { mediaUrl: { not: null } }, // Photo entries
+              { audioUrl: { not: null } }, // Audio entries
+            ],
             status: 'ACTIVE',
           },
           select: {
             id: true,
             mediaUrl: true,
+            audioUrl: true,
             text: true,
             createdAt: true,
           },
@@ -43,21 +47,38 @@ export async function GET() {
       },
     })
 
-    // Flatten all photos from all branches
-    const photos = branches.flatMap((branch) =>
-      branch.entries
-        .filter((entry) => entry.mediaUrl)
-        .map((entry) => ({
-          id: entry.id,
-          url: entry.mediaUrl!,
-          caption: entry.text?.substring(0, 100) || '',
-          branchId: branch.id,
-          branchName: branch.title,
-          createdAt: entry.createdAt,
-        }))
+    // Flatten all photos and soundwaves from all branches
+    const media = branches.flatMap((branch) =>
+      branch.entries.map((entry) => {
+        // If it has a photo, use the photo
+        if (entry.mediaUrl) {
+          return {
+            id: entry.id,
+            url: entry.mediaUrl,
+            type: 'photo',
+            caption: entry.text?.substring(0, 100) || '',
+            branchId: branch.id,
+            branchName: branch.title,
+            createdAt: entry.createdAt,
+          }
+        }
+        // If it has audio, use the soundwave image
+        else if (entry.audioUrl) {
+          return {
+            id: entry.id,
+            url: `/audio/${entry.id}-soundwave.png`,
+            type: 'soundwave',
+            caption: entry.text?.substring(0, 100) || '',
+            branchId: branch.id,
+            branchName: branch.title,
+            createdAt: entry.createdAt,
+          }
+        }
+        return null
+      }).filter(Boolean)
     )
 
-    return NextResponse.json(photos)
+    return NextResponse.json(media)
   } catch (error) {
     console.error('Error fetching grove photos:', error)
     return NextResponse.json(
