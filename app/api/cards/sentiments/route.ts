@@ -41,17 +41,28 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Category not found' }, { status: 404 })
     }
 
-    // Filter sentiments by matching tags with category name
-    const categoryKeywords = category.name.toLowerCase().split(' ')
+    // Filter sentiments by matching category name with CSV Category column or Tags
+    const categoryName = category.name.toLowerCase()
+    const categoryKeywords = categoryName.split(' ')
+
     const sentiments = records
       .filter((record: any) => {
+        const csvCategory = (record.Category || '').toLowerCase()
         const tags = (record.Tags || '').toLowerCase()
-        // Match if any category keyword is in tags
-        return categoryKeywords.some(keyword => tags.includes(keyword))
+
+        // Try exact match first (case-insensitive)
+        if (csvCategory.includes(categoryName) || categoryName.includes(csvCategory)) {
+          return true
+        }
+
+        // Try keyword matching in both Category and Tags
+        return categoryKeywords.some(keyword =>
+          keyword.length > 2 && (csvCategory.includes(keyword) || tags.includes(keyword))
+        )
       })
       .map((record: any, index: number) => ({
-        id: `csv-${index}`,
-        coverMessage: record.Front || record.Category, // Use Front, fallback to Category
+        id: `csv-${categoryId}-${index}`,
+        coverMessage: record.Front || record.Category,
         insideMessage: record.Inside || '',
         tags: record.Tags || '',
       }))
