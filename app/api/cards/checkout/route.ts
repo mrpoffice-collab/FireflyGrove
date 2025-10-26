@@ -118,12 +118,6 @@ export async function POST(request: Request) {
         },
       })
 
-      // Store Stripe session ID
-      await prisma.cardOrder.update({
-        where: { id: order.id },
-        data: { stripeSessionId: checkoutSession.id },
-      })
-
       return NextResponse.json({
         checkoutUrl: checkoutSession.url,
         orderId: order.id,
