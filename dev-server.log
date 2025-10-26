@@ -1639,3 +1639,17 @@ Error: You cannot use different slug names for the same dynamic path ('id' !== '
     at Watchpack.<anonymous> (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-utils\setup-dev-bundler.js:558:65)
  ✓ Compiled in 350ms (907 modules)
 <w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, rename 'C:\Users\mrpof\APPS Homemade\Firefly Grove\.next\cache\webpack\client-development\2.pack.gz_' -> 'C:\Users\mrpof\APPS Homemade\Firefly Grove\.next\cache\webpack\client-development\2.pack.gz'
+<w> [webpack.cache.PackFileCacheStrategy] Restoring failed for FlagDependencyExportsPlugin|javascript/auto|C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@next\react-refresh-utils\dist\loader.js!C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\build\webpack\loaders\next-flight-client-module-loader.js!C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\build\webpack\loaders\next-swc-loader.js??ruleSet[1].rules[17].oneOf[5].use[1]!C:\Users\mrpof\APPS Homemade\Firefly Grove\components\CardDesigner.tsx|app-pages-browser from pack: Error: invalid stored block lengths
+ ✓ Compiled in 1392ms (1623 modules)
+ ⚠ Failed to reload dynamic routes: Error: You cannot use different slug names for the same dynamic path ('id' !== 'orderId').
+    at handleSlug (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\shared\lib\router\utils\sorted-routes.js:94:31)
+    at UrlNode._insert (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\shared\lib\router\utils\sorted-routes.js:131:17)
+    at UrlNode._insert (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\shared\lib\router\utils\sorted-routes.js:142:40)
+    at UrlNode._insert (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\shared\lib\router\utils\sorted-routes.js:142:40)
+    at UrlNode._insert (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\shared\lib\router\utils\sorted-routes.js:142:40)
+    at UrlNode.insert (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\shared\lib\router\utils\sorted-routes.js:13:14)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\shared\lib\router\utils\sorted-routes.js:165:46
+    at Array.forEach (<anonymous>)
+    at getSortedRoutes (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\shared\lib\router\utils\sorted-routes.js:165:21)
+    at Watchpack.<anonymous> (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-utils\setup-dev-bundler.js:558:65)
+ ✓ Compiled in 256ms (907 modules)
