@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import { trackEventServer, AnalyticsEvents, AnalyticsCategories, AnalyticsActions } from '@/lib/analytics'
 
 export async function GET(req: NextRequest) {
   try {
@@ -135,6 +136,18 @@ export async function POST(req: NextRequest) {
           title: branch.title,
           description: branch.description,
         }),
+      },
+    })
+
+    // Track analytics (privacy-respecting - no content)
+    await trackEventServer(prisma, userId, {
+      eventType: AnalyticsEvents.BRANCH_CREATED,
+      category: AnalyticsCategories.BRANCHES,
+      action: AnalyticsActions.CREATED,
+      metadata: {
+        branchId: branch.id,
+        treeId,
+        hasDescription: !!description,
       },
     })
 

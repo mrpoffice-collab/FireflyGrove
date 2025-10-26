@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import Stripe from 'stripe'
+import { trackEventServer, AnalyticsEvents, AnalyticsCategories, AnalyticsActions } from '@/lib/analytics'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2025-02-24.acacia',
@@ -118,6 +119,20 @@ export async function POST(request: Request) {
         },
       })
 
+      // Track analytics: Card checkout started (non-grove owner)
+      await trackEventServer(prisma, userId, {
+        eventType: AnalyticsEvents.CARD_CHECKOUT_STARTED,
+        category: AnalyticsCategories.CARDS,
+        action: AnalyticsActions.CHECKOUT,
+        metadata: {
+          orderId: order.id,
+          templateId,
+          deliveryType,
+          amount,
+          isGroveOwner: false,
+        },
+      })
+
       return NextResponse.json({
         checkoutUrl: checkoutSession.url,
         orderId: order.id,
@@ -177,6 +192,20 @@ export async function POST(request: Request) {
         console.error('❌ Failed to trigger digital delivery:', err)
       }
     }
+
+    // Track analytics: Card sent (complimentary for grove owner)
+    await trackEventServer(prisma, userId, {
+      eventType: AnalyticsEvents.CARD_SENT,
+      category: AnalyticsCategories.CARDS,
+      action: AnalyticsActions.COMPLETED,
+      metadata: {
+        orderId: order.id,
+        templateId,
+        deliveryType,
+        isGroveOwner: true,
+        isComplimentary: true,
+      },
+    })
 
     // Return success - no Stripe checkout needed
     return NextResponse.json({

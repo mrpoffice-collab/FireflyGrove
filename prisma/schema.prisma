@@ -846,3 +846,44 @@ model CardDelivery {
   @@index([status])
   @@index([createdAt])
 }
+
+// Privacy-Respecting Analytics
+// Tracks user behavior and feature usage WITHOUT storing personal content
+model AnalyticsEvent {
+  id              String   @id @default(cuid())
+  userId          String?  // Optional - some events may not have a user
+
+  // Event details
+  eventType       String   // e.g., "branch_created", "card_started", "card_sent", "soundwave_generated"
+  category        String   // e.g., "branches", "cards", "soundwave", "trees", "auth"
+  action          String   // e.g., "created", "updated", "deleted", "viewed", "abandoned"
+
+  // Contextual metadata (NO personal content)
+  metadata        String?  @db.Text // JSON: {feature: "heart_waveform", deliveryType: "digital"} - NEVER store card messages, branch content, etc.
+
+  // Session info
+  sessionId       String?  // Optional session tracking
+  userAgent       String?  // Browser/device info for understanding platform usage
+
+  // Performance tracking
+  durationMs      Int?     // How long action took (e.g., time to complete card)
+
+  // Error tracking
+  isError         Boolean  @default(false)
+  errorMessage    String?  // If action failed, why?
+
+  // Success flags
+  isSuccess       Boolean  @default(true)
+  isAbandoned     Boolean  @default(false) // Did user start but not complete?
+
+  createdAt       DateTime @default(now())
+
+  @@index([userId])
+  @@index([eventType])
+  @@index([category])
+  @@index([action])
+  @@index([createdAt])
+  @@index([isError])
+  @@index([isSuccess])
+  @@index([isAbandoned])
+}

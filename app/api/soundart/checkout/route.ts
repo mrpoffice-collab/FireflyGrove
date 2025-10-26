@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import Stripe from 'stripe'
+import { trackEventServer, AnalyticsEvents, AnalyticsCategories, AnalyticsActions } from '@/lib/analytics'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2025-02-24.acacia',
@@ -31,6 +32,18 @@ export async function POST(request: Request) {
 
     // Grove owners get free download - shouldn't reach here but just in case
     if (isGroveOwner) {
+      // Track analytics: Soundwave download (complimentary)
+      await trackEventServer(prisma, userId, {
+        eventType: AnalyticsEvents.SOUNDWAVE_DOWNLOADED,
+        category: AnalyticsCategories.SOUNDWAVE,
+        action: AnalyticsActions.DOWNLOADED,
+        metadata: {
+          title: title || 'Untitled',
+          isGroveOwner: true,
+          isComplimentary: true,
+        },
+      })
+
       return NextResponse.json({
         success: true,
         message: 'Grove owners get complimentary downloads',
@@ -60,6 +73,19 @@ export async function POST(request: Request) {
         userId,
         title: title || 'Untitled',
         productType: 'soundwave_art',
+      },
+    })
+
+    // Track analytics: Soundwave checkout started (non-grove owner)
+    await trackEventServer(prisma, userId, {
+      eventType: AnalyticsEvents.SOUNDWAVE_CHECKOUT_STARTED,
+      category: AnalyticsCategories.SOUNDWAVE,
+      action: AnalyticsActions.CHECKOUT,
+      metadata: {
+        title: title || 'Untitled',
+        amount: SOUNDART_PRICE,
+        isGroveOwner: false,
+        sessionId: checkoutSession.id,
       },
     })
 
