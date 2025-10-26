@@ -536,7 +536,7 @@ export default function SoundArtBuilder() {
       ctx.stroke()
     } else if (waveformStyle === 'heart') {
       // Heart-shaped waveform using parametric equations
-      const size = Math.min(scaledWidth, scaledHeight) * 0.15
+      const size = Math.min(scaledWidth, scaledHeight) * 0.08
       const centerX = scaledWidth / 2
 
       ctx.beginPath()
@@ -592,8 +592,8 @@ export default function SoundArtBuilder() {
 
       ctx.stroke()
     } else if (waveformStyle === 'infinity') {
-      // Infinity symbol (lemniscate) waveform
-      const size = Math.min(scaledWidth, scaledHeight) * 0.25
+      // Infinity symbol (lemniscate) waveform with better point distribution
+      const size = Math.min(scaledWidth, scaledHeight) * 0.2
       const centerX = scaledWidth / 2
 
       ctx.beginPath()
@@ -601,11 +601,11 @@ export default function SoundArtBuilder() {
       ctx.lineWidth = 3 * scale
 
       samples.forEach((sample, i) => {
-        const t = (i / samples.length) * Math.PI * 2
+        const t = (i / samples.length) * Math.PI * 4 // Use 4π for complete infinity loop
         // Lemniscate parametric equation
-        const denom = 1 + Math.pow(Math.sin(t), 2)
-        const infX = Math.cos(t) / denom
-        const infY = Math.sin(t) * Math.cos(t) / denom
+        const scale_factor = Math.sqrt(2) / (Math.pow(Math.sin(t), 2) + 1)
+        const infX = scale_factor * Math.cos(t)
+        const infY = scale_factor * Math.sin(t) * Math.cos(t)
 
         // Apply amplitude and scaling
         const amplitude = 1 + sample * 0.3
@@ -619,124 +619,6 @@ export default function SoundArtBuilder() {
         }
       })
 
-      ctx.closePath()
-      ctx.stroke()
-    } else if (waveformStyle === 'cardinal') {
-      // Cardinal bird silhouette - simplified bird shape
-      const size = Math.min(scaledWidth, scaledHeight) * 0.18
-      const centerX = scaledWidth / 2
-
-      ctx.beginPath()
-      ctx.strokeStyle = primaryColor
-      ctx.fillStyle = primaryColor
-      ctx.lineWidth = 3 * scale
-
-      samples.forEach((sample, i) => {
-        const t = (i / samples.length) * Math.PI * 2
-
-        // Create bird-like shape using modified circle with wings
-        let r, angle
-        if (t < Math.PI / 4 || t > (7 * Math.PI) / 4) {
-          // Head (right side)
-          angle = t
-          r = 0.6
-        } else if (t >= Math.PI / 4 && t < (3 * Math.PI) / 4) {
-          // Top wing
-          angle = t
-          r = 1.2 + 0.3 * Math.sin((t - Math.PI / 4) * 4)
-        } else if (t >= (3 * Math.PI) / 4 && t < (5 * Math.PI) / 4) {
-          // Tail (left side)
-          angle = t
-          r = 0.8 + 0.4 * Math.sin((t - (3 * Math.PI) / 4) * 3)
-        } else {
-          // Bottom wing
-          angle = t
-          r = 1.2 + 0.3 * Math.sin((t - (5 * Math.PI) / 4) * 4)
-        }
-
-        // Apply amplitude
-        const amplitude = 1 + sample * 0.3
-        const x = centerX + Math.cos(angle) * r * size * amplitude * scale
-        const y = centerY + Math.sin(angle) * r * size * amplitude * scale
-
-        if (i === 0) {
-          ctx.moveTo(x, y)
-        } else {
-          ctx.lineTo(x, y)
-        }
-      })
-
-      ctx.closePath()
-      ctx.fill()
-      ctx.stroke()
-    } else if (waveformStyle === 'cross') {
-      // Cross shape with waveform amplitude affecting size
-      const baseSize = Math.min(scaledWidth, scaledHeight) * 0.15
-      const centerX = scaledWidth / 2
-
-      // Calculate average amplitude for pulsing effect
-      const avgAmplitude = samples.reduce((a, b) => a + b, 0) / samples.length
-
-      // Cross dimensions
-      const crossWidth = baseSize * 0.4 * (1 + avgAmplitude * 0.3)
-      const crossHeight = baseSize * (1 + avgAmplitude * 0.3)
-      const horizontalBar = baseSize * 0.7 * (1 + avgAmplitude * 0.3)
-      const barThickness = baseSize * 0.15 * scale
-
-      ctx.fillStyle = primaryColor
-      ctx.strokeStyle = primaryColor
-      ctx.lineWidth = 2 * scale
-
-      // Draw cross with waveform detail on edges
-      ctx.beginPath()
-
-      // Top part of vertical beam
-      let edgePoints = []
-      const segmentCount = Math.floor(samples.length / 4)
-
-      // Right edge of top vertical
-      for (let i = 0; i < segmentCount; i++) {
-        const progress = i / segmentCount
-        const sample = samples[i] || 0
-        const x = centerX + crossWidth / 2 + sample * 10 * scale
-        const y = centerY - crossHeight + progress * (crossHeight - horizontalBar / 2)
-        edgePoints.push({ x, y })
-      }
-
-      // Horizontal beam right
-      for (let i = 0; i < segmentCount; i++) {
-        const progress = i / segmentCount
-        const sample = samples[segmentCount + i] || 0
-        const x = centerX + crossWidth / 2 + progress * (horizontalBar - crossWidth / 2) + sample * 10 * scale
-        const y = centerY + barThickness / 2
-        edgePoints.push({ x, y })
-      }
-
-      // Bottom right
-      for (let i = 0; i < segmentCount; i++) {
-        const progress = i / segmentCount
-        const sample = samples[segmentCount * 2 + i] || 0
-        const x = centerX + crossWidth / 2 + sample * 10 * scale
-        const y = centerY + barThickness / 2 + progress * (crossHeight - horizontalBar / 2)
-        edgePoints.push({ x, y })
-      }
-
-      // Bottom center
-      edgePoints.push({ x: centerX, y: centerY + crossHeight })
-
-      // Mirror for left side
-      const mirroredPoints = [...edgePoints].reverse().map(p => ({
-        x: centerX - (p.x - centerX),
-        y: p.y
-      }))
-
-      // Draw the path
-      ctx.moveTo(edgePoints[0].x, edgePoints[0].y)
-      edgePoints.forEach(p => ctx.lineTo(p.x, p.y))
-      mirroredPoints.forEach(p => ctx.lineTo(p.x, p.y))
-      ctx.closePath()
-
-      ctx.fill()
       ctx.stroke()
     }
 
@@ -935,8 +817,6 @@ export default function SoundArtBuilder() {
                         <option value="heart">💕 Heart</option>
                         <option value="butterfly">🦋 Butterfly</option>
                         <option value="infinity">♾️ Infinity</option>
-                        <option value="cardinal">🐦 Cardinal</option>
-                        <option value="cross">✝️ Cross</option>
                       </select>
                     </div>
 
