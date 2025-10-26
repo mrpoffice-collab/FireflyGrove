@@ -51,6 +51,30 @@ const CARD_CATEGORIES = [
     description: 'Congratulate achievement and new beginnings',
     displayOrder: 8,
   },
+  {
+    name: 'Encouragement & Healing',
+    icon: '🌅',
+    description: 'For recovery, resilience, and gentle hope.',
+    displayOrder: 9,
+  },
+  {
+    name: 'Friendship & Connection',
+    icon: '✨',
+    description: 'To celebrate the people who keep your world bright.',
+    displayOrder: 10,
+  },
+  {
+    name: 'Pet Remembrance',
+    icon: '🐾',
+    description: 'For the companions who left paw prints on our hearts.',
+    displayOrder: 11,
+  },
+  {
+    name: 'Just Because',
+    icon: '💛',
+    description: 'For no reason other than kindness.',
+    displayOrder: 12,
+  },
 ]
 
 async function main() {
