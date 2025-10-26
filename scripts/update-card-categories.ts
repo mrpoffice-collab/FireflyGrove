@@ -2,111 +2,131 @@ import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
-// Beautiful, on-brand Firefly Grove category descriptions
-const UPDATED_CATEGORIES = [
+// Map CSV category names to correct category data
+const CATEGORY_MAPPING = [
   {
-    oldName: 'Sympathy & Condolence',
-    newName: 'In the Quiet of Loss',
-    icon: '🌿',
-    tagline: 'Cards that honor grief with gentleness, presence, and light.',
-    description: 'When loss leaves no words, these cards offer the language of warmth and remembrance.',
-    displayOrder: 1,
+    oldName: 'In the Quiet of Loss',
+    newData: {
+      name: 'Sympathy & Condolence',
+      icon: '🕯️',
+      description: 'Cards to express sympathy and support during difficult times',
+      displayOrder: 1,
+    },
   },
   {
-    oldName: 'Birthday',
-    newName: 'Another Year of Light',
-    icon: '🌸',
-    tagline: 'Celebrate the glow of a life still unfolding.',
-    description: 'Birthdays in the Grove aren\'t about candles; they\'re about gratitude for another orbit around love, laughter, and belonging.',
-    displayOrder: 2,
+    oldName: 'Another Year of Light',
+    newData: {
+      name: 'Birthday',
+      icon: '🎂',
+      description: 'Celebrate another year with heartfelt birthday wishes',
+      displayOrder: 2,
+    },
   },
   {
-    oldName: 'Christmas & Holiday',
-    newName: 'Season of Warmth',
-    icon: '🌲',
-    tagline: 'Wishes wrapped in quiet wonder.',
-    description: 'Gentle greetings for the nights that glimmer with meaning — peace, memory, and home.',
-    displayOrder: 3,
+    oldName: 'Season of Warmth',
+    newData: {
+      name: 'Christmas & Holiday',
+      icon: '🎄',
+      description: 'Spread holiday cheer and seasonal greetings',
+      displayOrder: 3,
+    },
   },
   {
-    oldName: 'Thank You',
-    newName: 'Gratitude in Bloom',
-    icon: '🌼',
-    tagline: 'Because kindness should never go unspoken.',
-    description: 'Words of appreciation that linger like the afterglow of a kind act — soft, sincere, enduring.',
-    displayOrder: 4,
+    oldName: 'Gratitude in Bloom',
+    newData: {
+      name: 'Thank You',
+      icon: '💐',
+      description: 'Express gratitude and appreciation',
+      displayOrder: 4,
+    },
   },
   {
-    oldName: 'Thinking of You',
-    newName: 'Under the Same Sky',
-    icon: '🌙',
-    tagline: 'When you want someone to feel seen, even from afar.',
-    description: 'For the friends, family, or souls you can\'t reach today — a reminder that distance doesn\'t dim connection.',
-    displayOrder: 5,
+    oldName: 'Under the Same Sky',
+    newData: {
+      name: 'Thinking of You',
+      icon: '💭',
+      description: 'Let someone know they are in your thoughts',
+      displayOrder: 5,
+    },
   },
   {
-    oldName: 'Anniversary',
-    newName: 'Love, Still Growing',
-    icon: '💞',
-    tagline: 'Celebrate the constancy that time can\'t erode.',
-    description: 'Each year adds a new ring to the tree — another story, another reason to say "still you."',
-    displayOrder: 6,
+    oldName: 'Love, Still Growing',
+    newData: {
+      name: 'Anniversary',
+      icon: '💒',
+      description: 'Celebrate love and commitment milestones',
+      displayOrder: 6,
+    },
   },
   {
-    oldName: 'New Baby',
-    newName: 'New Light in the Grove',
-    icon: '🌱',
-    tagline: 'Welcome a new soul with wonder and tenderness.',
-    description: 'A card for beginnings — tiny hands, new laughter, and a light that changes everything.',
-    displayOrder: 7,
+    oldName: 'New Light in the Grove',
+    newData: {
+      name: 'New Baby',
+      icon: '🌱',
+      description: 'Welcome a new little light to the world',
+      displayOrder: 7,
+    },
   },
   {
-    oldName: 'Graduation',
-    newName: 'Stepping Into the Light',
-    icon: '🎓',
-    tagline: 'Honor the courage it takes to begin the next chapter.',
-    description: 'These cards mark the turning of pages — celebrating growth, effort, and hope that shines ahead.',
-    displayOrder: 8,
+    oldName: 'Stepping Into the Light',
+    newData: {
+      name: 'Graduation',
+      icon: '🎓',
+      description: 'Congratulate achievement and new beginnings',
+      displayOrder: 8,
+    },
   },
 ]
 
-async function updateCategories() {
-  console.log('✨ Updating card categories with Firefly Grove magic...\n')
+async function main() {
+  console.log('🔄 Updating card categories to correct names...\n')
 
-  let updated = 0
-
-  for (const category of UPDATED_CATEGORIES) {
-    // Find category by old name
+  for (const mapping of CATEGORY_MAPPING) {
     const existing = await prisma.cardCategory.findFirst({
-      where: {
-        name: category.oldName,
-      },
+      where: { name: mapping.oldName },
+    })
+
+    if (existing) {
+      const updated = await prisma.cardCategory.update({
+        where: { id: existing.id },
+        data: mapping.newData,
+      })
+      console.log(`✓ Updated: "${mapping.oldName}" → "${updated.name}" ${updated.icon}`)
+    } else {
+      console.log(`⚠️  Skipped: "${mapping.oldName}" (not found)`)
+    }
+  }
+
+  // Deactivate categories not in the main 8
+  const categoriesToDeactivate = [
+    'Encouragement & Healing',
+    'Friendship & Connection',
+    'Pet Remembrance',
+    'Just Because',
+  ]
+
+  console.log('\n⏸️  Deactivating extra categories...\n')
+
+  for (const categoryName of categoriesToDeactivate) {
+    const existing = await prisma.cardCategory.findFirst({
+      where: { name: categoryName },
     })
 
     if (existing) {
       await prisma.cardCategory.update({
         where: { id: existing.id },
-        data: {
-          name: category.newName,
-          icon: category.icon,
-          description: `${category.tagline}\n\n${category.description}`,
-          displayOrder: category.displayOrder,
-        },
+        data: { isActive: false },
       })
-      console.log(`${category.icon} Updated: "${category.oldName}" → "${category.newName}"`)
-      updated++
-    } else {
-      console.log(`⚠️  Not found: "${category.oldName}" - skipping`)
+      console.log(`✓ Deactivated: "${categoryName}"`)
     }
   }
 
-  console.log(`\n✅ Successfully updated ${updated} card categories!`)
-  console.log('🌟 Your card categories now shine with Firefly Grove\'s voice.')
+  console.log('\n✨ Successfully updated card categories!')
 }
 
-updateCategories()
+main()
   .catch((e) => {
-    console.error('❌ Error updating categories:', e)
+    console.error('❌ Error updating card categories:', e)
     process.exit(1)
   })
   .finally(async () => {
