@@ -131,7 +131,7 @@ export default function CardPreview({
               <div className="text-center my-8">
                 {customMessage ? (
                   <p
-                    className="text-text-soft text-lg leading-relaxed whitespace-pre-wrap max-w-md mx-auto"
+                    className="text-text-soft text-2xl leading-relaxed whitespace-pre-wrap max-w-md mx-auto"
                     style={{ fontFamily: '"Brush Script MT", "Lucida Handwriting", cursive' }}
                   >
                     {customMessage}
@@ -148,7 +148,7 @@ export default function CardPreview({
                 <div className="text-center mt-auto mb-6">
                   {signature ? (
                     <p
-                      className="text-text-soft text-2xl italic"
+                      className="text-text-soft text-3xl italic"
                       style={{ fontFamily: '"Brush Script MT", "Lucida Handwriting", cursive' }}
                     >
                       {signature}
@@ -156,7 +156,7 @@ export default function CardPreview({
                   ) : senderName && (
                     <>
                       <p className="text-text-muted text-xs mb-2">With love,</p>
-                      <p className="text-text-soft text-base font-medium">
+                      <p className="text-text-soft text-lg font-medium">
                         {senderName}
                       </p>
                     </>

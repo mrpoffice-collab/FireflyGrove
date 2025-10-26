@@ -74,10 +74,12 @@ export default function CardSuccessContent() {
           </div>
 
           <h1 className="text-4xl font-light text-firefly-glow mb-4">
-            Payment Successful!
+            Card Sent Successfully!
           </h1>
           <p className="text-text-muted text-lg">
-            Your greeting card has been created and is being processed.
+            {order?.deliveryType === 'digital'
+              ? 'Your digital card is on its way to the recipient\'s inbox!'
+              : 'Your greeting card has been created and is being processed.'}
           </p>
         </div>
 
@@ -105,9 +107,9 @@ export default function CardSuccessContent() {
               </div>
 
               <div className="flex items-center justify-between pt-2">
-                <span className="text-text-soft font-medium">Total Paid</span>
+                <span className="text-text-soft font-medium">Price</span>
                 <span className="text-firefly-glow text-lg font-medium">
-                  ${order.totalAmount.toFixed(2)}
+                  Complimentary
                 </span>
               </div>
             </div>
