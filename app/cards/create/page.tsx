@@ -5,17 +5,24 @@ import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import Header from '@/components/Header'
 import CardCategoryPicker from '@/components/CardCategoryPicker'
-import CardTemplatePicker from '@/components/CardTemplatePicker'
+import CardSentimentPicker from '@/components/CardSentimentPicker'
 import CardDesigner from '@/components/CardDesigner'
 
-type Step = 'category' | 'template' | 'design'
+type Step = 'category' | 'sentiment' | 'design'
+
+interface Sentiment {
+  id: string
+  coverMessage: string
+  insideMessage: string
+  tags: string | null
+}
 
 export default function CreateCardPage() {
   const { data: session, status } = useSession()
   const router = useRouter()
   const [currentStep, setCurrentStep] = useState<Step>('category')
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
-  const [selectedTemplate, setSelectedTemplate] = useState<any>(null)
+  const [selectedSentiment, setSelectedSentiment] = useState<Sentiment | null>(null)
 
   // Redirect if not authenticated
   if (status === 'unauthenticated') {
@@ -33,18 +40,18 @@ export default function CreateCardPage() {
 
   const handleCategorySelect = (categoryId: string) => {
     setSelectedCategory(categoryId)
-    setCurrentStep('template')
+    setCurrentStep('sentiment')
   }
 
-  const handleTemplateSelect = (template: any) => {
-    setSelectedTemplate(template)
+  const handleSentimentSelect = (sentiment: Sentiment) => {
+    setSelectedSentiment(sentiment)
     setCurrentStep('design')
   }
 
   const handleBack = () => {
     if (currentStep === 'design') {
-      setCurrentStep('template')
-    } else if (currentStep === 'template') {
+      setCurrentStep('sentiment')
+    } else if (currentStep === 'sentiment') {
       setCurrentStep('category')
       setSelectedCategory(null)
     }
@@ -69,13 +76,13 @@ export default function CreateCardPage() {
 
             <div className="w-12 h-0.5 bg-border-subtle" />
 
-            <div className={`flex items-center gap-2 ${currentStep === 'template' ? 'text-firefly-glow' : 'text-text-muted'}`}>
+            <div className={`flex items-center gap-2 ${currentStep === 'sentiment' ? 'text-firefly-glow' : 'text-text-muted'}`}>
               <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center ${
-                currentStep === 'template' ? 'border-firefly-glow bg-firefly-glow/20' : 'border-border-subtle'
+                currentStep === 'sentiment' ? 'border-firefly-glow bg-firefly-glow/20' : 'border-border-subtle'
               }`}>
                 2
               </div>
-              <span className="text-sm font-medium">Template</span>
+              <span className="text-sm font-medium">Message</span>
             </div>
 
             <div className="w-12 h-0.5 bg-border-subtle" />
@@ -111,15 +118,15 @@ export default function CreateCardPage() {
             <CardCategoryPicker onSelectCategory={handleCategorySelect} />
           )}
 
-          {currentStep === 'template' && selectedCategory && (
-            <CardTemplatePicker
+          {currentStep === 'sentiment' && selectedCategory && (
+            <CardSentimentPicker
               categoryId={selectedCategory}
-              onSelectTemplate={handleTemplateSelect}
+              onSelectSentiment={handleSentimentSelect}
             />
           )}
 
-          {currentStep === 'design' && selectedTemplate && (
-            <CardDesigner template={selectedTemplate} />
+          {currentStep === 'design' && selectedSentiment && selectedCategory && (
+            <CardDesigner sentiment={selectedSentiment} categoryId={selectedCategory} />
           )}
         </div>
       </div>

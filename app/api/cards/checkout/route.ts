@@ -26,6 +26,7 @@ export async function POST(request: Request) {
     const {
       templateId,
       sentimentId,
+      categoryId,
       deliveryType,
       customMessage,
       selectedPhotos,
@@ -36,24 +37,27 @@ export async function POST(request: Request) {
       recipientAddress,
     } = body
 
-    // Validate required fields
-    if (!templateId || !deliveryType || !customMessage) {
+    // Validate required fields (templateId now optional)
+    if (!deliveryType || !customMessage) {
       return NextResponse.json(
         { error: 'Missing required fields' },
         { status: 400 }
       )
     }
 
-    // Fetch template
-    const template = await prisma.cardTemplate.findUnique({
-      where: { id: templateId },
-    })
+    // Fetch template if templateId provided (for backwards compatibility)
+    let template = null
+    if (templateId) {
+      template = await prisma.cardTemplate.findUnique({
+        where: { id: templateId },
+      })
 
-    if (!template) {
-      return NextResponse.json(
-        { error: 'Template not found' },
-        { status: 404 }
-      )
+      if (!template) {
+        return NextResponse.json(
+          { error: 'Template not found' },
+          { status: 404 }
+        )
+      }
     }
 
     // Check if user is a grove owner (has branches or entries)
@@ -63,10 +67,10 @@ export async function POST(request: Request) {
 
     const isGroveOwner = userBranchCount > 0
 
-    // Calculate price based on delivery type
-    const amount = deliveryType === 'digital'
-      ? template.digitalPrice
-      : template.physicalPrice
+    // Calculate price based on delivery type (default to 0 for no template)
+    const amount = template
+      ? (deliveryType === 'digital' ? template.digitalPrice : template.physicalPrice)
+      : 0
 
     // If NOT a grove owner and price > 0, create Stripe checkout
     if (!isGroveOwner && amount > 0) {
@@ -74,7 +78,7 @@ export async function POST(request: Request) {
       const order = await prisma.cardOrder.create({
         data: {
           userId,
-          templateId,
+          templateId: templateId || null,
           sentimentId: sentimentId || null,
           deliveryType,
           customMessage,
@@ -93,6 +97,7 @@ export async function POST(request: Request) {
       })
 
       // Create Stripe checkout session
+      const cardName = template?.name || 'Firefly Grove Card'
       const checkoutSession = await stripe.checkout.sessions.create({
         payment_method_types: ['card'],
         line_items: [
@@ -100,9 +105,9 @@ export async function POST(request: Request) {
             price_data: {
               currency: 'usd',
               product_data: {
-                name: `${template.name} - ${deliveryType === 'digital' ? 'Digital' : 'Printed & Mailed'}`,
+                name: `${cardName} - ${deliveryType === 'digital' ? 'Digital' : 'Printed & Mailed'}`,
                 description: customMessage.substring(0, 200),
-                images: template.previewImage ? [template.previewImage] : [],
+                images: template?.previewImage ? [template.previewImage] : [],
               },
               unit_amount: Math.round(amount * 100), // Convert to cents
             },
@@ -143,7 +148,7 @@ export async function POST(request: Request) {
     const order = await prisma.cardOrder.create({
       data: {
         userId,
-        templateId,
+        templateId: templateId || null,
         sentimentId: sentimentId || null,
         deliveryType,
         customMessage,

@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation'
 import CardPreview from './CardPreview'
 import CardMessageEditor from './CardMessageEditor'
 import GrovePhotoPicker from './GrovePhotoPicker'
-import SentimentPicker from './SentimentPicker'
 
 interface Sentiment {
   id: string
@@ -15,14 +14,14 @@ interface Sentiment {
 }
 
 interface CardDesignerProps {
-  template: any
+  sentiment: Sentiment
+  categoryId?: string
 }
 
-export default function CardDesigner({ template }: CardDesignerProps) {
+export default function CardDesigner({ sentiment, categoryId }: CardDesignerProps) {
   const router = useRouter()
   const [customMessage, setCustomMessage] = useState('')
   const [selectedPhotos, setSelectedPhotos] = useState<string[]>([])
-  const [selectedSentiment, setSelectedSentiment] = useState<Sentiment | null>(null)
   const [senderName, setSenderName] = useState('')
   const [signature, setSignature] = useState('')
   const [recipientEmail, setRecipientEmail] = useState('')
@@ -39,8 +38,10 @@ export default function CardDesigner({ template }: CardDesignerProps) {
   const [processing, setProcessing] = useState(false)
   const [isGroveOwner, setIsGroveOwner] = useState<boolean | null>(null)
 
-  const deliveryType = template.deliveryType || 'digital'
-  const price = deliveryType === 'digital' ? template.digitalPrice : template.physicalPrice
+  // Default values since we no longer use templates
+  const deliveryType: 'digital' | 'physical' = 'digital' // Only digital cards for now
+  const maxPhotos = 3 // Allow up to 3 photos per card
+  const price = 0 // Cards are free for grove owners
 
   // Check if user is a grove owner on mount
   useEffect(() => {
@@ -74,10 +75,11 @@ export default function CardDesigner({ template }: CardDesignerProps) {
       return
     }
 
-    if (deliveryType === 'physical' && (!recipientName || !recipientAddress.line1)) {
-      alert('Please enter recipient name and address')
-      return
-    }
+    // Physical cards not yet supported
+    // if (deliveryType === 'physical' && (!recipientName || !recipientAddress.line1)) {
+    //   alert('Please enter recipient name and address')
+    //   return
+    // }
 
     setProcessing(true)
 
@@ -87,16 +89,16 @@ export default function CardDesigner({ template }: CardDesignerProps) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          templateId: template.id,
-          sentimentId: selectedSentiment?.id || null,
+          sentimentId: sentiment.id,
+          categoryId: categoryId || null,
           deliveryType,
           customMessage,
           selectedPhotos,
           senderName,
           signature,
-          recipientEmail: deliveryType === 'digital' ? recipientEmail : null,
-          recipientName: deliveryType === 'physical' ? recipientName : null,
-          recipientAddress: deliveryType === 'physical' ? recipientAddress : null,
+          recipientEmail: recipientEmail, // Always digital for now
+          recipientName: null, // Physical cards not yet supported
+          recipientAddress: null, // Physical cards not yet supported
         }),
       })
 
@@ -131,6 +133,22 @@ export default function CardDesigner({ template }: CardDesignerProps) {
             Customize Your Card
           </h2>
 
+          {/* Selected Card Preview */}
+          <div className="mb-6 bg-bg-elevated border border-firefly-dim/30 rounded-lg p-4">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="text-2xl">💌</span>
+              <span className="text-xs text-firefly-glow uppercase tracking-wide font-medium">
+                Your Selected Card
+              </span>
+            </div>
+            <p className="text-text-soft text-sm italic mb-2 border-l-2 border-firefly-dim/30 pl-3">
+              {sentiment.coverMessage}
+            </p>
+            <p className="text-text-muted text-xs whitespace-pre-line border-l-2 border-firefly-dim/30 pl-3">
+              {sentiment.insideMessage}
+            </p>
+          </div>
+
           {/* Sender Name */}
           <div className="mb-6">
             <label className="block text-text-soft text-sm font-medium mb-2">
@@ -144,13 +162,6 @@ export default function CardDesigner({ template }: CardDesignerProps) {
               className="w-full px-4 py-2 bg-[#1a1a1a] border border-border-subtle rounded text-white focus:outline-none focus:border-firefly-dim placeholder:text-text-muted"
             />
           </div>
-
-          {/* Sentiment Picker */}
-          <SentimentPicker
-            categoryId={template.categoryId}
-            selectedSentiment={selectedSentiment}
-            onSelect={setSelectedSentiment}
-          />
 
           {/* Custom Message */}
           <CardMessageEditor
@@ -184,7 +195,7 @@ export default function CardDesigner({ template }: CardDesignerProps) {
                 Photos & Soundwaves from Grove (Optional)
               </label>
               <span className="text-text-muted text-xs">
-                {selectedPhotos.length} / {template.maxPhotos} selected
+                {selectedPhotos.length} / {maxPhotos} selected
               </span>
             </div>
 
@@ -206,7 +217,7 @@ export default function CardDesigner({ template }: CardDesignerProps) {
 
             <button
               onClick={() => setShowPhotoPicker(true)}
-              disabled={selectedPhotos.length >= template.maxPhotos}
+              disabled={selectedPhotos.length >= maxPhotos}
               className="w-full py-2 bg-bg-elevated border border-border-subtle rounded text-text-soft hover:border-firefly-dim transition-soft disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {selectedPhotos.length === 0 ? 'Add Photos or Soundwaves' : 'Change Selection'}
@@ -329,20 +340,20 @@ export default function CardDesigner({ template }: CardDesignerProps) {
       {/* Right Column - Preview */}
       <div className="lg:sticky lg:top-4 h-fit">
         <CardPreview
-          template={template}
+          template={null}
           customMessage={customMessage}
           selectedPhotos={selectedPhotos}
           senderName={senderName}
           signature={signature}
           deliveryType={deliveryType}
-          selectedSentiment={selectedSentiment}
+          selectedSentiment={sentiment}
         />
       </div>
 
       {/* Grove Photo Picker Modal */}
       {showPhotoPicker && (
         <GrovePhotoPicker
-          maxPhotos={template.maxPhotos}
+          maxPhotos={maxPhotos}
           selectedPhotos={selectedPhotos}
           onSelect={handlePhotoSelect}
           onClose={() => setShowPhotoPicker(false)}
