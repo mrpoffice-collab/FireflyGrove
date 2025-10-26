@@ -8,7 +8,10 @@ export async function POST(request: Request) {
   try {
     const { orderId, deliveryId } = await request.json()
 
+    console.log('📧 Starting digital card delivery:', { orderId, deliveryId })
+
     if (!orderId || !deliveryId) {
+      console.error('❌ Missing orderId or deliveryId')
       return NextResponse.json(
         { error: 'Order ID and Delivery ID required' },
         { status: 400 }
@@ -25,6 +28,12 @@ export async function POST(request: Request) {
           },
         },
       },
+    })
+
+    console.log('📦 Order fetched:', {
+      orderId: order?.id,
+      recipientEmail: order?.recipientEmail,
+      senderName: order?.senderName,
     })
 
     if (!order) {
@@ -56,9 +65,12 @@ export async function POST(request: Request) {
     })
 
     // Send email with Resend
+    const fromEmail = process.env.RESEND_FROM_EMAIL || 'Firefly Grove <onboarding@resend.dev>'
+    console.log('📤 Sending email from:', fromEmail, 'to:', order.recipientEmail)
+
     try {
-      await resend.emails.send({
-        from: 'Firefly Grove <cards@firefly-grove.com>',
+      const emailResult = await resend.emails.send({
+        from: fromEmail,
         to: order.recipientEmail,
         subject: `You have a card from ${order.senderName || 'someone special'}`,
         html: generateEmailHTML({
@@ -68,6 +80,8 @@ export async function POST(request: Request) {
           categoryIcon: order.template.category.icon,
         }),
       })
+
+      console.log('✅ Email sent successfully:', emailResult)
 
       // Update delivery status
       await prisma.cardDelivery.update({
@@ -91,22 +105,30 @@ export async function POST(request: Request) {
         success: true,
         viewUrl,
       })
-    } catch (emailError) {
-      console.error('Failed to send email:', emailError)
+    } catch (emailError: any) {
+      console.error('❌ Failed to send email:', {
+        error: emailError,
+        message: emailError?.message,
+        statusCode: emailError?.statusCode,
+        response: emailError?.response?.body,
+      })
 
       // Update delivery with error
       await prisma.cardDelivery.update({
         where: { id: deliveryId },
         data: {
           status: 'failed',
-          errorMessage: 'Failed to send email',
+          errorMessage: emailError?.message || 'Failed to send email',
           retryCount: { increment: 1 },
           lastRetryAt: new Date(),
         },
       })
 
       return NextResponse.json(
-        { error: 'Failed to send email' },
+        {
+          error: 'Failed to send email',
+          details: emailError?.message,
+        },
         { status: 500 }
       )
     }

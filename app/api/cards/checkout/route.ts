@@ -92,11 +92,24 @@ export async function POST(request: Request) {
     // Trigger delivery immediately (complimentary)
     if (deliveryType === 'digital') {
       // Queue digital delivery
-      await fetch(`${process.env.NEXTAUTH_URL}/api/cards/send-digital`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ orderId: order.id, deliveryId: delivery.id }),
-      }).catch(err => console.error('Failed to trigger digital delivery:', err))
+      try {
+        console.log('🚀 Triggering digital card delivery...')
+        const sendResponse = await fetch(`${process.env.NEXTAUTH_URL}/api/cards/send-digital`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ orderId: order.id, deliveryId: delivery.id }),
+        })
+
+        if (!sendResponse.ok) {
+          const errorData = await sendResponse.json()
+          console.error('❌ Digital delivery failed:', errorData)
+        } else {
+          const successData = await sendResponse.json()
+          console.log('✅ Digital delivery triggered:', successData)
+        }
+      } catch (err) {
+        console.error('❌ Failed to trigger digital delivery:', err)
+      }
     }
 
     // Return success - no Stripe checkout needed
