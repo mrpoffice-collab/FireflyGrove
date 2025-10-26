@@ -10,6 +10,7 @@ interface Template {
   digitalPrice: number
   physicalPrice: number
   maxPhotos: number
+  deliveryType?: 'digital' | 'physical'
 }
 
 interface CardTemplatePickerProps {
