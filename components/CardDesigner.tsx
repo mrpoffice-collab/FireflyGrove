@@ -114,7 +114,7 @@ export default function CardDesigner({ template }: CardDesignerProps) {
               value={senderName}
               onChange={(e) => setSenderName(e.target.value)}
               placeholder="e.g., John & Jane Smith"
-              className="w-full px-4 py-2 bg-bg-elevated border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-dim"
+              className="w-full px-4 py-2 bg-bg-elevated border border-border-subtle rounded text-white focus:outline-none focus:border-firefly-dim placeholder:text-text-muted"
             />
           </div>
 
@@ -135,7 +135,7 @@ export default function CardDesigner({ template }: CardDesignerProps) {
               value={signature}
               onChange={(e) => setSignature(e.target.value)}
               placeholder="e.g., With love, The Smith Family"
-              className="w-full px-4 py-2 bg-bg-elevated border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-dim italic"
+              className="w-full px-4 py-2 bg-bg-elevated border border-border-subtle rounded text-white focus:outline-none focus:border-firefly-dim italic placeholder:text-text-muted"
               style={{ fontFamily: '"Brush Script MT", cursive' }}
             />
             <p className="text-text-muted text-xs mt-1">
@@ -191,7 +191,7 @@ export default function CardDesigner({ template }: CardDesignerProps) {
                 value={recipientEmail}
                 onChange={(e) => setRecipientEmail(e.target.value)}
                 placeholder="recipient@example.com"
-                className="w-full px-4 py-2 bg-bg-elevated border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-dim"
+                className="w-full px-4 py-2 bg-bg-elevated border border-border-subtle rounded text-white focus:outline-none focus:border-firefly-dim placeholder:text-text-muted"
               />
             ) : (
               <div className="space-y-3">
@@ -200,21 +200,21 @@ export default function CardDesigner({ template }: CardDesignerProps) {
                   value={recipientName}
                   onChange={(e) => setRecipientName(e.target.value)}
                   placeholder="Recipient Name"
-                  className="w-full px-4 py-2 bg-bg-elevated border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-dim"
+                  className="w-full px-4 py-2 bg-bg-elevated border border-border-subtle rounded text-white focus:outline-none focus:border-firefly-dim placeholder:text-text-muted"
                 />
                 <input
                   type="text"
                   value={recipientAddress.line1}
                   onChange={(e) => setRecipientAddress({ ...recipientAddress, line1: e.target.value })}
                   placeholder="Street Address"
-                  className="w-full px-4 py-2 bg-bg-elevated border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-dim"
+                  className="w-full px-4 py-2 bg-bg-elevated border border-border-subtle rounded text-white focus:outline-none focus:border-firefly-dim placeholder:text-text-muted"
                 />
                 <input
                   type="text"
                   value={recipientAddress.line2}
                   onChange={(e) => setRecipientAddress({ ...recipientAddress, line2: e.target.value })}
                   placeholder="Apt, Suite, etc. (optional)"
-                  className="w-full px-4 py-2 bg-bg-elevated border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-dim"
+                  className="w-full px-4 py-2 bg-bg-elevated border border-border-subtle rounded text-white focus:outline-none focus:border-firefly-dim placeholder:text-text-muted"
                 />
                 <div className="grid grid-cols-2 gap-3">
                   <input
@@ -222,14 +222,14 @@ export default function CardDesigner({ template }: CardDesignerProps) {
                     value={recipientAddress.city}
                     onChange={(e) => setRecipientAddress({ ...recipientAddress, city: e.target.value })}
                     placeholder="City"
-                    className="w-full px-4 py-2 bg-bg-elevated border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-dim"
+                    className="w-full px-4 py-2 bg-bg-elevated border border-border-subtle rounded text-white focus:outline-none focus:border-firefly-dim placeholder:text-text-muted"
                   />
                   <input
                     type="text"
                     value={recipientAddress.state}
                     onChange={(e) => setRecipientAddress({ ...recipientAddress, state: e.target.value })}
                     placeholder="State"
-                    className="w-full px-4 py-2 bg-bg-elevated border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-dim"
+                    className="w-full px-4 py-2 bg-bg-elevated border border-border-subtle rounded text-white focus:outline-none focus:border-firefly-dim placeholder:text-text-muted"
                   />
                 </div>
                 <input
@@ -237,7 +237,7 @@ export default function CardDesigner({ template }: CardDesignerProps) {
                   value={recipientAddress.zip}
                   onChange={(e) => setRecipientAddress({ ...recipientAddress, zip: e.target.value })}
                   placeholder="ZIP Code"
-                  className="w-full px-4 py-2 bg-bg-elevated border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-dim"
+                  className="w-full px-4 py-2 bg-bg-elevated border border-border-subtle rounded text-white focus:outline-none focus:border-firefly-dim placeholder:text-text-muted"
                 />
               </div>
             )}

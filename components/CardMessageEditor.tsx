@@ -31,7 +31,7 @@ export default function CardMessageEditor({
         }}
         placeholder="Share your heartfelt message..."
         rows={6}
-        className="w-full px-4 py-3 bg-bg-elevated border border-border-subtle rounded text-text-soft placeholder:text-text-muted focus:outline-none focus:border-firefly-dim resize-none"
+        className="w-full px-4 py-3 bg-bg-elevated border border-border-subtle rounded text-white placeholder:text-text-muted focus:outline-none focus:border-firefly-dim resize-none"
       />
 
       {/* Suggested Phrases */}

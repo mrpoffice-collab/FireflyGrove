@@ -23,6 +23,8 @@ export async function GET(request: Request) {
         name: true,
         description: true,
         previewImage: true,
+        coverMessage: true,
+        insideMessage: true,
         digitalPrice: true,
         physicalPrice: true,
         maxPhotos: true,

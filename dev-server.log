@@ -1653,3 +1653,4 @@ Error: You cannot use different slug names for the same dynamic path ('id' !== '
     at getSortedRoutes (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\shared\lib\router\utils\sorted-routes.js:165:21)
     at Watchpack.<anonymous> (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-utils\setup-dev-bundler.js:558:65)
  ✓ Compiled in 256ms (907 modules)
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: invalid stored block lengths
