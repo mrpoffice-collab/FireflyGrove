@@ -83,9 +83,20 @@ export default function GreetingCardsPage() {
                 </li>
               </ul>
 
-              <p className="text-firefly-glow text-2xl font-medium">
-                Starting at $0.99
-              </p>
+              <div className="border-t border-border-subtle pt-6">
+                <p className="text-firefly-glow text-2xl font-medium mb-4">
+                  Complimentary for Grove Owners
+                </p>
+                <p className="text-text-muted text-sm mb-6">
+                  Create your first memory to unlock complimentary cards
+                </p>
+                <Link
+                  href="/cards/create"
+                  className="inline-block px-8 py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg font-medium transition-soft"
+                >
+                  Create Your Card →
+                </Link>
+              </div>
             </div>
 
             {/* Physical Cards */}
@@ -138,6 +149,10 @@ export default function GreetingCardsPage() {
               { icon: '💒', name: 'Anniversary' },
               { icon: '🌱', name: 'New Baby' },
               { icon: '🎓', name: 'Graduation' },
+              { icon: '🌅', name: 'Encouragement' },
+              { icon: '✨', name: 'Friendship' },
+              { icon: '🐾', name: 'Pet Remembrance' },
+              { icon: '💛', name: 'Just Because' },
             ].map((category) => (
               <div
                 key={category.name}
@@ -147,23 +162,6 @@ export default function GreetingCardsPage() {
                 <p className="text-text-soft text-sm">{category.name}</p>
               </div>
             ))}
-          </div>
-
-          {/* CTA */}
-          <div className="bg-gradient-to-r from-firefly-dim/10 to-firefly-glow/10 border border-firefly-dim/30 rounded-lg p-12 text-center">
-            <h3 className="text-2xl font-light text-firefly-glow mb-4">
-              Create Your First Card
-            </h3>
-            <p className="text-text-muted mb-8 max-w-2xl mx-auto">
-              Choose from beautiful templates, add photos from your grove, and write your heartfelt message.
-              We'll handle the rest.
-            </p>
-            <Link
-              href="/cards/create"
-              className="inline-block px-10 py-4 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg font-medium text-lg transition-soft"
-            >
-              Get Started →
-            </Link>
           </div>
         </div>
       </div>

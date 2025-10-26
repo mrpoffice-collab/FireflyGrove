@@ -41,37 +41,15 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Category not found' }, { status: 404 })
     }
 
-    // Map database category names to CSV category names
-    const categoryMapping: Record<string, string> = {
-      'Sympathy & Condolence': 'In the Quiet of Loss',
-      'Birthday': 'Another Year of Light',
-      'Christmas & Holiday': 'Season of Warmth',
-      'Thank You': 'Gratitude in Bloom',
-      'Thinking of You': 'Under the Same Sky',
-      'Anniversary': 'Love, Still Growing',
-      'New Baby': 'New Light in the Grove',
-      'Graduation': 'Stepping Into the Light',
-      'Encouragement & Healing': 'Encouragement & Healing',
-      'Friendship & Connection': 'Friendship & Connection',
-      'Pet Remembrance': 'Pet Remembrance',
-      'Just Because': 'Just Because',
-    }
-
-    const csvCategoryName = categoryMapping[category.name]
-
-    if (!csvCategoryName) {
-      return NextResponse.json({ sentiments: [] })
-    }
-
-    // Filter sentiments by exact CSV Category match
+    // Filter sentiments by exact category name match (CSV Category column now matches DB category names)
     const sentiments = records
       .filter((record: any) => {
-        return record.Category === csvCategoryName
+        return record.Category === category.name
       })
       .map((record: any, index: number) => ({
         id: `csv-${categoryId}-${index}`,
-        coverMessage: record.Front || record.Category,
-        insideMessage: record.Inside || '',
+        coverMessage: record.Front,
+        insideMessage: record.Inside,
         tags: record.Tags || '',
       }))
 

@@ -90,43 +90,67 @@ export default function SentimentPicker({
         Choose the poetic message that will appear on your card
       </p>
 
-      {/* All Sentiment Options - Show All Upfront */}
-      <div className="space-y-3 max-h-[600px] overflow-y-auto">
-        {sentiments.map((sentiment) => (
+      {/* All Sentiment Options - Large Preview Cards */}
+      <div className="space-y-4 max-h-[700px] overflow-y-auto pr-2">
+        {sentiments.map((sentiment, index) => (
           <button
             key={sentiment.id}
             onClick={() => onSelect(sentiment)}
-            className={`w-full text-left p-4 rounded-lg border-2 transition-all ${
+            className={`w-full text-left rounded-xl border-2 transition-all overflow-hidden ${
               selectedSentiment?.id === sentiment.id
-                ? 'bg-firefly-dim/10 border-firefly-dim shadow-lg'
-                : 'bg-bg-elevated border-border-subtle hover:border-firefly-dim/50 hover:bg-bg-elevated/80'
+                ? 'bg-firefly-dim/10 border-firefly-glow shadow-2xl ring-2 ring-firefly-glow/30'
+                : 'bg-bg-elevated border-border-subtle hover:border-firefly-dim/50 hover:shadow-lg'
             }`}
           >
-            {/* Front Message */}
-            <div className="mb-3">
-              <span className="text-xs text-text-muted uppercase tracking-wide font-medium">
-                Front
+            {/* Option Number & Selection Status */}
+            <div className={`px-5 py-2 border-b flex items-center justify-between ${
+              selectedSentiment?.id === sentiment.id
+                ? 'bg-firefly-glow/10 border-firefly-dim/30'
+                : 'bg-bg-dark border-border-subtle'
+            }`}>
+              <span className="text-xs font-medium text-text-muted uppercase tracking-wider">
+                Option {index + 1}
               </span>
-              <p className="text-text-soft text-base italic mt-1 leading-relaxed">
+              {selectedSentiment?.id === sentiment.id && (
+                <span className="flex items-center gap-1.5 text-firefly-glow text-sm font-medium">
+                  <span className="text-lg">✓</span>
+                  <span>Selected</span>
+                </span>
+              )}
+            </div>
+
+            {/* Card Preview - Front */}
+            <div className="p-6 bg-gradient-to-br from-bg-dark/50 to-bg-darker/50">
+              <div className="flex items-center gap-2 mb-3">
+                <span className="text-2xl">💌</span>
+                <span className="text-xs text-text-muted uppercase tracking-wide font-medium">
+                  Card Front
+                </span>
+              </div>
+              <p className="text-text-soft text-lg italic leading-relaxed px-4 py-2 border-l-2 border-firefly-dim/30">
                 {sentiment.coverMessage}
               </p>
             </div>
 
-            {/* Inside Message */}
-            <div>
-              <span className="text-xs text-text-muted uppercase tracking-wide font-medium">
-                Inside
-              </span>
-              <p className="text-text-soft text-sm whitespace-pre-line mt-1 leading-relaxed">
+            {/* Card Preview - Inside */}
+            <div className="p-6 pt-4 bg-bg-elevated">
+              <div className="flex items-center gap-2 mb-3">
+                <span className="text-2xl">📖</span>
+                <span className="text-xs text-text-muted uppercase tracking-wide font-medium">
+                  Inside Message
+                </span>
+              </div>
+              <p className="text-text-soft text-base whitespace-pre-line leading-relaxed px-4 py-2 border-l-2 border-firefly-dim/30">
                 {sentiment.insideMessage}
               </p>
             </div>
 
-            {/* Selection Indicator */}
-            {selectedSentiment?.id === sentiment.id && (
-              <div className="mt-3 flex items-center gap-2 text-firefly-glow text-xs font-medium">
-                <span>✓</span>
-                <span>Selected</span>
+            {/* Click to Select Hint */}
+            {selectedSentiment?.id !== sentiment.id && (
+              <div className="px-5 py-3 bg-bg-dark/50 text-center border-t border-border-subtle">
+                <p className="text-text-muted text-xs">
+                  Click to select this message for your card
+                </p>
               </div>
             )}
           </button>
