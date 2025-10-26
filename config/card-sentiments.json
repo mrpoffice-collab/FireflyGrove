@@ -1,0 +1,65 @@
+{
+  "sentiments": {
+    "In Loving Memory": {
+      "cover": "Some people aren't just part of our story — they are the light we see it by.",
+      "inside": "In quiet moments, their memory glows softly,\nreminding us of love that never fades.\nLike fireflies dancing through dusk,\ntheir light continues to guide us home."
+    },
+    "Thinking of You": {
+      "cover": "Some people aren't just part of our story — they are the light we see it by.",
+      "inside": "You cross my mind in the quiet hours,\nand I'm reminded how steady friendship feels.\nThank you for being one of my constants,\none of my gentle joys."
+    },
+    "Happy Birthday": {
+      "cover": "Another year of light shared, another year of memories made.",
+      "inside": "May your day glow as bright as fireflies on a summer evening.\nHere's to celebrating you—\nthe warmth you bring, the joy you share,\nand all the beautiful moments yet to come."
+    },
+    "Thank You": {
+      "cover": "Some kindnesses glow long after they're given.",
+      "inside": "Like a firefly's gentle light in the darkness,\nyour thoughtfulness brightened my world.\nI'm grateful for you and the warmth you bring\nto every moment we share."
+    },
+    "Season's Greetings": {
+      "cover": "In this season of warmth and wonder, I'm thinking of you.",
+      "inside": "May your days be filled with the quiet glow of peace,\nthe brightness of joy,\nand the comfort of knowing you're deeply cherished.\nWishing you light and love this season."
+    },
+    "Congratulations": {
+      "cover": "Some moments deserve to shine a little brighter.",
+      "inside": "You've earned this moment of light.\nMay it remind you of how far you've come,\nhow much you've grown,\nand how brilliantly you shine."
+    },
+    "Get Well Soon": {
+      "cover": "The light always returns — even after the longest night.",
+      "inside": "Sending you warmth for the difficult days,\npatience for the healing,\nand the gentle reminder that brighter mornings are coming.\nYou're not alone in this."
+    },
+    "Welcome, Little One": {
+      "cover": "A new light has entered the world.",
+      "inside": "May this little soul grow surrounded by love,\nilluminated by wonder,\nand guided by all the gentle lights\nwho came before.\nWelcome to the world, tiny firefly."
+    },
+    "With Sympathy": {
+      "cover": "In the quiet of loss, may you feel held by love.",
+      "inside": "When words fail, know this:\ntheir light touched yours,\nand that warmth never truly fades.\nYou are seen, you are supported,\nand you are not alone in your grief."
+    },
+    "Happy Anniversary": {
+      "cover": "Love, still growing — another year, another ring in the tree.",
+      "inside": "What a beautiful thing you've built together.\nEach year adds depth, warmth, and new reasons\nto say 'still you.'\nHere's to the story you're still writing,\none glowing chapter at a time."
+    },
+    "Just Because": {
+      "cover": "No occasion, no need — just a little light to remind you you're loved.",
+      "inside": "Sometimes the best moments are the unplanned ones—\nthe unexpected reminders that someone's thinking of you.\nThis is one of those moments.\nYou matter. You're appreciated. You're loved."
+    },
+    "In Memory of a Pet": {
+      "cover": "Their joy was simple, their love was pure — and it still glows.",
+      "inside": "They left paw prints on your heart\nthat time will never erase.\nTheir light was bright, their presence a gift,\nand the love you shared\nwill always be a part of who you are."
+    },
+    "Friendship": {
+      "cover": "You're one of the steady lights I look for in the dark.",
+      "inside": "Some people make the world feel less lonely,\njust by existing in it.\nYou're one of those people.\nThank you for being a constant,\na joy, a light."
+    },
+    "Default": {
+      "cover": "Sending light and love your way.",
+      "inside": "Like fireflies dancing through the evening,\nthis card carries warmth across the miles.\nYou're thought of, you're cherished,\nand you're always in my heart."
+    }
+  },
+  "notes": {
+    "usage": "Edit the sentiments above to change card messages. Each sentiment needs a 'cover' (front) and 'inside' message.",
+    "deployment": "After editing, run: npm run update-sentiments",
+    "formatting": "Use \\n for line breaks in the inside messages to preserve poetic formatting."
+  }
+}
