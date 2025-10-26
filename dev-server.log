@@ -273,3 +273,1369 @@ https://next-auth.js.org/warnings#debug_enabled
  ✓ Compiled /login in 240ms (2036 modules)
  ✓ Compiled /icon.svg in 264ms (1022 modules)
  GET /icon.svg?9f13d4b91f3b77de 200 in 309ms
+[next-auth][warn][DEBUG_ENABLED] 
+https://next-auth.js.org/warnings#debug_enabled
+ GET /api/admin/activity 403 in 220ms
+ GET /api/admin/activity 403 in 170ms
+ ✓ Compiled /blog in 188ms (1361 modules)
+ GET /blog 200 in 587ms
+[next-auth][warn][DEBUG_ENABLED] 
+https://next-auth.js.org/warnings#debug_enabled
+ GET /api/auth/session 200 in 26ms
+ GET /api/auth/session 200 in 26ms
+ GET /api/admin/activity 403 in 90ms
+ GET /api/admin/activity 403 in 89ms
+ GET /api/admin/activity 403 in 259ms
+ GET /api/admin/activity 403 in 167ms
+ GET /api/admin/activity 403 in 185ms
+ ✓ Compiled /api/persons/transplantable in 323ms (1326 modules)
+ ✓ Compiled (1328 modules)
+[next-auth][warn][DEBUG_ENABLED] 
+https://next-auth.js.org/warnings#debug_enabled
+ GET /api/persons/transplantable 200 in 663ms
+ GET /api/persons/transplantable 200 in 103ms
+Error fetching grove: PrismaClientKnownRequestError: 
+Invalid `prisma.grove.create()` invocation:
+
+
+Foreign key constraint violated: `Grove_userId_fkey (index)`
+    at $n.handleRequestError (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\@prisma\client\runtime\library.js:121:7315)
+    at $n.handleAndLogRequestError (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\@prisma\client\runtime\library.js:121:6623)
+    at $n.request (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\@prisma\client\runtime\library.js:121:6307)
+    at async l (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\@prisma\client\runtime\library.js:130:9633)
+    at async GET (webpack-internal:///(rsc)/./app/api/grove/route.ts:98:13)
+    at async C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:55778
+    at async eO.execute (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:46527)
+    at async eO.handle (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:57112)
+    at async doRender (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1352:42)
+    at async cacheEntry.responseCache.get.routeKind (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1574:28)
+    at async DevServer.renderToResponseWithComponentsImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1482:28)
+    at async DevServer.renderPageComponent (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1908:24)
+    at async DevServer.renderToResponseImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1946:32)
+    at async DevServer.pipeImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:921:25)
+    at async NextNodeServer.handleCatchallRenderRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\next-server.js:272:17)
+    at async DevServer.handleRequestImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:817:17)
+    at async C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\dev\next-dev-server.js:339:20
+    at async Span.traceAsyncFn (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\trace\trace.js:154:20)
+    at async DevServer.handleRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\dev\next-dev-server.js:336:24)
+    at async invokeRender (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:173:21)
+    at async handleRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:350:24)
+    at async requestHandlerImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:374:13)
+    at async Server.requestListener (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\start-server.js:141:13) {
+  code: 'P2003',
+  clientVersion: '5.22.0',
+  meta: { modelName: 'Grove', field_name: 'Grove_userId_fkey (index)' }
+}
+ GET /api/grove 500 in 1498ms
+Error fetching grove: PrismaClientKnownRequestError: 
+Invalid `prisma.grove.create()` invocation:
+
+
+Foreign key constraint violated: `Grove_userId_fkey (index)`
+    at $n.handleRequestError (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\@prisma\client\runtime\library.js:121:7315)
+    at $n.handleAndLogRequestError (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\@prisma\client\runtime\library.js:121:6623)
+    at $n.request (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\@prisma\client\runtime\library.js:121:6307)
+    at async l (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\@prisma\client\runtime\library.js:130:9633)
+    at async GET (webpack-internal:///(rsc)/./app/api/grove/route.ts:98:13)
+    at async C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:55778
+    at async eO.execute (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:46527)
+    at async eO.handle (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:57112)
+    at async doRender (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1352:42)
+    at async cacheEntry.responseCache.get.routeKind (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1574:28)
+    at async DevServer.renderToResponseWithComponentsImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1482:28)
+    at async DevServer.renderPageComponent (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1908:24)
+    at async DevServer.renderToResponseImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1946:32)
+    at async DevServer.pipeImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:921:25)
+    at async NextNodeServer.handleCatchallRenderRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\next-server.js:272:17)
+    at async DevServer.handleRequestImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:817:17)
+    at async C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\dev\next-dev-server.js:339:20
+    at async Span.traceAsyncFn (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\trace\trace.js:154:20)
+    at async DevServer.handleRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\dev\next-dev-server.js:336:24)
+    at async invokeRender (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:173:21)
+    at async handleRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:350:24)
+    at async requestHandlerImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:374:13)
+    at async Server.requestListener (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\start-server.js:141:13) {
+  code: 'P2003',
+  clientVersion: '5.22.0',
+  meta: { modelName: 'Grove', field_name: 'Grove_userId_fkey (index)' }
+}
+ GET /api/grove 500 in 297ms
+ GET /api/admin/activity 403 in 298ms
+ GET /api/admin/activity 403 in 180ms
+ GET /api/admin/activity 403 in 221ms
+ GET /api/admin/activity 403 in 217ms
+ ✓ Compiled in 294ms (710 modules)
+ ✓ Compiled in 224ms (710 modules)
+ GET /api/admin/activity 403 in 225ms
+ ✓ Compiled in 837ms (2034 modules)
+[next-auth][warn][DEBUG_ENABLED] 
+https://next-auth.js.org/warnings#debug_enabled
+ GET /api/admin/activity 403 in 183ms
+ GET /api/admin/activity 403 in 107ms
+ ⨯ ./components/Header.tsx
+Error: 
+  [31mx[0m Expression expected
+    ,-[[36;1;4mC:\Users\mrpof\APPS Homemade\Firefly Grove\components\Header.tsx[0m:36:1]
+ [2m36[0m |   }, [])
+ [2m37[0m | 
+ [2m38[0m |   return (
+ [2m39[0m |     <>
+    : [31;1m     ^[0m
+ [2m40[0m |     <header className="bg-bg-dark border-b border-border-subtle">
+ [2m41[0m |       <div className="container mx-auto px-4 py-2">
+ [2m42[0m |         <div className="flex items-center justify-between">
+    `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./components/Header.tsx
+ ⨯ ./components/Header.tsx
+Error: 
+  [31mx[0m Expression expected
+    ,-[[36;1;4mC:\Users\mrpof\APPS Homemade\Firefly Grove\components\Header.tsx[0m:36:1]
+ [2m36[0m |   }, [])
+ [2m37[0m | 
+ [2m38[0m |   return (
+ [2m39[0m |     <>
+    : [31;1m     ^[0m
+ [2m40[0m |     <header className="bg-bg-dark border-b border-border-subtle">
+ [2m41[0m |       <div className="container mx-auto px-4 py-2">
+ [2m42[0m |         <div className="flex items-center justify-between">
+    `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./components/Header.tsx
+./app/grove/page.tsx
+ ⨯ ./components/Header.tsx
+Error: 
+  [31mx[0m Expression expected
+    ,-[[36;1;4mC:\Users\mrpof\APPS Homemade\Firefly Grove\components\Header.tsx[0m:36:1]
+ [2m36[0m |   }, [])
+ [2m37[0m | 
+ [2m38[0m |   return (
+ [2m39[0m |     <>
+    : [31;1m     ^[0m
+ [2m40[0m |     <header className="bg-bg-dark border-b border-border-subtle">
+ [2m41[0m |       <div className="container mx-auto px-4 py-2">
+ [2m42[0m |         <div className="flex items-center justify-between">
+    `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./components/Header.tsx
+ ○ Compiling /_not-found ...
+ ⨯ ./components/Header.tsx
+Error: 
+  [31mx[0m Expression expected
+    ,-[[36;1;4mC:\Users\mrpof\APPS Homemade\Firefly Grove\components\Header.tsx[0m:36:1]
+ [2m36[0m |   }, [])
+ [2m37[0m | 
+ [2m38[0m |   return (
+ [2m39[0m |     <>
+    : [31;1m     ^[0m
+ [2m40[0m |     <header className="bg-bg-dark border-b border-border-subtle">
+ [2m41[0m |       <div className="container mx-auto px-4 py-2">
+ [2m42[0m |         <div className="flex items-center justify-between">
+    `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./components/Header.tsx
+ GET /api/auth/session 500 in 1942ms
+ POST /api/auth/_log 500 in 43ms
+ GET /login 500 in 29ms
+ GET /login 500 in 21ms
+ ✓ Compiled /_error in 742ms (2250 modules)
+ GET /_next/static/webpack/50d2cf83b875ee96.webpack.hot-update.json 404 in 525ms
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ GET /login 200 in 149ms
+ GET /login 200 in 65ms
+[next-auth][warn][DEBUG_ENABLED] 
+https://next-auth.js.org/warnings#debug_enabled
+ GET /api/auth/session 200 in 24ms
+ GET /api/auth/session 200 in 14ms
+ GET /api/admin/activity 403 in 154ms
+ GET /api/admin/activity 403 in 216ms
+ GET /api/admin/activity 403 in 722ms
+ GET /api/admin/activity 403 in 216ms
+ GET /api/admin/activity 403 in 191ms
+ GET /api/admin/activity 403 in 209ms
+ GET /api/admin/activity 403 in 176ms
+ GET /api/admin/activity 403 in 220ms
+ GET /api/admin/activity 403 in 200ms
+ GET /api/admin/activity 403 in 193ms
+ GET /api/admin/activity 403 in 765ms
+ GET /api/admin/activity 403 in 208ms
+ GET /api/admin/activity 403 in 200ms
+ GET /api/admin/activity 403 in 180ms
+ GET /api/admin/activity 403 in 193ms
+ ✓ Compiled in 634ms (2259 modules)
+[next-auth][warn][DEBUG_ENABLED] 
+https://next-auth.js.org/warnings#debug_enabled
+ GET /api/admin/activity 403 in 219ms
+ ✓ Compiled in 519ms (2259 modules)
+[next-auth][warn][DEBUG_ENABLED] 
+https://next-auth.js.org/warnings#debug_enabled
+ GET /api/admin/activity 403 in 195ms
+ GET /api/admin/activity 403 in 749ms
+ ⨯ ./components/Header.tsx
+Error: 
+  [31mx[0m Expression expected
+    ,-[[36;1;4mC:\Users\mrpof\APPS Homemade\Firefly Grove\components\Header.tsx[0m:36:1]
+ [2m36[0m |   }, [])
+ [2m37[0m | 
+ [2m38[0m |   return (
+ [2m39[0m |     <>
+    : [31;1m     ^[0m
+ [2m40[0m |     <header className="bg-bg-dark border-b border-border-subtle">
+ [2m41[0m |       <div className="container mx-auto px-4 py-2">
+ [2m42[0m |         <div className="flex items-center justify-between">
+    `----
+
+  [31mx[0m Expected ',', got '{'
+     ,-[[36;1;4mC:\Users\mrpof\APPS Homemade\Firefly Grove\components\Header.tsx[0m:184:1]
+ [2m184[0m |       <FeedbackModal isOpen={isFeedbackOpen} onClose={() => setIsFeedbackOpen(false)} />
+ [2m185[0m |     </header>
+ [2m186[0m | 
+ [2m187[0m |     {/* Mobile Menu Overlay */}
+     : [31;1m    ^[0m
+ [2m188[0m |     {isMobileMenuOpen && (
+ [2m189[0m |       <>
+ [2m190[0m |         {/* Backdrop */}
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./components/Header.tsx
+ GET /api/admin/activity 500 in 28ms
+ ✓ Compiled in 446ms (2259 modules)
+ ○ Compiling /api/auth/[...nextauth] ...
+ ✓ Compiled /api/auth/[...nextauth] in 573ms (1366 modules)
+[next-auth][warn][DEBUG_ENABLED] 
+https://next-auth.js.org/warnings#debug_enabled
+ GET /api/auth/session 200 in 636ms
+ GET /api/admin/activity 403 in 188ms
+ ✓ Compiled in 369ms (2261 modules)
+ GET /blog 200 in 329ms
+[next-auth][warn][DEBUG_ENABLED] 
+https://next-auth.js.org/warnings#debug_enabled
+ GET /api/auth/session 200 in 53ms
+ GET /api/auth/session 200 in 14ms
+ GET /api/admin/activity 403 in 176ms
+ GET /api/admin/activity 403 in 76ms
+ GET /api/admin/activity 403 in 202ms
+ GET /api/admin/activity 403 in 311ms
+ GET /api/admin/activity 403 in 224ms
+ GET /api/admin/activity 403 in 179ms
+ ○ Compiling /grove-exchange ...
+ ✓ Compiled /grove-exchange in 669ms (2251 modules)
+[next-auth][warn][DEBUG_ENABLED] 
+https://next-auth.js.org/warnings#debug_enabled
+ GET /api/admin/activity 403 in 230ms
+ ✓ Compiled in 417ms (2259 modules)
+[next-auth][warn][DEBUG_ENABLED] 
+https://next-auth.js.org/warnings#debug_enabled
+ GET /api/admin/activity 403 in 207ms
+ ✓ Compiled in 601ms (2259 modules)
+[next-auth][warn][DEBUG_ENABLED] 
+https://next-auth.js.org/warnings#debug_enabled
+ GET /api/admin/activity 403 in 809ms
+ GET /api/admin/activity 403 in 251ms
+ GET /api/admin/activity 403 in 219ms
+ GET /api/admin/activity 403 in 207ms
+ GET /api/admin/activity 403 in 192ms
+ GET /api/admin/activity 403 in 188ms
+ GET /api/admin/activity 403 in 163ms
+ ✓ Compiled in 629ms (2259 modules)
+[next-auth][warn][DEBUG_ENABLED] 
+https://next-auth.js.org/warnings#debug_enabled
+ GET /api/admin/activity 403 in 190ms
+ GET /api/admin/activity 403 in 263ms
+ ✓ Compiled in 566ms (2259 modules)
+[next-auth][warn][DEBUG_ENABLED] 
+https://next-auth.js.org/warnings#debug_enabled
+ GET /api/admin/activity 403 in 711ms
+ ✓ Compiled in 242ms (897 modules)
+ GET /api/admin/activity 403 in 267ms
+ ✓ Compiled in 307ms (897 modules)
+ ✓ Compiled in 199ms (897 modules)
+ GET /api/admin/activity 403 in 93ms
+ ✓ Compiled in 237ms (897 modules)
+ ✓ Compiled in 186ms (897 modules)
+ ✓ Compiled in 167ms (897 modules)
+ ✓ Compiled in 193ms (897 modules)
+ GET /api/admin/activity 403 in 168ms
+ ✓ Compiled in 1250ms (2259 modules)
+[next-auth][warn][DEBUG_ENABLED] 
+https://next-auth.js.org/warnings#debug_enabled
+ GET /api/admin/activity 403 in 224ms
+ ✓ Compiled /api/auth/[...nextauth] in 252ms (1364 modules)
+[next-auth][warn][DEBUG_ENABLED] 
+https://next-auth.js.org/warnings#debug_enabled
+ GET /api/auth/session 200 in 430ms
+ GET /api/admin/activity 403 in 567ms
+ GET /api/admin/activity 403 in 94ms
+ GET /grove-exchange 200 in 129ms
+ GET /api/auth/session 200 in 19ms
+ GET /api/auth/session 200 in 17ms
+ ✓ Compiled /icon.svg in 277ms (1392 modules)
+ GET /icon.svg?9f13d4b91f3b77de 200 in 445ms
+[next-auth][warn][DEBUG_ENABLED] 
+https://next-auth.js.org/warnings#debug_enabled
+ GET /api/admin/activity 403 in 491ms
+ GET /api/admin/activity 403 in 247ms
+ GET /api/admin/activity 403 in 335ms
+ ✓ Compiled in 807ms (2259 modules)
+ ✓ Compiled in 0ms (1362 modules)
+ ✓ Compiled in 0ms (1362 modules)
+ ✓ Compiled in 0ms (1362 modules)
+[next-auth][warn][DEBUG_ENABLED] 
+https://next-auth.js.org/warnings#debug_enabled
+ GET /api/admin/activity 403 in 1014ms
+[next-auth][warn][DEBUG_ENABLED] 
+https://next-auth.js.org/warnings#debug_enabled
+ GET /api/admin/activity 403 in 251ms
+ ✓ Compiled /api/auth/[...nextauth] in 451ms (1364 modules)
+[next-auth][warn][DEBUG_ENABLED] 
+https://next-auth.js.org/warnings#debug_enabled
+ GET /api/auth/session 200 in 493ms
+ GET /api/admin/activity 403 in 100ms
+ GET /grove-exchange 200 in 113ms
+ ✓ Compiled /icon.svg in 235ms (1392 modules)
+[next-auth][warn][DEBUG_ENABLED] 
+https://next-auth.js.org/warnings#debug_enabled
+ GET /api/auth/session 200 in 430ms
+ GET /icon.svg?9f13d4b91f3b77de 200 in 448ms
+ GET /api/auth/session 200 in 55ms
+ GET /api/admin/activity 403 in 142ms
+ GET /api/admin/activity 403 in 88ms
+ GET /api/admin/activity 403 in 797ms
+ GET /api/admin/activity 403 in 304ms
+ GET /api/admin/activity 403 in 227ms
+ GET /api/admin/activity 403 in 213ms
+ GET /api/admin/activity 403 in 163ms
+ GET /api/admin/activity 403 in 301ms
+ GET /api/admin/activity 403 in 203ms
+ GET /api/admin/activity 403 in 224ms
+ GET /api/admin/activity 403 in 194ms
+ GET /api/admin/activity 403 in 217ms
+ GET /api/admin/activity 403 in 188ms
+ GET /api/admin/activity 403 in 807ms
+ GET /api/admin/activity 403 in 194ms
+ GET /api/admin/activity 403 in 180ms
+ GET /api/admin/activity 403 in 181ms
+ GET /api/admin/activity 403 in 219ms
+ GET /api/auth/session 200 in 35ms
+ GET /api/admin/activity 403 in 99ms
+ GET /api/admin/activity 403 in 215ms
+ GET /api/admin/activity 403 in 242ms
+ GET /api/admin/activity 403 in 222ms
+ GET /api/admin/activity 403 in 181ms
+ ✓ Compiled in 957ms (2259 modules)
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 768ms (2262 modules)
+ GET /grove-exchange 200 in 110ms
+ ✓ Compiled /api/auth/[...nextauth] in 136ms (1365 modules)
+[next-auth][warn][DEBUG_ENABLED] 
+https://next-auth.js.org/warnings#debug_enabled
+ GET /api/auth/session 200 in 204ms
+ GET /api/auth/session 200 in 17ms
+ GET /api/admin/activity 403 in 715ms
+ GET /api/admin/activity 403 in 85ms
+ ✓ Compiled in 181ms (899 modules)
+ ✓ Compiled in 308ms (2250 modules)
+ ✓ Compiled in 182ms (899 modules)
+[next-auth][warn][DEBUG_ENABLED] 
+https://next-auth.js.org/warnings#debug_enabled
+ GET /api/admin/activity 403 in 227ms
+ GET /api/admin/activity 403 in 219ms
+ ✓ Compiled in 181ms (897 modules)
+ ✓ Compiled in 512ms (2261 modules)
+ ✓ Compiled in 168ms (897 modules)
+[next-auth][warn][DEBUG_ENABLED] 
+https://next-auth.js.org/warnings#debug_enabled
+ GET /api/admin/activity 403 in 195ms
+ ✓ Compiled in 172ms (897 modules)
+ ✓ Compiled in 203ms (897 modules)
+ ✓ Compiled in 178ms (897 modules)
+ GET /api/admin/activity 403 in 216ms
+ ✓ Compiled in 912ms (2259 modules)
+[next-auth][warn][DEBUG_ENABLED] 
+https://next-auth.js.org/warnings#debug_enabled
+ GET /api/admin/activity 403 in 222ms
+ ✓ Compiled in 180ms (897 modules)
+ ✓ Compiled in 520ms (2245 modules)
+[next-auth][warn][DEBUG_ENABLED] 
+https://next-auth.js.org/warnings#debug_enabled
+ GET /api/admin/activity 403 in 182ms
+ ✓ Compiled in 581ms (2245 modules)
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 795ms (2248 modules)
+ GET /grove-exchange 200 in 120ms
+ ✓ Compiled /api/auth/[...nextauth] in 381ms (1365 modules)
+[next-auth][warn][DEBUG_ENABLED] 
+https://next-auth.js.org/warnings#debug_enabled
+ GET /api/auth/session 200 in 445ms
+ GET /api/auth/session 200 in 18ms
+ GET /api/admin/activity 403 in 164ms
+ GET /api/admin/activity 403 in 84ms
+ ✓ Compiled in 196ms (899 modules)
+ ✓ Compiled in 627ms (2250 modules)
+ GET /grove-exchange 200 in 94ms
+[next-auth][warn][DEBUG_ENABLED] 
+https://next-auth.js.org/warnings#debug_enabled
+ GET /api/auth/session 200 in 46ms
+ GET /api/auth/session 200 in 19ms
+ GET /api/admin/activity 403 in 87ms
+ GET /api/admin/activity 403 in 237ms
+ ✓ Compiled in 626ms (2264 modules)
+ ✓ Compiled in 612ms (2248 modules)
+ GET /grove-exchange 200 in 106ms
+ ✓ Compiled /api/auth/[...nextauth] in 123ms (1365 modules)
+[next-auth][warn][DEBUG_ENABLED] 
+https://next-auth.js.org/warnings#debug_enabled
+ GET /api/auth/session 200 in 158ms
+ GET /api/auth/session 200 in 17ms
+ GET /api/admin/activity 403 in 354ms
+ GET /api/admin/activity 403 in 101ms
+ ✓ Compiled in 169ms (899 modules)
+ GET /api/admin/activity 403 in 764ms
+ GET /api/admin/activity 403 in 185ms
+ ✓ Compiled in 850ms (2245 modules)
+ ✓ Compiled in 245ms (897 modules)
+[next-auth][warn][DEBUG_ENABLED] 
+https://next-auth.js.org/warnings#debug_enabled
+ GET /api/admin/activity 403 in 274ms
+ GET /api/admin/activity 403 in 233ms
+ ✓ Compiled in 198ms (897 modules)
+ ✓ Compiled in 359ms (2245 modules)
+ ⨯ SyntaxError: Unexpected non-whitespace character after JSON at position 294 (line 16 column 2)
+    at JSON.parse (<anonymous>)
+    at loadManifest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\load-manifest.js:36:25)
+    at loadManifestWithRetries (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\load-components.js:40:51)
+    at async Promise.all (index 0)
+    at async loadComponentsImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\load-components.js:79:100)
+    at async DevServer.findPageComponentsImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\next-server.js:709:36)
+    at async DevServer.findPageComponents (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\dev\next-dev-server.js:577:20)
+    at async DevServer.renderPageComponent (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1894:24)
+    at async DevServer.renderToResponseImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1946:32)
+    at async DevServer.pipeImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:921:25)
+    at async NextNodeServer.handleCatchallRenderRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\next-server.js:272:17)
+    at async DevServer.handleRequestImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:817:17)
+    at async C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\dev\next-dev-server.js:339:20
+    at async Span.traceAsyncFn (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\trace\trace.js:154:20)
+    at async DevServer.handleRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\dev\next-dev-server.js:336:24)
+    at async invokeRender (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:173:21)
+    at async handleRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:350:24)
+    at async requestHandlerImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:374:13)
+    at async Server.requestListener (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\start-server.js:141:13) {
+  page: '/grove-exchange'
+}
+ ⨯ SyntaxError: Unexpected non-whitespace character after JSON at position 294 (line 16 column 2)
+    at JSON.parse (<anonymous>)
+    at loadManifest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\load-manifest.js:36:25)
+    at loadManifestWithRetries (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\load-components.js:40:51)
+    at async Promise.all (index 0)
+    at async loadComponentsImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\load-components.js:79:100)
+    at async DevServer.findPageComponentsImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\next-server.js:709:36)
+    at async DevServer.findPageComponents (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\dev\next-dev-server.js:577:20)
+    at async DevServer.renderErrorToResponseImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:2115:26)
+    at async pipe.req.req (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:2040:30)
+    at async DevServer.pipeImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:921:25)
+    at async NextNodeServer.handleCatchallRenderRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\next-server.js:287:21)
+    at async DevServer.handleRequestImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:817:17)
+    at async C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\dev\next-dev-server.js:339:20
+    at async Span.traceAsyncFn (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\trace\trace.js:154:20)
+    at async DevServer.handleRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\dev\next-dev-server.js:336:24)
+    at async invokeRender (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:173:21)
+    at async handleRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:350:24)
+    at async requestHandlerImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:374:13)
+    at async Server.requestListener (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\start-server.js:141:13)
+ ⨯ SyntaxError: Unexpected non-whitespace character after JSON at position 294 (line 16 column 2)
+    at JSON.parse (<anonymous>)
+    at loadManifest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\load-manifest.js:36:25)
+    at loadManifestWithRetries (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\load-components.js:40:51)
+    at async Promise.all (index 0)
+    at async loadComponentsImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\load-components.js:79:100)
+    at async DevServer.findPageComponentsImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\next-server.js:709:36)
+    at async DevServer.findPageComponents (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\dev\next-dev-server.js:577:20)
+    at async DevServer.renderPageComponent (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1894:24)
+    at async DevServer.renderToResponseImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1946:32)
+    at async DevServer.pipeImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:921:25)
+    at async NextNodeServer.handleCatchallRenderRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\next-server.js:272:17)
+    at async DevServer.handleRequestImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:817:17)
+    at async C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\dev\next-dev-server.js:339:20
+    at async Span.traceAsyncFn (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\trace\trace.js:154:20)
+    at async DevServer.handleRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\dev\next-dev-server.js:336:24)
+    at async invokeRender (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:173:21)
+    at async handleRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:350:24)
+    at async requestHandlerImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:374:13)
+    at async Server.requestListener (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\start-server.js:141:13) {
+  page: '/grove-exchange'
+}
+ ⨯ SyntaxError: Unexpected non-whitespace character after JSON at position 294 (line 16 column 2)
+    at JSON.parse (<anonymous>)
+    at loadManifest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\load-manifest.js:36:25)
+    at loadManifestWithRetries (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\load-components.js:40:51)
+    at async Promise.all (index 0)
+    at async loadComponentsImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\load-components.js:79:100)
+    at async DevServer.findPageComponentsImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\next-server.js:709:36)
+    at async DevServer.findPageComponents (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\dev\next-dev-server.js:577:20)
+    at async DevServer.renderErrorToResponseImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:2115:26)
+    at async pipe.req.req (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:2040:30)
+    at async DevServer.pipeImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:921:25)
+    at async NextNodeServer.handleCatchallRenderRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\next-server.js:287:21)
+    at async DevServer.handleRequestImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:817:17)
+    at async C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\dev\next-dev-server.js:339:20
+    at async Span.traceAsyncFn (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\trace\trace.js:154:20)
+    at async DevServer.handleRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\dev\next-dev-server.js:336:24)
+    at async invokeRender (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:173:21)
+    at async handleRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:350:24)
+    at async requestHandlerImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:374:13)
+    at async Server.requestListener (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\start-server.js:141:13)
+ ⨯ SyntaxError: Unexpected non-whitespace character after JSON at position 294 (line 16 column 2)
+    at JSON.parse (<anonymous>)
+    at loadManifest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\load-manifest.js:36:25)
+    at loadManifestWithRetries (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\load-components.js:40:51)
+    at async Promise.all (index 0)
+    at async loadComponentsImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\load-components.js:79:100)
+    at async DevServer.findPageComponentsImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\next-server.js:709:36)
+    at async DevServer.findPageComponents (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\dev\next-dev-server.js:577:20)
+    at async DevServer.renderPageComponent (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1894:24)
+    at async DevServer.renderToResponseImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1946:32)
+    at async DevServer.pipeImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:921:25)
+    at async NextNodeServer.handleCatchallRenderRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\next-server.js:272:17)
+    at async DevServer.handleRequestImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:817:17)
+    at async C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\dev\next-dev-server.js:339:20
+    at async Span.traceAsyncFn (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\trace\trace.js:154:20)
+    at async DevServer.handleRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\dev\next-dev-server.js:336:24)
+    at async invokeRender (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:173:21)
+    at async handleRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:350:24)
+    at async requestHandlerImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:374:13)
+    at async Server.requestListener (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\start-server.js:141:13) {
+  page: '/grove-exchange'
+}
+ ⨯ SyntaxError: Unexpected non-whitespace character after JSON at position 294 (line 16 column 2)
+    at JSON.parse (<anonymous>)
+    at loadManifest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\load-manifest.js:36:25)
+    at loadManifestWithRetries (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\load-components.js:40:51)
+    at async Promise.all (index 0)
+    at async loadComponentsImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\load-components.js:79:100)
+    at async DevServer.findPageComponentsImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\next-server.js:709:36)
+    at async DevServer.findPageComponents (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\dev\next-dev-server.js:577:20)
+    at async DevServer.renderErrorToResponseImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:2115:26)
+    at async pipe.req.req (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:2040:30)
+    at async DevServer.pipeImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:921:25)
+    at async NextNodeServer.handleCatchallRenderRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\next-server.js:287:21)
+    at async DevServer.handleRequestImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:817:17)
+    at async C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\dev\next-dev-server.js:339:20
+    at async Span.traceAsyncFn (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\trace\trace.js:154:20)
+    at async DevServer.handleRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\dev\next-dev-server.js:336:24)
+    at async invokeRender (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:173:21)
+    at async handleRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:350:24)
+    at async requestHandlerImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:374:13)
+    at async Server.requestListener (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\start-server.js:141:13)
+ GET /grove-exchange 500 in 491ms
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 1699ms (2248 modules)
+ GET /grove-exchange 200 in 547ms
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ GET /_next/static/webpack/50d2cf83b875ee96.webpack.hot-update.json 404 in 1224ms
+ GET /grove-exchange 200 in 84ms
+ ✓ Compiled /api/auth/[...nextauth] in 353ms (1365 modules)
+[next-auth][warn][DEBUG_ENABLED] 
+https://next-auth.js.org/warnings#debug_enabled
+ GET /api/auth/session 200 in 415ms
+ GET /api/auth/session 200 in 21ms
+ GET /api/admin/activity 403 in 156ms
+ GET /api/admin/activity 403 in 88ms
+ ✓ Compiled in 622ms (2250 modules)
+[next-auth][warn][DEBUG_ENABLED] 
+https://next-auth.js.org/warnings#debug_enabled
+ GET /api/admin/activity 403 in 186ms
+ GET /api/admin/activity 403 in 190ms
+ GET /api/admin/activity 403 in 214ms
+ ✓ Compiled in 880ms (2245 modules)
+ ✓ Compiled /api/auth/[...nextauth] in 142ms (1364 modules)
+[next-auth][warn][DEBUG_ENABLED] 
+https://next-auth.js.org/warnings#debug_enabled
+ GET /api/auth/session 200 in 189ms
+ GET /api/admin/activity 403 in 165ms
+ ✓ Compiled in 655ms (2261 modules)
+[next-auth][warn][DEBUG_ENABLED] 
+https://next-auth.js.org/warnings#debug_enabled
+ GET /api/admin/activity 403 in 269ms
+ ✓ Compiled in 588ms (2261 modules)
+[next-auth][warn][DEBUG_ENABLED] 
+https://next-auth.js.org/warnings#debug_enabled
+ GET /api/admin/activity 403 in 903ms
+ GET /api/admin/activity 403 in 224ms
+ ○ Compiling /cards ...
+ ✓ Compiled /cards in 570ms (2251 modules)
+ ✓ Compiled /cards/create in 321ms (1872 modules)
+ ✓ Compiled /api/cards/categories in 336ms (981 modules)
+Error fetching card categories: TypeError: Cannot read properties of undefined (reading 'findMany')
+    at GET (webpack-internal:///(rsc)/./app/api/cards/categories/route.ts:11:95)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:55784
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\trace\tracer.js:140:36
+    at NoopContextManager.with (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+    at NoopTracer.startActiveSpan (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18093)
+    at ProxyTracer.startActiveSpan (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18854)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\trace\tracer.js:122:103
+    at NoopContextManager.with (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+    at NextTracerImpl.trace (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\trace\tracer.js:122:28)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:48572
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Object.wrap (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:40957)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:47148
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Object.wrap (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:38292)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:47110
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at eO.execute (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:46557)
+    at eO.handle (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:57123)
+    at doRender (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1352:60)
+    at cacheEntry.responseCache.get.routeKind (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1574:34)
+    at ResponseCache.get (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\response-cache\index.js:49:26)
+    at DevServer.renderToResponseWithComponentsImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1482:53)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1003:121
+    at NextTracerImpl.trace (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\trace\tracer.js:105:20)
+    at DevServer.renderToResponseWithComponents (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1003:41)
+    at DevServer.renderPageComponent (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1908:35)
+    at async DevServer.renderToResponseImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1946:32)
+    at async DevServer.pipeImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:921:25)
+    at async NextNodeServer.handleCatchallRenderRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\next-server.js:272:17)
+    at async DevServer.handleRequestImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:817:17)
+    at async C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\dev\next-dev-server.js:339:20
+    at async Span.traceAsyncFn (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\trace\trace.js:154:20)
+    at async DevServer.handleRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\dev\next-dev-server.js:336:24)
+    at async invokeRender (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:173:21)
+    at async handleRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:350:24)
+    at async requestHandlerImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:374:13)
+    at async Server.requestListener (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\start-server.js:141:13)
+ GET /api/cards/categories 500 in 377ms
+Error fetching card categories: TypeError: Cannot read properties of undefined (reading 'findMany')
+    at GET (webpack-internal:///(rsc)/./app/api/cards/categories/route.ts:11:95)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:55784
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\trace\tracer.js:140:36
+    at NoopContextManager.with (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+    at NoopTracer.startActiveSpan (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18093)
+    at ProxyTracer.startActiveSpan (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18854)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\trace\tracer.js:122:103
+    at NoopContextManager.with (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+    at NextTracerImpl.trace (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\trace\tracer.js:122:28)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:48572
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Object.wrap (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:40957)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:47148
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Object.wrap (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:38292)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:47110
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at eO.execute (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:46557)
+    at eO.handle (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:57123)
+    at doRender (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1352:60)
+    at cacheEntry.responseCache.get.routeKind (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1574:34)
+    at ResponseCache.get (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\response-cache\index.js:49:26)
+    at DevServer.renderToResponseWithComponentsImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1482:53)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1003:121
+    at NextTracerImpl.trace (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\trace\tracer.js:105:20)
+    at DevServer.renderToResponseWithComponents (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1003:41)
+    at DevServer.renderPageComponent (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1908:35)
+    at async DevServer.renderToResponseImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1946:32)
+    at async DevServer.pipeImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:921:25)
+    at async NextNodeServer.handleCatchallRenderRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\next-server.js:272:17)
+    at async DevServer.handleRequestImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:817:17)
+    at async C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\dev\next-dev-server.js:339:20
+    at async Span.traceAsyncFn (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\trace\trace.js:154:20)
+    at async DevServer.handleRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\dev\next-dev-server.js:336:24)
+    at async invokeRender (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:173:21)
+    at async handleRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:350:24)
+    at async requestHandlerImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:374:13)
+    at async Server.requestListener (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\start-server.js:141:13)
+ GET /api/cards/categories 500 in 95ms
+   Reload env: .env.local
+ ✓ Compiled in 443ms (1609 modules)
+ GET /cards/create 200 in 132ms
+ ✓ Compiled /api/auth/[...nextauth] in 376ms (747 modules)
+ ✓ Compiled (982 modules)
+[next-auth][warn][DEBUG_ENABLED] 
+https://next-auth.js.org/warnings#debug_enabled
+ GET /icon.svg?9f13d4b91f3b77de 200 in 793ms
+ GET /api/auth/session 200 in 792ms
+ GET /api/auth/session 200 in 48ms
+ ✓ Compiled /api/admin/activity in 149ms (1005 modules)
+ ✓ Compiled (1007 modules)
+[next-auth][warn][DEBUG_ENABLED] 
+https://next-auth.js.org/warnings#debug_enabled
+Error fetching card categories: TypeError: Cannot read properties of undefined (reading 'findMany')
+    at GET (webpack-internal:///(rsc)/./app/api/cards/categories/route.ts:11:95)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:55784
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\trace\tracer.js:140:36
+    at NoopContextManager.with (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+    at NoopTracer.startActiveSpan (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18093)
+    at ProxyTracer.startActiveSpan (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18854)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\trace\tracer.js:122:103
+    at NoopContextManager.with (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+    at NextTracerImpl.trace (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\trace\tracer.js:122:28)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:48572
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Object.wrap (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:40957)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:47148
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Object.wrap (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:38292)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:47110
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at eO.execute (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:46557)
+    at eO.handle (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:57123)
+    at doRender (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1352:60)
+    at cacheEntry.responseCache.get.routeKind (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1574:34)
+    at ResponseCache.get (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\response-cache\index.js:49:26)
+    at DevServer.renderToResponseWithComponentsImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1482:53)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1003:121
+    at NextTracerImpl.trace (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\trace\tracer.js:105:20)
+    at DevServer.renderToResponseWithComponents (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1003:41)
+    at DevServer.renderPageComponent (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1908:35)
+    at async DevServer.renderToResponseImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1946:32)
+    at async DevServer.pipeImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:921:25)
+    at async NextNodeServer.handleCatchallRenderRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\next-server.js:272:17)
+    at async DevServer.handleRequestImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:817:17)
+    at async C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\dev\next-dev-server.js:339:20
+    at async Span.traceAsyncFn (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\trace\trace.js:154:20)
+    at async DevServer.handleRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\dev\next-dev-server.js:336:24)
+    at async invokeRender (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:173:21)
+    at async handleRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:350:24)
+    at async requestHandlerImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:374:13)
+    at async Server.requestListener (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\start-server.js:141:13)
+ GET /api/cards/categories 500 in 494ms
+Error fetching card categories: TypeError: Cannot read properties of undefined (reading 'findMany')
+    at GET (webpack-internal:///(rsc)/./app/api/cards/categories/route.ts:11:95)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:55784
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\trace\tracer.js:140:36
+    at NoopContextManager.with (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+    at NoopTracer.startActiveSpan (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18093)
+    at ProxyTracer.startActiveSpan (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18854)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\trace\tracer.js:122:103
+    at NoopContextManager.with (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+    at NextTracerImpl.trace (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\trace\tracer.js:122:28)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:48572
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Object.wrap (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:40957)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:47148
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Object.wrap (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:38292)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:47110
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at eO.execute (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:46557)
+    at eO.handle (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:57123)
+    at doRender (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1352:60)
+    at cacheEntry.responseCache.get.routeKind (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1574:34)
+    at ResponseCache.get (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\response-cache\index.js:49:26)
+    at DevServer.renderToResponseWithComponentsImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1482:53)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1003:121
+    at NextTracerImpl.trace (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\trace\tracer.js:105:20)
+    at DevServer.renderToResponseWithComponents (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1003:41)
+    at DevServer.renderPageComponent (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1908:35)
+    at async DevServer.renderToResponseImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1946:32)
+    at async DevServer.pipeImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:921:25)
+    at async NextNodeServer.handleCatchallRenderRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\next-server.js:272:17)
+    at async DevServer.handleRequestImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:817:17)
+    at async C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\dev\next-dev-server.js:339:20
+    at async Span.traceAsyncFn (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\trace\trace.js:154:20)
+    at async DevServer.handleRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\dev\next-dev-server.js:336:24)
+    at async invokeRender (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:173:21)
+    at async handleRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:350:24)
+    at async requestHandlerImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:374:13)
+    at async Server.requestListener (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\start-server.js:141:13)
+ GET /api/cards/categories 500 in 72ms
+ GET /api/admin/activity 403 in 639ms
+ GET /api/admin/activity 403 in 90ms
+   Reload env: .env.local
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ ✓ Compiled in 450ms (1914 modules)
+ GET /cards/create 200 in 345ms
+[next-auth][warn][DEBUG_ENABLED] 
+https://next-auth.js.org/warnings#debug_enabled
+ GET /api/auth/session 200 in 43ms
+ GET /icon.svg?9f13d4b91f3b77de 200 in 52ms
+Error fetching card categories: TypeError: Cannot read properties of undefined (reading 'findMany')
+    at GET (webpack-internal:///(rsc)/./app/api/cards/categories/route.ts:11:95)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:55784
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\trace\tracer.js:140:36
+    at NoopContextManager.with (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+    at NoopTracer.startActiveSpan (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18093)
+    at ProxyTracer.startActiveSpan (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18854)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\trace\tracer.js:122:103
+    at NoopContextManager.with (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+    at NextTracerImpl.trace (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\trace\tracer.js:122:28)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:48572
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Object.wrap (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:40957)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:47148
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Object.wrap (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:38292)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:47110
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at eO.execute (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:46557)
+    at eO.handle (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:57123)
+    at doRender (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1352:60)
+    at cacheEntry.responseCache.get.routeKind (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1574:34)
+    at ResponseCache.get (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\response-cache\index.js:49:26)
+    at DevServer.renderToResponseWithComponentsImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1482:53)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1003:121
+    at NextTracerImpl.trace (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\trace\tracer.js:105:20)
+    at DevServer.renderToResponseWithComponents (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1003:41)
+    at DevServer.renderPageComponent (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1908:35)
+    at async DevServer.renderToResponseImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1946:32)
+    at async DevServer.pipeImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:921:25)
+    at async NextNodeServer.handleCatchallRenderRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\next-server.js:272:17)
+    at async DevServer.handleRequestImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:817:17)
+    at async C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\dev\next-dev-server.js:339:20
+    at async Span.traceAsyncFn (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\trace\trace.js:154:20)
+    at async DevServer.handleRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\dev\next-dev-server.js:336:24)
+    at async invokeRender (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:173:21)
+    at async handleRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:350:24)
+    at async requestHandlerImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:374:13)
+    at async Server.requestListener (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\start-server.js:141:13)
+ GET /api/cards/categories 500 in 66ms
+ GET /api/auth/session 200 in 84ms
+Error fetching card categories: TypeError: Cannot read properties of undefined (reading 'findMany')
+    at GET (webpack-internal:///(rsc)/./app/api/cards/categories/route.ts:11:95)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:55784
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\trace\tracer.js:140:36
+    at NoopContextManager.with (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+    at NoopTracer.startActiveSpan (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18093)
+    at ProxyTracer.startActiveSpan (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18854)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\trace\tracer.js:122:103
+    at NoopContextManager.with (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+    at NextTracerImpl.trace (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\trace\tracer.js:122:28)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:48572
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Object.wrap (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:40957)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:47148
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Object.wrap (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:38292)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:47110
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at eO.execute (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:46557)
+    at eO.handle (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:57123)
+    at doRender (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1352:60)
+    at cacheEntry.responseCache.get.routeKind (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1574:34)
+    at ResponseCache.get (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\response-cache\index.js:49:26)
+    at DevServer.renderToResponseWithComponentsImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1482:53)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1003:121
+    at NextTracerImpl.trace (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\trace\tracer.js:105:20)
+    at DevServer.renderToResponseWithComponents (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1003:41)
+    at DevServer.renderPageComponent (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1908:35)
+    at async DevServer.renderToResponseImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1946:32)
+    at async DevServer.pipeImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:921:25)
+    at async NextNodeServer.handleCatchallRenderRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\next-server.js:272:17)
+    at async DevServer.handleRequestImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:817:17)
+    at async C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\dev\next-dev-server.js:339:20
+    at async Span.traceAsyncFn (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\trace\trace.js:154:20)
+    at async DevServer.handleRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\dev\next-dev-server.js:336:24)
+    at async invokeRender (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:173:21)
+    at async handleRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:350:24)
+    at async requestHandlerImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:374:13)
+    at async Server.requestListener (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\start-server.js:141:13)
+ GET /api/cards/categories 500 in 86ms
+ GET /api/admin/activity 403 in 172ms
+   Reload env: .env.local
+ ✓ Compiled in 436ms (1609 modules)
+ GET /cards/create 200 in 167ms
+ ✓ Compiled /icon.svg in 143ms (953 modules)
+ ✓ Compiled (982 modules)
+ GET /icon.svg?9f13d4b91f3b77de 200 in 250ms
+[next-auth][warn][DEBUG_ENABLED] 
+https://next-auth.js.org/warnings#debug_enabled
+ GET /api/auth/session 200 in 373ms
+ GET /api/auth/session 200 in 19ms
+ ✓ Compiled /api/admin/activity in 126ms (1005 modules)
+ ✓ Compiled (1007 modules)
+[next-auth][warn][DEBUG_ENABLED] 
+https://next-auth.js.org/warnings#debug_enabled
+Error fetching card categories: TypeError: Cannot read properties of undefined (reading 'findMany')
+    at GET (webpack-internal:///(rsc)/./app/api/cards/categories/route.ts:11:95)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:55784
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\trace\tracer.js:140:36
+    at NoopContextManager.with (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+    at NoopTracer.startActiveSpan (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18093)
+    at ProxyTracer.startActiveSpan (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18854)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\trace\tracer.js:122:103
+    at NoopContextManager.with (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+    at NextTracerImpl.trace (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\trace\tracer.js:122:28)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:48572
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Object.wrap (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:40957)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:47148
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Object.wrap (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:38292)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:47110
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at eO.execute (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:46557)
+    at eO.handle (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:57123)
+    at doRender (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1352:60)
+    at cacheEntry.responseCache.get.routeKind (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1574:34)
+    at ResponseCache.get (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\response-cache\index.js:49:26)
+    at DevServer.renderToResponseWithComponentsImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1482:53)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1003:121
+    at NextTracerImpl.trace (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\trace\tracer.js:105:20)
+    at DevServer.renderToResponseWithComponents (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1003:41)
+    at DevServer.renderPageComponent (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1908:35)
+    at async DevServer.renderToResponseImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1946:32)
+    at async DevServer.pipeImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:921:25)
+    at async NextNodeServer.handleCatchallRenderRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\next-server.js:272:17)
+    at async DevServer.handleRequestImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:817:17)
+    at async C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\dev\next-dev-server.js:339:20
+    at async Span.traceAsyncFn (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\trace\trace.js:154:20)
+    at async DevServer.handleRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\dev\next-dev-server.js:336:24)
+    at async invokeRender (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:173:21)
+    at async handleRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:350:24)
+    at async requestHandlerImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:374:13)
+    at async Server.requestListener (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\start-server.js:141:13)
+ GET /api/cards/categories 500 in 629ms
+Error fetching card categories: TypeError: Cannot read properties of undefined (reading 'findMany')
+    at GET (webpack-internal:///(rsc)/./app/api/cards/categories/route.ts:11:95)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:55784
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\trace\tracer.js:140:36
+    at NoopContextManager.with (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+    at NoopTracer.startActiveSpan (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18093)
+    at ProxyTracer.startActiveSpan (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18854)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\trace\tracer.js:122:103
+    at NoopContextManager.with (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+    at NextTracerImpl.trace (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\trace\tracer.js:122:28)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:48572
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Object.wrap (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:40957)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:47148
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Object.wrap (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:38292)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:47110
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at eO.execute (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:46557)
+    at eO.handle (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:57123)
+    at doRender (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1352:60)
+    at cacheEntry.responseCache.get.routeKind (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1574:34)
+    at ResponseCache.get (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\response-cache\index.js:49:26)
+    at DevServer.renderToResponseWithComponentsImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1482:53)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1003:121
+    at NextTracerImpl.trace (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\trace\tracer.js:105:20)
+    at DevServer.renderToResponseWithComponents (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1003:41)
+    at DevServer.renderPageComponent (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1908:35)
+    at async DevServer.renderToResponseImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1946:32)
+    at async DevServer.pipeImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:921:25)
+    at async NextNodeServer.handleCatchallRenderRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\next-server.js:272:17)
+    at async DevServer.handleRequestImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:817:17)
+    at async C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\dev\next-dev-server.js:339:20
+    at async Span.traceAsyncFn (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\trace\trace.js:154:20)
+    at async DevServer.handleRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\dev\next-dev-server.js:336:24)
+    at async invokeRender (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:173:21)
+    at async handleRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:350:24)
+    at async requestHandlerImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:374:13)
+    at async Server.requestListener (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\start-server.js:141:13)
+ GET /api/cards/categories 500 in 19ms
+ GET /api/admin/activity 403 in 1272ms
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ ✓ Compiled in 715ms (1623 modules)
+ GET /cards/create 200 in 619ms
+ ✓ Compiled /icon.svg in 126ms (953 modules)
+ ✓ Compiled (982 modules)
+ GET /icon.svg?9f13d4b91f3b77de 200 in 307ms
+[next-auth][warn][DEBUG_ENABLED] 
+https://next-auth.js.org/warnings#debug_enabled
+ GET /api/auth/session 200 in 350ms
+ GET /api/auth/session 200 in 41ms
+ ✓ Compiled /api/admin/activity in 418ms (1005 modules)
+ ✓ Compiled (1007 modules)
+[next-auth][warn][DEBUG_ENABLED] 
+https://next-auth.js.org/warnings#debug_enabled
+Error fetching card categories: TypeError: Cannot read properties of undefined (reading 'findMany')
+    at GET (webpack-internal:///(rsc)/./app/api/cards/categories/route.ts:11:95)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:55784
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\trace\tracer.js:140:36
+    at NoopContextManager.with (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+    at NoopTracer.startActiveSpan (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18093)
+    at ProxyTracer.startActiveSpan (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18854)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\trace\tracer.js:122:103
+    at NoopContextManager.with (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+    at NextTracerImpl.trace (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\trace\tracer.js:122:28)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:48572
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Object.wrap (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:40957)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:47148
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Object.wrap (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:38292)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:47110
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at eO.execute (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:46557)
+    at eO.handle (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:57123)
+    at doRender (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1352:60)
+    at cacheEntry.responseCache.get.routeKind (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1574:34)
+    at ResponseCache.get (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\response-cache\index.js:49:26)
+    at DevServer.renderToResponseWithComponentsImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1482:53)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1003:121
+    at NextTracerImpl.trace (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\trace\tracer.js:105:20)
+    at DevServer.renderToResponseWithComponents (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1003:41)
+    at DevServer.renderPageComponent (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1908:35)
+    at async DevServer.renderToResponseImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1946:32)
+    at async DevServer.pipeImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:921:25)
+    at async NextNodeServer.handleCatchallRenderRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\next-server.js:272:17)
+    at async DevServer.handleRequestImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:817:17)
+    at async C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\dev\next-dev-server.js:339:20
+    at async Span.traceAsyncFn (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\trace\trace.js:154:20)
+    at async DevServer.handleRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\dev\next-dev-server.js:336:24)
+    at async invokeRender (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:173:21)
+    at async handleRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:350:24)
+    at async requestHandlerImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:374:13)
+    at async Server.requestListener (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\start-server.js:141:13)
+ GET /api/cards/categories 500 in 775ms
+Error fetching card categories: TypeError: Cannot read properties of undefined (reading 'findMany')
+    at GET (webpack-internal:///(rsc)/./app/api/cards/categories/route.ts:11:95)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:55784
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\trace\tracer.js:140:36
+    at NoopContextManager.with (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+    at NoopTracer.startActiveSpan (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18093)
+    at ProxyTracer.startActiveSpan (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18854)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\trace\tracer.js:122:103
+    at NoopContextManager.with (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+    at NextTracerImpl.trace (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\trace\tracer.js:122:28)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:48572
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Object.wrap (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:40957)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:47148
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Object.wrap (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:38292)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:47110
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at eO.execute (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:46557)
+    at eO.handle (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:57123)
+    at doRender (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1352:60)
+    at cacheEntry.responseCache.get.routeKind (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1574:34)
+    at ResponseCache.get (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\response-cache\index.js:49:26)
+    at DevServer.renderToResponseWithComponentsImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1482:53)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1003:121
+    at NextTracerImpl.trace (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\trace\tracer.js:105:20)
+    at DevServer.renderToResponseWithComponents (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1003:41)
+    at DevServer.renderPageComponent (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1908:35)
+    at async DevServer.renderToResponseImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1946:32)
+    at async DevServer.pipeImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:921:25)
+    at async NextNodeServer.handleCatchallRenderRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\next-server.js:272:17)
+    at async DevServer.handleRequestImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:817:17)
+    at async C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\dev\next-dev-server.js:339:20
+    at async Span.traceAsyncFn (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\trace\trace.js:154:20)
+    at async DevServer.handleRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\dev\next-dev-server.js:336:24)
+    at async invokeRender (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:173:21)
+    at async handleRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:350:24)
+    at async requestHandlerImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:374:13)
+    at async Server.requestListener (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\start-server.js:141:13)
+ GET /api/cards/categories 500 in 82ms
+ GET /api/admin/activity 403 in 916ms
+ GET /api/admin/activity 403 in 102ms
+ ✓ Compiled in 470ms (1914 modules)
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ GET /cards/create 200 in 116ms
+ GET /icon.svg?9f13d4b91f3b77de 200 in 41ms
+[next-auth][warn][DEBUG_ENABLED] 
+https://next-auth.js.org/warnings#debug_enabled
+ GET /api/auth/session 200 in 58ms
+ GET /api/auth/session 200 in 48ms
+Error fetching card categories: TypeError: Cannot read properties of undefined (reading 'findMany')
+    at GET (webpack-internal:///(rsc)/./app/api/cards/categories/route.ts:11:95)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:55784
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\trace\tracer.js:140:36
+    at NoopContextManager.with (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+    at NoopTracer.startActiveSpan (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18093)
+    at ProxyTracer.startActiveSpan (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18854)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\trace\tracer.js:122:103
+    at NoopContextManager.with (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+    at NextTracerImpl.trace (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\trace\tracer.js:122:28)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:48572
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Object.wrap (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:40957)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:47148
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Object.wrap (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:38292)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:47110
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at eO.execute (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:46557)
+    at eO.handle (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:57123)
+    at doRender (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1352:60)
+    at cacheEntry.responseCache.get.routeKind (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1574:34)
+    at ResponseCache.get (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\response-cache\index.js:49:26)
+    at DevServer.renderToResponseWithComponentsImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1482:53)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1003:121
+    at NextTracerImpl.trace (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\trace\tracer.js:105:20)
+    at DevServer.renderToResponseWithComponents (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1003:41)
+    at DevServer.renderPageComponent (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1908:35)
+    at async DevServer.renderToResponseImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1946:32)
+    at async DevServer.pipeImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:921:25)
+    at async NextNodeServer.handleCatchallRenderRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\next-server.js:272:17)
+    at async DevServer.handleRequestImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:817:17)
+    at async C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\dev\next-dev-server.js:339:20
+    at async Span.traceAsyncFn (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\trace\trace.js:154:20)
+    at async DevServer.handleRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\dev\next-dev-server.js:336:24)
+    at async invokeRender (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:173:21)
+    at async handleRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:350:24)
+    at async requestHandlerImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:374:13)
+    at async Server.requestListener (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\start-server.js:141:13)
+ GET /api/cards/categories 500 in 53ms
+Error fetching card categories: TypeError: Cannot read properties of undefined (reading 'findMany')
+    at GET (webpack-internal:///(rsc)/./app/api/cards/categories/route.ts:11:95)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:55784
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\trace\tracer.js:140:36
+    at NoopContextManager.with (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+    at NoopTracer.startActiveSpan (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18093)
+    at ProxyTracer.startActiveSpan (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18854)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\trace\tracer.js:122:103
+    at NoopContextManager.with (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+    at NextTracerImpl.trace (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\trace\tracer.js:122:28)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:48572
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Object.wrap (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:40957)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:47148
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Object.wrap (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:38292)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:47110
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at eO.execute (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:46557)
+    at eO.handle (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:57123)
+    at doRender (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1352:60)
+    at cacheEntry.responseCache.get.routeKind (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1574:34)
+    at ResponseCache.get (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\response-cache\index.js:49:26)
+    at DevServer.renderToResponseWithComponentsImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1482:53)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1003:121
+    at NextTracerImpl.trace (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\trace\tracer.js:105:20)
+    at DevServer.renderToResponseWithComponents (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1003:41)
+    at DevServer.renderPageComponent (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1908:35)
+    at async DevServer.renderToResponseImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1946:32)
+    at async DevServer.pipeImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:921:25)
+    at async NextNodeServer.handleCatchallRenderRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\next-server.js:272:17)
+    at async DevServer.handleRequestImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:817:17)
+    at async C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\dev\next-dev-server.js:339:20
+    at async Span.traceAsyncFn (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\trace\trace.js:154:20)
+    at async DevServer.handleRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\dev\next-dev-server.js:336:24)
+    at async invokeRender (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:173:21)
+    at async handleRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:350:24)
+    at async requestHandlerImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:374:13)
+    at async Server.requestListener (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\start-server.js:141:13)
+ GET /api/cards/categories 500 in 88ms
+ GET /api/admin/activity 403 in 219ms
+ GET /api/admin/activity 403 in 117ms
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ ✓ Compiled in 693ms (1914 modules)
+ GET /cards/create 200 in 567ms
+[next-auth][warn][DEBUG_ENABLED] 
+https://next-auth.js.org/warnings#debug_enabled
+ GET /api/auth/session 200 in 46ms
+ GET /icon.svg?9f13d4b91f3b77de 200 in 44ms
+Error fetching card categories: TypeError: Cannot read properties of undefined (reading 'findMany')
+    at GET (webpack-internal:///(rsc)/./app/api/cards/categories/route.ts:11:95)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:55784
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\trace\tracer.js:140:36
+    at NoopContextManager.with (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+    at NoopTracer.startActiveSpan (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18093)
+    at ProxyTracer.startActiveSpan (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18854)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\trace\tracer.js:122:103
+    at NoopContextManager.with (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+    at NextTracerImpl.trace (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\trace\tracer.js:122:28)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:48572
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Object.wrap (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:40957)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:47148
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Object.wrap (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:38292)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:47110
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at eO.execute (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:46557)
+    at eO.handle (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:57123)
+    at doRender (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1352:60)
+    at cacheEntry.responseCache.get.routeKind (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1574:34)
+    at ResponseCache.get (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\response-cache\index.js:49:26)
+    at DevServer.renderToResponseWithComponentsImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1482:53)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1003:121
+    at NextTracerImpl.trace (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\trace\tracer.js:105:20)
+    at DevServer.renderToResponseWithComponents (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1003:41)
+    at DevServer.renderPageComponent (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1908:35)
+    at async DevServer.renderToResponseImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1946:32)
+    at async DevServer.pipeImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:921:25)
+    at async NextNodeServer.handleCatchallRenderRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\next-server.js:272:17)
+    at async DevServer.handleRequestImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:817:17)
+    at async C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\dev\next-dev-server.js:339:20
+    at async Span.traceAsyncFn (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\trace\trace.js:154:20)
+    at async DevServer.handleRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\dev\next-dev-server.js:336:24)
+    at async invokeRender (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:173:21)
+    at async handleRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:350:24)
+    at async requestHandlerImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:374:13)
+    at async Server.requestListener (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\start-server.js:141:13)
+ GET /api/cards/categories 500 in 59ms
+ GET /api/auth/session 200 in 86ms
+Error fetching card categories: TypeError: Cannot read properties of undefined (reading 'findMany')
+    at GET (webpack-internal:///(rsc)/./app/api/cards/categories/route.ts:11:95)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:55784
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\trace\tracer.js:140:36
+    at NoopContextManager.with (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+    at NoopTracer.startActiveSpan (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18093)
+    at ProxyTracer.startActiveSpan (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18854)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\trace\tracer.js:122:103
+    at NoopContextManager.with (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+    at NextTracerImpl.trace (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\trace\tracer.js:122:28)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:48572
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Object.wrap (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:40957)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:47148
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at Object.wrap (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:38292)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:47110
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at eO.execute (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:46557)
+    at eO.handle (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\compiled\next-server\app-route.runtime.dev.js:6:57123)
+    at doRender (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1352:60)
+    at cacheEntry.responseCache.get.routeKind (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1574:34)
+    at ResponseCache.get (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\response-cache\index.js:49:26)
+    at DevServer.renderToResponseWithComponentsImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1482:53)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1003:121
+    at NextTracerImpl.trace (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\trace\tracer.js:105:20)
+    at DevServer.renderToResponseWithComponents (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1003:41)
+    at DevServer.renderPageComponent (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1908:35)
+    at async DevServer.renderToResponseImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:1946:32)
+    at async DevServer.pipeImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:921:25)
+    at async NextNodeServer.handleCatchallRenderRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\next-server.js:272:17)
+    at async DevServer.handleRequestImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\base-server.js:817:17)
+    at async C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\dev\next-dev-server.js:339:20
+    at async Span.traceAsyncFn (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\trace\trace.js:154:20)
+    at async DevServer.handleRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\dev\next-dev-server.js:336:24)
+    at async invokeRender (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:173:21)
+    at async handleRequest (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:350:24)
+    at async requestHandlerImpl (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-server.js:374:13)
+    at async Server.requestListener (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\start-server.js:141:13)
+ GET /api/cards/categories 500 in 97ms
+ GET /api/admin/activity 403 in 167ms
+ ✓ Compiled in 1919ms (1623 modules)
+ ✓ Compiled in 959ms (907 modules)
+ ✓ Compiled in 1230ms (1609 modules)
+ ✓ Compiled in 1027ms (907 modules)
+ ✓ Compiled in 257ms (907 modules)
+ ✓ Compiled in 1209ms (1623 modules)
+ ✓ Compiled in 330ms (907 modules)
+ ✓ Compiled in 348ms (907 modules)
+ ✓ Compiled in 1968ms (1623 modules)
+ ✓ Compiled in 488ms (1623 modules)
+ ✓ Compiled in 484ms (1623 modules)
+ ✓ Compiled in 374ms (1623 modules)
+ ✓ Compiled in 464ms (1623 modules)
+ ✓ Compiled in 420ms (1623 modules)
+ ✓ Compiled in 289ms (907 modules)
+ ✓ Compiled in 415ms (907 modules)
+ ✓ Compiled in 366ms (907 modules)
+ ✓ Compiled in 1385ms (1623 modules)
+ ✓ Compiled in 318ms (907 modules)
+ ✓ Compiled in 229ms (907 modules)
+ ⚠ Failed to reload dynamic routes: Error: You cannot use different slug names for the same dynamic path ('id' !== 'orderId').
+    at handleSlug (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\shared\lib\router\utils\sorted-routes.js:94:31)
+    at UrlNode._insert (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\shared\lib\router\utils\sorted-routes.js:131:17)
+    at UrlNode._insert (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\shared\lib\router\utils\sorted-routes.js:142:40)
+    at UrlNode._insert (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\shared\lib\router\utils\sorted-routes.js:142:40)
+    at UrlNode._insert (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\shared\lib\router\utils\sorted-routes.js:142:40)
+    at UrlNode.insert (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\shared\lib\router\utils\sorted-routes.js:13:14)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\shared\lib\router\utils\sorted-routes.js:165:46
+    at Array.forEach (<anonymous>)
+    at getSortedRoutes (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\shared\lib\router\utils\sorted-routes.js:165:21)
+    at Watchpack.<anonymous> (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-utils\setup-dev-bundler.js:558:65)
+Error: You cannot use different slug names for the same dynamic path ('id' !== 'orderId').
+    at handleSlug (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\shared\lib\router\utils\sorted-routes.js:94:31)
+    at UrlNode._insert (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\shared\lib\router\utils\sorted-routes.js:131:17)
+    at UrlNode._insert (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\shared\lib\router\utils\sorted-routes.js:142:40)
+    at UrlNode._insert (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\shared\lib\router\utils\sorted-routes.js:142:40)
+    at UrlNode._insert (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\shared\lib\router\utils\sorted-routes.js:142:40)
+    at UrlNode.insert (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\shared\lib\router\utils\sorted-routes.js:13:14)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\shared\lib\router\utils\sorted-routes.js:165:46
+    at Array.forEach (<anonymous>)
+    at getSortedRoutes (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\shared\lib\router\utils\sorted-routes.js:165:21)
+    at DevRouteMatcherManager.reload (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\future\route-matcher-managers\default-route-matcher-manager.js:112:55)
+    at async DevRouteMatcherManager.reload (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\future\route-matcher-managers\dev-route-matcher-manager.js:112:9)
+    at async Object.propagateServerField (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\render-server.js:75:13)
+    at async propagateServerField (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-utils\setup-dev-bundler.js:134:5)
+    at async Watchpack.<anonymous> (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-utils\setup-dev-bundler.js:627:17)
+ ⨯ unhandledRejection: Error: You cannot use different slug names for the same dynamic path ('id' !== 'orderId').
+    at handleSlug (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\shared\lib\router\utils\sorted-routes.js:94:31)
+    at UrlNode._insert (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\shared\lib\router\utils\sorted-routes.js:131:17)
+    at UrlNode._insert (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\shared\lib\router\utils\sorted-routes.js:142:40)
+    at UrlNode._insert (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\shared\lib\router\utils\sorted-routes.js:142:40)
+    at UrlNode._insert (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\shared\lib\router\utils\sorted-routes.js:142:40)
+    at UrlNode.insert (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\shared\lib\router\utils\sorted-routes.js:13:14)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\shared\lib\router\utils\sorted-routes.js:165:46
+    at Array.forEach (<anonymous>)
+    at getSortedRoutes (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\shared\lib\router\utils\sorted-routes.js:165:21)
+    at DevRouteMatcherManager.reload (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\future\route-matcher-managers\default-route-matcher-manager.js:112:55)
+    at async DevRouteMatcherManager.reload (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\future\route-matcher-managers\dev-route-matcher-manager.js:112:9)
+    at async Object.propagateServerField (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\render-server.js:75:13)
+    at async propagateServerField (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-utils\setup-dev-bundler.js:134:5)
+    at async Watchpack.<anonymous> (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-utils\setup-dev-bundler.js:627:17)
+ ⨯ unhandledRejection: Error: You cannot use different slug names for the same dynamic path ('id' !== 'orderId').
+    at handleSlug (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\shared\lib\router\utils\sorted-routes.js:94:31)
+    at UrlNode._insert (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\shared\lib\router\utils\sorted-routes.js:131:17)
+    at UrlNode._insert (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\shared\lib\router\utils\sorted-routes.js:142:40)
+    at UrlNode._insert (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\shared\lib\router\utils\sorted-routes.js:142:40)
+    at UrlNode._insert (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\shared\lib\router\utils\sorted-routes.js:142:40)
+    at UrlNode.insert (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\shared\lib\router\utils\sorted-routes.js:13:14)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\shared\lib\router\utils\sorted-routes.js:165:46
+    at Array.forEach (<anonymous>)
+    at getSortedRoutes (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\shared\lib\router\utils\sorted-routes.js:165:21)
+    at DevRouteMatcherManager.reload (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\future\route-matcher-managers\default-route-matcher-manager.js:112:55)
+    at async DevRouteMatcherManager.reload (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\future\route-matcher-managers\dev-route-matcher-manager.js:112:9)
+    at async Object.propagateServerField (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\render-server.js:75:13)
+    at async propagateServerField (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-utils\setup-dev-bundler.js:134:5)
+    at async Watchpack.<anonymous> (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-utils\setup-dev-bundler.js:627:17)
+ ✓ Compiled in 269ms (907 modules)
+ ⚠ Failed to reload dynamic routes: Error: You cannot use different slug names for the same dynamic path ('id' !== 'orderId').
+    at handleSlug (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\shared\lib\router\utils\sorted-routes.js:94:31)
+    at UrlNode._insert (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\shared\lib\router\utils\sorted-routes.js:131:17)
+    at UrlNode._insert (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\shared\lib\router\utils\sorted-routes.js:142:40)
+    at UrlNode._insert (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\shared\lib\router\utils\sorted-routes.js:142:40)
+    at UrlNode._insert (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\shared\lib\router\utils\sorted-routes.js:142:40)
+    at UrlNode.insert (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\shared\lib\router\utils\sorted-routes.js:13:14)
+    at C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\shared\lib\router\utils\sorted-routes.js:165:46
+    at Array.forEach (<anonymous>)
+    at getSortedRoutes (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\shared\lib\router\utils\sorted-routes.js:165:21)
+    at Watchpack.<anonymous> (C:\Users\mrpof\APPS Homemade\Firefly Grove\node_modules\next\dist\server\lib\router-utils\setup-dev-bundler.js:558:65)
+ ✓ Compiled in 350ms (907 modules)
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, rename 'C:\Users\mrpof\APPS Homemade\Firefly Grove\.next\cache\webpack\client-development\2.pack.gz_' -> 'C:\Users\mrpof\APPS Homemade\Firefly Grove\.next\cache\webpack\client-development\2.pack.gz'

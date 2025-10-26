@@ -715,7 +715,8 @@ model CardTemplate {
   htmlTemplate    String   @db.Text // HTML structure for the card
   cssStyles       String   @db.Text // CSS styling for the card
   previewImage    String?  // URL to preview image
-  prewrittenMessage String? @db.Text // Firefly Grove inspired message for the card
+  coverMessage    String?  @db.Text // Short message for the card front/cover
+  insideMessage   String?  @db.Text // Longer Firefly Grove message inside the card
   photoLayout     String?  @db.Text // JSON describing photo placement zones
 
   // Pricing

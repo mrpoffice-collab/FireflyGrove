@@ -26,98 +26,106 @@ export default function CardPreview({
         </span>
       </div>
 
-      {/* Card Preview Container */}
-      <div className="bg-bg-elevated rounded-lg overflow-hidden border border-border-subtle">
-        {/* Card Mockup */}
-        <div className="aspect-[5/7] relative bg-gradient-to-br from-bg-dark to-bg-darker p-6 flex flex-col overflow-y-auto">
-          {/* Template Header */}
-          <div className="text-center mb-4">
-            <h4 className="text-2xl font-light text-firefly-glow mb-2">
-              {template.name}
-            </h4>
-          </div>
-
-          {/* Photos Section */}
-          {selectedPhotos.length > 0 && (
-            <div className={`grid gap-2 mb-4 ${
-              selectedPhotos.length === 1 ? 'grid-cols-1' :
-              selectedPhotos.length === 2 ? 'grid-cols-2' :
-              'grid-cols-2'
-            }`}>
-              {selectedPhotos.slice(0, 3).map((url, index) => (
-                <div
-                  key={index}
-                  className={`rounded overflow-hidden ${
-                    selectedPhotos.length === 1 ? 'aspect-video' :
-                    selectedPhotos.length === 3 && index === 0 ? 'col-span-2 aspect-video' :
-                    'aspect-square'
-                  }`}
-                >
-                  <img
-                    src={url}
-                    alt={`Preview ${index + 1}`}
-                    className="w-full h-full object-cover"
-                  />
+      {/* Card Preview Container - Front and Inside */}
+      <div className="space-y-4">
+        {/* FRONT of Card */}
+        <div className="bg-bg-elevated rounded-lg overflow-hidden border border-border-subtle">
+          <div className="bg-gradient-to-br from-bg-dark to-bg-darker p-6">
+            <p className="text-xs text-text-muted mb-2 text-center">FRONT</p>
+            <div className="aspect-[5/7] flex items-center justify-center p-8">
+              {/* Photos on Front */}
+              {selectedPhotos.length > 0 && (
+                <div className={`grid gap-2 mb-4 w-full ${
+                  selectedPhotos.length === 1 ? 'grid-cols-1' :
+                  selectedPhotos.length === 2 ? 'grid-cols-2' :
+                  'grid-cols-2'
+                }`}>
+                  {selectedPhotos.slice(0, 3).map((url, index) => (
+                    <div
+                      key={index}
+                      className={`rounded overflow-hidden ${
+                        selectedPhotos.length === 1 ? 'aspect-video' :
+                        selectedPhotos.length === 3 && index === 0 ? 'col-span-2 aspect-video' :
+                        'aspect-square'
+                      }`}
+                    >
+                      <img
+                        src={url}
+                        alt={`Preview ${index + 1}`}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          )}
+              )}
 
-          {/* Prewritten Message from Template */}
-          {template.prewrittenMessage && (
-            <div className="mb-4 px-2">
-              <div className="bg-firefly-dim/5 border border-firefly-dim/20 rounded-lg p-4">
-                <p className="text-text-soft text-sm leading-relaxed text-center italic">
-                  {template.prewrittenMessage}
+              {/* Cover Message */}
+              {template.coverMessage ? (
+                <p className="text-text-soft text-lg leading-relaxed text-center italic">
+                  {template.coverMessage}
+                </p>
+              ) : (
+                <p className="text-text-muted text-sm italic text-center">
+                  Cover message will appear here
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* INSIDE of Card */}
+        <div className="bg-bg-elevated rounded-lg overflow-hidden border border-border-subtle">
+          <div className="bg-gradient-to-br from-bg-dark to-bg-darker p-6">
+            <p className="text-xs text-text-muted mb-2 text-center">INSIDE</p>
+            <div className="aspect-[5/7] flex flex-col justify-center p-8 space-y-6">
+              {/* Inside Message from Firefly Grove */}
+              {template.insideMessage && (
+                <div className="bg-firefly-dim/5 border border-firefly-dim/20 rounded-lg p-4">
+                  <p className="text-text-soft text-sm leading-relaxed text-center">
+                    {template.insideMessage}
+                  </p>
+                </div>
+              )}
+
+              {/* Personal Message */}
+              <div className="text-center">
+                {customMessage ? (
+                  <p className="text-text-soft text-sm leading-relaxed whitespace-pre-wrap">
+                    {customMessage}
+                  </p>
+                ) : (
+                  <p className="text-text-muted text-xs italic">
+                    Your personal message...
+                  </p>
+                )}
+              </div>
+
+              {/* Signature */}
+              {(signature || senderName) && (
+                <div className="text-center mt-auto">
+                  {signature ? (
+                    <p
+                      className="text-text-soft text-base italic"
+                      style={{ fontFamily: '"Brush Script MT", "Lucida Handwriting", cursive' }}
+                    >
+                      {signature}
+                    </p>
+                  ) : senderName && (
+                    <p className="text-text-soft text-sm">
+                      {senderName}
+                    </p>
+                  )}
+                </div>
+              )}
+
+              {/* Firefly Grove Branding */}
+              <div className="text-center pt-3 border-t border-border-subtle">
+                <p className="text-text-muted text-xs flex items-center justify-center gap-1">
+                  <span className="text-firefly-glow">✦</span>
+                  Firefly Grove
                 </p>
               </div>
             </div>
-          )}
-
-          {/* Personal Message */}
-          <div className="flex-1 flex items-center justify-center mb-4 px-2">
-            <div className="text-center">
-              {customMessage ? (
-                <p className="text-text-soft text-sm leading-relaxed whitespace-pre-wrap">
-                  {customMessage}
-                </p>
-              ) : (
-                <p className="text-text-muted text-sm italic">
-                  Your personal message will appear here...
-                </p>
-              )}
-            </div>
-          </div>
-
-          {/* Signature Section */}
-          {(signature || senderName) && (
-            <div className="text-center mt-auto mb-4 px-2">
-              {signature ? (
-                <p
-                  className="text-text-soft text-base italic"
-                  style={{ fontFamily: '"Brush Script MT", "Lucida Handwriting", cursive' }}
-                >
-                  {signature}
-                </p>
-              ) : senderName && (
-                <>
-                  <p className="text-text-muted text-xs mb-1">
-                    With love,
-                  </p>
-                  <p className="text-text-soft text-sm font-medium">
-                    {senderName}
-                  </p>
-                </>
-              )}
-            </div>
-          )}
-
-          {/* Firefly Grove Branding */}
-          <div className="text-center pt-3 border-t border-border-subtle">
-            <p className="text-text-muted text-xs flex items-center justify-center gap-1">
-              <span className="text-firefly-glow">✦</span>
-              Sent with Firefly Grove
-            </p>
           </div>
         </div>
       </div>
