@@ -274,13 +274,7 @@ export default function MarketingGeniusPage() {
 
           {trends.length === 0 ? (
             <div className="text-center py-12 text-text-muted">
-              <p className="mb-4">No trends detected yet.</p>
-              <button
-                onClick={handleScanReddit}
-                className="px-6 py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg font-medium transition-soft"
-              >
-                Scan Reddit for Trends
-              </button>
+              <p>No trends detected yet. Click "Scan Reddit Now" above to find trending topics.</p>
             </div>
           ) : (
             <div className="space-y-4">
