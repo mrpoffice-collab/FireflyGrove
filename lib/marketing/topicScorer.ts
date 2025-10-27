@@ -5,9 +5,11 @@
 
 import Anthropic from '@anthropic-ai/sdk'
 
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY!,
-})
+const anthropic = process.env.ANTHROPIC_API_KEY
+  ? new Anthropic({
+      apiKey: process.env.ANTHROPIC_API_KEY,
+    })
+  : null
 
 interface TopicInput {
   topic: string
@@ -28,26 +30,32 @@ interface ScoreResult {
  * Score a topic for content creation using AI
  */
 export async function scoreTopic(input: TopicInput): Promise<ScoreResult> {
-  // Use Claude to intelligently score the topic
-  const aiScores = await scoreTopicWithAI(input)
+  try {
+    // Use Claude to intelligently score the topic
+    const aiScores = await scoreTopicWithAI(input)
 
-  // Calculate overall confidence
-  const confidenceScore = calculateConfidenceScore(
-    aiScores.demandScore,
-    aiScores.competitionScore,
-    aiScores.relevanceScore
-  )
+    // Calculate overall confidence
+    const confidenceScore = calculateConfidenceScore(
+      aiScores.demandScore,
+      aiScores.competitionScore,
+      aiScores.relevanceScore
+    )
 
-  // Estimate users based on confidence
-  const estimatedUsers = estimateUsers(confidenceScore, aiScores.demandScore)
+    // Estimate users based on confidence
+    const estimatedUsers = estimateUsers(confidenceScore, aiScores.demandScore)
 
-  return {
-    demandScore: aiScores.demandScore,
-    competitionScore: aiScores.competitionScore,
-    relevanceScore: aiScores.relevanceScore,
-    confidenceScore,
-    estimatedUsers,
-    reasoningNotes: aiScores.reasoning,
+    return {
+      demandScore: aiScores.demandScore,
+      competitionScore: aiScores.competitionScore,
+      relevanceScore: aiScores.relevanceScore,
+      confidenceScore,
+      estimatedUsers,
+      reasoningNotes: aiScores.reasoning,
+    }
+  } catch (error) {
+    console.error('Error in scoreTopic, falling back to heuristics:', error)
+    // If AI scoring completely fails, fall back to legacy heuristic scoring
+    return scoreTopicLegacy(input)
   }
 }
 
@@ -60,6 +68,12 @@ async function scoreTopicWithAI(input: TopicInput): Promise<{
   relevanceScore: number
   reasoning: string
 }> {
+  // Check if API key is available
+  if (!anthropic) {
+    console.warn('ANTHROPIC_API_KEY not set, using heuristic scoring')
+    return heuristicScoring(input)
+  }
+
   const prompt = `You are a content strategist for Firefly Grove, a memory preservation app.
 
 Mission: Help families preserve stories, voices, and memories before it's too late.
@@ -152,12 +166,12 @@ function heuristicScoring(input: TopicInput): {
 /**
  * Score a topic for content creation (LEGACY - for backward compatibility)
  */
-export async function scoreTopicLegacy(input: TopicInput): Promise<ScoreResult> {
+export function scoreTopicLegacy(input: TopicInput): ScoreResult {
   // 1. Demand Score: Estimate search volume/demand
-  const demandScore = await calculateDemandScoreHeuristic(input.primaryKeyword, input.relatedKeywords)
+  const demandScore = calculateDemandScoreHeuristic(input.primaryKeyword, input.relatedKeywords)
 
   // 2. Competition Score: How beatable are competitors
-  const competitionScore = await calculateCompetitionScoreHeuristic(input.primaryKeyword)
+  const competitionScore = calculateCompetitionScoreHeuristic(input.primaryKeyword)
 
   // 3. Relevance Score: How well does this fit Firefly Grove?
   const relevanceScore = calculateRelevanceScoreHeuristic(input.topic, input.primaryKeyword)
