@@ -39,6 +39,8 @@ export async function POST(req: NextRequest) {
     // Check for API key
     if (!process.env.ANTHROPIC_API_KEY) {
       console.warn('⚠️ ANTHROPIC_API_KEY not set - will use heuristic scoring')
+    } else {
+      console.log('✅ ANTHROPIC_API_KEY is set - using AI scoring')
     }
 
     // Generate and score topics
