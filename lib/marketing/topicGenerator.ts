@@ -58,16 +58,16 @@ export async function generateTopics(
         relatedKeywords: topic.relatedKeywords,
       })
 
+      console.log(
+        `📊 "${topic.topic}" | Keyword: "${topic.primaryKeyword}" | Score: ${scores.confidenceScore}% (D:${scores.demandScore} C:${scores.competitionScore} R:${scores.relevanceScore})`
+      )
+
       // Only keep if meets minimum confidence
       if (scores.confidenceScore >= config.minConfidence) {
         scoredTopics.push({ ...topic, scores })
-        console.log(
-          `✅ ${topic.topic} - ${scores.confidenceScore}% confidence`
-        )
+        console.log(`   ✅ PASSED - Added to results`)
       } else {
-        console.log(
-          `❌ ${topic.topic} - ${scores.confidenceScore}% (below threshold)`
-        )
+        console.log(`   ❌ REJECTED - Below ${config.minConfidence}% threshold`)
       }
     } catch (error) {
       console.error(`Error scoring topic "${topic.topic}":`, error)
