@@ -21,6 +21,7 @@ interface ContentCalendarItem {
     publishedAt: string | null
     views: number
     signups: number
+    platform: string
   }
   createdAt: string
 }

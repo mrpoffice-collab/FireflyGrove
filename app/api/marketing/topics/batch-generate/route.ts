@@ -59,6 +59,45 @@ export async function POST(req: NextRequest) {
       `📝 Starting batch generation for ${topicIds.length} topics...`
     )
 
+    // Helper function to find next available date (skip dates with existing posts)
+    const findNextAvailableDate = async (
+      startDate: Date,
+      intervalDays: number
+    ): Promise<Date> => {
+      let candidateDate = new Date(startDate)
+
+      while (true) {
+        // Create date range for the full day
+        const dayStart = new Date(candidateDate)
+        dayStart.setHours(0, 0, 0, 0)
+        const dayEnd = new Date(candidateDate)
+        dayEnd.setHours(23, 59, 59, 999)
+
+        // Check if any approved posts are scheduled for this date
+        const existingPost = await prisma.marketingPost.findFirst({
+          where: {
+            isApproved: true,
+            scheduledFor: {
+              gte: dayStart,
+              lt: dayEnd,
+            },
+          },
+        })
+
+        if (!existingPost) {
+          // Date is free!
+          return candidateDate
+        }
+
+        // Date has a post, try next interval
+        console.log(
+          `  ⏭️ ${candidateDate.toLocaleDateString()} already has a post, trying next date...`
+        )
+        candidateDate = new Date(candidateDate)
+        candidateDate.setDate(candidateDate.getDate() + intervalDays)
+      }
+    }
+
     const results = []
     const errors = []
     let currentDate = startDate ? new Date(startDate) : new Date()
@@ -76,6 +115,10 @@ export async function POST(req: NextRequest) {
         }
 
         console.log(`\n📝 Processing: ${topic.topic}`)
+
+        // Find next available date (skip conflicts)
+        currentDate = await findNextAvailableDate(currentDate, interval)
+        console.log(`  📅 Scheduled for: ${currentDate.toLocaleDateString()}`)
 
         // Generate brief if doesn't exist
         let brief = await prisma.contentBrief.findUnique({
@@ -152,9 +195,10 @@ export async function POST(req: NextRequest) {
         const socialDate = new Date(blogPost.scheduledFor || currentDate)
         socialDate.setDate(socialDate.getDate() + 1)
 
-        // Increment date for next main post
-        currentDate = new Date(currentDate)
-        currentDate.setDate(currentDate.getDate() + interval)
+        // Set up next candidate date for next post (will check for conflicts before using)
+        const nextCandidateDate = new Date(currentDate)
+        nextCandidateDate.setDate(nextCandidateDate.getDate() + interval)
+        currentDate = nextCandidateDate
         if (formats.newsletter || formats.facebook || formats.pinterest || formats.reddit) {
           console.log('  → Repurposing content...')
 
