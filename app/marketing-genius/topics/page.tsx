@@ -35,7 +35,6 @@ export default function TopicsPage() {
   const [newsletterCount, setNewsletterCount] = useState(1)
   const [facebookCount, setFacebookCount] = useState(2)
   const [pinterestCount, setPinterestCount] = useState(3)
-  const [redditCount, setRedditCount] = useState(2)
   const [startDate, setStartDate] = useState(
     new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
   )
@@ -182,7 +181,7 @@ export default function TopicsPage() {
 
     const totalPosts =
       selectedTopics.size *
-      (blogCount + newsletterCount + facebookCount + pinterestCount + redditCount)
+      (blogCount + newsletterCount + facebookCount + pinterestCount)
 
     if (
       !confirm(
@@ -191,8 +190,7 @@ export default function TopicsPage() {
           `• ${blogCount} blog post\n` +
           `• ${newsletterCount} newsletter\n` +
           `• ${facebookCount} Facebook posts\n` +
-          `• ${pinterestCount} Pinterest pins\n` +
-          `• ${redditCount} Reddit posts\n\n` +
+          `• ${pinterestCount} Pinterest pins\n\n` +
           `Starting ${startDate}, main posts every ${intervalDays} days`
       )
     )
@@ -210,7 +208,6 @@ export default function TopicsPage() {
             newsletter: newsletterCount,
             facebook: facebookCount,
             pinterest: pinterestCount,
-            reddit: redditCount,
           },
           startDate,
           intervalDays,
@@ -644,22 +641,6 @@ export default function TopicsPage() {
                     />
                     <div className="text-xs text-text-muted mt-1">Multiple pins</div>
                   </div>
-
-                  <div className="p-4 bg-bg-elevated rounded-lg">
-                    <div className="flex items-center justify-between mb-2">
-                      <label className="text-text-soft text-sm font-medium">💬 Reddit</label>
-                      <span className="text-xs text-text-muted">Subreddits</span>
-                    </div>
-                    <input
-                      type="number"
-                      value={redditCount}
-                      onChange={(e) => setRedditCount(parseInt(e.target.value))}
-                      min="0"
-                      max="5"
-                      className="w-full px-4 py-2 bg-bg-dark border border-border-subtle rounded-lg text-text-soft"
-                    />
-                    <div className="text-xs text-text-muted mt-1">Different subreddits</div>
-                  </div>
                 </div>
 
                 {/* Scheduling */}
@@ -689,7 +670,7 @@ export default function TopicsPage() {
                 {/* Summary & Action */}
                 <div className="flex items-center justify-between">
                   <div className="text-sm text-text-muted">
-                    Will generate {selectedTopics.size * (blogCount + newsletterCount + facebookCount + pinterestCount + redditCount)} total pieces from {selectedTopics.size} topics
+                    Will generate {selectedTopics.size * (blogCount + newsletterCount + facebookCount + pinterestCount)} total pieces from {selectedTopics.size} topics
                   </div>
                   <button
                     onClick={batchGenerate}
