@@ -791,27 +791,20 @@ export default function TopicsPage() {
                     }`}>
                       {topic.status}
                     </span>
-                    {topic.status === 'candidate' ? (
-                      <button
-                        onClick={() => generateBrief(topic.id)}
-                        className="px-4 py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg text-sm font-medium transition-soft"
-                      >
-                        Generate Brief
-                      </button>
-                    ) : topic.status === 'drafted' ? (
+                    {topic.status === 'drafted' && (
                       <button
                         onClick={() => viewBrief(topic.id)}
                         className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg text-sm font-medium transition-soft"
                       >
                         📄 View Brief
                       </button>
-                    ) : null}
+                    )}
                     <button
                       onClick={() => dismissTopic(topic.id)}
-                      className="px-4 py-2 bg-yellow-500/20 hover:bg-yellow-500/30 text-yellow-400 rounded-lg text-sm font-medium transition-soft"
-                      title="Dismiss topic (hide from list)"
+                      className="px-4 py-2 bg-gray-500/20 hover:bg-gray-500/30 text-gray-400 rounded-lg text-sm font-medium transition-soft"
+                      title="Hide topic (won't show up again)"
                     >
-                      ⏭️
+                      ✕ Hide
                     </button>
                     <button
                       onClick={() => deleteTopic(topic.id)}
