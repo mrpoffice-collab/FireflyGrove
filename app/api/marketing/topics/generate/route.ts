@@ -36,12 +36,19 @@ export async function POST(req: NextRequest) {
       `🚀 Starting automated topic generation: ${count} topics, ${minConfidence}% min confidence`
     )
 
+    // Check for API key
+    if (!process.env.ANTHROPIC_API_KEY) {
+      console.warn('⚠️ ANTHROPIC_API_KEY not set - will use heuristic scoring')
+    }
+
     // Generate and score topics
+    console.log('📝 Calling generateTopics...')
     const scoredTopics = await generateTopics({
       count,
       minConfidence,
       focusAreas,
     })
+    console.log(`📊 generateTopics returned ${scoredTopics.length} topics`)
 
     // Save to database
     const savedTopics = []
@@ -94,11 +101,13 @@ export async function POST(req: NextRequest) {
       message: `Generated ${stats.passed} winning topics (${stats.highConfidence} high confidence, ${stats.mediumConfidence} medium confidence)`,
     })
   } catch (error) {
-    console.error('Error generating topics:', error)
+    console.error('❌ Error generating topics:', error)
+    console.error('Error stack:', (error as Error).stack)
     return NextResponse.json(
       {
         error: 'Failed to generate topics',
         details: (error as Error).message,
+        stack: process.env.NODE_ENV === 'development' ? (error as Error).stack : undefined,
       },
       { status: 500 }
     )

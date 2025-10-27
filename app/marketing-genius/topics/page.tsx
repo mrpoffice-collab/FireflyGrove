@@ -126,11 +126,12 @@ export default function TopicsPage() {
         fetchTopics() // Refresh to show new topics
       } else {
         const error = await res.json()
-        alert(error.error || 'Failed to generate topics')
+        console.error('Server error response:', error)
+        alert(`❌ ${error.error}\n\nDetails: ${error.details || 'No additional details'}`)
       }
     } catch (error) {
       console.error('Error generating topics:', error)
-      alert('Error generating topics')
+      alert(`❌ Error generating topics: ${(error as Error).message}`)
     } finally {
       setGenerating(false)
     }
