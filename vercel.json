@@ -1,4 +1,11 @@
 {
+  "git": {
+    "deploymentEnabled": {
+      "main": true,
+      "dev": false,
+      "staging": false
+    }
+  },
   "crons": [
     {
       "path": "/api/cron?job=daily-legacy",

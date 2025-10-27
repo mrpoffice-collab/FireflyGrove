@@ -1,0 +1,22 @@
+# Vercel Ignore File
+# Files that shouldn't trigger deployments
+
+# Documentation updates (don't trigger deployment)
+*.md
+!README.md
+!DEPLOYMENT.md
+
+# Local scripts
+scripts/scan-reddit-local.js
+scripts/set-admin.ts
+
+# Development files
+.vscode/
+.idea/
+*.log
+
+# Test files (if you have them)
+**/*.test.ts
+**/*.test.tsx
+**/*.spec.ts
+**/*.spec.tsx
