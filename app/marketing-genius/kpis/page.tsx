@@ -52,7 +52,7 @@ export default function KPIsPage() {
   const [productConversion, setProductConversion] = useState(10)
   const [avgProductSpend, setAvgProductSpend] = useState(20)
   const [fixedCosts, setFixedCosts] = useState(0)
-  const [variableCostPerUser, setVariableCostPerUser] = useState(2)
+  const [variableCostPerUser, setVariableCostPerUser] = useState(0.03)
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -435,30 +435,29 @@ export default function KPIsPage() {
           <h3 className="text-2xl font-light text-text-soft mb-2">💰 Financial Projections</h3>
           <p className="text-text-muted mb-8">Interactive "what-if" scenarios for profitability planning</p>
 
-          {/* Current State */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-            <div className="bg-bg-dark rounded-lg p-4">
-              <div className="text-text-muted text-sm mb-1">Monthly Revenue</div>
-              <div className={`text-2xl font-light ${currentMetrics.revenue >= fixedCosts ? 'text-green-400' : 'text-yellow-400'}`}>
-                {formatCurrency(currentMetrics.revenue)}
+          {/* What-If Scenario */}
+          <div className="bg-bg-dark rounded-lg p-6 mb-8">
+            <h4 className="text-lg text-text-soft font-medium mb-4">What-If: At {targetUsers} Users</h4>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <div>
+                <div className="text-text-muted text-sm mb-1">Monthly Revenue</div>
+                <div className="text-xl font-light text-green-400">{formatCurrency(targetMetrics.revenue)}</div>
               </div>
-            </div>
-            <div className="bg-bg-dark rounded-lg p-4">
-              <div className="text-text-muted text-sm mb-1">Monthly Costs</div>
-              <div className="text-2xl font-light text-red-400">
-                {formatCurrency(currentMetrics.costs)}
+              <div>
+                <div className="text-text-muted text-sm mb-1">Monthly Costs</div>
+                <div className="text-xl font-light text-red-400">{formatCurrency(targetMetrics.costs)}</div>
               </div>
-            </div>
-            <div className="bg-bg-dark rounded-lg p-4">
-              <div className="text-text-muted text-sm mb-1">Monthly Profit</div>
-              <div className={`text-2xl font-light ${currentMetrics.profit >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-                {formatCurrency(currentMetrics.profit)}
+              <div>
+                <div className="text-text-muted text-sm mb-1">Monthly Profit</div>
+                <div className={`text-xl font-light ${targetMetrics.profit >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                  {formatCurrency(targetMetrics.profit)}
+                </div>
               </div>
-            </div>
-            <div className="bg-bg-dark rounded-lg p-4">
-              <div className="text-text-muted text-sm mb-1">Profit Margin</div>
-              <div className={`text-2xl font-light ${currentMetrics.margin >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-                {currentMetrics.margin.toFixed(0)}%
+              <div>
+                <div className="text-text-muted text-sm mb-1">Annual Profit</div>
+                <div className={`text-xl font-light ${targetMetrics.profit >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                  {formatCurrency(targetMetrics.profit * 12)}
+                </div>
               </div>
             </div>
           </div>
@@ -587,13 +586,13 @@ export default function KPIsPage() {
               <div>
                 <div className="flex items-center justify-between mb-2">
                   <label className="text-text-soft text-sm font-medium">Variable Cost per User/Month</label>
-                  <span className="text-firefly-glow font-medium">${variableCostPerUser}/user</span>
+                  <span className="text-firefly-glow font-medium">${variableCostPerUser.toFixed(2)}/user</span>
                 </div>
                 <input
                   type="range"
                   min="0"
-                  max="10"
-                  step="0.5"
+                  max="2"
+                  step="0.01"
                   value={variableCostPerUser}
                   onChange={(e) => setVariableCostPerUser(parseFloat(e.target.value))}
                   className="w-full h-2 bg-bg-dark rounded-lg appearance-none cursor-pointer accent-firefly-glow"
@@ -609,28 +608,32 @@ export default function KPIsPage() {
             </div>
           </div>
 
-          {/* At Target Users */}
+          {/* Current Actual */}
           <div className="bg-bg-dark rounded-lg p-6 mb-8">
-            <h4 className="text-lg text-text-soft font-medium mb-4">At {targetUsers} Users (Target)</h4>
+            <h4 className="text-lg text-text-soft font-medium mb-4">Current Actual: {currentUsers} Users</h4>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div>
                 <div className="text-text-muted text-sm mb-1">Monthly Revenue</div>
-                <div className="text-xl font-light text-green-400">{formatCurrency(targetMetrics.revenue)}</div>
-              </div>
-              <div>
-                <div className="text-text-muted text-sm mb-1">Monthly Costs</div>
-                <div className="text-xl font-light text-red-400">{formatCurrency(targetMetrics.costs)}</div>
-              </div>
-              <div>
-                <div className="text-text-muted text-sm mb-1">Monthly Profit</div>
-                <div className={`text-xl font-light ${targetMetrics.profit >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-                  {formatCurrency(targetMetrics.profit)}
+                <div className={`text-xl font-light ${currentMetrics.revenue >= fixedCosts ? 'text-green-400' : 'text-yellow-400'}`}>
+                  {formatCurrency(currentMetrics.revenue)}
                 </div>
               </div>
               <div>
-                <div className="text-text-muted text-sm mb-1">Annual Profit</div>
-                <div className={`text-xl font-light ${targetMetrics.profit >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-                  {formatCurrency(targetMetrics.profit * 12)}
+                <div className="text-text-muted text-sm mb-1">Monthly Costs</div>
+                <div className="text-xl font-light text-red-400">
+                  {formatCurrency(currentMetrics.costs)}
+                </div>
+              </div>
+              <div>
+                <div className="text-text-muted text-sm mb-1">Monthly Profit</div>
+                <div className={`text-xl font-light ${currentMetrics.profit >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                  {formatCurrency(currentMetrics.profit)}
+                </div>
+              </div>
+              <div>
+                <div className="text-text-muted text-sm mb-1">Profit Margin</div>
+                <div className={`text-xl font-light ${currentMetrics.margin >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                  {currentMetrics.margin.toFixed(0)}%
                 </div>
               </div>
             </div>
