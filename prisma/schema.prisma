@@ -1081,6 +1081,9 @@ model TopicScore {
   scoredAt          DateTime @default(now())
   publishedAt       DateTime?
 
+  // Relations
+  contentBrief      ContentBrief?
+
   @@index([confidenceScore])
   @@index([status])
   @@index([scoredAt])
@@ -1113,6 +1116,9 @@ model ContentBrief {
 
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
+
+  // Relations
+  topicScore        TopicScore @relation(fields: [topicScoreId], references: [id], onDelete: Cascade)
 
   @@index([status])
   @@index([createdAt])
