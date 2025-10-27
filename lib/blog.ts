@@ -164,7 +164,7 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
       },
     })
 
-    if (!post) return null
+    if (!post || !post.slug) return null
 
     // Convert markdown content to HTML
     const processedContent = await remark()
