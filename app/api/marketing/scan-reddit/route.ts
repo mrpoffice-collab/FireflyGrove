@@ -127,7 +127,7 @@ function extractKeywords(title: string): string[] {
     .filter(word => word.length > 3 && !stopWords.includes(word))
 
   // Return top 5 unique words
-  return [...new Set(words)].slice(0, 5)
+  return Array.from(new Set(words)).slice(0, 5)
 }
 
 function generateContentIdea(title: string, subreddit: string): string {
