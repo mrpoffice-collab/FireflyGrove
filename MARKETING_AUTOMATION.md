@@ -634,6 +634,395 @@ model TrendingTopic {
 
 ---
 
+## Content Formatting & Style Guide
+
+### Blog Post Format Standards
+
+**Ideal Blog Post Structure:**
+```markdown
+# Main Title (H1) - Emotional Hook
+60-70 characters, includes power words, makes a promise
+
+Opening paragraph - Tell a story or share a shocking statistic.
+Create immediate emotional connection.
+
+## Why This Matters (H2)
+Connect to family legacy, memory preservation, preventing loss
+
+## Main Content Section 1 (H2)
+### Subsection A (H3)
+- Bullet point with actionable advice
+- Bullet point with specific example
+- Bullet point with next step
+
+### Subsection B (H3)
+Step-by-step instructions with clear outcomes
+
+## Main Content Section 2 (H2)
+More value-packed content
+
+## How Firefly Grove Helps (H2)
+Natural product mention (NOT salesy)
+- Feature 1 and how it solves the problem
+- Feature 2 and real use case
+- Feature 3 and benefits
+
+## Conclusion (H2)
+Summary + clear next step + emotional reminder
+
+**Call to Action:**
+> Start preserving your family memories today with Firefly Grove.
+> [Try Firefly Grove Free →](link)
+```
+
+**Formatting Best Practices:**
+- Use H2 for main sections, H3 for subsections
+- Bold important phrases for scanning
+- Italics for emphasis or quotes
+- Bullet points for lists (easier to read)
+- Short paragraphs (2-3 sentences max)
+- Include personal anecdotes (builds connection)
+- Add statistics when possible (builds credibility)
+- Use transitional phrases between sections
+
+**Content Quality Checklist:**
+- ✅ Passes "so what?" test (reader gets clear value)
+- ✅ Actionable (reader can do something immediately)
+- ✅ Emotional (connects to grief, legacy, love)
+- ✅ SEO-optimized (keywords used naturally)
+- ✅ Skimmable (headers, bullets, bold text)
+- ✅ Original examples (not generic advice)
+- ✅ Natural product mentions (not forced)
+
+---
+
+## Content Repurposing Strategy
+
+### From Blog Post → Multiple Platforms
+
+**One 2000-word blog post can become:**
+- 10+ Pinterest pins
+- 5+ Reddit posts
+- 15+ Facebook posts
+- 20+ Twitter/X threads
+- 3-5 email newsletters
+- 1 YouTube video script
+- 5+ Instagram carousels
+
+### 📌 Pinterest (Visual Platform - High Traffic)
+
+**Goal:** Drive traffic back to blog
+**Format:** Vertical images (1000x1500px) with text overlay
+
+**Repurposing Process:**
+```
+1. Extract 10 key takeaways from blog post
+2. Create pin for each takeaway using Canva:
+   - Eye-catching image (family photos, vintage aesthetics)
+   - Bold headline (from blog H2/H3 sections)
+   - Subtitle with benefit
+   - "Read more at FireflyGrove.app" CTA
+
+3. Pin titles:
+   "5 Ways to Preserve Family Memories Before It's Too Late"
+   "The #1 Mistake People Make With Old Photos (And How to Fix It)"
+   "Why Your Grandchildren Will Thank You for Doing This Now"
+
+4. Pin descriptions (500 chars):
+   - Expand on the key point
+   - Include target keywords
+   - Add blog URL
+   - Use hashtags: #FamilyHistory #MemoryPreservation #Genealogy
+
+5. Post schedule: 1-2 pins per day from same blog post
+```
+
+**Pinterest Boards to Create:**
+- Family Memory Preservation
+- Organizing Old Photos
+- Grief & Remembrance
+- Family History Tips
+- Digital Legacy Planning
+- Grandparenting Ideas
+
+### 📱 Reddit (Community Platform - Quality Engagement)
+
+**Goal:** Build authority, help people genuinely
+**Format:** Value-first text posts (NOT promotional)
+
+**Repurposing Process:**
+```
+1. Extract 3-5 standalone tips from blog
+2. Rewrite each as a helpful Reddit post:
+   - Start with relatable problem/story
+   - Share the solution (from blog)
+   - Add personal context
+   - Mention blog ONLY if asked
+
+3. Example transformation:
+
+   Blog H2: "How to Digitize Old Photos Without Spending $1000"
+
+   Reddit Post:
+   Title: "Digitized 500 family photos for under $50 - here's how"
+
+   Body:
+   "My grandmother passed away last year, and I inherited boxes of
+   old photos. Professional scanning would have cost $800+, so I
+   found a better way.
+
+   What I did:
+   - Borrowed a decent scanner from library (free)
+   - Used Google PhotoScan app for damaged photos ($0)
+   - Organized with [method from blog]
+   - Total cost: $35 for storage
+
+   Tips that saved me:
+   [Key points from blog post]
+
+   Happy to answer questions!"
+
+4. Subreddits to target:
+   - r/Genealogy (family history)
+   - r/Parenting (memory-making)
+   - r/GriefSupport (memorial ideas)
+   - r/LifeProTips (organization tips)
+   - r/declutter (organizing photos)
+
+5. Timing: Wait 1 week after blog publish
+6. Frequency: 1-2 posts per week (don't spam)
+```
+
+**Reddit Golden Rules:**
+- NEVER lead with product mention
+- Focus on genuinely helping
+- Be transparent if asked about Firefly Grove
+- Engage with comments (build relationships)
+- Share personal stories, not sales pitches
+
+### 📘 Facebook (Community Building - Warm Audience)
+
+**Goal:** Build engaged community, nurture leads
+**Format:** Conversational posts with images
+
+**Repurposing Process:**
+```
+1. Extract emotional stories/stats from blog
+2. Rewrite as conversation starters:
+
+   Blog opening: "78% of families wish they had recorded
+   their grandparents' stories before it was too late."
+
+   Facebook Post:
+   "My biggest regret? 😢
+
+   I never asked my grandmother about her childhood in Italy.
+   She passed away last year, and now those stories are gone forever.
+
+   I see so many of you sharing family photos and memories here.
+   Can I ask - have you recorded your parents' or grandparents'
+   stories yet?
+
+   If not, here are 3 questions to ask them this weekend:
+   [Key points from blog]
+
+   What's one story you wish you had asked about?
+   Comment below 👇"
+
+3. Post types to create:
+   - Question posts (drive engagement)
+   - Tip posts (quick value)
+   - Story posts (emotional connection)
+   - Photo posts (nostalgic imagery)
+   - Poll posts (interactive)
+
+4. Facebook Groups to share in:
+   - Family history groups
+   - Parenting groups (local and national)
+   - Grief support communities
+   - Genealogy enthusiasts
+   - Memory keeping groups
+
+5. Schedule: 3-5 posts per week
+```
+
+**Facebook Content Calendar from 1 Blog Post:**
+- Monday: Question post (conversation starter)
+- Wednesday: Tip post (actionable advice)
+- Friday: Story post (emotional/inspirational)
+- Weekend: Photo post (nostalgic/relatable)
+
+### 🐦 Twitter/X (Thought Leadership - Quick Tips)
+
+**Goal:** Build authority, drive traffic
+**Format:** Threads (8-12 tweets)
+
+**Repurposing Process:**
+```
+1. Turn blog into thread:
+
+   Tweet 1 (Hook):
+   "I helped my mom organize 60 years of family photos last weekend.
+
+   Here's the system that actually worked (and why most people
+   fail at this): 🧵"
+
+   Tweet 2-11 (Key points from blog):
+   Each H3 section = 1 tweet
+   - Keep it conversational
+   - One idea per tweet
+   - Add personal touch
+
+   Tweet 12 (CTA):
+   "Want the full step-by-step guide?
+
+   I wrote everything out here: [blog link]
+
+   And if you want help organizing your family memories,
+   check out [Firefly Grove link]"
+
+2. Quote tweets (ongoing):
+   - Pull stats from blog
+   - Share as standalone tweets
+   - Engage with similar content
+
+3. Schedule: 1-2 threads per week
+```
+
+### 📧 Email Newsletter (Direct Relationship)
+
+**Goal:** Nurture subscribers, drive conversions
+**Format:** Personal, story-driven emails
+
+**Repurposing Process:**
+```
+From 1 blog post, create 3-5 emails:
+
+Email 1: The Hook (Story from blog opening)
+Subject: "My biggest regret about my grandmother..."
+Body: Share emotional story, tease solution
+CTA: "Read how to avoid this →" [blog link]
+
+Email 2: The How-To (Main content)
+Subject: "Here's exactly how to [achieve result]"
+Body: Summarize key steps from blog
+CTA: "Get the complete guide →" [blog link]
+
+Email 3: The Social Proof (Success story)
+Subject: "This worked for Sarah (it can work for you too)"
+Body: Create case study from blog concepts
+CTA: "Try this yourself →" [Firefly Grove link]
+
+Email 4: The Objection Handler
+Subject: "But what if you don't have time for this?"
+Body: Address common objection from blog
+CTA: "Here's the shortcut →" [product link]
+
+Email 5: The Reminder
+Subject: "Did you try this yet?"
+Body: Gentle reminder + bonus tip
+CTA: "Here's one more thing that helps →"
+
+Spacing: 1 email every 3-4 days
+```
+
+### 🎥 Video Content (YouTube, TikTok, Reels)
+
+**Repurposing Process:**
+```
+1. Turn blog sections into video scripts:
+
+   Blog H2: "3 Ways to Preserve Family Stories"
+
+   Video Script:
+   [0:00] Hook: "Your grandparents' stories are disappearing..."
+   [0:05] Problem: Personal story (from blog intro)
+   [0:15] Solution 1: [First H3 section]
+   [0:30] Solution 2: [Second H3 section]
+   [0:45] Solution 3: [Third H3 section]
+   [1:00] CTA: "Link in bio for full guide"
+
+2. Video types:
+   - Tutorial (how-to from blog)
+   - Story time (emotional anecdote)
+   - Quick tip (single takeaway)
+   - Before/After (transformation)
+
+3. Platforms:
+   - YouTube Shorts (60 seconds)
+   - TikTok (90 seconds)
+   - Instagram Reels (90 seconds)
+   - Facebook Reels (60 seconds)
+```
+
+---
+
+## Content Repurposing Workflow
+
+### Week 1: Blog Published
+```
+Monday: Publish blog post on Firefly Grove
+Tuesday: Create 10 Pinterest pins
+Wednesday: Schedule pins (2/day for 5 days)
+Thursday: Write 2 Reddit posts
+Friday: Create Facebook post calendar (5 posts)
+Weekend: Write email newsletter
+```
+
+### Week 2: Maximum Distribution
+```
+Monday: Post to Reddit (1st post)
+Tuesday: Facebook post #1
+Wednesday: Twitter thread
+Thursday: Reddit post #2
+Friday: Facebook post #2
+Weekend: Send email newsletter
+```
+
+### Week 3: Continued Promotion
+```
+Continue Pinterest pins
+Continue Facebook posts
+Repurpose into video content
+Monitor engagement and comments
+```
+
+### Tracking What Works
+```
+Create simple spreadsheet:
+- Platform
+- Post type
+- Engagement (views, clicks, comments)
+- Traffic to blog (use UTM parameters)
+- Signups attributed
+
+Focus more on what works, less on what doesn't.
+```
+
+---
+
+## Content Multiplier Effect
+
+**One 2000-word blog post** =
+
+| Platform | Content Pieces | Time Required | Traffic Potential |
+|----------|---------------|---------------|-------------------|
+| Blog | 1 post | 2 min (AI) | 100-500 views/month |
+| Pinterest | 10 pins | 30 min | 500-2000 views/month |
+| Reddit | 3 posts | 20 min | 100-1000 views each |
+| Facebook | 5 posts | 15 min | 50-200 reach each |
+| Twitter | 1 thread | 10 min | 100-500 views |
+| Email | 3 emails | 20 min | 100% open rate (subscribers) |
+| **TOTAL** | **23 pieces** | **~2 hours** | **2000-5000+ views** |
+
+**Without AI:** 3 hours to write blog + 2 hours to repurpose = 5 hours total
+
+**With AI:** 2 minutes to generate + 2 hours to repurpose = 2 hours total
+
+**Time saved:** 60% 🚀
+
+---
+
 ## Future Enhancements
 
 ### Phase 2: Distribution Automation
