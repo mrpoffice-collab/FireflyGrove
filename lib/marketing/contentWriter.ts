@@ -100,14 +100,92 @@ export async function writeContentFromBrief(
 
 /**
  * Generate Unsplash image URL based on keywords
+ * Maps keywords to curated high-quality Unsplash images
  */
 function generateUnsplashImage(keywords: string[]): string {
-  // Use first keyword or fallback to generic family/memory keywords
-  const searchTerm = keywords[0] || 'family memories'
-  const cleanTerm = searchTerm.toLowerCase().replace(/\s+/g, '-')
+  // Keyword to Unsplash photo ID mapping (curated for memory preservation topics)
+  const keywordImageMap: Record<string, string> = {
+    // Family & Photos
+    'family': 'photo-1511895426328-dc8714191300', // Family gathering
+    'photos': 'photo-1551269901-5c5e14c25df7', // Photo albums
+    'memories': 'photo-1516733725897-1aa73b87c8e8', // Old photos
+    'album': 'photo-1551269901-5c5e14c25df7', // Photo albums
+    'scrapbook': 'photo-1452421822248-d4c2b47f0c81', // Scrapbooking
 
-  // Unsplash Source API for random images
-  return `https://images.unsplash.com/photo-1551269901-5c5e14c25df7?w=1200&h=630&fit=crop`
+    // Digital & Technology
+    'digital': 'photo-1488590528505-98d2b5aba04b', // Technology
+    'cloud': 'photo-1544197150-b99a580bb7a8', // Cloud storage
+    'backup': 'photo-1544197150-b99a580bb7a8', // Backup
+    'storage': 'photo-1597852074816-d933c7d2b988', // Storage
+    'scan': 'photo-1588600878108-578307a3cc9d', // Scanning
+
+    // Heritage & Legacy
+    'legacy': 'photo-1532187863486-abf9dbad1b69', // Generations
+    'heritage': 'photo-1581579186913-45ac3e6efe93', // Old documents
+    'ancestry': 'photo-1532187863486-abf9dbad1b69', // Family tree
+    'genealogy': 'photo-1532187863486-abf9dbad1b69', // Genealogy
+    'generations': 'photo-1532187863486-abf9dbad1b69', // Multi-generation
+
+    // Video & Audio
+    'video': 'photo-1574717024653-61fd2cf4d44d', // Video recording
+    'audio': 'photo-1598488035139-bdbb2231ce04', // Recording
+    'recording': 'photo-1598488035139-bdbb2231ce04', // Audio recording
+    'voice': 'photo-1589903308904-1010c2294adc', // Microphone
+
+    // Documents & Letters
+    'documents': 'photo-1586281380349-632531db7ed4', // Documents
+    'letters': 'photo-1455390582262-044cdead277a', // Handwritten letters
+    'handwritten': 'photo-1455390582262-044cdead277a', // Handwriting
+    'diary': 'photo-1517842645767-c639042777db', // Journal/diary
+
+    // Organization & Preservation
+    'organize': 'photo-1544816155-12df9643f363', // Organization
+    'preserve': 'photo-1551269901-5c5e14c25df7', // Preservation
+    'archive': 'photo-1507003211169-0a1dd7228f2d', // Archive
+    'collection': 'photo-1551269901-5c5e14c25df7', // Collection
+  }
+
+  // Pool of general memory preservation images for fallback
+  const fallbackImages = [
+    'photo-1551269901-5c5e14c25df7', // Photo albums
+    'photo-1511895426328-dc8714191300', // Family gathering
+    'photo-1516733725897-1aa73b87c8e8', // Old photos
+    'photo-1532187863486-abf9dbad1b69', // Generations
+    'photo-1452421822248-d4c2b47f0c81', // Vintage photos
+  ]
+
+  // Try to find matching keyword
+  let photoId: string | null = null
+
+  for (const keyword of keywords) {
+    const normalized = keyword.toLowerCase().trim()
+
+    // Check direct match
+    if (keywordImageMap[normalized]) {
+      photoId = keywordImageMap[normalized]
+      break
+    }
+
+    // Check partial matches
+    for (const [key, value] of Object.entries(keywordImageMap)) {
+      if (normalized.includes(key) || key.includes(normalized)) {
+        photoId = value
+        break
+      }
+    }
+
+    if (photoId) break
+  }
+
+  // If no match found, use hash of first keyword to consistently pick from fallback pool
+  if (!photoId) {
+    const keyword = keywords[0] || 'memory'
+    const hash = keyword.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)
+    const index = hash % fallbackImages.length
+    photoId = fallbackImages[index]
+  }
+
+  return `https://images.unsplash.com/${photoId}?w=1200&h=630&fit=crop`
 }
 
 /**
