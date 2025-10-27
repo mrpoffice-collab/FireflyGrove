@@ -34,7 +34,8 @@ export async function publishBlogPost(post: BlogPost): Promise<string> {
   const filepath = path.join(blogDir, filename)
 
   // Create markdown content with frontmatter
-  const publishDate = post.scheduledFor ? new Date(post.scheduledFor) : new Date()
+  // Use current date as publish date (not scheduledFor, which is for internal calendar)
+  const publishDate = new Date()
   const markdown = generateMarkdown(post, publishDate)
 
   // Write file

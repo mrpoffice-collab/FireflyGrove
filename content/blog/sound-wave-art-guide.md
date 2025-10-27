@@ -1,6 +1,6 @@
 ---
 title: "Sound Wave Art: Turn Voices Into Beautiful Wall Art (Complete Guide)"
-date: "2025-01-10"
+date: "2025-10-27"
 excerpt: "Discover how to transform meaningful voices and audio into stunning, scannable artwork. Perfect for gifts, memorials, and preserving precious moments forever."
 author: "Firefly Grove Team"
 category: "Sound Wave Art"

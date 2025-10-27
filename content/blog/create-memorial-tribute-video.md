@@ -1,6 +1,6 @@
 ---
 title: "How to Create a Memorial Tribute Video: Step-by-Step Guide"
-date: "2025-01-12"
+date: "2025-10-27"
 excerpt: "Learn how to create a beautiful memorial tribute video to honor a loved one. Includes photo selection tips, music choices, and free tools to get started."
 author: "Firefly Grove Team"
 category: "Memorial Tributes"

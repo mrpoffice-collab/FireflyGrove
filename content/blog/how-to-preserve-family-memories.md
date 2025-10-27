@@ -1,6 +1,6 @@
 ---
 title: "How to Preserve Family Memories: A Complete Guide for 2025"
-date: "2025-01-15"
+date: "2025-10-27"
 excerpt: "Discover proven methods to preserve your family's precious memories, from digitizing old photos to creating lasting memorial tributes. Complete guide with step-by-step instructions."
 author: "Firefly Grove Team"
 category: "Memory Preservation"
