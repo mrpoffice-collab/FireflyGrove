@@ -402,6 +402,30 @@ export default function DraftsPage() {
                         ↩️ Unapprove
                       </button>
                     )}
+
+                    {/* Share Buttons for Social Posts */}
+                    {post.platform === 'facebook' && post.isApproved && (
+                      <a
+                        href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent('https://fireflygrove.app')}&quote=${encodeURIComponent(post.content.substring(0, 500))}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-4 py-2 bg-[#1877f2] hover:bg-[#0c63d4] text-white rounded-lg text-sm font-medium transition-soft text-center"
+                      >
+                        📤 Share to FB
+                      </a>
+                    )}
+
+                    {post.platform === 'pinterest' && post.isApproved && (
+                      <a
+                        href={`https://pinterest.com/pin/create/button/?url=${encodeURIComponent('https://fireflygrove.app')}&description=${encodeURIComponent(post.content.substring(0, 500))}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-4 py-2 bg-[#e60023] hover:bg-[#c2001d] text-white rounded-lg text-sm font-medium transition-soft text-center"
+                      >
+                        📤 Share to Pinterest
+                      </a>
+                    )}
+
                     <button
                       onClick={() => deleteSingle(post.id)}
                       className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-medium transition-soft"
@@ -486,6 +510,29 @@ export default function DraftsPage() {
 
                     {/* Actions */}
                     <div className="flex flex-col gap-2">
+                      {/* Share Buttons for Social Posts */}
+                      {post.platform === 'facebook' && (
+                        <a
+                          href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent('https://fireflygrove.app')}&quote=${encodeURIComponent(post.content.substring(0, 500))}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="px-4 py-2 bg-[#1877f2] hover:bg-[#0c63d4] text-white rounded-lg text-sm font-medium transition-soft text-center"
+                        >
+                          📤 Share to FB
+                        </a>
+                      )}
+
+                      {post.platform === 'pinterest' && (
+                        <a
+                          href={`https://pinterest.com/pin/create/button/?url=${encodeURIComponent('https://fireflygrove.app')}&description=${encodeURIComponent(post.content.substring(0, 500))}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="px-4 py-2 bg-[#e60023] hover:bg-[#c2001d] text-white rounded-lg text-sm font-medium transition-soft text-center"
+                        >
+                          📤 Share to Pinterest
+                        </a>
+                      )}
+
                       <button
                         onClick={() => unapproveSingle(post.id)}
                         className="px-4 py-2 bg-yellow-600 hover:bg-yellow-700 text-white rounded-lg text-sm font-medium transition-soft"
