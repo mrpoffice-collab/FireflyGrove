@@ -306,10 +306,15 @@ export default function MarketingGeniusPage() {
         </div>
 
         {/* Draft Posts */}
-        {draftPosts.length > 0 && (
-          <div className="mb-12 bg-bg-elevated border border-border-subtle rounded-xl p-8">
-            <h2 className="text-2xl font-light text-text-soft mb-6">📝 Draft Posts</h2>
+        <div className="mb-12 bg-bg-elevated border border-border-subtle rounded-xl p-8">
+          <h2 className="text-2xl font-light text-text-soft mb-6">📝 Draft Posts ({draftPosts.length})</h2>
 
+          {draftPosts.length === 0 ? (
+            <div className="text-center py-12 text-text-muted">
+              <p className="mb-2">No draft posts yet.</p>
+              <p className="text-sm">Use "Auto-Write All Posts" above or "Generate Blog Post" to create drafts.</p>
+            </div>
+          ) : (
             <div className="space-y-4">
               {draftPosts.map(post => (
                 <div key={post.id} className="bg-bg-dark border border-border-subtle rounded-lg p-6">
@@ -346,8 +351,8 @@ export default function MarketingGeniusPage() {
                 </div>
               ))}
             </div>
-          </div>
-        )}
+          )}
+        </div>
 
         {/* Trending Topics */}
         <div className="bg-bg-elevated border border-border-subtle rounded-xl p-8">
