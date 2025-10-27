@@ -53,8 +53,27 @@ export async function POST(req: NextRequest) {
 
     console.log(`📘 Publishing to Facebook: ${post.title}`)
 
+    // Auto-publish blog post if it's not published yet
+    if (post.platform === 'blog' && post.status === 'draft') {
+      console.log('  → Auto-publishing blog post first...')
+      await prisma.marketingPost.update({
+        where: { id: postId },
+        data: {
+          status: 'published',
+          publishedAt: new Date(),
+        },
+      })
+      console.log('  ✅ Blog post published')
+    }
+
     // Prepare Facebook post content
     const message = post.excerpt || post.content.substring(0, 500)
+
+    // Determine the correct URL
+    let postUrl = 'https://fireflygrove.app'
+    if (post.platform === 'blog' && post.slug) {
+      postUrl = `https://fireflygrove.app/blog/${post.slug}`
+    }
 
     // Post to Facebook
     let facebookPostId: string | null = null
@@ -72,7 +91,7 @@ export async function POST(req: NextRequest) {
           },
           body: JSON.stringify({
             url: post.image,
-            caption: `${post.title}\n\n${message}\n\nRead more: https://firefly-grove.vercel.app/blog/${post.slug}`,
+            caption: `${post.title}\n\n${message}\n\nRead more: ${postUrl}`,
             access_token: pageAccessToken,
           }),
         }
@@ -102,7 +121,7 @@ export async function POST(req: NextRequest) {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            message: `${post.title}\n\n${message}\n\nRead more: https://firefly-grove.vercel.app/blog/${post.slug}`,
+            message: `${post.title}\n\n${message}\n\nRead more: ${postUrl}`,
             access_token: pageAccessToken,
           }),
         }
