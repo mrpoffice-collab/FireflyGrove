@@ -1043,3 +1043,143 @@ model ContentCalendar {
   @@index([scheduledFor, status])
   @@index([status])
 }
+
+// ============================================
+// CONTENT INTELLIGENCE SYSTEM
+// ============================================
+
+// Topic scoring and intelligence
+model TopicScore {
+  id                String   @id @default(cuid())
+
+  // Topic details
+  topic             String
+  description       String?  @db.Text
+  primaryKeyword    String
+  relatedKeywords   String[] // Additional keywords
+
+  // Scoring components (0-100 scale)
+  demandScore       Float    // Search volume/demand
+  competitionScore  Float    // How beatable is the competition
+  relevanceScore    Float    // How relevant to Firefly Grove
+
+  // Overall confidence
+  confidenceScore   Float    // Combined score: likelihood of success (0-100)
+  estimatedUsers    Int?     // Estimated user signups from this topic
+
+  // Status
+  status            String   @default("candidate") // candidate, approved, drafted, published, dismissed
+
+  // Performance (once published)
+  postId            String?  @unique // Link to MarketingPost when created
+  actualUsers       Int?     // Actual signups after publishing
+
+  // AI reasoning
+  reasoningNotes    String?  @db.Text // Why this score was given
+
+  // Learning
+  scoredAt          DateTime @default(now())
+  publishedAt       DateTime?
+
+  @@index([confidenceScore])
+  @@index([status])
+  @@index([scoredAt])
+}
+
+// Content briefs - instructions for writing winning content
+model ContentBrief {
+  id                String   @id @default(cuid())
+  topicScoreId      String   @unique
+
+  // Brief content
+  title             String
+  targetKeywords    String[] // Keywords to target
+  suggestedLength   Int      // Recommended word count
+
+  // Structure
+  outlinePoints     String   @db.Text // JSON array of key points to cover
+  suggestedH2s      String[] // Recommended H2 headings
+
+  // Patterns from winners
+  ctaRecommendation String?  @db.Text // Best CTA based on past performance
+  toneNotes         String?  @db.Text // Voice/tone recommendations
+
+  // Competition insights
+  topCompetitors    String?  @db.Text // JSON: URLs and analysis of top-ranking content
+  contentGaps       String?  @db.Text // What competitors missed that we can cover
+
+  // Status
+  status            String   @default("draft") // draft, approved, in_writing, completed
+
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([status])
+  @@index([createdAt])
+}
+
+// Learned patterns from successful posts
+model ContentPattern {
+  id                String   @id @default(cuid())
+
+  // Pattern details
+  patternType       String   // structure, cta, tone, keyword_density, length, heading_style
+  name              String   // e.g., "List-style H2s with questions"
+
+  // Performance data
+  avgConversionRate Float    // Average conversion rate for posts with this pattern
+  sampleSize        Int      // Number of posts analyzed
+  confidenceLevel   Float    // Statistical confidence (0-100)
+
+  // Pattern definition
+  definition        String   @db.Text // JSON describing the pattern
+  examples          String?  @db.Text // Example posts that used this pattern
+
+  // Usage
+  isActive          Boolean  @default(true) // Use this in future briefs?
+  priority          Int      @default(50) // Higher = more important (0-100)
+
+  // Learning
+  lastUpdated       DateTime @updatedAt
+  createdAt         DateTime @default(now())
+
+  @@index([patternType, isActive])
+  @@index([avgConversionRate])
+  @@index([priority])
+}
+
+// Competitor content analysis
+model CompetitorAnalysis {
+  id                String   @id @default(cuid())
+
+  // Target info
+  url               String   @unique
+  domain            String
+  title             String
+  primaryKeyword    String
+
+  // Content analysis
+  wordCount         Int
+  h2Count           Int
+  imageCount        Int
+
+  // Structure
+  headings          String[] // Extracted H2/H3 headings
+  keyPoints         String?  @db.Text // Main points covered
+
+  // SEO
+  metaDescription   String?
+  estimatedRanking  Int?     // Estimated position in search results
+
+  // Gaps we can exploit
+  identifiedGaps    String?  @db.Text // What they didn't cover well
+  ourAdvantage      String?  @db.Text // How we can do better
+
+  // Status
+  isRelevant        Boolean  @default(true)
+  analyzedAt        DateTime @default(now())
+
+  @@index([primaryKeyword])
+  @@index([domain])
+  @@index([analyzedAt])
+}

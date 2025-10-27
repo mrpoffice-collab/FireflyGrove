@@ -15,6 +15,7 @@
     "import-sentiments": "npx ts-node scripts/import-sentiments.ts"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.67.0",
     "@prisma/client": "^5.20.0",
     "@stripe/stripe-js": "^4.8.0",
     "@tailwindcss/typography": "^0.5.19",
