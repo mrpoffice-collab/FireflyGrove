@@ -54,9 +54,9 @@ export async function POST(request: NextRequest) {
         const data = await response.json()
         const posts: RedditPost[] = data.data.children.map((child: any) => child.data)
 
-        // Filter high-engagement posts
+        // Filter high-engagement posts (lowered threshold for more results)
         const highEngagement = posts.filter(
-          post => post.score > 50 || post.num_comments > 20
+          post => post.score > 10 || post.num_comments > 5
         )
 
         for (const post of highEngagement) {
@@ -69,8 +69,8 @@ export async function POST(request: NextRequest) {
           // Generate content idea
           const contentIdea = generateContentIdea(post.title, subreddit)
 
-          // Determine priority
-          const priority = score > 500 ? 'high' : score > 200 ? 'medium' : 'low'
+          // Determine priority (adjusted thresholds)
+          const priority = score > 100 ? 'high' : score > 30 ? 'medium' : 'low'
 
           // Save to database
           const trend = await prisma.trendingTopic.create({
