@@ -30,6 +30,7 @@ export async function GET() {
         views: true,
         signups: true,
         topic: true,
+        slug: true,
         createdAt: true,
       }
     })
@@ -51,6 +52,7 @@ export async function GET() {
         views: post.views,
         signups: post.signups,
         platform: post.platform,
+        slug: post.slug,
       },
       createdAt: post.createdAt,
     }))
