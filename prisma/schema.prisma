@@ -938,3 +938,92 @@ model AnalyticsEvent {
   @@index([isSuccess])
   @@index([isAbandoned])
 }
+
+// ============================================
+// MARKETING INTELLIGENCE SYSTEM
+// ============================================
+
+// Marketing posts (blog, social, email)
+model MarketingPost {
+  id            String   @id @default(cuid())
+
+  platform      String   // blog, reddit, pinterest, email
+  postType      String   // blog_post, social_post, email
+  title         String
+  content       String   @db.Text
+  excerpt       String?  @db.Text
+
+  status        String   // draft, published
+  publishedAt   DateTime?
+
+  // SEO
+  slug          String?  @unique
+  metaDescription String?
+  keywords      String[] // Array of keywords
+
+  // Performance
+  views         Int      @default(0)
+  signups       Int      @default(0)
+
+  // AI metadata
+  generatedBy   String   @default("human") // ai, human
+  topic         String?
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([platform, status])
+  @@index([publishedAt])
+}
+
+// Trending topics from Reddit, Pinterest, Google Trends
+model TrendingTopic {
+  id            String   @id @default(cuid())
+
+  source        String   // reddit, google_trends, pinterest
+  subreddit     String?  // If from Reddit
+
+  title         String
+  description   String?  @db.Text
+  url           String?
+
+  score         Float    // engagement score
+  engagement    Int      // upvotes, comments, shares
+
+  keywords      String[]
+
+  // Content idea
+  contentIdea   String?  @db.Text
+  priority      String   @default("medium") // high, medium, low
+
+  status        String   @default("new") // new, used, dismissed
+
+  detectedAt    DateTime @default(now())
+
+  @@index([source, score])
+  @@index([status, priority])
+}
+
+// Daily performance metrics
+model PerformanceMetric {
+  id            String   @id @default(cuid())
+  date          DateTime @db.Date
+
+  // Traffic
+  visitors      Int      @default(0)
+  sessions      Int      @default(0)
+  pageviews     Int      @default(0)
+
+  // Conversions
+  signups       Int      @default(0)
+  conversionRate Float   @default(0)
+
+  // Top sources
+  topSource     String?
+  topPost       String?
+
+  createdAt     DateTime @default(now())
+
+  @@unique([date])
+  @@index([date])
+}
