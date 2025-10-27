@@ -25,6 +25,7 @@ export default function TopicsPage() {
   const [topics, setTopics] = useState<TopicScore[]>([])
   const [loading, setLoading] = useState(true)
   const [selectedTopics, setSelectedTopics] = useState<Set<string>>(new Set())
+  const [sortBy, setSortBy] = useState<'confidence' | 'date'>('confidence')
 
   // Batch generation settings
   const [showBatchPanel, setShowBatchPanel] = useState(false)
@@ -71,6 +72,21 @@ export default function TopicsPage() {
     } finally {
       setLoading(false)
     }
+  }
+
+  // Sort topics
+  const sortedTopics = [...topics].sort((a, b) => {
+    if (sortBy === 'confidence') {
+      return b.confidenceScore - a.confidenceScore
+    } else {
+      return new Date(b.scoredAt).getTime() - new Date(a.scoredAt).getTime()
+    }
+  })
+
+  // Quick select top N
+  const selectTopN = (n: number) => {
+    const topN = sortedTopics.slice(0, n).map(t => t.id)
+    setSelectedTopics(new Set(topN))
   }
 
   const scoreTopic = async () => {
@@ -434,6 +450,46 @@ export default function TopicsPage() {
           </div>
         )}
 
+        {/* Sort & Quick Select */}
+        {topics.length > 0 && (
+          <div className="mb-6 bg-bg-elevated border border-border-subtle rounded-xl p-6">
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+              <div className="flex items-center gap-4">
+                <label className="text-text-soft text-sm font-medium">Sort by:</label>
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value as 'confidence' | 'date')}
+                  className="px-4 py-2 bg-bg-dark border border-border-subtle rounded-lg text-text-soft"
+                >
+                  <option value="confidence">Confidence Score (High → Low)</option>
+                  <option value="date">Date (Newest First)</option>
+                </select>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-text-muted text-sm">Quick select:</span>
+                <button
+                  onClick={() => selectTopN(10)}
+                  className="px-3 py-1 bg-bg-dark hover:bg-firefly-dim/20 border border-border-subtle rounded text-text-soft text-sm transition-soft"
+                >
+                  Top 10
+                </button>
+                <button
+                  onClick={() => selectTopN(20)}
+                  className="px-3 py-1 bg-bg-dark hover:bg-firefly-dim/20 border border-border-subtle rounded text-text-soft text-sm transition-soft"
+                >
+                  Top 20
+                </button>
+                <button
+                  onClick={() => selectTopN(50)}
+                  className="px-3 py-1 bg-bg-dark hover:bg-firefly-dim/20 border border-border-subtle rounded text-text-soft text-sm transition-soft"
+                >
+                  Top 50
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Batch Actions */}
         {topics.length > 0 && (
           <div className="mb-8 bg-gradient-to-r from-firefly-dim/10 to-firefly-glow/10 border border-firefly-dim rounded-xl p-6">
@@ -611,7 +667,7 @@ export default function TopicsPage() {
               </p>
             </div>
           ) : (
-            topics.map((topic) => (
+            sortedTopics.map((topic) => (
               <div
                 key={topic.id}
                 className="bg-bg-elevated border border-border-subtle rounded-xl p-6 hover:border-firefly-dim/50 transition-soft"
