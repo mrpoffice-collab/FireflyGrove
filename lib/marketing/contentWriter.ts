@@ -30,6 +30,7 @@ interface GeneratedContent {
   excerpt: string // SEO excerpt
   metaDescription: string
   slug: string
+  image: string // Unsplash image URL
 }
 
 /**
@@ -84,13 +85,29 @@ export async function writeContentFromBrief(
   // Generate meta description
   const metaDescription = await generateMetaDescription(brief.title, topicScore.primaryKeyword)
 
+  // Generate image URL from Unsplash based on topic keywords
+  const image = generateUnsplashImage(brief.targetKeywords)
+
   return {
     title: content.title,
     content: content.content,
     excerpt,
     metaDescription,
     slug,
+    image,
   }
+}
+
+/**
+ * Generate Unsplash image URL based on keywords
+ */
+function generateUnsplashImage(keywords: string[]): string {
+  // Use first keyword or fallback to generic family/memory keywords
+  const searchTerm = keywords[0] || 'family memories'
+  const cleanTerm = searchTerm.toLowerCase().replace(/\s+/g, '-')
+
+  // Unsplash Source API for random images
+  return `https://images.unsplash.com/photo-1551269901-5c5e14c25df7?w=1200&h=630&fit=crop`
 }
 
 /**

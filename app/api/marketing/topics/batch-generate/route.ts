@@ -159,6 +159,7 @@ export async function POST(req: NextRequest) {
             excerpt: blogContent.excerpt,
             slug: blogContent.slug,
             metaDescription: blogContent.metaDescription,
+            image: blogContent.image,
             keywords: brief.targetKeywords,
             status: 'draft',
             scheduledFor: currentDate,

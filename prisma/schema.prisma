@@ -966,6 +966,7 @@ model MarketingPost {
   slug          String?  @unique
   metaDescription String?
   keywords      String[] // Array of keywords
+  image         String?  // Featured image URL (Unsplash, etc.)
 
   // Performance
   views         Int      @default(0)

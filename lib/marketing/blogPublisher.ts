@@ -16,6 +16,7 @@ interface BlogPost {
   keywords: string[]
   scheduledFor: Date | null
   topic: string | null
+  image?: string | null
 }
 
 /**
@@ -58,6 +59,9 @@ function generateMarkdown(post: BlogPost, publishDate: Date): string {
   const wordCount = post.content.split(/\s+/).length
   const readTime = Math.ceil(wordCount / 200)
 
+  // Generate or use existing image
+  const imageUrl = post.image || 'https://images.unsplash.com/photo-1551269901-5c5e14c25df7?w=1200&h=630&fit=crop'
+
   const frontmatter = `---
 title: "${post.title.replace(/"/g, '\\"')}"
 date: "${dateStr}"
@@ -65,6 +69,7 @@ excerpt: "${(post.excerpt || post.metaDescription || '').replace(/"/g, '\\"')}"
 author: "Firefly Grove Team"
 category: "Memory Preservation"
 readTime: "${readTime} min read"
+image: "${imageUrl}"
 ---
 
 ${post.content}
