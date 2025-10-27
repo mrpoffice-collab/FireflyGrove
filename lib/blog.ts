@@ -36,36 +36,36 @@ async function getPostsFromDatabase(): Promise<BlogPost[]> {
     })
 
     // Convert database posts to BlogPost format
-    const blogPosts = await Promise.all(
-      posts.map(async (post) => {
-        if (!post.slug) return null
+    const blogPosts: BlogPost[] = []
 
-        // Convert markdown content to HTML
-        const processedContent = await remark()
-          .use(remarkGfm)
-          .use(html, { sanitize: false })
-          .process(post.content)
-        const contentHtml = processedContent.toString()
+    for (const post of posts) {
+      if (!post.slug) continue
 
-        // Calculate read time
-        const wordCount = post.content.split(/\s+/).length
-        const readTime = Math.ceil(wordCount / 200)
+      // Convert markdown content to HTML
+      const processedContent = await remark()
+        .use(remarkGfm)
+        .use(html, { sanitize: false })
+        .process(post.content)
+      const contentHtml = processedContent.toString()
 
-        return {
-          slug: post.slug,
-          title: post.title,
-          date: post.publishedAt?.toISOString() || new Date().toISOString(),
-          excerpt: post.excerpt || post.metaDescription || '',
-          content: contentHtml,
-          author: 'Firefly Grove Team',
-          category: 'Memory Preservation',
-          readTime: `${readTime} min read`,
-          image: post.image || undefined,
-        }
+      // Calculate read time
+      const wordCount = post.content.split(/\s+/).length
+      const readTime = Math.ceil(wordCount / 200)
+
+      blogPosts.push({
+        slug: post.slug,
+        title: post.title,
+        date: post.publishedAt?.toISOString() || new Date().toISOString(),
+        excerpt: post.excerpt || post.metaDescription || '',
+        content: contentHtml,
+        author: 'Firefly Grove Team',
+        category: 'Memory Preservation',
+        readTime: `${readTime} min read`,
+        image: post.image || undefined,
       })
-    )
+    }
 
-    return blogPosts.filter((post): post is BlogPost => post !== null)
+    return blogPosts
   } catch (error) {
     console.error('Error fetching posts from database:', error)
     return []
