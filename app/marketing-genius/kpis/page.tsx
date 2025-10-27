@@ -45,6 +45,15 @@ export default function KPIsPage() {
   const [kpis, setKpis] = useState<KPIData | null>(null)
   const [loading, setLoading] = useState(true)
 
+  // Financial projection sliders
+  const [targetUsers, setTargetUsers] = useState(100)
+  const [monthlyGrowth, setMonthlyGrowth] = useState(10)
+  const [subscriptionPrice, setSubscriptionPrice] = useState(10)
+  const [productConversion, setProductConversion] = useState(10)
+  const [avgProductSpend, setAvgProductSpend] = useState(20)
+  const [fixedCosts, setFixedCosts] = useState(1000)
+  const [variableCostPerUser, setVariableCostPerUser] = useState(2)
+
   useEffect(() => {
     if (status === 'unauthenticated') {
       router.push('/login')
@@ -91,6 +100,73 @@ export default function KPIsPage() {
 
   const progress = parseInt(kpis.northStar.progress)
   const onTrack = kpis.acquisition.newUsersThisWeek >= 3 // Target: 3+ users/week
+
+  // Financial calculations
+  const currentUsers = kpis.northStar.totalUsers
+
+  // Calculate monthly metrics
+  const calculateMonthlyMetrics = (users: number) => {
+    const monthlySubRevenue = (users * subscriptionPrice) / 12 // Annual subscription divided by 12
+    const monthlyProductRevenue = users * (productConversion / 100) * (avgProductSpend / 12)
+    const totalMonthlyRevenue = monthlySubRevenue + monthlyProductRevenue
+
+    const totalMonthlyCosts = fixedCosts + (users * variableCostPerUser)
+    const monthlyProfit = totalMonthlyRevenue - totalMonthlyCosts
+
+    return {
+      revenue: totalMonthlyRevenue,
+      costs: totalMonthlyCosts,
+      profit: monthlyProfit,
+      margin: totalMonthlyRevenue > 0 ? (monthlyProfit / totalMonthlyRevenue * 100) : 0
+    }
+  }
+
+  // Calculate 12-month projection
+  const calculateProjection = () => {
+    const projection = []
+    let users = currentUsers
+
+    for (let month = 0; month <= 12; month++) {
+      const metrics = calculateMonthlyMetrics(users)
+      projection.push({
+        month,
+        users: Math.round(users),
+        ...metrics
+      })
+      users += monthlyGrowth
+    }
+
+    return projection
+  }
+
+  // Break-even calculation
+  const calculateBreakEven = () => {
+    // Fixed + (users × variable) = (users × sub/12) + (users × product)
+    // Fixed = users × (sub/12 + product - variable)
+    const revenuePerUser = (subscriptionPrice / 12) + ((productConversion / 100) * (avgProductSpend / 12))
+    const netPerUser = revenuePerUser - variableCostPerUser
+
+    if (netPerUser <= 0) return null // Can't break even with these numbers
+
+    return Math.ceil(fixedCosts / netPerUser)
+  }
+
+  // Lifetime value
+  const ltv = subscriptionPrice * 10 + (productConversion / 100) * avgProductSpend * 10
+
+  const currentMetrics = calculateMonthlyMetrics(currentUsers)
+  const targetMetrics = calculateMonthlyMetrics(targetUsers)
+  const projection = calculateProjection()
+  const breakEvenUsers = calculateBreakEven()
+
+  const formatCurrency = (num: number) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    }).format(num)
+  }
 
   return (
     <div className="min-h-screen bg-bg-dark">
@@ -352,6 +428,246 @@ export default function KPIsPage() {
               ))}
             </div>
           )}
+        </div>
+
+        {/* Financial Projections */}
+        <div className="mt-8 bg-gradient-to-r from-green-500/10 to-firefly-glow/10 border border-green-500/30 rounded-xl p-8">
+          <h3 className="text-2xl font-light text-text-soft mb-2">💰 Financial Projections</h3>
+          <p className="text-text-muted mb-8">Interactive "what-if" scenarios for profitability planning</p>
+
+          {/* Current State */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+            <div className="bg-bg-dark rounded-lg p-4">
+              <div className="text-text-muted text-sm mb-1">Monthly Revenue</div>
+              <div className={`text-2xl font-light ${currentMetrics.revenue >= fixedCosts ? 'text-green-400' : 'text-yellow-400'}`}>
+                {formatCurrency(currentMetrics.revenue)}
+              </div>
+            </div>
+            <div className="bg-bg-dark rounded-lg p-4">
+              <div className="text-text-muted text-sm mb-1">Monthly Costs</div>
+              <div className="text-2xl font-light text-red-400">
+                {formatCurrency(currentMetrics.costs)}
+              </div>
+            </div>
+            <div className="bg-bg-dark rounded-lg p-4">
+              <div className="text-text-muted text-sm mb-1">Monthly Profit</div>
+              <div className={`text-2xl font-light ${currentMetrics.profit >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                {formatCurrency(currentMetrics.profit)}
+              </div>
+            </div>
+            <div className="bg-bg-dark rounded-lg p-4">
+              <div className="text-text-muted text-sm mb-1">Profit Margin</div>
+              <div className={`text-2xl font-light ${currentMetrics.margin >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                {currentMetrics.margin.toFixed(0)}%
+              </div>
+            </div>
+          </div>
+
+          {/* Break-even */}
+          {breakEvenUsers && (
+            <div className="mb-8 p-4 bg-bg-dark rounded-lg border border-firefly-dim/30">
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="text-text-soft font-medium">Break-Even Point</div>
+                  <div className="text-text-muted text-sm mt-1">
+                    {currentUsers >= breakEvenUsers
+                      ? `✅ You're profitable! (needed ${breakEvenUsers} users)`
+                      : `Need ${breakEvenUsers - currentUsers} more users to break even`
+                    }
+                  </div>
+                </div>
+                <div className="text-3xl font-light text-firefly-glow">
+                  {breakEvenUsers} users
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Sliders */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div className="space-y-6">
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <label className="text-text-soft text-sm font-medium">Target Users</label>
+                  <span className="text-firefly-glow font-medium">{targetUsers}</span>
+                </div>
+                <input
+                  type="range"
+                  min="0"
+                  max="500"
+                  step="10"
+                  value={targetUsers}
+                  onChange={(e) => setTargetUsers(parseInt(e.target.value))}
+                  className="w-full h-2 bg-bg-dark rounded-lg appearance-none cursor-pointer accent-firefly-glow"
+                />
+              </div>
+
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <label className="text-text-soft text-sm font-medium">Monthly User Growth</label>
+                  <span className="text-firefly-glow font-medium">+{monthlyGrowth} users/month</span>
+                </div>
+                <input
+                  type="range"
+                  min="0"
+                  max="50"
+                  step="1"
+                  value={monthlyGrowth}
+                  onChange={(e) => setMonthlyGrowth(parseInt(e.target.value))}
+                  className="w-full h-2 bg-bg-dark rounded-lg appearance-none cursor-pointer accent-firefly-glow"
+                />
+              </div>
+
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <label className="text-text-soft text-sm font-medium">Annual Subscription</label>
+                  <span className="text-firefly-glow font-medium">${subscriptionPrice}/year</span>
+                </div>
+                <input
+                  type="range"
+                  min="5"
+                  max="50"
+                  step="5"
+                  value={subscriptionPrice}
+                  onChange={(e) => setSubscriptionPrice(parseInt(e.target.value))}
+                  className="w-full h-2 bg-bg-dark rounded-lg appearance-none cursor-pointer accent-firefly-glow"
+                />
+              </div>
+
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <label className="text-text-soft text-sm font-medium">Product Conversion Rate</label>
+                  <span className="text-firefly-glow font-medium">{productConversion}%</span>
+                </div>
+                <input
+                  type="range"
+                  min="0"
+                  max="50"
+                  step="5"
+                  value={productConversion}
+                  onChange={(e) => setProductConversion(parseInt(e.target.value))}
+                  className="w-full h-2 bg-bg-dark rounded-lg appearance-none cursor-pointer accent-firefly-glow"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-6">
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <label className="text-text-soft text-sm font-medium">Avg Product Spend/Year</label>
+                  <span className="text-firefly-glow font-medium">${avgProductSpend}/year</span>
+                </div>
+                <input
+                  type="range"
+                  min="5"
+                  max="100"
+                  step="5"
+                  value={avgProductSpend}
+                  onChange={(e) => setAvgProductSpend(parseInt(e.target.value))}
+                  className="w-full h-2 bg-bg-dark rounded-lg appearance-none cursor-pointer accent-firefly-glow"
+                />
+              </div>
+
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <label className="text-text-soft text-sm font-medium">Fixed Monthly Costs</label>
+                  <span className="text-firefly-glow font-medium">${fixedCosts}/month</span>
+                </div>
+                <input
+                  type="range"
+                  min="500"
+                  max="5000"
+                  step="100"
+                  value={fixedCosts}
+                  onChange={(e) => setFixedCosts(parseInt(e.target.value))}
+                  className="w-full h-2 bg-bg-dark rounded-lg appearance-none cursor-pointer accent-firefly-glow"
+                />
+              </div>
+
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <label className="text-text-soft text-sm font-medium">Variable Cost per User/Month</label>
+                  <span className="text-firefly-glow font-medium">${variableCostPerUser}/user</span>
+                </div>
+                <input
+                  type="range"
+                  min="0"
+                  max="10"
+                  step="0.5"
+                  value={variableCostPerUser}
+                  onChange={(e) => setVariableCostPerUser(parseFloat(e.target.value))}
+                  className="w-full h-2 bg-bg-dark rounded-lg appearance-none cursor-pointer accent-firefly-glow"
+                />
+              </div>
+
+              <div className="p-4 bg-bg-dark rounded-lg border border-firefly-dim/30">
+                <div className="text-text-muted text-sm mb-1">Customer Lifetime Value (10 years)</div>
+                <div className="text-2xl font-light text-firefly-glow">
+                  {formatCurrency(ltv)}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* At Target Users */}
+          <div className="bg-bg-dark rounded-lg p-6 mb-8">
+            <h4 className="text-lg text-text-soft font-medium mb-4">At {targetUsers} Users (Target)</h4>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <div>
+                <div className="text-text-muted text-sm mb-1">Monthly Revenue</div>
+                <div className="text-xl font-light text-green-400">{formatCurrency(targetMetrics.revenue)}</div>
+              </div>
+              <div>
+                <div className="text-text-muted text-sm mb-1">Monthly Costs</div>
+                <div className="text-xl font-light text-red-400">{formatCurrency(targetMetrics.costs)}</div>
+              </div>
+              <div>
+                <div className="text-text-muted text-sm mb-1">Monthly Profit</div>
+                <div className={`text-xl font-light ${targetMetrics.profit >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                  {formatCurrency(targetMetrics.profit)}
+                </div>
+              </div>
+              <div>
+                <div className="text-text-muted text-sm mb-1">Annual Profit</div>
+                <div className={`text-xl font-light ${targetMetrics.profit >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                  {formatCurrency(targetMetrics.profit * 12)}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 12-Month Projection */}
+          <div className="bg-bg-dark rounded-lg p-6">
+            <h4 className="text-lg text-text-soft font-medium mb-4">12-Month Projection</h4>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead className="border-b border-border-subtle">
+                  <tr>
+                    <th className="text-left text-text-muted font-medium pb-2">Month</th>
+                    <th className="text-right text-text-muted font-medium pb-2">Users</th>
+                    <th className="text-right text-text-muted font-medium pb-2">Revenue</th>
+                    <th className="text-right text-text-muted font-medium pb-2">Costs</th>
+                    <th className="text-right text-text-muted font-medium pb-2">Profit</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {projection.map((month) => (
+                    <tr key={month.month} className="border-b border-border-subtle/50">
+                      <td className="py-2 text-text-muted">
+                        {month.month === 0 ? 'Now' : `Month ${month.month}`}
+                      </td>
+                      <td className="py-2 text-right text-text-soft">{month.users}</td>
+                      <td className="py-2 text-right text-green-400">{formatCurrency(month.revenue)}</td>
+                      <td className="py-2 text-right text-red-400">{formatCurrency(month.costs)}</td>
+                      <td className={`py-2 text-right font-medium ${month.profit >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                        {formatCurrency(month.profit)}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
 
         {/* Strategic Targets */}
