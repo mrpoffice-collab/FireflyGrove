@@ -23,6 +23,7 @@ interface DraftPost {
   topic: string | null
   subreddit: string | null
   pinDescription: string | null
+  image: string | null
   createdAt: string
 }
 
@@ -36,6 +37,8 @@ export default function DraftsPage() {
   const [approving, setApproving] = useState(false)
   const [editingDateId, setEditingDateId] = useState<string | null>(null)
   const [editDate, setEditDate] = useState<string>('')
+  const [editingImageId, setEditingImageId] = useState<string | null>(null)
+  const [editImage, setEditImage] = useState<string>('')
   const [publishing, setPublishing] = useState(false)
 
   useEffect(() => {
@@ -246,6 +249,38 @@ export default function DraftsPage() {
     setEditDate('')
   }
 
+  const startEditImage = (post: DraftPost) => {
+    setEditingImageId(post.id)
+    setEditImage(post.image || '')
+  }
+
+  const saveImage = async (postId: string) => {
+    try {
+      const res = await fetch(`/api/marketing/posts/${postId}/update-image`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ image: editImage }),
+      })
+
+      if (res.ok) {
+        alert('🖼️ Image updated successfully!')
+        setEditingImageId(null)
+        setEditImage('')
+        fetchDrafts()
+      } else {
+        alert('Failed to update image')
+      }
+    } catch (error) {
+      console.error('Error updating image:', error)
+      alert('Error updating image')
+    }
+  }
+
+  const cancelEditImage = () => {
+    setEditingImageId(null)
+    setEditImage('')
+  }
+
   const getPlatformEmoji = (platform: string) => {
     switch (platform) {
       case 'blog': return '📝'
@@ -447,6 +482,41 @@ export default function DraftsPage() {
                               className="hover:text-firefly-glow transition-soft"
                             >
                               📅 Scheduled: {new Date(post.scheduledFor).toLocaleDateString()}
+                            </button>
+                          )}
+                        </div>
+                      )}
+                      {/* Image editor for blog posts */}
+                      {post.platform === 'blog' && (
+                        <div className="flex items-center gap-2">
+                          {editingImageId === post.id ? (
+                            <>
+                              <input
+                                type="text"
+                                value={editImage}
+                                onChange={(e) => setEditImage(e.target.value)}
+                                placeholder="Image URL (Unsplash, etc.)"
+                                className="flex-1 px-2 py-1 bg-bg-dark border border-firefly-dim rounded text-text-soft text-xs"
+                              />
+                              <button
+                                onClick={() => saveImage(post.id)}
+                                className="px-2 py-1 bg-green-500/20 hover:bg-green-500/30 text-green-400 rounded text-xs"
+                              >
+                                Save
+                              </button>
+                              <button
+                                onClick={cancelEditImage}
+                                className="px-2 py-1 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded text-xs"
+                              >
+                                Cancel
+                              </button>
+                            </>
+                          ) : (
+                            <button
+                              onClick={() => startEditImage(post)}
+                              className="hover:text-firefly-glow transition-soft text-xs"
+                            >
+                              🖼️ Image: {post.image ? '✓ Set' : '⚠️ Missing - Click to add'}
                             </button>
                           )}
                         </div>
