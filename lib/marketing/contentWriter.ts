@@ -136,20 +136,21 @@ ${brief.ctaRecommendation}
 
 # WRITING REQUIREMENTS
 
-1. **Hook**: Start with an emotional story or scenario that makes them feel the urgency
-2. **Emotional Connection**: Tap into regret prevention, "before it's too late," time running out
-3. **Specific Examples**: Use vivid details (grandmother's voice, father's stories, specific memories)
-4. **SEO Optimization**:
+1. **Third Person Perspective**: Write entirely in 3rd person (they/their/people/families) - NEVER use "you/your"
+2. **Hook**: Start with an emotional story or scenario that makes them feel the urgency
+3. **Emotional Connection**: Tap into regret prevention, "before it's too late," time running out
+4. **Specific Examples**: Use vivid details (grandmother's voice, father's stories, specific memories)
+5. **SEO Optimization**:
    - Use target keywords naturally throughout
    - Include primary keyword in title, first paragraph, and H2s where natural
    - Use semantic variations
-5. **Firefly Grove Integration**:
+6. **Firefly Grove Integration**:
    - Mention features naturally where relevant (sound wave art, Story Sparks, memorial videos)
    - Don't hard sell - present as the obvious solution
    - Link features to pain points
-6. **Actionable**: Give real, practical steps they can take today
-7. **Conversational**: Write like talking to a friend, not a textbook
-8. **Formatting**: Use short paragraphs, bullet points, bold for emphasis
+7. **Actionable**: Give real, practical steps families can take today
+8. **Conversational**: Write like an empathetic observer, not a textbook
+9. **Formatting**: Use short paragraphs, bullet points, bold for emphasis
 
 # MARKDOWN FORMAT
 Return the post in clean markdown format with:

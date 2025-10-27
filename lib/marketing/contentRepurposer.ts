@@ -71,7 +71,8 @@ Blog Content: ${blog.content}
 
 Newsletter Requirements:
 - Subject line (compelling, under 50 chars)
-- Personal, warm tone (like an email from a friend)
+- Write in 3rd person (they/their/families) - NEVER use "you/your"
+- Warm, empathetic tone
 - Lead with an emotional story or scenario
 - Include 2-3 key takeaways from the blog
 - Add a clear CTA: "Read the full post" linking to blog
@@ -101,11 +102,12 @@ Blog Excerpt: ${blog.excerpt}
 Keywords: ${blog.keywords.join(', ')}
 
 Facebook Post Requirements:
-- Personal, conversational tone (first person)
+- Write in 3rd person perspective (they/their/families) - NEVER use "you/your" or "I/me"
+- Conversational tone (like sharing an observation or story)
 - Start with a hook (story, question, or emotional statement)
 - Short paragraphs, easy to read on mobile
 - Include 1-2 emojis (natural, not overdone)
-- End with soft CTA (not salesy): "I wrote about this on the blog" or "Link in comments"
+- End with soft CTA (not salesy): "Read more on the blog" or "Link in comments"
 - Length: 100-200 words
 - Each post should focus on a different angle/takeaway from the blog
 
@@ -140,6 +142,7 @@ Blog Excerpt: ${blog.excerpt}
 Keywords: ${blog.keywords.join(', ')}
 
 Pinterest Pin Requirements:
+- Write in 3rd person (they/their/families) - NEVER use "you/your"
 - Title: Compelling, keyword-rich (60-100 chars)
 - Description: Detailed, SEO-friendly, helpful (100-500 chars)
 - Include keywords naturally

@@ -130,8 +130,48 @@ export default function DraftsPage() {
       }
     } catch (error) {
       console.error('Error unapproving post:', error)
-      alert('Error unapproving post')
+      alert('Error unapprove post')
     }
+  }
+
+  const deletePosts = async (postIds: string[]) => {
+    if (!confirm(`Are you sure you want to delete ${postIds.length} post(s)? This cannot be undone.`)) {
+      return
+    }
+
+    try {
+      const res = await fetch('/api/marketing/drafts/delete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ postIds }),
+      })
+
+      if (res.ok) {
+        const data = await res.json()
+        alert(`🗑️ ${data.deleted} post(s) deleted!`)
+        fetchDrafts()
+        setSelectedPosts(new Set())
+      } else {
+        const data = await res.json()
+        alert(data.error || 'Failed to delete posts')
+      }
+    } catch (error) {
+      console.error('Error deleting posts:', error)
+      alert('Error deleting posts')
+    }
+  }
+
+  const deleteSelected = () => {
+    if (selectedPosts.size === 0) {
+      alert('No posts selected')
+      return
+    }
+
+    deletePosts(Array.from(selectedPosts))
+  }
+
+  const deleteSingle = (postId: string) => {
+    deletePosts([postId])
   }
 
   const getPlatformEmoji = (platform: string) => {
@@ -216,48 +256,60 @@ export default function DraftsPage() {
           </div>
         </div>
 
-        {/* Bulk Actions */}
-        {drafts.length > 0 && (
-          <div className="mb-8 bg-gradient-to-r from-firefly-dim/10 to-firefly-glow/10 border border-firefly-dim rounded-xl p-6">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <input
-                  type="checkbox"
-                  checked={selectedPosts.size === drafts.length && drafts.length > 0}
-                  onChange={toggleSelectAll}
-                  className="w-5 h-5 rounded border-border-subtle bg-bg-dark"
-                />
-                <div>
-                  <h3 className="text-lg text-text-soft font-medium">
-                    {selectedPosts.size === 0
-                      ? 'Select posts to approve'
-                      : `${selectedPosts.size} selected`}
-                  </h3>
-                </div>
-              </div>
-              {selectedPosts.size > 0 && (
-                <button
-                  onClick={approveSelected}
-                  disabled={approving}
-                  className="px-6 py-3 bg-green-600 hover:bg-green-700 disabled:bg-gray-600 text-white rounded-lg font-medium transition-soft"
-                >
-                  {approving ? 'Approving...' : `✅ Approve ${selectedPosts.size}`}
-                </button>
-              )}
-            </div>
-          </div>
-        )}
+        {/* SECTION 1: Awaiting Review */}
+        {unapprovedDrafts.length > 0 && (
+          <div className="mb-12">
+            <h2 className="text-2xl font-light text-text-soft mb-6">
+              📋 Awaiting Review ({unapprovedDrafts.length})
+            </h2>
 
-        {/* Posts List */}
-        <div className="space-y-4">
-          {drafts.length === 0 ? (
-            <div className="text-center py-12 bg-bg-elevated rounded-xl border border-border-subtle">
-              <p className="text-text-muted">
-                No draft posts yet. Generate content from topics to get started!
-              </p>
+            {/* Bulk Actions for Unapproved */}
+            <div className="mb-6 bg-gradient-to-r from-firefly-dim/10 to-firefly-glow/10 border border-firefly-dim rounded-xl p-6">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <input
+                    type="checkbox"
+                    checked={selectedPosts.size === unapprovedDrafts.length && unapprovedDrafts.length > 0}
+                    onChange={() => {
+                      if (selectedPosts.size === unapprovedDrafts.length) {
+                        setSelectedPosts(new Set())
+                      } else {
+                        setSelectedPosts(new Set(unapprovedDrafts.map((d) => d.id)))
+                      }
+                    }}
+                    className="w-5 h-5 rounded border-border-subtle bg-bg-dark"
+                  />
+                  <div>
+                    <h3 className="text-lg text-text-soft font-medium">
+                      {selectedPosts.size === 0
+                        ? 'Select posts to approve or delete'
+                        : `${selectedPosts.size} selected`}
+                    </h3>
+                  </div>
+                </div>
+                {selectedPosts.size > 0 && (
+                  <div className="flex gap-3">
+                    <button
+                      onClick={approveSelected}
+                      disabled={approving}
+                      className="px-6 py-3 bg-green-600 hover:bg-green-700 disabled:bg-gray-600 text-white rounded-lg font-medium transition-soft"
+                    >
+                      {approving ? 'Approving...' : `✅ Approve ${selectedPosts.size}`}
+                    </button>
+                    <button
+                      onClick={deleteSelected}
+                      className="px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-soft"
+                    >
+                      🗑️ Delete {selectedPosts.size}
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
-          ) : (
-            drafts.map((post) => (
+
+            {/* Unapproved Posts List */}
+            <div className="space-y-4">
+              {unapprovedDrafts.map((post) => (
               <div
                 key={post.id}
                 className={`border rounded-xl p-6 transition-soft ${getPlatformColor(post.platform)} ${
@@ -340,12 +392,118 @@ export default function DraftsPage() {
                         ↩️ Unapprove
                       </button>
                     )}
+                    <button
+                      onClick={() => deleteSingle(post.id)}
+                      className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-medium transition-soft"
+                    >
+                      🗑️ Delete
+                    </button>
                   </div>
                 </div>
               </div>
-            ))
-          )}
-        </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* SECTION 2: Approved & Ready to Publish */}
+        {approvedDrafts.length > 0 && (
+          <div className="mb-12">
+            <h2 className="text-2xl font-light text-green-400 mb-6">
+              ✅ Approved & Ready to Publish ({approvedDrafts.length})
+            </h2>
+            <p className="text-text-muted mb-6">
+              These posts will auto-publish on their scheduled dates. Great work! 🎉
+            </p>
+
+            {/* Approved Posts List */}
+            <div className="space-y-4">
+              {approvedDrafts.map((post) => (
+                <div
+                  key={post.id}
+                  className={`border border-green-500/50 rounded-xl p-6 transition-soft ${getPlatformColor(post.platform)}`}
+                >
+                  <div className="flex items-start gap-4">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="text-2xl">{getPlatformEmoji(post.platform)}</span>
+                        <span className="text-xs uppercase font-medium text-text-muted">
+                          {post.platform}
+                        </span>
+                        <span className="px-2 py-1 bg-green-500/20 text-green-400 text-xs rounded">
+                          ✅ Approved
+                        </span>
+                      </div>
+                      <h3 className="text-xl font-medium text-text-soft mb-2">
+                        {post.title}
+                      </h3>
+                      {post.excerpt && (
+                        <p className="text-text-muted text-sm mb-3">
+                          {post.excerpt.substring(0, 200)}...
+                        </p>
+                      )}
+
+                      {/* Metadata */}
+                      <div className="flex flex-wrap gap-3 text-sm text-text-muted mb-3">
+                        {post.scheduledFor && (
+                          <span className="text-green-400">
+                            📅 Publishing: {new Date(post.scheduledFor).toLocaleDateString()}
+                          </span>
+                        )}
+                        {post.topic && <span>🎯 Topic: {post.topic}</span>}
+                        {post.keywords.length > 0 && (
+                          <span>🔑 {post.keywords.slice(0, 3).join(', ')}</span>
+                        )}
+                      </div>
+
+                      {/* Preview Toggle */}
+                      <button
+                        onClick={() => setExpandedPost(expandedPost === post.id ? null : post.id)}
+                        className="text-sm text-firefly-glow hover:text-firefly-dim"
+                      >
+                        {expandedPost === post.id ? '▼ Hide content' : '▶ Show content'}
+                      </button>
+
+                      {/* Expanded Content */}
+                      {expandedPost === post.id && (
+                        <div className="mt-4 p-4 bg-bg-dark rounded-lg border border-border-subtle">
+                          <pre className="text-text-soft text-sm whitespace-pre-wrap font-sans">
+                            {post.content}
+                          </pre>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Actions */}
+                    <div className="flex flex-col gap-2">
+                      <button
+                        onClick={() => unapproveSingle(post.id)}
+                        className="px-4 py-2 bg-yellow-600 hover:bg-yellow-700 text-white rounded-lg text-sm font-medium transition-soft"
+                      >
+                        ↩️ Unapprove
+                      </button>
+                      <button
+                        onClick={() => deleteSingle(post.id)}
+                        className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-medium transition-soft"
+                      >
+                        🗑️ Delete
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Empty State */}
+        {drafts.length === 0 && (
+          <div className="text-center py-12 bg-bg-elevated rounded-xl border border-border-subtle">
+            <p className="text-text-muted">
+              No draft posts yet. Generate content from topics to get started!
+            </p>
+          </div>
+        )}
       </div>
     </div>
   )
