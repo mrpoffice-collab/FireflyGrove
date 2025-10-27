@@ -2,6 +2,8 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import Header from '@/components/Header'
 import { getAllPosts } from '@/lib/blog'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/auth'
 
 export const metadata: Metadata = {
   title: 'Blog - Family Memory & Legacy Preservation Tips',
@@ -10,10 +12,11 @@ export const metadata: Metadata = {
 
 export default async function BlogPage() {
   const posts = await getAllPosts()
+  const session = await getServerSession(authOptions)
 
   return (
     <div className="min-h-screen">
-      <Header userName="" />
+      <Header userName={session?.user?.name || ''} />
 
       <div className="max-w-4xl mx-auto px-4 py-16">
         <div className="text-center mb-16">
@@ -25,51 +28,60 @@ export default async function BlogPage() {
           </p>
         </div>
 
-        <div className="space-y-8">
-          {posts.map((post) => (
-            <article key={post.slug} className="bg-bg-elevated border border-border-subtle rounded-xl p-8 hover:border-firefly-dim/50 transition-soft">
-              <Link href={`/blog/${post.slug}`}>
-                <div className="flex items-start gap-6">
-                  {post.image && (
-                    <div className="hidden md:block w-48 h-32 rounded-lg overflow-hidden flex-shrink-0">
-                      <img
-                        src={post.image}
-                        alt={post.title}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                  )}
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-3">
-                      <span className="text-xs text-firefly-glow bg-firefly-glow/10 px-3 py-1 rounded-full">
-                        {post.category}
-                      </span>
-                      <span className="text-xs text-text-muted">
-                        {new Date(post.date).toLocaleDateString('en-US', {
-                          month: 'long',
-                          day: 'numeric',
-                          year: 'numeric'
-                        })}
-                      </span>
-                      <span className="text-xs text-text-muted">
-                        {post.readTime}
-                      </span>
-                    </div>
-                    <h2 className="text-2xl font-medium text-text-soft mb-3 hover:text-firefly-glow transition-soft">
-                      {post.title}
-                    </h2>
-                    <p className="text-text-muted mb-4 line-clamp-2">
-                      {post.excerpt}
-                    </p>
-                    <div className="text-firefly-glow text-sm font-medium">
-                      Read more →
+        {posts.length === 0 ? (
+          <div className="text-center py-12 bg-bg-elevated border border-border-subtle rounded-xl">
+            <p className="text-text-muted text-lg mb-4">No blog posts yet.</p>
+            <p className="text-text-muted text-sm">
+              Check back soon for memory preservation tips and guides!
+            </p>
+          </div>
+        ) : (
+          <div className="space-y-8">
+            {posts.map((post) => (
+              <article key={post.slug} className="bg-bg-elevated border border-border-subtle rounded-xl p-8 hover:border-firefly-dim/50 transition-soft">
+                <Link href={`/blog/${post.slug}`}>
+                  <div className="flex items-start gap-6">
+                    {post.image && (
+                      <div className="hidden md:block w-48 h-32 rounded-lg overflow-hidden flex-shrink-0">
+                        <img
+                          src={post.image}
+                          alt={post.title}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    )}
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3 mb-3">
+                        <span className="text-xs text-firefly-glow bg-firefly-glow/10 px-3 py-1 rounded-full">
+                          {post.category}
+                        </span>
+                        <span className="text-xs text-text-muted">
+                          {new Date(post.date).toLocaleDateString('en-US', {
+                            month: 'long',
+                            day: 'numeric',
+                            year: 'numeric'
+                          })}
+                        </span>
+                        <span className="text-xs text-text-muted">
+                          {post.readTime}
+                        </span>
+                      </div>
+                      <h2 className="text-2xl font-medium text-text-soft mb-3 hover:text-firefly-glow transition-soft">
+                        {post.title}
+                      </h2>
+                      <p className="text-text-muted mb-4 line-clamp-2">
+                        {post.excerpt}
+                      </p>
+                      <div className="text-firefly-glow text-sm font-medium">
+                        Read more →
+                      </div>
                     </div>
                   </div>
-                </div>
-              </Link>
-            </article>
-          ))}
-        </div>
+                </Link>
+              </article>
+            ))}
+          </div>
+        )}
 
         {/* Newsletter CTA */}
         <div className="mt-16 bg-bg-elevated border border-border-subtle rounded-xl p-8 text-center">

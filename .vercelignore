@@ -5,6 +5,7 @@
 *.md
 !README.md
 !DEPLOYMENT.md
+!content/blog/*.md
 
 # Local scripts
 scripts/scan-reddit-local.js
