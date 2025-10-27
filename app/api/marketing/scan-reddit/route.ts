@@ -77,23 +77,28 @@ export async function POST(request: NextRequest) {
           const priority = score > 100 ? 'high' : score > 30 ? 'medium' : 'low'
 
           // Save to database
-          const trend = await prisma.trendingTopic.create({
-            data: {
-              source: 'reddit',
-              subreddit: subreddit,
-              title: post.title,
-              description: `High-engagement post in r/${subreddit}`,
-              url: `https://reddit.com${post.permalink}`,
-              score: score,
-              engagement: post.score + post.num_comments,
-              keywords,
-              contentIdea,
-              priority,
-              status: 'new'
-            }
-          })
+          try {
+            const trend = await prisma.trendingTopic.create({
+              data: {
+                source: 'reddit',
+                subreddit: subreddit,
+                title: post.title,
+                description: `High-engagement post in r/${subreddit}`,
+                url: `https://reddit.com${post.permalink}`,
+                score: score,
+                engagement: post.score + post.num_comments,
+                keywords,
+                contentIdea,
+                priority,
+                status: 'new'
+              }
+            })
 
-          allTrends.push(trend)
+            allTrends.push(trend)
+            console.log(`Saved trend: "${post.title.substring(0, 50)}..."`)
+          } catch (dbError) {
+            console.error(`Failed to save trend from r/${subreddit}:`, dbError)
+          }
         }
 
         // Rate limiting - wait 2 seconds between subreddits
@@ -105,10 +110,16 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    console.log(`Total trends saved: ${allTrends.length}`)
+
     return NextResponse.json({
       success: true,
       trendsFound: allTrends.length,
-      trends: allTrends.slice(0, 10) // Return top 10
+      trends: allTrends.slice(0, 10), // Return top 10
+      debug: {
+        subredditsScanned: SUBREDDITS.length,
+        message: allTrends.length === 0 ? 'No posts met criteria or database save failed' : 'Success'
+      }
     })
 
   } catch (error: any) {
