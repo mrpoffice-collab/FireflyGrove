@@ -163,7 +163,7 @@ Write the complete blog post now:`
 
   try {
     const message = await anthropic.messages.create({
-      model: 'claude-3-sonnet-20240229',
+      model: 'claude-3-5-sonnet-20241022',
       max_tokens: 8000,
       temperature: 0.7,
       messages: [
@@ -191,7 +191,7 @@ Write the complete blog post now:`
  */
 async function generateMetaDescription(title: string, keyword: string): Promise<string> {
   const message = await anthropic.messages.create({
-    model: 'claude-3-sonnet-20240229',
+    model: 'claude-3-5-sonnet-20241022',
     max_tokens: 200,
     messages: [
       {
