@@ -40,6 +40,7 @@ export default function DraftsPage() {
   const [editImage, setEditImage] = useState<string>('')
   const [publishing, setPublishing] = useState(false)
   const [fixingImages, setFixingImages] = useState(false)
+  const [postingToFacebook, setPostingToFacebook] = useState(false)
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -214,6 +215,34 @@ export default function DraftsPage() {
       alert('Error publishing post')
     } finally {
       setPublishing(false)
+    }
+  }
+
+  const postToFacebook = async (postId: string) => {
+    if (!confirm('Post this to your Facebook Page now? It will be visible immediately.')) {
+      return
+    }
+
+    setPostingToFacebook(true)
+    try {
+      const res = await fetch('/api/marketing/posts/publish-to-facebook', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ postId }),
+      })
+
+      if (res.ok) {
+        const data = await res.json()
+        alert(`✅ Posted to Facebook!\n\nView at: ${data.postUrl}`)
+      } else {
+        const data = await res.json()
+        alert(data.error || 'Failed to post to Facebook')
+      }
+    } catch (error) {
+      console.error('Error posting to Facebook:', error)
+      alert('Error posting to Facebook')
+    } finally {
+      setPostingToFacebook(false)
     }
   }
 
@@ -624,12 +653,32 @@ export default function DraftsPage() {
 
                     {/* Publish Now button for blog posts */}
                     {post.platform === 'blog' && post.isApproved && (
+                      <>
+                        <button
+                          onClick={() => publishNow(post.id)}
+                          disabled={publishing}
+                          className="px-4 py-2 bg-purple-600 hover:bg-purple-700 disabled:bg-gray-600 text-white rounded-lg text-sm font-medium transition-soft"
+                        >
+                          {publishing ? 'Publishing...' : '🚀 Publish Now'}
+                        </button>
+                        <button
+                          onClick={() => postToFacebook(post.id)}
+                          disabled={postingToFacebook}
+                          className="px-4 py-2 bg-[#1877f2] hover:bg-[#0c63d4] disabled:bg-gray-600 text-white rounded-lg text-sm font-medium transition-soft"
+                        >
+                          {postingToFacebook ? 'Posting...' : '📘 Post to FB'}
+                        </button>
+                      </>
+                    )}
+
+                    {/* Post to Facebook button for Facebook posts */}
+                    {post.platform === 'facebook' && post.isApproved && (
                       <button
-                        onClick={() => publishNow(post.id)}
-                        disabled={publishing}
-                        className="px-4 py-2 bg-purple-600 hover:bg-purple-700 disabled:bg-gray-600 text-white rounded-lg text-sm font-medium transition-soft"
+                        onClick={() => postToFacebook(post.id)}
+                        disabled={postingToFacebook}
+                        className="px-4 py-2 bg-[#1877f2] hover:bg-[#0c63d4] disabled:bg-gray-600 text-white rounded-lg text-sm font-medium transition-soft"
                       >
-                        {publishing ? 'Publishing...' : '🚀 Publish Now'}
+                        {postingToFacebook ? 'Posting...' : '📘 Post to FB'}
                       </button>
                     )}
 
@@ -771,12 +820,32 @@ export default function DraftsPage() {
 
                       {/* Publish Now button for blog posts */}
                       {post.platform === 'blog' && (
+                        <>
+                          <button
+                            onClick={() => publishNow(post.id)}
+                            disabled={publishing}
+                            className="px-4 py-2 bg-purple-600 hover:bg-purple-700 disabled:bg-gray-600 text-white rounded-lg text-sm font-medium transition-soft"
+                          >
+                            {publishing ? 'Publishing...' : '🚀 Publish Now'}
+                          </button>
+                          <button
+                            onClick={() => postToFacebook(post.id)}
+                            disabled={postingToFacebook}
+                            className="px-4 py-2 bg-[#1877f2] hover:bg-[#0c63d4] disabled:bg-gray-600 text-white rounded-lg text-sm font-medium transition-soft"
+                          >
+                            {postingToFacebook ? 'Posting...' : '📘 Post to FB'}
+                          </button>
+                        </>
+                      )}
+
+                      {/* Post to Facebook button for Facebook posts */}
+                      {post.platform === 'facebook' && (
                         <button
-                          onClick={() => publishNow(post.id)}
-                          disabled={publishing}
-                          className="px-4 py-2 bg-purple-600 hover:bg-purple-700 disabled:bg-gray-600 text-white rounded-lg text-sm font-medium transition-soft"
+                          onClick={() => postToFacebook(post.id)}
+                          disabled={postingToFacebook}
+                          className="px-4 py-2 bg-[#1877f2] hover:bg-[#0c63d4] disabled:bg-gray-600 text-white rounded-lg text-sm font-medium transition-soft"
                         >
-                          {publishing ? 'Publishing...' : '🚀 Publish Now'}
+                          {postingToFacebook ? 'Posting...' : '📘 Post to FB'}
                         </button>
                       )}
 
