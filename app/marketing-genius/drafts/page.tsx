@@ -605,6 +605,7 @@ export default function DraftsPage() {
                         target="_blank"
                         rel="noopener noreferrer"
                         className="px-4 py-2 bg-[#1877f2] hover:bg-[#0c63d4] text-white rounded-lg text-sm font-medium transition-soft text-center"
+                        title="Note: Facebook can't show custom images from drafts. Publish the blog post first for image preview."
                       >
                         📤 Share to FB
                       </a>
@@ -612,7 +613,7 @@ export default function DraftsPage() {
 
                     {post.platform === 'pinterest' && post.isApproved && (
                       <a
-                        href={`https://pinterest.com/pin/create/button/?url=${encodeURIComponent('https://fireflygrove.app')}&description=${encodeURIComponent(post.content.substring(0, 500))}`}
+                        href={`https://pinterest.com/pin/create/button/?url=${encodeURIComponent('https://fireflygrove.app')}&media=${encodeURIComponent(post.image || '')}&description=${encodeURIComponent(post.content.substring(0, 500))}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="px-4 py-2 bg-[#e60023] hover:bg-[#c2001d] text-white rounded-lg text-sm font-medium transition-soft text-center"
@@ -751,6 +752,7 @@ export default function DraftsPage() {
                           target="_blank"
                           rel="noopener noreferrer"
                           className="px-4 py-2 bg-[#1877f2] hover:bg-[#0c63d4] text-white rounded-lg text-sm font-medium transition-soft text-center"
+                          title="Note: Facebook can't show custom images from drafts. Publish the blog post first for image preview."
                         >
                           📤 Share to FB
                         </a>
@@ -758,7 +760,7 @@ export default function DraftsPage() {
 
                       {post.platform === 'pinterest' && (
                         <a
-                          href={`https://pinterest.com/pin/create/button/?url=${encodeURIComponent('https://fireflygrove.app')}&description=${encodeURIComponent(post.content.substring(0, 500))}`}
+                          href={`https://pinterest.com/pin/create/button/?url=${encodeURIComponent('https://fireflygrove.app')}&media=${encodeURIComponent(post.image || '')}&description=${encodeURIComponent(post.content.substring(0, 500))}`}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="px-4 py-2 bg-[#e60023] hover:bg-[#c2001d] text-white rounded-lg text-sm font-medium transition-soft text-center"
