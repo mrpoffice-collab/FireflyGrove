@@ -34,6 +34,7 @@ export default function ContentPlanPage() {
   const [view, setView] = useState<'calendar' | 'list'>('calendar')
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editDate, setEditDate] = useState<string>('')
+  const [platformFilter, setPlatformFilter] = useState<string | null>(null) // Filter by platform
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -89,11 +90,16 @@ export default function ContentPlanPage() {
     }
   }
 
+  // Apply platform filter
+  const filteredCalendar = platformFilter
+    ? calendar.filter(item => item.post?.platform === platformFilter)
+    : calendar
+
   // Group by week
   const groupByWeek = () => {
     const weeks: Record<string, ContentCalendarItem[]> = {}
 
-    calendar.forEach(item => {
+    filteredCalendar.forEach(item => {
       const date = new Date(item.scheduledFor)
       const weekStart = new Date(date)
       weekStart.setDate(date.getDate() - date.getDay()) // Start of week (Sunday)
@@ -108,15 +114,15 @@ export default function ContentPlanPage() {
     return Object.entries(weeks).sort((a, b) => a[0].localeCompare(b[0]))
   }
 
-  // Analytics
+  // Analytics (use filtered calendar for display stats)
   const stats = {
-    total: calendar.length,
-    approved: calendar.filter(i => i.status === 'approved' || i.status === 'scheduled').length,
-    scheduled: calendar.filter(i => i.status === 'scheduled').length,
-    published: calendar.filter(i => i.status === 'published').length,
-    totalViews: calendar.reduce((sum, i) => sum + (i.post?.views || 0), 0),
-    totalSignups: calendar.reduce((sum, i) => sum + (i.post?.signups || 0), 0),
-    // Platform breakdown
+    total: filteredCalendar.length,
+    approved: filteredCalendar.filter(i => i.status === 'approved' || i.status === 'scheduled').length,
+    scheduled: filteredCalendar.filter(i => i.status === 'scheduled').length,
+    published: filteredCalendar.filter(i => i.status === 'published').length,
+    totalViews: filteredCalendar.reduce((sum, i) => sum + (i.post?.views || 0), 0),
+    totalSignups: filteredCalendar.reduce((sum, i) => sum + (i.post?.signups || 0), 0),
+    // Platform breakdown (always use full calendar for counts)
     blog: calendar.filter(i => i.post?.platform === 'blog').length,
     facebook: calendar.filter(i => i.post?.platform === 'facebook').length,
     pinterest: calendar.filter(i => i.post?.platform === 'pinterest').length,
@@ -213,39 +219,94 @@ export default function ContentPlanPage() {
           </div>
         </div>
 
-        {/* Platform Breakdown */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          <div className="bg-bg-elevated border border-border-subtle rounded-lg p-4">
-            <div className="flex items-center gap-2 mb-1">
-              <span className="text-xl">📝</span>
-              <div className="text-xl font-light text-text-soft">{stats.blog}</div>
-            </div>
-            <div className="text-text-muted text-sm">Blog Posts</div>
+        {/* Platform Breakdown - Clickable Filters */}
+        <div className="mb-6">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-lg text-text-soft font-medium">Filter by Platform</h3>
+            {platformFilter && (
+              <button
+                onClick={() => setPlatformFilter(null)}
+                className="text-sm text-firefly-glow hover:text-firefly-dim"
+              >
+                Clear Filter
+              </button>
+            )}
           </div>
-          <div className="bg-bg-elevated border border-border-subtle rounded-lg p-4">
-            <div className="flex items-center gap-2 mb-1">
-              <span className="text-xl">👤</span>
-              <div className="text-xl font-light text-text-soft">{stats.facebook}</div>
-            </div>
-            <div className="text-text-muted text-sm">Facebook Posts</div>
-          </div>
-          <div className="bg-bg-elevated border border-border-subtle rounded-lg p-4">
-            <div className="flex items-center gap-2 mb-1">
-              <span className="text-xl">📌</span>
-              <div className="text-xl font-light text-text-soft">{stats.pinterest}</div>
-            </div>
-            <div className="text-text-muted text-sm">Pinterest Pins</div>
-          </div>
-          <div className="bg-bg-elevated border border-border-subtle rounded-lg p-4">
-            <div className="flex items-center gap-2 mb-1">
-              <span className="text-xl">📧</span>
-              <div className="text-xl font-light text-text-soft">{stats.email}</div>
-            </div>
-            <div className="text-text-muted text-sm">Newsletters</div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <button
+              onClick={() => setPlatformFilter(platformFilter === 'blog' ? null : 'blog')}
+              className={`bg-bg-elevated border rounded-lg p-4 text-left transition-soft ${
+                platformFilter === 'blog'
+                  ? 'border-green-500 ring-2 ring-green-500/30'
+                  : 'border-border-subtle hover:border-firefly-dim'
+              }`}
+            >
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-xl">📝</span>
+                <div className="text-xl font-light text-text-soft">{stats.blog}</div>
+              </div>
+              <div className="text-text-muted text-sm">Blog Posts</div>
+            </button>
+            <button
+              onClick={() => setPlatformFilter(platformFilter === 'facebook' ? null : 'facebook')}
+              className={`bg-bg-elevated border rounded-lg p-4 text-left transition-soft ${
+                platformFilter === 'facebook'
+                  ? 'border-blue-500 ring-2 ring-blue-500/30'
+                  : 'border-border-subtle hover:border-firefly-dim'
+              }`}
+            >
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-xl">👤</span>
+                <div className="text-xl font-light text-text-soft">{stats.facebook}</div>
+              </div>
+              <div className="text-text-muted text-sm">Facebook Posts</div>
+            </button>
+            <button
+              onClick={() => setPlatformFilter(platformFilter === 'pinterest' ? null : 'pinterest')}
+              className={`bg-bg-elevated border rounded-lg p-4 text-left transition-soft ${
+                platformFilter === 'pinterest'
+                  ? 'border-red-500 ring-2 ring-red-500/30'
+                  : 'border-border-subtle hover:border-firefly-dim'
+              }`}
+            >
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-xl">📌</span>
+                <div className="text-xl font-light text-text-soft">{stats.pinterest}</div>
+              </div>
+              <div className="text-text-muted text-sm">Pinterest Pins</div>
+            </button>
+            <button
+              onClick={() => setPlatformFilter(platformFilter === 'email' ? null : 'email')}
+              className={`bg-bg-elevated border rounded-lg p-4 text-left transition-soft ${
+                platformFilter === 'email'
+                  ? 'border-purple-500 ring-2 ring-purple-500/30'
+                  : 'border-border-subtle hover:border-firefly-dim'
+              }`}
+            >
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-xl">📧</span>
+                <div className="text-xl font-light text-text-soft">{stats.email}</div>
+              </div>
+              <div className="text-text-muted text-sm">Newsletters</div>
+            </button>
           </div>
         </div>
 
         {/* Empty State */}
+        {filteredCalendar.length === 0 && calendar.length > 0 && (
+          <div className="bg-bg-elevated border border-border-subtle rounded-xl p-12 text-center">
+            <p className="text-text-muted text-lg mb-4">
+              No {platformFilter} posts found
+            </p>
+            <button
+              onClick={() => setPlatformFilter(null)}
+              className="text-firefly-glow hover:text-firefly-dim text-sm"
+            >
+              Clear filter to see all posts
+            </button>
+          </div>
+        )}
+
         {calendar.length === 0 && (
           <div className="bg-bg-elevated border border-border-subtle rounded-xl p-12 text-center">
             <div className="text-6xl mb-4">📅</div>
@@ -364,13 +425,22 @@ export default function ContentPlanPage() {
                           )}
                         </div>
 
-                        <div className="flex gap-2">
+                        <div className="flex flex-col gap-2">
                           {item.status !== 'published' && (
                             <Link
                               href="/marketing-genius/drafts"
-                              className="px-3 py-1 bg-firefly-dim/20 hover:bg-firefly-dim/30 text-firefly-glow rounded text-sm transition-soft"
+                              className="px-3 py-1 bg-firefly-dim/20 hover:bg-firefly-dim/30 text-firefly-glow rounded text-sm transition-soft text-center"
                             >
-                              Manage
+                              View in Drafts
+                            </Link>
+                          )}
+                          {item.status === 'published' && item.post?.platform === 'blog' && item.post?.slug && (
+                            <Link
+                              href={`/blog/${item.post.slug}`}
+                              target="_blank"
+                              className="px-3 py-1 bg-green-500/20 hover:bg-green-500/30 text-green-400 rounded text-sm transition-soft text-center"
+                            >
+                              View Post →
                             </Link>
                           )}
                         </div>
