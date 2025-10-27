@@ -30,10 +30,10 @@ export default function MissionPage() {
             </div>
           </div>
           <h1 className="text-5xl md:text-6xl font-light text-firefly-glow mb-4">
-            The Firefly Grove Mission
+            Our Compass
           </h1>
           <p className="text-2xl text-text-soft font-light">
-            Where Memory Becomes Legacy, and Love Never Fades
+            The guiding light that keeps us true
           </p>
         </div>
 

@@ -1,5 +1,5 @@
-# The Firefly Grove Mission
-## Where Memory Becomes Legacy, and Love Never Fades
+# Our Compass
+## The Guiding Light That Keeps Us True
 
 ---
 
