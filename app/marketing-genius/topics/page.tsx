@@ -61,7 +61,7 @@ export default function TopicsPage() {
 
   const fetchTopics = async () => {
     try {
-      const res = await fetch('/api/marketing/topics?minConfidence=65')
+      const res = await fetch('/api/marketing/topics?minConfidence=0')
       if (res.ok) {
         const data = await res.json()
         setTopics(data.topics)
