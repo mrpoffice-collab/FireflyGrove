@@ -3,11 +3,20 @@ const prisma = new PrismaClient()
 
 const SUBREDDITS = [
   'Genealogy',
-  'GriefSupport',
-  'Journaling',
   'FamilyHistory',
-  'DigitalNomad',
-  'Productivity'
+  'GriefSupport',
+  'Parenting',
+  'Mommit',
+  'daddit',
+  'AskParents',
+  'SandwichGeneration',
+  'AgingParents',
+  'MemoryKeeping',
+  'Scrapbooking',
+  'OldPhotos',
+  'TheWayWeWere',
+  'estrangedadultchild',
+  'LifeAfterNarcissism'
 ]
 
 function extractKeywords(title) {
