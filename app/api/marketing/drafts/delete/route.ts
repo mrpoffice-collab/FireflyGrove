@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Admin access required' }, { status: 403 })
     }
 
-    const { postIds } = await req.json()
+    const { postIds, autoFillGaps = false } = await req.json()
 
     if (!postIds || !Array.isArray(postIds) || postIds.length === 0) {
       return NextResponse.json({ error: 'Invalid postIds' }, { status: 400 })
@@ -36,6 +36,7 @@ export async function POST(req: NextRequest) {
         id: { in: postIds },
         status: { in: ['draft', 'scheduled'] }, // Don't allow deleting published posts
       },
+      orderBy: { scheduledFor: 'asc' },
     })
 
     if (posts.length === 0) {
@@ -54,9 +55,40 @@ export async function POST(req: NextRequest) {
 
     console.log(`🗑️ Deleted ${result.count} post(s) by ${session.user.email}`)
 
+    // Auto-fill gaps if requested
+    if (autoFillGaps) {
+      // Get all remaining approved posts with scheduled dates
+      const remainingPosts = await prisma.marketingPost.findMany({
+        where: {
+          isApproved: true,
+          scheduledFor: { not: null },
+        },
+        orderBy: { scheduledFor: 'asc' },
+      })
+
+      if (remainingPosts.length > 0) {
+        // Find the earliest scheduled date
+        const startDate = new Date(remainingPosts[0].scheduledFor!)
+
+        // Reschedule all posts evenly from start date
+        for (let i = 0; i < remainingPosts.length; i++) {
+          const newDate = new Date(startDate)
+          newDate.setDate(startDate.getDate() + (i * 2)) // 2 days apart
+
+          await prisma.marketingPost.update({
+            where: { id: remainingPosts[i].id },
+            data: { scheduledFor: newDate },
+          })
+        }
+
+        console.log(`📅 Auto-filled gaps: rescheduled ${remainingPosts.length} posts`)
+      }
+    }
+
     return NextResponse.json({
       success: true,
       deleted: result.count,
+      rescheduled: autoFillGaps,
     })
   } catch (error) {
     console.error('Error deleting posts:', error)

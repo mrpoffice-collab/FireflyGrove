@@ -139,16 +139,26 @@ export default function DraftsPage() {
       return
     }
 
+    // Ask about auto-filling gaps
+    const autoFillGaps = confirm(
+      `Auto-fill gaps in the schedule?\n\n` +
+      `YES = Remaining posts will be rescheduled evenly (2 days apart)\n` +
+      `NO = Keep existing schedule dates`
+    )
+
     try {
       const res = await fetch('/api/marketing/drafts/delete', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ postIds }),
+        body: JSON.stringify({ postIds, autoFillGaps }),
       })
 
       if (res.ok) {
         const data = await res.json()
-        alert(`🗑️ ${data.deleted} post(s) deleted!`)
+        const message = data.rescheduled
+          ? `🗑️ ${data.deleted} post(s) deleted!\n📅 Remaining posts rescheduled to fill gaps.`
+          : `🗑️ ${data.deleted} post(s) deleted!`
+        alert(message)
         fetchDrafts()
         setSelectedPosts(new Set())
       } else {

@@ -22,8 +22,8 @@ interface BlogPost {
  * Publish a blog post as a markdown file
  */
 export async function publishBlogPost(post: BlogPost): Promise<string> {
-  // Ensure blog directory exists
-  const blogDir = path.join(process.cwd(), 'public', 'blog')
+  // Ensure blog directory exists (using content/blog to match blog reader)
+  const blogDir = path.join(process.cwd(), 'content', 'blog')
   if (!fs.existsSync(blogDir)) {
     fs.mkdirSync(blogDir, { recursive: true })
   }
@@ -43,23 +43,27 @@ export async function publishBlogPost(post: BlogPost): Promise<string> {
   console.log(`📝 Published blog post: ${filepath}`)
 
   // Return the public URL
-  return `/blog/${filename}`
+  return `/blog/${slug}`
 }
 
 /**
  * Generate markdown with YAML frontmatter
  */
 function generateMarkdown(post: BlogPost, publishDate: Date): string {
+  // Format date as YYYY-MM-DD
+  const dateStr = publishDate.toISOString().split('T')[0]
+
+  // Calculate read time (rough estimate: 200 words per minute)
+  const wordCount = post.content.split(/\s+/).length
+  const readTime = Math.ceil(wordCount / 200)
+
   const frontmatter = `---
 title: "${post.title.replace(/"/g, '\\"')}"
-date: ${publishDate.toISOString()}
-excerpt: "${(post.excerpt || '').replace(/"/g, '\\"')}"
-keywords:
-${post.keywords.map((k) => `  - ${k}`).join('\n')}
-slug: ${post.slug || generateSlug(post.title)}
-metaDescription: "${(post.metaDescription || '').replace(/"/g, '\\"')}"
-${post.topic ? `topic: "${post.topic.replace(/"/g, '\\"')}"` : ''}
-published: true
+date: "${dateStr}"
+excerpt: "${(post.excerpt || post.metaDescription || '').replace(/"/g, '\\"')}"
+author: "Firefly Grove Team"
+category: "Memory Preservation"
+readTime: "${readTime} min read"
 ---
 
 ${post.content}
@@ -82,7 +86,7 @@ function generateSlug(title: string): string {
  * Check if blog post already published (file exists)
  */
 export function isBlogPostPublished(slug: string): boolean {
-  const blogDir = path.join(process.cwd(), 'public', 'blog')
+  const blogDir = path.join(process.cwd(), 'content', 'blog')
   const filepath = path.join(blogDir, `${slug}.md`)
   return fs.existsSync(filepath)
 }

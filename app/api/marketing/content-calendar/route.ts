@@ -11,29 +11,48 @@ export async function GET() {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    // Fetch all content calendar items
-    const calendarItems = await prisma.contentCalendar.findMany({
-      orderBy: { scheduledFor: 'asc' }
-    })
-
-    // Fetch related posts
-    const postIds = calendarItems.filter(item => item.postId).map(item => item.postId as string)
-    const posts = await prisma.marketingPost.findMany({
-      where: { id: { in: postIds } },
+    // Fetch approved MarketingPost entries with scheduled dates
+    const approvedPosts = await prisma.marketingPost.findMany({
+      where: {
+        isApproved: true,
+        scheduledFor: { not: null }
+      },
+      orderBy: { scheduledFor: 'asc' },
       select: {
         id: true,
+        platform: true,
         title: true,
+        excerpt: true,
+        keywords: true,
+        scheduledFor: true,
         status: true,
         publishedAt: true,
         views: true,
-        signups: true
+        signups: true,
+        topic: true,
+        createdAt: true,
       }
     })
 
-    // Merge posts into calendar items
-    const calendar = calendarItems.map(item => ({
-      ...item,
-      post: item.postId ? posts.find(p => p.id === item.postId) : null
+    // Transform to calendar format
+    const calendar = approvedPosts.map(post => ({
+      id: post.id,
+      topic: post.topic || post.title,
+      keywords: post.keywords,
+      excerpt: post.excerpt,
+      scheduledFor: post.scheduledFor!,
+      status: post.status === 'published' ? 'published' : post.status === 'scheduled' ? 'scheduled' : 'approved',
+      postId: post.id,
+      post: {
+        id: post.id,
+        title: post.title,
+        status: post.status,
+        publishedAt: post.publishedAt,
+        views: post.views,
+        signups: post.signups,
+        platform: post.platform,
+      },
+      createdAt: post.createdAt,
     }))
 
     return NextResponse.json({ calendar })
