@@ -2,8 +2,6 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
-import fs from 'fs'
-import path from 'path'
 
 export async function POST(
   request: NextRequest,
@@ -34,33 +32,7 @@ export async function POST(
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/(^-|-$)/g, '')
 
-    // Calculate read time (roughly 200 words per minute)
-    const wordCount = post.content.split(/\s+/).length
-    const readTime = Math.ceil(wordCount / 200)
-
-    // Create frontmatter
-    const today = new Date().toISOString().split('T')[0]
-    const imageUrl = post.image || 'https://images.unsplash.com/photo-1551269901-5c5e14c25df7?w=1200&h=630&fit=crop'
-    const frontmatter = `---
-title: "${post.title.replace(/"/g, '\\"')}"
-date: "${today}"
-excerpt: "${(post.excerpt || post.metaDescription || post.title).replace(/"/g, '\\"')}"
-author: "Firefly Grove Team"
-category: "Memory Preservation"
-readTime: "${readTime} min read"
-image: "${imageUrl}"
----
-
-${post.content}
-`
-
-    // Write to content/blog directory
-    const blogDir = path.join(process.cwd(), 'content', 'blog')
-    const filePath = path.join(blogDir, `${slug}.md`)
-
-    fs.writeFileSync(filePath, frontmatter, 'utf-8')
-
-    // Update post to published
+    // Update post to published (no file write needed - blog.ts reads from database)
     const updatedPost = await prisma.marketingPost.update({
       where: { id: postId },
       data: {
@@ -70,12 +42,14 @@ ${post.content}
       }
     })
 
+    console.log(`✅ Published blog post: ${slug}`)
+
     return NextResponse.json({
       success: true,
       post: updatedPost,
       slug: slug,
       url: `/blog/${slug}`,
-      message: 'Blog post published successfully!'
+      message: 'Blog post published successfully! Post will be served from database.'
     })
   } catch (error: any) {
     console.error('Error publishing post:', error)
