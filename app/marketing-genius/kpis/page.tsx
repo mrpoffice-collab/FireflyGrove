@@ -51,7 +51,7 @@ export default function KPIsPage() {
   const [subscriptionPrice, setSubscriptionPrice] = useState(10)
   const [productConversion, setProductConversion] = useState(10)
   const [avgProductSpend, setAvgProductSpend] = useState(20)
-  const [fixedCosts, setFixedCosts] = useState(1000)
+  const [fixedCosts, setFixedCosts] = useState(0)
   const [variableCostPerUser, setVariableCostPerUser] = useState(2)
 
   useEffect(() => {
@@ -494,8 +494,8 @@ export default function KPIsPage() {
                 <input
                   type="range"
                   min="0"
-                  max="500"
-                  step="10"
+                  max="12000"
+                  step="50"
                   value={targetUsers}
                   onChange={(e) => setTargetUsers(parseInt(e.target.value))}
                   className="w-full h-2 bg-bg-dark rounded-lg appearance-none cursor-pointer accent-firefly-glow"
@@ -575,7 +575,7 @@ export default function KPIsPage() {
                 </div>
                 <input
                   type="range"
-                  min="500"
+                  min="0"
                   max="5000"
                   step="100"
                   value={fixedCosts}
