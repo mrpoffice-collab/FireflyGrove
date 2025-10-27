@@ -25,36 +25,74 @@ export async function GET(req: NextRequest) {
     }
 
     const { searchParams } = new URL(req.url)
-    const status = searchParams.get('status') || undefined
+    const status = searchParams.get('status')
     const minConfidence = searchParams.get('minConfidence')
       ? parseInt(searchParams.get('minConfidence')!)
       : undefined
+    const showAll = searchParams.get('showAll') === 'true'
 
-    // Build query
+    // Smart filter: Only show "candidate" topics by default
+    // (hide drafted/published/dismissed topics)
     const where: any = {}
-    if (status) where.status = status
+    if (status) {
+      where.status = status
+    } else if (!showAll) {
+      // Default: only show candidates (not drafted, published, or dismissed)
+      where.status = 'candidate'
+    }
+
     if (minConfidence) {
       where.confidenceScore = { gte: minConfidence }
     }
 
+    // Fetch topics
     const topics = await prisma.topicScore.findMany({
       where,
       orderBy: [{ confidenceScore: 'desc' }, { scoredAt: 'desc' }],
-      take: 50,
     })
+
+    // Smart filter: Remove topics with similar content published < 360 days ago
+    const filteredTopics = []
+    const oneYearAgo = new Date()
+    oneYearAgo.setDate(oneYearAgo.getDate() - 360)
+
+    for (const topic of topics) {
+      // Check if similar content exists (by primary keyword)
+      const similarPost = await prisma.marketingPost.findFirst({
+        where: {
+          keywords: {
+            has: topic.primaryKeyword,
+          },
+          publishedAt: {
+            gte: oneYearAgo,
+          },
+        },
+        select: { id: true, title: true, publishedAt: true },
+      })
+
+      // Only include if no similar post within 360 days
+      if (!similarPost) {
+        filteredTopics.push(topic)
+      } else {
+        console.log(
+          `⏭️ Skipping "${topic.topic}" - similar post "${similarPost.title}" published ${similarPost.publishedAt}`
+        )
+      }
+    }
 
     // Get summary stats
     const stats = {
-      total: topics.length,
-      highConfidence: topics.filter((t) => t.confidenceScore >= 80).length,
-      mediumConfidence: topics.filter(
+      total: filteredTopics.length,
+      highConfidence: filteredTopics.filter((t) => t.confidenceScore >= 80).length,
+      mediumConfidence: filteredTopics.filter(
         (t) => t.confidenceScore >= 65 && t.confidenceScore < 80
       ).length,
-      lowConfidence: topics.filter((t) => t.confidenceScore < 65).length,
+      lowConfidence: filteredTopics.filter((t) => t.confidenceScore < 65).length,
+      filtered: topics.length - filteredTopics.length,
     }
 
     return NextResponse.json({
-      topics,
+      topics: filteredTopics,
       stats,
     })
   } catch (error) {

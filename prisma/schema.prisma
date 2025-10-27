@@ -947,14 +947,20 @@ model AnalyticsEvent {
 model MarketingPost {
   id            String   @id @default(cuid())
 
-  platform      String   // blog, reddit, pinterest, email
+  platform      String   // blog, reddit, pinterest, email, facebook
   postType      String   // blog_post, social_post, email
   title         String
   content       String   @db.Text
   excerpt       String?  @db.Text
 
-  status        String   // draft, published
+  status        String   // draft, scheduled, published, failed
   publishedAt   DateTime?
+  scheduledFor  DateTime? // When to auto-publish
+
+  // Approval workflow
+  isApproved    Boolean  @default(false)
+  approvedAt    DateTime?
+  approvedBy    String?  // Admin email who approved
 
   // SEO
   slug          String?  @unique
@@ -969,11 +975,17 @@ model MarketingPost {
   generatedBy   String   @default("human") // ai, human
   topic         String?
 
+  // Platform-specific metadata
+  subreddit     String?  // For Reddit posts
+  pinDescription String? @db.Text // For Pinterest pins
+
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
   @@index([platform, status])
   @@index([publishedAt])
+  @@index([scheduledFor])
+  @@index([isApproved])
 }
 
 // Trending topics from Reddit, Pinterest, Google Trends

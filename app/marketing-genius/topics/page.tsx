@@ -52,6 +52,8 @@ export default function TopicsPage() {
   const [generating, setGenerating] = useState(false)
   const [genCount, setGenCount] = useState(20)
   const [genMinConfidence, setGenMinConfidence] = useState(65)
+  const [viewingBrief, setViewingBrief] = useState<string | null>(null)
+  const [briefData, setBriefData] = useState<any>(null)
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -233,6 +235,28 @@ export default function TopicsPage() {
     }
   }
 
+  const dismissTopic = async (topicId: string) => {
+    if (!confirm('Dismiss this topic?\n\nIt will be marked as "dismissed" and won\'t appear in this candidate list anymore (but will still exist in the database).')) return
+
+    try {
+      const res = await fetch(`/api/marketing/topics/${topicId}/dismiss`, {
+        method: 'PATCH',
+      })
+
+      if (res.ok) {
+        setTopics(topics.filter((t) => t.id !== topicId))
+        const newSelection = new Set(selectedTopics)
+        newSelection.delete(topicId)
+        setSelectedTopics(newSelection)
+      } else {
+        alert('Failed to dismiss topic')
+      }
+    } catch (error) {
+      console.error('Error dismissing topic:', error)
+      alert('Error dismissing topic')
+    }
+  }
+
   const deleteTopic = async (topicId: string) => {
     if (!confirm('Delete this topic? This cannot be undone.')) return
 
@@ -277,6 +301,27 @@ export default function TopicsPage() {
       console.error('Error generating brief:', error)
       alert('Error generating brief')
     }
+  }
+
+  const viewBrief = async (topicId: string) => {
+    try {
+      const res = await fetch(`/api/marketing/briefs/${topicId}`)
+      if (res.ok) {
+        const data = await res.json()
+        setBriefData(data.brief)
+        setViewingBrief(topicId)
+      } else {
+        alert('Failed to load brief')
+      }
+    } catch (error) {
+      console.error('Error loading brief:', error)
+      alert('Error loading brief')
+    }
+  }
+
+  const closeBrief = () => {
+    setViewingBrief(null)
+    setBriefData(null)
   }
 
   if (status === 'loading' || loading) {
@@ -746,18 +791,32 @@ export default function TopicsPage() {
                     }`}>
                       {topic.status}
                     </span>
-                    {topic.status === 'candidate' && (
+                    {topic.status === 'candidate' ? (
                       <button
                         onClick={() => generateBrief(topic.id)}
                         className="px-4 py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg text-sm font-medium transition-soft"
                       >
                         Generate Brief
                       </button>
-                    )}
+                    ) : topic.status === 'drafted' ? (
+                      <button
+                        onClick={() => viewBrief(topic.id)}
+                        className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg text-sm font-medium transition-soft"
+                      >
+                        📄 View Brief
+                      </button>
+                    ) : null}
+                    <button
+                      onClick={() => dismissTopic(topic.id)}
+                      className="px-4 py-2 bg-yellow-500/20 hover:bg-yellow-500/30 text-yellow-400 rounded-lg text-sm font-medium transition-soft"
+                      title="Dismiss topic (hide from list)"
+                    >
+                      ⏭️
+                    </button>
                     <button
                       onClick={() => deleteTopic(topic.id)}
                       className="px-4 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-lg text-sm font-medium transition-soft"
-                      title="Delete topic"
+                      title="Delete topic permanently"
                     >
                       🗑️
                     </button>
@@ -767,6 +826,109 @@ export default function TopicsPage() {
             ))
           )}
         </div>
+
+        {/* Brief Viewer Modal */}
+        {viewingBrief && briefData && (
+          <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+            <div className="bg-bg-elevated border border-border-subtle rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+              <div className="sticky top-0 bg-bg-elevated border-b border-border-subtle p-6 flex items-center justify-between">
+                <h2 className="text-2xl font-light text-text-soft">Content Brief</h2>
+                <button
+                  onClick={closeBrief}
+                  className="text-text-muted hover:text-text-soft text-2xl"
+                >
+                  ✕
+                </button>
+              </div>
+
+              <div className="p-6 space-y-6">
+                {/* Title */}
+                <div>
+                  <h3 className="text-sm font-medium text-text-muted mb-2">Title</h3>
+                  <p className="text-lg text-text-soft">{briefData.title}</p>
+                </div>
+
+                {/* Target Keywords */}
+                <div>
+                  <h3 className="text-sm font-medium text-text-muted mb-2">Target Keywords</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {briefData.targetKeywords.map((keyword: string, i: number) => (
+                      <span
+                        key={i}
+                        className="px-3 py-1 bg-firefly-dim/20 text-firefly-glow rounded-full text-sm"
+                      >
+                        {keyword}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Suggested Length */}
+                <div>
+                  <h3 className="text-sm font-medium text-text-muted mb-2">Suggested Length</h3>
+                  <p className="text-text-soft">{briefData.suggestedLength} words</p>
+                </div>
+
+                {/* Suggested H2s */}
+                <div>
+                  <h3 className="text-sm font-medium text-text-muted mb-2">Suggested H2 Headings</h3>
+                  <ol className="list-decimal list-inside space-y-1 text-text-soft">
+                    {briefData.suggestedH2s.map((h2: string, i: number) => (
+                      <li key={i}>{h2}</li>
+                    ))}
+                  </ol>
+                </div>
+
+                {/* Outline Points */}
+                <div>
+                  <h3 className="text-sm font-medium text-text-muted mb-2">Outline</h3>
+                  <div className="bg-bg-dark rounded-lg p-4">
+                    <ol className="list-decimal list-inside space-y-2 text-text-soft">
+                      {JSON.parse(briefData.outlinePoints).map((point: string, i: number) => (
+                        <li key={i}>{point}</li>
+                      ))}
+                    </ol>
+                  </div>
+                </div>
+
+                {/* CTA Recommendation */}
+                <div>
+                  <h3 className="text-sm font-medium text-text-muted mb-2">CTA Recommendation</h3>
+                  <p className="text-text-soft bg-bg-dark rounded-lg p-4">
+                    {briefData.ctaRecommendation}
+                  </p>
+                </div>
+
+                {/* Tone Notes */}
+                <div>
+                  <h3 className="text-sm font-medium text-text-muted mb-2">Tone Notes</h3>
+                  <p className="text-text-soft bg-bg-dark rounded-lg p-4">
+                    {briefData.toneNotes}
+                  </p>
+                </div>
+
+                {/* Actions */}
+                <div className="flex gap-3 pt-4 border-t border-border-subtle">
+                  <button
+                    onClick={closeBrief}
+                    className="flex-1 px-6 py-3 bg-bg-dark hover:bg-bg-elevated border border-border-subtle text-text-soft rounded-lg font-medium transition-soft"
+                  >
+                    Close
+                  </button>
+                  <button
+                    onClick={() => {
+                      toggleSelection(viewingBrief)
+                      closeBrief()
+                    }}
+                    className="flex-1 px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-soft"
+                  >
+                    ✅ Select & Generate Content
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )

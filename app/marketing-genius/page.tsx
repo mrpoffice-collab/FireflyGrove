@@ -196,6 +196,12 @@ export default function MarketingGeniusPage() {
               🎯 Topic Intelligence
             </Link>
             <Link
+              href="/marketing-genius/drafts"
+              className="px-6 py-3 bg-gradient-to-r from-blue-500/20 to-blue-600/20 hover:from-blue-500/30 hover:to-blue-600/30 border border-blue-500 text-text-soft rounded-lg transition-soft"
+            >
+              📝 Draft Posts Review
+            </Link>
+            <Link
               href="/marketing-genius/kpis"
               className="px-6 py-3 bg-gradient-to-r from-firefly-dim/20 to-firefly-glow/20 hover:from-firefly-dim/30 hover:to-firefly-glow/30 border border-firefly-dim text-text-soft rounded-lg transition-soft"
             >

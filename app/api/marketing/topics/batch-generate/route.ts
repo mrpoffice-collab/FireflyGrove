@@ -118,6 +118,7 @@ export async function POST(req: NextRequest) {
             metaDescription: blogContent.metaDescription,
             keywords: brief.targetKeywords,
             status: 'draft',
+            scheduledFor: currentDate,
             generatedBy: 'ai',
             topic: topic.topic,
           },
@@ -146,11 +147,14 @@ export async function POST(req: NextRequest) {
           },
         })
 
+        // Step 2: Repurpose blog into other formats
+        // Social posts scheduled 1 day after blog
+        const socialDate = new Date(blogPost.scheduledFor || currentDate)
+        socialDate.setDate(socialDate.getDate() + 1)
+
         // Increment date for next main post
         currentDate = new Date(currentDate)
         currentDate.setDate(currentDate.getDate() + interval)
-
-        // Step 2: Repurpose blog into other formats
         if (formats.newsletter || formats.facebook || formats.pinterest || formats.reddit) {
           console.log('  → Repurposing content...')
 
@@ -180,6 +184,7 @@ export async function POST(req: NextRequest) {
                 excerpt: blogContent.excerpt,
                 keywords: brief.targetKeywords,
                 status: 'draft',
+                scheduledFor: socialDate,
                 generatedBy: 'ai',
                 topic: topic.topic,
               },
@@ -199,6 +204,7 @@ export async function POST(req: NextRequest) {
                   excerpt: blogContent.excerpt.substring(0, 100),
                   keywords: brief.targetKeywords,
                   status: 'draft',
+                  scheduledFor: socialDate,
                   generatedBy: 'ai',
                   topic: topic.topic,
                 },
@@ -220,8 +226,10 @@ export async function POST(req: NextRequest) {
                   excerpt: pin.description.substring(0, 100),
                   keywords: brief.targetKeywords,
                   status: 'draft',
+                  scheduledFor: socialDate,
                   generatedBy: 'ai',
                   topic: topic.topic,
+                  pinDescription: pin.description,
                 },
               })
               generatedPosts.push(pinterestPost)
@@ -241,8 +249,10 @@ export async function POST(req: NextRequest) {
                   excerpt: redditPost.body.substring(0, 100),
                   keywords: brief.targetKeywords,
                   status: 'draft',
+                  scheduledFor: socialDate,
                   generatedBy: 'ai',
                   topic: topic.topic,
+                  subreddit: redditPost.subreddit.replace('r/', ''),
                 },
               })
               generatedPosts.push(post)
