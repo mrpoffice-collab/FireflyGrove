@@ -228,6 +228,7 @@ export async function POST(req: NextRequest) {
                 content: repurposed.newsletter,
                 excerpt: blogContent.excerpt,
                 keywords: brief.targetKeywords,
+                image: blogContent.image, // Inherit from blog post
                 status: 'draft',
                 scheduledFor: socialDate,
                 generatedBy: 'ai',
@@ -248,6 +249,7 @@ export async function POST(req: NextRequest) {
                   content: repurposed.facebook[i],
                   excerpt: blogContent.excerpt.substring(0, 100),
                   keywords: brief.targetKeywords,
+                  image: blogContent.image, // Inherit from blog post
                   status: 'draft',
                   scheduledFor: socialDate,
                   generatedBy: 'ai',
@@ -270,6 +272,7 @@ export async function POST(req: NextRequest) {
                   content: pin.description,
                   excerpt: pin.description.substring(0, 100),
                   keywords: brief.targetKeywords,
+                  image: blogContent.image, // Inherit from blog post
                   status: 'draft',
                   scheduledFor: socialDate,
                   generatedBy: 'ai',
@@ -293,6 +296,7 @@ export async function POST(req: NextRequest) {
                   content: `**Subreddit**: ${redditPost.subreddit}\n**Title**: ${redditPost.title}\n\n${redditPost.body}`,
                   excerpt: redditPost.body.substring(0, 100),
                   keywords: brief.targetKeywords,
+                  image: blogContent.image, // Inherit from blog post
                   status: 'draft',
                   scheduledFor: socialDate,
                   generatedBy: 'ai',
