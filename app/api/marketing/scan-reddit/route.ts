@@ -36,9 +36,9 @@ export async function POST(request: NextRequest) {
 
     for (const subreddit of SUBREDDITS) {
       try {
-        // Fetch top posts from last 24 hours
+        // Fetch top posts from last week (expanded from day for more results)
         const response = await fetch(
-          `https://www.reddit.com/r/${subreddit}/top.json?t=day&limit=25`,
+          `https://www.reddit.com/r/${subreddit}/top.json?t=week&limit=25`,
           {
             headers: {
               'User-Agent': 'Firefly Grove Marketing Scanner 1.0'
@@ -47,17 +47,21 @@ export async function POST(request: NextRequest) {
         )
 
         if (!response.ok) {
-          console.log(`Failed to fetch r/${subreddit}`)
+          console.log(`Failed to fetch r/${subreddit}: ${response.status}`)
           continue
         }
 
         const data = await response.json()
         const posts: RedditPost[] = data.data.children.map((child: any) => child.data)
 
+        console.log(`r/${subreddit}: Found ${posts.length} posts`)
+
         // Filter high-engagement posts (lowered threshold for more results)
         const highEngagement = posts.filter(
           post => post.score > 10 || post.num_comments > 5
         )
+
+        console.log(`r/${subreddit}: ${highEngagement.length} posts meet engagement criteria`)
 
         for (const post of highEngagement) {
           // Extract keywords from title
