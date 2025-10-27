@@ -41,7 +41,14 @@ export async function POST(request: NextRequest) {
           `https://www.reddit.com/r/${subreddit}/top.json?t=week&limit=25`,
           {
             headers: {
-              'User-Agent': 'Firefly Grove Marketing Scanner 1.0'
+              'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+              'Accept': 'application/json, text/plain, */*',
+              'Accept-Language': 'en-US,en;q=0.9',
+              'Accept-Encoding': 'gzip, deflate, br',
+              'Referer': 'https://www.reddit.com/',
+              'DNT': '1',
+              'Connection': 'keep-alive',
+              'Upgrade-Insecure-Requests': '1'
             }
           }
         )
