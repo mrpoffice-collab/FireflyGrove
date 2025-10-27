@@ -20,7 +20,6 @@ interface RepurposedContent {
   newsletter?: string
   facebook?: string[]
   pinterest?: Array<{ title: string; description: string }>
-  reddit?: Array<{ subreddit: string; title: string; body: string }>
 }
 
 /**
@@ -32,7 +31,6 @@ export async function repurposeContent(
     newsletter?: number
     facebook?: number
     pinterest?: number
-    reddit?: number
   }
 ): Promise<RepurposedContent> {
   const result: RepurposedContent = {}
@@ -50,11 +48,6 @@ export async function repurposeContent(
   // Pinterest pins
   if (formats.pinterest && formats.pinterest > 0) {
     result.pinterest = await generatePinterestPins(blog, formats.pinterest)
-  }
-
-  // Reddit posts (multiple subreddits)
-  if (formats.reddit && formats.reddit > 0) {
-    result.reddit = await generateRedditPosts(blog, formats.reddit)
   }
 
   return result
@@ -169,44 +162,3 @@ Return as JSON array:
   return jsonMatch ? JSON.parse(jsonMatch[0]) : []
 }
 
-/**
- * Generate Reddit posts for relevant subreddits
- */
-async function generateRedditPosts(
-  blog: BlogPost,
-  count: number
-): Promise<Array<{ subreddit: string; title: string; body: string }>> {
-  const prompt = `Create ${count} Reddit post ideas for this blog content. Target relevant subreddits where families discuss memory preservation, genealogy, or legacy planning.
-
-Blog Title: ${blog.title}
-Blog Excerpt: ${blog.excerpt}
-Keywords: ${blog.keywords.join(', ')}
-
-Reddit Post Requirements:
-- Subreddit: Suggest relevant subreddit (e.g., r/Genealogy, r/AskOldPeople, r/family)
-- Title: Compelling question or discussion starter (follow subreddit rules)
-- Body: Helpful, not promotional. Share insights from blog without being salesy
-- Natural mention of blog at end: "I wrote more about this here: [link]"
-- Conversational, authentic tone (Redditors hate marketing)
-- Length: 150-300 words
-- Each post should be tailored to a different subreddit's audience
-
-Return as JSON array:
-[
-  {
-    "subreddit": "r/SubredditName",
-    "title": "Post title as question or discussion",
-    "body": "Post body text"
-  }
-]`
-
-  const message = await anthropic.messages.create({
-    model: 'claude-sonnet-4-20250514',
-    max_tokens: 3000,
-    messages: [{ role: 'user', content: prompt }],
-  })
-
-  const text = message.content[0].type === 'text' ? message.content[0].text : ''
-  const jsonMatch = text.match(/\[[\s\S]*\]/)
-  return jsonMatch ? JSON.parse(jsonMatch[0]) : []
-}

@@ -356,15 +356,6 @@ export default function KPIsPage() {
 
             <div className="p-4 bg-bg-dark rounded-lg">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-text-muted">Reddit</span>
-                <span className="text-yellow-400 text-sm">⏳ Planned</span>
-              </div>
-              <div className="text-2xl font-light text-text-muted mb-1">-</div>
-              <div className="text-text-muted text-xs">Not started</div>
-            </div>
-
-            <div className="p-4 bg-bg-dark rounded-lg">
-              <div className="flex items-center justify-between mb-2">
                 <span className="text-text-muted">Pinterest</span>
                 <span className="text-yellow-400 text-sm">⏳ Planned</span>
               </div>
@@ -699,7 +690,7 @@ export default function KPIsPage() {
                 </li>
                 <li className="flex items-center gap-2">
                   <span className="text-yellow-400">⏳</span>
-                  <span>Active on Reddit, Pinterest, Facebook</span>
+                  <span>Active on Pinterest, Facebook</span>
                 </li>
               </ul>
             </div>

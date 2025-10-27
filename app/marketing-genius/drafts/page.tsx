@@ -21,7 +21,6 @@ interface DraftPost {
   slug: string | null
   keywords: string[]
   topic: string | null
-  subreddit: string | null
   pinDescription: string | null
   image: string | null
   createdAt: string
@@ -286,7 +285,6 @@ export default function DraftsPage() {
       case 'blog': return '📝'
       case 'facebook': return '👤'
       case 'pinterest': return '📌'
-      case 'reddit': return '💬'
       case 'email': return '📧'
       default: return '📄'
     }
@@ -297,7 +295,6 @@ export default function DraftsPage() {
       case 'blog': return 'border-green-500/30 bg-green-500/10'
       case 'facebook': return 'border-blue-500/30 bg-blue-500/10'
       case 'pinterest': return 'border-red-500/30 bg-red-500/10'
-      case 'reddit': return 'border-orange-500/30 bg-orange-500/10'
       case 'email': return 'border-purple-500/30 bg-purple-500/10'
       default: return 'border-border-subtle bg-bg-elevated'
     }
@@ -522,7 +519,6 @@ export default function DraftsPage() {
                         </div>
                       )}
                       {post.topic && <span>🎯 Topic: {post.topic}</span>}
-                      {post.subreddit && <span>📍 r/{post.subreddit}</span>}
                       {post.keywords.length > 0 && (
                         <span>🔑 {post.keywords.slice(0, 3).join(', ')}</span>
                       )}

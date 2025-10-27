@@ -11,7 +11,6 @@ interface FormatConfig {
   newsletter?: number // Newsletter email (0 or 1)
   facebook?: number // How many FB posts
   pinterest?: number // How many pinterest pins
-  reddit?: number // How many reddit posts
 }
 
 /**
@@ -200,7 +199,7 @@ export async function POST(req: NextRequest) {
         const nextCandidateDate = new Date(currentDate)
         nextCandidateDate.setDate(nextCandidateDate.getDate() + interval)
         currentDate = nextCandidateDate
-        if (formats.newsletter || formats.facebook || formats.pinterest || formats.reddit) {
+        if (formats.newsletter || formats.facebook || formats.pinterest) {
           console.log('  → Repurposing content...')
 
           const repurposed = await repurposeContent(
@@ -214,7 +213,6 @@ export async function POST(req: NextRequest) {
               newsletter: formats.newsletter,
               facebook: formats.facebook,
               pinterest: formats.pinterest,
-              reddit: formats.reddit,
             }
           )
 
@@ -284,29 +282,6 @@ export async function POST(req: NextRequest) {
             }
           }
 
-          // Save Reddit posts
-          if (repurposed.reddit) {
-            for (let i = 0; i < repurposed.reddit.length; i++) {
-              const redditPost = repurposed.reddit[i]
-              const post = await prisma.marketingPost.create({
-                data: {
-                  platform: 'reddit',
-                  postType: 'social_post',
-                  title: `${redditPost.subreddit}: ${redditPost.title}`,
-                  content: `**Subreddit**: ${redditPost.subreddit}\n**Title**: ${redditPost.title}\n\n${redditPost.body}`,
-                  excerpt: redditPost.body.substring(0, 100),
-                  keywords: brief.targetKeywords,
-                  image: blogContent.image, // Inherit from blog post
-                  status: 'draft',
-                  scheduledFor: socialDate,
-                  generatedBy: 'ai',
-                  topic: topic.topic,
-                  subreddit: redditPost.subreddit.replace('r/', ''),
-                },
-              })
-              generatedPosts.push(post)
-            }
-          }
         }
 
         results.push({
