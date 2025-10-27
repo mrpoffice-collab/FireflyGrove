@@ -188,12 +188,20 @@ export default function MarketingGeniusPage() {
               AI-powered SEO content planning and generation
             </p>
           </div>
-          <Link
-            href="/marketing-genius/content-plan"
-            className="px-6 py-3 bg-bg-elevated hover:bg-bg-dark border border-border-subtle hover:border-firefly-dim text-text-soft rounded-lg transition-soft"
-          >
-            📅 View Content Plan
-          </Link>
+          <div className="flex gap-3">
+            <Link
+              href="/marketing-genius/kpis"
+              className="px-6 py-3 bg-gradient-to-r from-firefly-dim/20 to-firefly-glow/20 hover:from-firefly-dim/30 hover:to-firefly-glow/30 border border-firefly-dim text-text-soft rounded-lg transition-soft"
+            >
+              📊 KPIs & Goals
+            </Link>
+            <Link
+              href="/marketing-genius/content-plan"
+              className="px-6 py-3 bg-bg-elevated hover:bg-bg-dark border border-border-subtle hover:border-firefly-dim text-text-soft rounded-lg transition-soft"
+            >
+              📅 Content Plan
+            </Link>
+          </div>
         </div>
 
         {/* Full Automation */}
