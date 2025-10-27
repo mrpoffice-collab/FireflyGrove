@@ -5,22 +5,6 @@ import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import Header from '@/components/Header'
 
-interface TrendingTopic {
-  id: string
-  source: string
-  subreddit: string | null
-  title: string
-  description: string | null
-  url: string | null
-  score: number
-  engagement: number
-  keywords: string[]
-  contentIdea: string | null
-  priority: string
-  status: string
-  detectedAt: string
-}
-
 interface MarketingPost {
   id: string
   platform: string
@@ -36,10 +20,8 @@ interface MarketingPost {
 export default function MarketingGeniusPage() {
   const { data: session, status } = useSession()
   const router = useRouter()
-  const [trends, setTrends] = useState<TrendingTopic[]>([])
   const [draftPosts, setDraftPosts] = useState<MarketingPost[]>([])
   const [loading, setLoading] = useState(true)
-  const [scanning, setScanning] = useState(false)
   const [generating, setGenerating] = useState(false)
   const [generatingPlan, setGeneratingPlan] = useState(false)
   const [autoWriting, setAutoWriting] = useState(false)
@@ -52,20 +34,12 @@ export default function MarketingGeniusPage() {
     if (status === 'unauthenticated') {
       router.push('/login')
     } else if (status === 'authenticated') {
-      // Check if admin
       fetchData()
     }
   }, [status, router])
 
   const fetchData = async () => {
     try {
-      // Fetch trends
-      const trendsRes = await fetch('/api/marketing/trends')
-      if (trendsRes.ok) {
-        const trendsData = await trendsRes.json()
-        setTrends(trendsData)
-      }
-
       // Fetch draft posts
       const postsRes = await fetch('/api/marketing/posts?status=draft')
       if (postsRes.ok) {
@@ -76,25 +50,6 @@ export default function MarketingGeniusPage() {
       console.error('Error fetching data:', error)
     } finally {
       setLoading(false)
-    }
-  }
-
-  const handleScanReddit = async () => {
-    setScanning(true)
-    try {
-      const res = await fetch('/api/marketing/scan-reddit', { method: 'POST' })
-      if (res.ok) {
-        const data = await res.json()
-        alert(`🔥 Found ${data.trendsFound} new trending topics!`)
-        fetchData() // Refresh
-      } else {
-        alert('Failed to scan Reddit')
-      }
-    } catch (error) {
-      console.error('Error scanning Reddit:', error)
-      alert('Error scanning Reddit')
-    } finally {
-      setScanning(false)
     }
   }
 
@@ -228,7 +183,7 @@ export default function MarketingGeniusPage() {
         <div className="mb-8">
           <h1 className="text-4xl font-light text-text-soft mb-3">🧠 Marketing Intelligence</h1>
           <p className="text-text-muted text-lg">
-            AI-powered content generation and trend analysis
+            AI-powered SEO content planning and generation
           </p>
         </div>
 
@@ -354,83 +309,78 @@ export default function MarketingGeniusPage() {
           )}
         </div>
 
-        {/* Trending Topics */}
+        {/* SEO Planning Guide */}
         <div className="bg-bg-elevated border border-border-subtle rounded-xl p-8">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-light text-text-soft">🔥 Trending Topics</h2>
-            <button
-              onClick={handleScanReddit}
-              disabled={scanning}
-              className="px-6 py-2 bg-firefly-dim/20 hover:bg-firefly-dim/30 text-firefly-glow rounded font-medium transition-soft disabled:opacity-50"
-            >
-              {scanning ? '🔄 Scanning...' : '🔍 Scan Reddit Now'}
-            </button>
-          </div>
+          <h2 className="text-2xl font-light text-text-soft mb-6">🎯 SEO Content Planning</h2>
 
-          {trends.length === 0 ? (
-            <div className="text-center py-12 text-text-muted">
-              <p>No trends detected yet. Click "Scan Reddit Now" above to find trending topics.</p>
-            </div>
-          ) : (
-            <div className="space-y-4">
-              {trends.map(trend => (
-                <div key={trend.id} className="bg-bg-dark border border-border-subtle rounded-lg p-6">
-                  <div className="flex items-start gap-4">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-2">
-                        <span className={`px-2 py-1 rounded text-xs ${
-                          trend.priority === 'high' ? 'bg-red-500/20 text-red-400' :
-                          trend.priority === 'medium' ? 'bg-yellow-500/20 text-yellow-400' :
-                          'bg-blue-500/20 text-blue-400'
-                        }`}>
-                          {trend.priority === 'high' ? '🔥 High Priority' :
-                           trend.priority === 'medium' ? '⚡ Medium Priority' :
-                           '💡 Low Priority'}
-                        </span>
-                        <span className="px-2 py-1 bg-firefly-dim/10 text-firefly-glow rounded text-xs">
-                          r/{trend.subreddit}
-                        </span>
-                      </div>
-
-                      <h3 className="text-lg text-text-soft font-medium mb-2">{trend.title}</h3>
-
-                      <p className="text-text-muted text-sm mb-3">{trend.contentIdea}</p>
-
-                      <div className="flex items-center gap-3 text-text-muted text-sm">
-                        <span>Score: {trend.score.toFixed(0)}</span>
-                        <span>•</span>
-                        <span>Engagement: {trend.engagement}</span>
-                        <span>•</span>
-                        <span>Keywords: {trend.keywords.join(', ')}</span>
-                      </div>
-
-                      {trend.url && (
-                        <a
-                          href={trend.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-firefly-glow hover:text-firefly-bright text-sm mt-2 inline-block"
-                        >
-                          View on Reddit →
-                        </a>
-                      )}
-                    </div>
-
-                    <button
-                      onClick={() => {
-                        setTopic(trend.title)
-                        setKeywords(trend.keywords.join(', '))
-                        window.scrollTo({ top: 0, behavior: 'smooth' })
-                      }}
-                      className="px-4 py-2 bg-firefly-dim/20 hover:bg-firefly-dim/30 text-firefly-glow rounded text-sm font-medium transition-soft whitespace-nowrap"
-                    >
-                      Generate Post
-                    </button>
-                  </div>
+          <div className="space-y-6">
+            <div className="bg-bg-dark border border-border-subtle rounded-lg p-6">
+              <h3 className="text-lg text-text-soft font-medium mb-3">📊 Your Target Keywords</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div>
+                  <h4 className="text-sm text-firefly-glow font-medium mb-2">Primary Keywords</h4>
+                  <ul className="space-y-1 text-text-muted text-sm">
+                    <li>• memory preservation</li>
+                    <li>• family legacy planning</li>
+                    <li>• sound wave art</li>
+                    <li>• memorial tribute video</li>
+                    <li>• digital family tree</li>
+                  </ul>
                 </div>
-              ))}
+                <div>
+                  <h4 className="text-sm text-firefly-glow font-medium mb-2">Long-Tail Keywords</h4>
+                  <ul className="space-y-1 text-text-muted text-sm">
+                    <li>• how to preserve family memories</li>
+                    <li>• create memorial video online</li>
+                    <li>• turn voice into art</li>
+                    <li>• organize old family photos</li>
+                    <li>• digital legacy planning guide</li>
+                  </ul>
+                </div>
+              </div>
             </div>
-          )}
+
+            <div className="bg-bg-dark border border-border-subtle rounded-lg p-6">
+              <h3 className="text-lg text-text-soft font-medium mb-3">💡 Content Ideas</h3>
+              <div className="space-y-3">
+                <button
+                  onClick={() => {
+                    setTopic('How to Preserve Family Memories Before It\'s Too Late')
+                    setKeywords('memory preservation, family history, legacy planning')
+                    window.scrollTo({ top: 0, behavior: 'smooth' })
+                  }}
+                  className="w-full text-left p-4 bg-bg-elevated hover:bg-bg-dark border border-border-subtle hover:border-firefly-dim rounded-lg transition-soft"
+                >
+                  <div className="text-text-soft font-medium mb-1">How to Preserve Family Memories Before It's Too Late</div>
+                  <div className="text-text-muted text-sm">Keywords: memory preservation, family history, legacy planning</div>
+                </button>
+
+                <button
+                  onClick={() => {
+                    setTopic('Complete Guide to Creating Memorial Tribute Videos')
+                    setKeywords('memorial video, tribute video, photo slideshow')
+                    window.scrollTo({ top: 0, behavior: 'smooth' })
+                  }}
+                  className="w-full text-left p-4 bg-bg-elevated hover:bg-bg-dark border border-border-subtle hover:border-firefly-dim rounded-lg transition-soft"
+                >
+                  <div className="text-text-soft font-medium mb-1">Complete Guide to Creating Memorial Tribute Videos</div>
+                  <div className="text-text-muted text-sm">Keywords: memorial video, tribute video, photo slideshow</div>
+                </button>
+
+                <button
+                  onClick={() => {
+                    setTopic('Sound Wave Art: Turn Meaningful Voices Into Beautiful Wall Art')
+                    setKeywords('sound wave art, voice art, audio visualization')
+                    window.scrollTo({ top: 0, behavior: 'smooth' })
+                  }}
+                  className="w-full text-left p-4 bg-bg-elevated hover:bg-bg-dark border border-border-subtle hover:border-firefly-dim rounded-lg transition-soft"
+                >
+                  <div className="text-text-soft font-medium mb-1">Sound Wave Art: Turn Meaningful Voices Into Beautiful Wall Art</div>
+                  <div className="text-text-muted text-sm">Keywords: sound wave art, voice art, audio visualization</div>
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
