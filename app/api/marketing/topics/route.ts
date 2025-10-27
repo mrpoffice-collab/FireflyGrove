@@ -32,13 +32,13 @@ export async function GET(req: NextRequest) {
     const showAll = searchParams.get('showAll') === 'true'
 
     // Smart filter: Only show "candidate" topics by default
-    // (hide drafted/published/dismissed topics)
+    // (hide published/dismissed topics, but show drafted for content generation)
     const where: any = {}
     if (status) {
       where.status = status
     } else if (!showAll) {
-      // Default: only show candidates (not drafted, published, or dismissed)
-      where.status = 'candidate'
+      // Default: show candidates AND drafted (hide published/dismissed)
+      where.status = { in: ['candidate', 'drafted'] }
     }
 
     if (minConfidence) {
