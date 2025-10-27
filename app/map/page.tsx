@@ -3,45 +3,6 @@ import { authOptions } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { prisma } from '@/lib/prisma'
-import { glob } from 'glob'
-import path from 'path'
-import fs from 'fs'
-
-// Automatically scan filesystem for routes
-async function scanFilesystem() {
-  const appDir = path.join(process.cwd(), 'app')
-
-  // Find all page.tsx and route.ts files
-  const pageFiles = glob.sync('**/page.tsx', { cwd: appDir })
-  const apiFiles = glob.sync('**/route.ts', { cwd: appDir })
-
-  const discoveredRoutes: Array<{ path: string; type: string; file: string }> = []
-
-  // Convert file paths to URL paths
-  for (const file of pageFiles) {
-    let urlPath = '/' + file.replace('/page.tsx', '').replace('page.tsx', '')
-    if (urlPath === '//') urlPath = '/'
-
-    discoveredRoutes.push({
-      path: urlPath,
-      type: 'page',
-      file: file
-    })
-  }
-
-  for (const file of apiFiles) {
-    let urlPath = '/' + file.replace('/route.ts', '').replace('route.ts', '')
-    if (urlPath === '//') urlPath = '/'
-
-    discoveredRoutes.push({
-      path: urlPath,
-      type: 'api',
-      file: file
-    })
-  }
-
-  return discoveredRoutes.sort((a, b) => a.path.localeCompare(b.path))
-}
 
 export default async function SiteMapPage() {
   const session = await getServerSession(authOptions)
@@ -61,8 +22,38 @@ export default async function SiteMapPage() {
     redirect('/grove') // Non-admins redirected to grove
   }
 
-  // Scan filesystem for actual routes
-  const discoveredRoutes = await scanFilesystem()
+  // Manually defined routes (auto-discovery coming later)
+  const discoveredRoutes = [
+    { path: '/', type: 'page', file: 'page.tsx' },
+    { path: '/login', type: 'page', file: 'login/page.tsx' },
+    { path: '/blog', type: 'page', file: 'blog/page.tsx' },
+    { path: '/blog/[slug]', type: 'page', file: 'blog/[slug]/page.tsx' },
+    { path: '/grove', type: 'page', file: 'grove/page.tsx' },
+    { path: '/branch/[id]', type: 'page', file: 'branch/[id]/page.tsx' },
+    { path: '/open-grove', type: 'page', file: 'open-grove/page.tsx' },
+    { path: '/feedback', type: 'page', file: 'feedback/page.tsx' },
+    { path: '/billing', type: 'page', file: 'billing/page.tsx' },
+    { path: '/test-email', type: 'page', file: 'test-email/page.tsx' },
+    { path: '/map', type: 'page', file: 'map/page.tsx' },
+    { path: '/marketing-genius', type: 'page', file: 'marketing-genius/page.tsx' },
+    { path: '/api/auth/[...nextauth]', type: 'api', file: 'api/auth/[...nextauth]/route.ts' },
+    { path: '/api/branches', type: 'api', file: 'api/branches/route.ts' },
+    { path: '/api/branches/[id]', type: 'api', file: 'api/branches/[id]/route.ts' },
+    { path: '/api/branches/[id]/entries', type: 'api', file: 'api/branches/[id]/entries/route.ts' },
+    { path: '/api/branches/[id]/export', type: 'api', file: 'api/branches/[id]/export/route.ts' },
+    { path: '/api/branches/[id]/heirs', type: 'api', file: 'api/branches/[id]/heirs/route.ts' },
+    { path: '/api/marketing/generate-blog', type: 'api', file: 'api/marketing/generate-blog/route.ts' },
+    { path: '/api/marketing/generate-content-plan', type: 'api', file: 'api/marketing/generate-content-plan/route.ts' },
+    { path: '/api/marketing/auto-write', type: 'api', file: 'api/marketing/auto-write/route.ts' },
+    { path: '/api/marketing/posts', type: 'api', file: 'api/marketing/posts/route.ts' },
+    { path: '/api/marketing/posts/[id]/publish', type: 'api', file: 'api/marketing/posts/[id]/publish/route.ts' },
+    { path: '/api/marketing/trends', type: 'api', file: 'api/marketing/trends/route.ts' },
+    { path: '/api/marketing/scan-reddit', type: 'api', file: 'api/marketing/scan-reddit/route.ts' },
+    { path: '/api/stripe/webhook', type: 'api', file: 'api/stripe/webhook/route.ts' },
+    { path: '/api/cron/backup', type: 'api', file: 'api/cron/backup/route.ts' },
+    { path: '/api/cron/legacy-monitor', type: 'api', file: 'api/cron/legacy-monitor/route.ts' },
+    { path: '/api/cron/subscription-check', type: 'api', file: 'api/cron/subscription-check/route.ts' },
+  ]
 
   // Enhanced route metadata with detailed descriptions
   const routeMetadata: Record<string, { name: string; description: string; auth?: string; notes?: string }> = {
