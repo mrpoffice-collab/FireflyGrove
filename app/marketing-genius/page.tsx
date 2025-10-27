@@ -180,11 +180,19 @@ export default function MarketingGeniusPage() {
       <Header userName={session?.user?.name || ''} />
 
       <div className="max-w-7xl mx-auto px-4 py-12">
-        <div className="mb-8">
-          <h1 className="text-4xl font-light text-text-soft mb-3">🧠 Marketing Intelligence</h1>
-          <p className="text-text-muted text-lg">
-            AI-powered SEO content planning and generation
-          </p>
+        <div className="mb-8 flex items-center justify-between">
+          <div>
+            <h1 className="text-4xl font-light text-text-soft mb-3">🧠 Marketing Intelligence</h1>
+            <p className="text-text-muted text-lg">
+              AI-powered SEO content planning and generation
+            </p>
+          </div>
+          <Link
+            href="/marketing-genius/content-plan"
+            className="px-6 py-3 bg-bg-elevated hover:bg-bg-dark border border-border-subtle hover:border-firefly-dim text-text-soft rounded-lg transition-soft"
+          >
+            📅 View Content Plan
+          </Link>
         </div>
 
         {/* Full Automation */}
