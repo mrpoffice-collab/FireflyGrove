@@ -39,6 +39,7 @@ export default function DraftsPage() {
   const [editingImageId, setEditingImageId] = useState<string | null>(null)
   const [editImage, setEditImage] = useState<string>('')
   const [publishing, setPublishing] = useState(false)
+  const [fixingImages, setFixingImages] = useState(false)
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -280,6 +281,33 @@ export default function DraftsPage() {
     setEditImage('')
   }
 
+  const fixMissingImages = async () => {
+    if (!confirm('Add images to all posts that are missing them? This will use keyword-based Unsplash images.')) {
+      return
+    }
+
+    setFixingImages(true)
+    try {
+      const res = await fetch('/api/marketing/posts/fix-missing-images', {
+        method: 'POST',
+      })
+
+      if (res.ok) {
+        const data = await res.json()
+        alert(`✅ Success! Updated ${data.updated} posts with images.`)
+        fetchDrafts()
+      } else {
+        const data = await res.json()
+        alert(data.error || 'Failed to fix images')
+      }
+    } catch (error) {
+      console.error('Error fixing images:', error)
+      alert('Error fixing images')
+    } finally {
+      setFixingImages(false)
+    }
+  }
+
   const getPlatformEmoji = (platform: string) => {
     switch (platform) {
       case 'blog': return '📝'
@@ -333,6 +361,15 @@ export default function DraftsPage() {
           <p className="text-text-muted text-lg">
             Review and approve content for auto-publishing
           </p>
+
+          {/* Fix Missing Images Button */}
+          <button
+            onClick={fixMissingImages}
+            disabled={fixingImages}
+            className="mt-4 px-4 py-2 bg-purple-600 hover:bg-purple-700 disabled:bg-gray-600 text-white rounded-lg text-sm font-medium transition-soft"
+          >
+            {fixingImages ? '⏳ Adding images...' : '🖼️ Fix Missing Images'}
+          </button>
         </div>
 
         {/* Stats */}
