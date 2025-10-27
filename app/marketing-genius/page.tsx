@@ -41,6 +41,8 @@ export default function MarketingGeniusPage() {
   const [loading, setLoading] = useState(true)
   const [scanning, setScanning] = useState(false)
   const [generating, setGenerating] = useState(false)
+  const [generatingPlan, setGeneratingPlan] = useState(false)
+  const [autoWriting, setAutoWriting] = useState(false)
 
   // Content generation form
   const [topic, setTopic] = useState('')
@@ -151,6 +153,62 @@ export default function MarketingGeniusPage() {
     }
   }
 
+  const handleGenerateContentPlan = async () => {
+    if (!confirm('Generate 12 blog topics for the next month?')) return
+
+    setGeneratingPlan(true)
+    try {
+      const res = await fetch('/api/marketing/generate-content-plan', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          postsPerWeek: 3,
+          weeks: 4
+        })
+      })
+
+      if (res.ok) {
+        const data = await res.json()
+        alert(`🎯 ${data.message}\n\nNext: Click "Auto-Write All Posts" to generate the content!`)
+      } else {
+        const error = await res.json()
+        alert(`Failed: ${error.error}`)
+      }
+    } catch (error) {
+      console.error('Error generating content plan:', error)
+      alert('Error generating content plan')
+    } finally {
+      setGeneratingPlan(false)
+    }
+  }
+
+  const handleAutoWriteAll = async () => {
+    if (!confirm('Auto-write the next 5 blog posts from your content calendar?\n\nThis will take 1-2 minutes.')) return
+
+    setAutoWriting(true)
+    try {
+      const res = await fetch('/api/marketing/auto-write', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ limit: 5 })
+      })
+
+      if (res.ok) {
+        const data = await res.json()
+        alert(`🚀 ${data.message}\n\nCheck the Draft Posts section below to review and publish!`)
+        fetchData()
+      } else {
+        const error = await res.json()
+        alert(`Failed: ${error.error}`)
+      }
+    } catch (error) {
+      console.error('Error auto-writing:', error)
+      alert('Error auto-writing posts')
+    } finally {
+      setAutoWriting(false)
+    }
+  }
+
   if (status === 'loading' || loading) {
     return (
       <div className="min-h-screen">
@@ -174,7 +232,39 @@ export default function MarketingGeniusPage() {
           </p>
         </div>
 
-        {/* Content Generator */}
+        {/* Full Automation */}
+        <div className="mb-12 bg-gradient-to-r from-firefly-dim/10 to-firefly-glow/10 border border-firefly-dim rounded-xl p-8">
+          <h2 className="text-2xl font-light text-text-soft mb-2">🤖 Full Automation</h2>
+          <p className="text-text-muted mb-6">Let AI plan and write your entire month of content</p>
+
+          <div className="flex flex-col sm:flex-row gap-4">
+            <button
+              onClick={handleGenerateContentPlan}
+              disabled={generatingPlan}
+              className="flex-1 px-8 py-4 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg font-medium transition-soft disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {generatingPlan ? '🎯 Planning...' : '🎯 Step 1: Generate Content Plan (12 topics)'}
+            </button>
+
+            <button
+              onClick={handleAutoWriteAll}
+              disabled={autoWriting}
+              className="flex-1 px-8 py-4 bg-green-500/80 hover:bg-green-500 text-white rounded-lg font-medium transition-soft disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {autoWriting ? '✍️ Writing...' : '✍️ Step 2: Auto-Write All Posts (5 at a time)'}
+            </button>
+          </div>
+
+          <div className="mt-4 p-4 bg-bg-dark/50 rounded-lg">
+            <p className="text-sm text-text-muted">
+              <strong>How it works:</strong> Step 1 creates 12 blog topic ideas with SEO keywords.
+              Step 2 writes complete 2000-word blog posts for each topic.
+              Then review drafts below and publish with 1-click! 🚀
+            </p>
+          </div>
+        </div>
+
+        {/* Manual Content Generator */}
         <div className="mb-12 bg-bg-elevated border border-border-subtle rounded-xl p-8">
           <h2 className="text-2xl font-light text-text-soft mb-6">✍️ AI Content Generator</h2>
 

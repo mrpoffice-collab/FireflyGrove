@@ -1027,3 +1027,19 @@ model PerformanceMetric {
   @@unique([date])
   @@index([date])
 }
+
+// AI-generated content calendar
+model ContentCalendar {
+  id            String   @id @default(cuid())
+  topic         String
+  keywords      String[]
+  excerpt       String?  @db.Text
+  scheduledFor  DateTime
+  status        String   @default("planned") // planned, generated, published
+  postId        String?  // Link to MarketingPost when generated
+
+  createdAt     DateTime @default(now())
+
+  @@index([scheduledFor, status])
+  @@index([status])
+}
