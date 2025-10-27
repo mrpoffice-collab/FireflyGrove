@@ -44,6 +44,8 @@ model User {
   videoGenerations VideoGeneration[]
   soundArts SoundArt[] @relation("UserSoundArt")
   sparks Spark[] @relation("UserSparks")
+  sparkCollections SparkCollection[] @relation("UserSparkCollections")
+  activeSparkCollections UserSparkCollection[] @relation("UserActiveCollections")
 
   @@index([email])
   @@index([status])
@@ -657,26 +659,75 @@ model SoundArt {
   @@index([deletedAt])
 }
 
-// Sparks - Memory prompts to inspire content creation
-model Spark {
+// Spark Collections - Files/groups of related prompts
+model SparkCollection {
   id          String   @id @default(cuid())
-  userId      String?  // Null for admin-created global sparks
-  branchId    String?  // For custom user-uploaded sparks (branch-specific)
-  text        String   // The prompt text (e.g., "What was your first memory with this person?")
-  category    String?  // Category like "Childhood", "Family", "Career", "Hobbies", "Relationships", etc.
-  sparkType   String   @default("standard") // "standard" (system), "challenge" (seasonal), "custom" (user-uploaded)
-  isGlobal    Boolean  @default(false) // Admin-created sparks shown to all users
-  isActive    Boolean  @default(true) // Can be deactivated by user or admin
-  usageCount  Int      @default(0) // Track how often this prompt is used
+  name        String   // User-defined name (e.g., "Family Memories", "Bible Verses")
+  description String?  // Optional description
+  userId      String?  // Null for admin-created featured collections
+  isFeatured  Boolean  @default(false) // Admin-highlighted collections
+  isGlobal    Boolean  @default(false) // Admin-created, available to all users
+  icon        String?  // Optional emoji/icon
+  promptCount Int      @default(0) // Number of prompts in this collection
 
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
   // Relations
-  user        User?    @relation("UserSparks", fields: [userId], references: [id], onDelete: Cascade)
+  user        User?    @relation("UserSparkCollections", fields: [userId], references: [id], onDelete: Cascade)
+  sparks      Spark[]  @relation("CollectionSparks")
+  userActivations UserSparkCollection[]
+
+  @@index([userId])
+  @@index([isFeatured])
+  @@index([isGlobal])
+  @@index([createdAt])
+}
+
+// User's active spark collections (which collections they've enabled for their grove)
+model UserSparkCollection {
+  id           String   @id @default(cuid())
+  userId       String
+  collectionId String
+  isActive     Boolean  @default(true) // User can toggle collections on/off
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relations
+  user         User     @relation("UserActiveCollections", fields: [userId], references: [id], onDelete: Cascade)
+  collection   SparkCollection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, collectionId])
+  @@index([userId])
+  @@index([collectionId])
+  @@index([isActive])
+}
+
+// Sparks - Individual memory prompts within collections
+model Spark {
+  id           String   @id @default(cuid())
+  collectionId String?  // Belongs to a collection (null for legacy standalone sparks)
+  userId       String?  // Null for admin-created global sparks
+  branchId     String?  // For custom user-uploaded sparks (branch-specific)
+  text         String   // The prompt text (e.g., "What was your first memory with this person?")
+  category     String?  // Category like "Childhood", "Family", "Career", "Hobbies", "Relationships", etc.
+  sparkType    String   @default("standard") // "standard" (system), "challenge" (seasonal), "custom" (user-uploaded)
+  isGlobal     Boolean  @default(false) // Admin-created sparks shown to all users
+  isActive     Boolean  @default(true) // Can be deactivated by user or admin
+  usageCount   Int      @default(0) // Track how often this prompt is used
+  order        Int      @default(0) // Order within collection (preserves file order)
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relations
+  user         User?    @relation("UserSparks", fields: [userId], references: [id], onDelete: Cascade)
+  collection   SparkCollection? @relation("CollectionSparks", fields: [collectionId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@index([branchId])
+  @@index([collectionId])
   @@index([sparkType])
   @@index([isGlobal])
   @@index([isActive])
