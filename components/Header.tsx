@@ -148,6 +148,15 @@ export default function Header({ userName, isBetaTester, groveInfo }: HeaderProp
                   )}
                   <button
                     onClick={() => {
+                      router.push('/spark-collections')
+                      setIsDropdownOpen(false)
+                    }}
+                    className="w-full text-left px-3 py-1.5 text-sm text-text-muted hover:bg-border-subtle hover:text-text-soft transition-soft"
+                  >
+                    ✨ Manage Spark Collections
+                  </button>
+                  <button
+                    onClick={() => {
                       setIsFeedbackOpen(true)
                       setIsDropdownOpen(false)
                     }}

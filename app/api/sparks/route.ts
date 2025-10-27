@@ -3,7 +3,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 
-// GET /api/sparks - Get all sparks (user's personal + global)
+// GET /api/sparks - Get sparks from user's active collections
 export async function GET(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions)
@@ -16,26 +16,46 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url)
     const category = searchParams.get('category')
 
-    // Get user's personal sparks + global sparks
+    // Get user's active collection IDs
+    const activeCollections = await prisma.userSparkCollection.findMany({
+      where: {
+        userId,
+        isActive: true
+      },
+      select: { collectionId: true },
+    })
+
+    const activeCollectionIds = activeCollections.map((ac) => ac.collectionId)
+
+    if (activeCollectionIds.length === 0) {
+      return NextResponse.json([])
+    }
+
+    // Build where clause
     const where: any = {
       isActive: true,
-      OR: [
-        { userId: userId }, // User's own sparks
-        { isGlobal: true }, // Global admin sparks
-      ],
+      collectionId: { in: activeCollectionIds },
     }
 
     if (category) {
       where.category = category
     }
 
+    // Get sparks from active collections
     const sparks = await prisma.spark.findMany({
       where,
       orderBy: [
-        { usageCount: 'desc' }, // Most used first
-        { createdAt: 'desc' }, // Then newest
+        { collection: { name: 'asc' } }, // Group by collection
+        { order: 'asc' }, // Preserve file order within collection
       ],
       include: {
+        collection: {
+          select: {
+            id: true,
+            name: true,
+            icon: true,
+          },
+        },
         user: {
           select: {
             id: true,

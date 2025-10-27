@@ -8,6 +8,11 @@ interface Spark {
   category: string | null
   isGlobal: boolean
   usageCount: number
+  collection: {
+    id: string
+    name: string
+    icon: string | null
+  } | null
 }
 
 interface SparkPickerProps {
@@ -71,6 +76,19 @@ export default function SparkPicker({ onSelect, onClose }: SparkPickerProps) {
   const handleSkip = () => {
     onSelect('What memory would you like to share?')
   }
+
+  // Group sparks by collection
+  const groupedSparks = filteredSparks.reduce((acc, spark) => {
+    const collectionName = spark.collection?.name || 'Uncategorized'
+    if (!acc[collectionName]) {
+      acc[collectionName] = {
+        icon: spark.collection?.icon || null,
+        sparks: []
+      }
+    }
+    acc[collectionName].sparks.push(spark)
+    return acc
+  }, {} as Record<string, { icon: string | null; sparks: Spark[] }>)
 
   return (
     <div className="fixed inset-0 bg-black/30 flex items-center justify-center p-4 z-50 backdrop-blur-sm">
@@ -147,46 +165,77 @@ export default function SparkPicker({ onSelect, onClose }: SparkPickerProps) {
           ) : filteredSparks.length === 0 ? (
             <div className="text-center py-12 bg-bg-elevated border border-border-subtle rounded-xl">
               <p className="text-text-muted mb-4">
-                No sparks found in this category.
+                {sparks.length === 0
+                  ? 'No active spark collections. Visit "Manage Spark Collections" to activate some prompts.'
+                  : 'No sparks found in this category.'}
               </p>
-              <button
-                onClick={() => setSelectedCategory('All')}
-                className="px-4 py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded transition-soft"
-              >
-                View All Sparks
-              </button>
+              {sparks.length === 0 ? (
+                <a
+                  href="/spark-collections"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block px-4 py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded transition-soft"
+                >
+                  Manage Collections
+                </a>
+              ) : (
+                <button
+                  onClick={() => setSelectedCategory('All')}
+                  className="px-4 py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded transition-soft"
+                >
+                  View All Sparks
+                </button>
+              )}
             </div>
           ) : (
-            <div className="grid gap-3">
-              {filteredSparks.map((spark) => (
-                <button
-                  key={spark.id}
-                  onClick={() => handleSparkSelect(spark)}
-                  className="text-left p-4 bg-bg-elevated border border-border-subtle hover:border-firefly-dim rounded-lg transition-soft group"
-                >
-                  <div className="flex items-start justify-between gap-4">
-                    <p className="text-text-soft group-hover:text-firefly-glow transition-soft">
-                      {spark.text}
-                    </p>
-                    <div className="flex items-center gap-2 flex-shrink-0">
-                      {spark.isGlobal && (
-                        <span className="px-2 py-1 bg-green-500/10 text-green-400 rounded text-xs">
-                          Popular
-                        </span>
-                      )}
-                      {spark.category && (
-                        <span className="px-2 py-1 bg-firefly-dim/10 text-firefly-glow rounded text-xs">
-                          {spark.category}
-                        </span>
-                      )}
-                    </div>
+            <div className="space-y-6">
+              {Object.entries(groupedSparks).map(([collectionName, { icon, sparks: collectionSparks }]) => (
+                <div key={collectionName}>
+                  {/* Collection Header */}
+                  <div className="flex items-center gap-2 mb-3 pb-2 border-b border-border-subtle">
+                    {icon && <span className="text-xl">{icon}</span>}
+                    <h3 className="text-sm font-medium text-text-muted uppercase tracking-wide">
+                      {collectionName}
+                    </h3>
+                    <span className="text-xs text-text-muted ml-auto">
+                      {collectionSparks.length} {collectionSparks.length === 1 ? 'prompt' : 'prompts'}
+                    </span>
                   </div>
-                  {spark.usageCount > 0 && (
-                    <p className="text-text-muted text-xs mt-2">
-                      Used {spark.usageCount} times
-                    </p>
-                  )}
-                </button>
+
+                  {/* Collection Sparks */}
+                  <div className="grid gap-3">
+                    {collectionSparks.map((spark) => (
+                      <button
+                        key={spark.id}
+                        onClick={() => handleSparkSelect(spark)}
+                        className="text-left p-4 bg-bg-elevated border border-border-subtle hover:border-firefly-dim rounded-lg transition-soft group"
+                      >
+                        <div className="flex items-start justify-between gap-4">
+                          <p className="text-text-soft group-hover:text-firefly-glow transition-soft">
+                            {spark.text}
+                          </p>
+                          <div className="flex items-center gap-2 flex-shrink-0">
+                            {spark.isGlobal && (
+                              <span className="px-2 py-1 bg-green-500/10 text-green-400 rounded text-xs">
+                                Popular
+                              </span>
+                            )}
+                            {spark.category && (
+                              <span className="px-2 py-1 bg-firefly-dim/10 text-firefly-glow rounded text-xs">
+                                {spark.category}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                        {spark.usageCount > 0 && (
+                          <p className="text-text-muted text-xs mt-2">
+                            Used {spark.usageCount} times
+                          </p>
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                </div>
               ))}
             </div>
           )}
@@ -195,12 +244,12 @@ export default function SparkPicker({ onSelect, onClose }: SparkPickerProps) {
         {/* Footer */}
         <div className="p-6 border-t border-border-subtle flex justify-between items-center gap-4">
           <a
-            href="/sparks"
+            href="/spark-collections"
             target="_blank"
             rel="noopener noreferrer"
             className="text-firefly-glow hover:text-firefly-bright text-sm transition-soft"
           >
-            Manage my sparks →
+            ✨ Manage Spark Collections →
           </a>
           <div className="flex gap-3">
             <button
