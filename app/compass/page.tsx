@@ -4,7 +4,7 @@ import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 import Header from '@/components/Header'
 
-export default function MissionPage() {
+export default function CompassPage() {
   const { data: session } = useSession()
 
   return (
