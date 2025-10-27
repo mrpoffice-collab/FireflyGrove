@@ -69,8 +69,8 @@ async function scoreTopicWithAI(input: TopicInput): Promise<{
   reasoning: string
 }> {
   // Check if API key is available
-  if (!anthropic) {
-    console.warn('ANTHROPIC_API_KEY not set, using heuristic scoring')
+  if (!anthropic || !process.env.ANTHROPIC_API_KEY || process.env.ANTHROPIC_API_KEY.trim() === '') {
+    console.warn('ANTHROPIC_API_KEY not set or invalid, using heuristic scoring')
     return heuristicScoring(input)
   }
 
@@ -206,30 +206,30 @@ export function scoreTopicLegacy(input: TopicInput): ScoreResult {
  * Uses Google autocomplete suggestions as proxy for search volume
  */
 function calculateDemandScoreHeuristic(primaryKeyword: string, relatedKeywords?: string[]): number {
-  // For now, use a heuristic based on keyword characteristics
-  // In production, this would hit Google Autocomplete API
+  // Generous heuristic scoring for memory/family topics
+  // Start with a higher base since our niche is passionate but small
 
-  let score = 50 // Base score
+  let score = 60 // Higher base score
 
-  // Longer tail keywords = more specific = lower volume but higher intent
+  // Longer tail keywords = more specific = lower volume but MUCH higher intent
   const wordCount = primaryKeyword.split(' ').length
-  if (wordCount >= 4) score -= 20 // Long tail, lower volume
-  else if (wordCount === 3) score += 10 // Sweet spot
-  else score += 5 // Short, might be too generic
+  if (wordCount >= 4) score += 5 // Long tail = high intent (was -20!)
+  else if (wordCount === 3) score += 15 // Sweet spot
+  else score += 10 // Short keywords are fine too
 
   // Question keywords indicate high intent
   if (/^(how|what|why|when|where|can|should|will)/i.test(primaryKeyword)) {
-    score += 20
-  }
-
-  // Pain point keywords
-  if (/before (it\'s too late|they|you|losing|forget)/i.test(primaryKeyword)) {
     score += 15
   }
 
-  // Memory/family keywords (our niche)
-  if (/(memor|family|legacy|ancestor|genealogy|preserve|story|voice|photo)/i.test(primaryKeyword)) {
-    score += 10
+  // Pain point keywords - these are GOLD for us
+  if (/before (it\'s too late|they|you|losing|forget|pass)/i.test(primaryKeyword)) {
+    score += 20
+  }
+
+  // Memory/family keywords (our core audience)
+  if (/(memor|family|legacy|ancestor|genealogy|preserve|story|voice|photo|grandparent|parent)/i.test(primaryKeyword)) {
+    score += 15
   }
 
   return Math.min(100, Math.max(0, score))
@@ -240,17 +240,16 @@ function calculateDemandScoreHeuristic(primaryKeyword: string, relatedKeywords?:
  * Higher score = easier to compete
  */
 function calculateCompetitionScoreHeuristic(primaryKeyword: string): number {
-  // For now, use heuristics
-  // In production, this would analyze actual search results
+  // Optimistic competition scoring - memory preservation is still a growing niche
 
-  let score = 60 // Base: assume moderate competition
+  let score = 70 // Higher base: assume beatable competition
 
   // Very specific queries have less competition
   const wordCount = primaryKeyword.split(' ').length
-  if (wordCount >= 5) score += 25 // Very specific
+  if (wordCount >= 5) score += 20 // Very specific
   else if (wordCount === 4) score += 15
-  else if (wordCount === 3) score += 5
-  else score -= 10 // Too broad
+  else if (wordCount === 3) score += 10
+  else score += 5 // Even short keywords can work in our niche
 
   // Question format has less competition (long-form content)
   if (/^(how to|how do i|what is|why should)/i.test(primaryKeyword)) {
@@ -265,34 +264,32 @@ function calculateCompetitionScoreHeuristic(primaryKeyword: string): number {
  * How well does this align with our mission and product?
  */
 function calculateRelevanceScoreHeuristic(topic: string, primaryKeyword: string): number {
-  let score = 50 // Base
+  let score = 65 // Higher base - Claude generates relevant topics
 
   const content = `${topic} ${primaryKeyword}`.toLowerCase()
 
-  // Core product features
+  // Core product features - HIGHLY relevant
   if (/(voice recording|sound wave|audio|recording|memories|memorial|tribute|legacy)/i.test(content)) {
-    score += 30
-  }
-
-  // Target audience pain points
-  if (/(grandparent|elderly|aging parent|before (it\'s too late|death|lose|losing)|preserve|save|capture)/i.test(content)) {
     score += 25
   }
 
-  // Family/memory themes
-  if (/(family|ancestor|genealogy|heritage|history|story|photos|album)/i.test(content)) {
+  // Target audience pain points - KEY for us
+  if (/(grandparent|elderly|aging parent|before (it\'s too late|death|lose|losing)|preserve|save|capture)/i.test(content)) {
+    score += 20
+  }
+
+  // Family/memory themes - PERFECT fit
+  if (/(family|ancestor|genealogy|heritage|history|story|stories|photos|album|generation)/i.test(content)) {
     score += 15
   }
 
-  // Competitor topics (not unique to us)
+  // Competitor topics (not unique to us) - but don't penalize too much
   if (/(social media|facebook|instagram|twitter)/i.test(content)) {
-    score -= 20
+    score -= 10 // Reduced penalty
   }
 
-  // Generic topics
-  if (/(tips|ideas|ways to|best)/i.test(content) && !/firefly grove/i.test(content)) {
-    score -= 5
-  }
+  // Generic topics are OK if they're about our niche
+  // Remove the penalty - Claude generates good generic topics
 
   return Math.min(100, Math.max(0, score))
 }
