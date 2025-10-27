@@ -17,6 +17,7 @@ interface TopicScore {
   demandScore: number
   competitionScore: number
   relevanceScore: number
+  scoredAt: string
 }
 
 export default function TopicsPage() {
