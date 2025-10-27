@@ -34,6 +34,9 @@ export default function DraftsPage() {
   const [selectedPosts, setSelectedPosts] = useState<Set<string>>(new Set())
   const [expandedPost, setExpandedPost] = useState<string | null>(null)
   const [approving, setApproving] = useState(false)
+  const [editingDateId, setEditingDateId] = useState<string | null>(null)
+  const [editDate, setEditDate] = useState<string>('')
+  const [publishing, setPublishing] = useState(false)
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -182,6 +185,65 @@ export default function DraftsPage() {
 
   const deleteSingle = (postId: string) => {
     deletePosts([postId])
+  }
+
+  const publishNow = async (postId: string) => {
+    if (!confirm('Publish this blog post now? It will be published immediately to /blog.')) {
+      return
+    }
+
+    setPublishing(true)
+    try {
+      const res = await fetch(`/api/marketing/posts/${postId}/publish`, {
+        method: 'POST',
+      })
+
+      if (res.ok) {
+        const data = await res.json()
+        alert(`✅ Published! View at: ${data.url}`)
+        fetchDrafts()
+      } else {
+        const data = await res.json()
+        alert(data.error || 'Failed to publish')
+      }
+    } catch (error) {
+      console.error('Error publishing post:', error)
+      alert('Error publishing post')
+    } finally {
+      setPublishing(false)
+    }
+  }
+
+  const startEditDate = (post: DraftPost) => {
+    setEditingDateId(post.id)
+    setEditDate(post.scheduledFor ? new Date(post.scheduledFor).toISOString().split('T')[0] : '')
+  }
+
+  const saveDate = async (postId: string) => {
+    try {
+      const res = await fetch(`/api/marketing/posts/${postId}/reschedule`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ scheduledFor: editDate }),
+      })
+
+      if (res.ok) {
+        alert('📅 Date updated successfully!')
+        setEditingDateId(null)
+        setEditDate('')
+        fetchDrafts()
+      } else {
+        alert('Failed to update date')
+      }
+    } catch (error) {
+      console.error('Error updating date:', error)
+      alert('Error updating date')
+    }
+  }
+
+  const cancelEditDate = () => {
+    setEditingDateId(null)
+    setEditDate('')
   }
 
   const getPlatformEmoji = (platform: string) => {
@@ -357,7 +419,37 @@ export default function DraftsPage() {
                     {/* Metadata */}
                     <div className="flex flex-wrap gap-3 text-sm text-text-muted mb-3">
                       {post.scheduledFor && (
-                        <span>📅 Scheduled: {new Date(post.scheduledFor).toLocaleDateString()}</span>
+                        <div className="flex items-center gap-2">
+                          {editingDateId === post.id ? (
+                            <>
+                              <input
+                                type="date"
+                                value={editDate}
+                                onChange={(e) => setEditDate(e.target.value)}
+                                className="px-2 py-1 bg-bg-dark border border-firefly-dim rounded text-text-soft text-xs"
+                              />
+                              <button
+                                onClick={() => saveDate(post.id)}
+                                className="px-2 py-1 bg-green-500/20 hover:bg-green-500/30 text-green-400 rounded text-xs"
+                              >
+                                Save
+                              </button>
+                              <button
+                                onClick={cancelEditDate}
+                                className="px-2 py-1 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded text-xs"
+                              >
+                                Cancel
+                              </button>
+                            </>
+                          ) : (
+                            <button
+                              onClick={() => startEditDate(post)}
+                              className="hover:text-firefly-glow transition-soft"
+                            >
+                              📅 Scheduled: {new Date(post.scheduledFor).toLocaleDateString()}
+                            </button>
+                          )}
+                        </div>
                       )}
                       {post.topic && <span>🎯 Topic: {post.topic}</span>}
                       {post.subreddit && <span>📍 r/{post.subreddit}</span>}
@@ -426,6 +518,17 @@ export default function DraftsPage() {
                       </a>
                     )}
 
+                    {/* Publish Now button for blog posts */}
+                    {post.platform === 'blog' && post.isApproved && (
+                      <button
+                        onClick={() => publishNow(post.id)}
+                        disabled={publishing}
+                        className="px-4 py-2 bg-purple-600 hover:bg-purple-700 disabled:bg-gray-600 text-white rounded-lg text-sm font-medium transition-soft"
+                      >
+                        {publishing ? 'Publishing...' : '🚀 Publish Now'}
+                      </button>
+                    )}
+
                     <button
                       onClick={() => deleteSingle(post.id)}
                       className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-medium transition-soft"
@@ -480,9 +583,37 @@ export default function DraftsPage() {
                       {/* Metadata */}
                       <div className="flex flex-wrap gap-3 text-sm text-text-muted mb-3">
                         {post.scheduledFor && (
-                          <span className="text-green-400">
-                            📅 Publishing: {new Date(post.scheduledFor).toLocaleDateString()}
-                          </span>
+                          <div className="flex items-center gap-2">
+                            {editingDateId === post.id ? (
+                              <>
+                                <input
+                                  type="date"
+                                  value={editDate}
+                                  onChange={(e) => setEditDate(e.target.value)}
+                                  className="px-2 py-1 bg-bg-dark border border-firefly-dim rounded text-text-soft text-xs"
+                                />
+                                <button
+                                  onClick={() => saveDate(post.id)}
+                                  className="px-2 py-1 bg-green-500/20 hover:bg-green-500/30 text-green-400 rounded text-xs"
+                                >
+                                  Save
+                                </button>
+                                <button
+                                  onClick={cancelEditDate}
+                                  className="px-2 py-1 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded text-xs"
+                                >
+                                  Cancel
+                                </button>
+                              </>
+                            ) : (
+                              <button
+                                onClick={() => startEditDate(post)}
+                                className="text-green-400 hover:text-firefly-glow transition-soft"
+                              >
+                                📅 Publishing: {new Date(post.scheduledFor).toLocaleDateString()}
+                              </button>
+                            )}
+                          </div>
                         )}
                         {post.topic && <span>🎯 Topic: {post.topic}</span>}
                         {post.keywords.length > 0 && (
@@ -531,6 +662,17 @@ export default function DraftsPage() {
                         >
                           📤 Share to Pinterest
                         </a>
+                      )}
+
+                      {/* Publish Now button for blog posts */}
+                      {post.platform === 'blog' && (
+                        <button
+                          onClick={() => publishNow(post.id)}
+                          disabled={publishing}
+                          className="px-4 py-2 bg-purple-600 hover:bg-purple-700 disabled:bg-gray-600 text-white rounded-lg text-sm font-medium transition-soft"
+                        >
+                          {publishing ? 'Publishing...' : '🚀 Publish Now'}
+                        </button>
                       )}
 
                       <button

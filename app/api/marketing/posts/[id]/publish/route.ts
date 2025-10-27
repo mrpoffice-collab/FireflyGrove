@@ -40,6 +40,7 @@ export async function POST(
 
     // Create frontmatter
     const today = new Date().toISOString().split('T')[0]
+    const imageUrl = post.image || 'https://images.unsplash.com/photo-1551269901-5c5e14c25df7?w=1200&h=630&fit=crop'
     const frontmatter = `---
 title: "${post.title.replace(/"/g, '\\"')}"
 date: "${today}"
@@ -47,7 +48,7 @@ excerpt: "${(post.excerpt || post.metaDescription || post.title).replace(/"/g, '
 author: "Firefly Grove Team"
 category: "Memory Preservation"
 readTime: "${readTime} min read"
-image: "https://images.unsplash.com/photo-1551269901-5c5e14c25df7?w=1200&h=630&fit=crop"
+image: "${imageUrl}"
 ---
 
 ${post.content}
@@ -73,7 +74,7 @@ ${post.content}
       success: true,
       post: updatedPost,
       slug: slug,
-      filePath: `/blog/${slug}`,
+      url: `/blog/${slug}`,
       message: 'Blog post published successfully!'
     })
   } catch (error: any) {
