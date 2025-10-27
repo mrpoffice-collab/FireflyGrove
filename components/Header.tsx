@@ -70,12 +70,6 @@ export default function Header({ userName, isBetaTester, groveInfo }: HeaderProp
               >
                 🕯️ Open Grove
               </Link>
-              <Link
-                href="/sparks"
-                className="text-text-muted hover:text-firefly-glow text-sm transition-soft"
-              >
-                ✨ Sparks
-              </Link>
             </nav>
           </div>
 
@@ -237,13 +231,6 @@ export default function Header({ userName, isBetaTester, groveInfo }: HeaderProp
               className="text-lg font-light text-text-soft hover:text-[var(--legacy-glow)] transition-soft py-2.5 border-b border-border-subtle"
             >
               🕯️ Open Grove
-            </Link>
-            <Link
-              href="/sparks"
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="text-lg font-light text-text-soft hover:text-firefly-glow transition-soft py-2.5 border-b border-border-subtle"
-            >
-              ✨ Memory Sparks
             </Link>
 
             {/* Grove Exchange Products - Only Built Features */}
