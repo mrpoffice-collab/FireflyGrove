@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import Header from '@/components/Header'
+import FireflyGrove from '@/components/FireflyGrove'
 
 interface Memorial {
   id: string
@@ -27,6 +28,7 @@ export default function OpenGrovePage() {
   const [hasMore, setHasMore] = useState(false)
   const [total, setTotal] = useState(0)
   const [totalMemories, setTotalMemories] = useState(0)
+  const [memoryAges, setMemoryAges] = useState<number[]>([])
 
   useEffect(() => {
     fetchMemorials()
@@ -48,6 +50,7 @@ export default function OpenGrovePage() {
         setMemorials(data.memorials)
         setTotal(data.pagination.total)
         setTotalMemories(data.totalMemories || 0)
+        setMemoryAges(data.memoryAges || [])
         setHasMore(data.pagination.hasMore)
       }
     } catch (error) {
@@ -84,6 +87,16 @@ export default function OpenGrovePage() {
             The Grove holds <span className="text-[var(--legacy-glow)] font-semibold">{totalMemories.toLocaleString()}</span> {totalMemories === 1 ? 'memory' : 'memories'} tonight.
           </p>
         </div>
+
+        {/* Firefly Visualization */}
+        {!loading && totalMemories > 0 && (
+          <div className="max-w-6xl mx-auto mb-8">
+            <FireflyGrove memoryCount={totalMemories} memoryAges={memoryAges} />
+            <p className="text-center text-text-muted text-sm mt-3 italic">
+              Each light represents a memory. After 60 days, they begin to fade, making room for new memories to shine.
+            </p>
+          </div>
+        )}
 
         {/* Search and Filter */}
         <div className="max-w-4xl mx-auto mb-8">

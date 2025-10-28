@@ -10,72 +10,125 @@ export async function GET(
 ) {
   try {
     const session = await getServerSession(authOptions)
-
-    if (!session?.user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const userId = (session.user as any).id
+    const userId = session?.user ? (session.user as any).id : null
     const branchId = params.branchId
 
-    const branch = await prisma.branch.findFirst({
-      where: {
-        id: branchId,
-        OR: [
-          { ownerId: userId },
-          {
-            members: {
-              some: {
-                userId: userId,
-                approved: true,
+    // First, try to find the branch (either user has access OR it's public)
+    let branch = null
+    let isPublicView = false
+
+    if (userId) {
+      // Authenticated user - check if they have access
+      branch = await prisma.branch.findFirst({
+        where: {
+          id: branchId,
+          OR: [
+            { ownerId: userId },
+            {
+              members: {
+                some: {
+                  userId: userId,
+                  approved: true,
+                },
+              },
+            },
+          ],
+        },
+        include: {
+          owner: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+            },
+          },
+          person: {
+            select: {
+              id: true,
+              name: true,
+              isLegacy: true,
+              birthDate: true,
+              deathDate: true,
+              discoveryEnabled: true,
+              memoryLimit: true,
+              memoryCount: true,
+              trusteeId: true,
+              ownerId: true,
+              moderatorId: true,
+              trusteeExpiresAt: true,
+            },
+          },
+          members: {
+            include: {
+              user: {
+                select: {
+                  name: true,
+                  email: true,
+                },
               },
             },
           },
-        ],
-      },
-      include: {
-        owner: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-          },
         },
-        person: {
-          select: {
-            id: true,
-            name: true,
-            isLegacy: true,
-            birthDate: true,
-            deathDate: true,
-            discoveryEnabled: true,
-            memoryLimit: true,
-            memoryCount: true,
-            trusteeId: true,
-            ownerId: true,
-            moderatorId: true,
-            trusteeExpiresAt: true,
+      })
+    }
+
+    // If not found and user is not authenticated, check if it's a public Open Grove tree
+    if (!branch) {
+      const publicBranch = await prisma.branch.findUnique({
+        where: { id: branchId },
+        include: {
+          owner: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+            },
           },
-        },
-        members: {
-          include: {
-            user: {
-              select: {
-                name: true,
-                email: true,
+          person: {
+            select: {
+              id: true,
+              name: true,
+              isLegacy: true,
+              birthDate: true,
+              deathDate: true,
+              discoveryEnabled: true,
+              memoryLimit: true,
+              memoryCount: true,
+              trusteeId: true,
+              ownerId: true,
+              moderatorId: true,
+              trusteeExpiresAt: true,
+            },
+          },
+          members: {
+            include: {
+              user: {
+                select: {
+                  name: true,
+                  email: true,
+                },
               },
             },
           },
         },
-      },
-    })
+      })
+
+      // Check if it's a public Open Grove tree
+      if (publicBranch?.person?.isLegacy && publicBranch?.person?.discoveryEnabled) {
+        branch = publicBranch
+        isPublicView = true
+      } else if (!userId) {
+        // Not authenticated and not a public tree
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      }
+    }
 
     if (!branch) {
       return NextResponse.json({ error: 'Branch not found' }, { status: 404 })
     }
 
     // Check if user is owner to determine what entries to show
-    const isOwner = branch.ownerId === userId
+    const isOwner = userId && branch.ownerId === userId
 
     // Pagination params from query string
     const url = new URL(req.url)
@@ -89,7 +142,9 @@ export async function GET(
         where: {
           branchId: branchId,
           status: 'ACTIVE',
-          ...(isOwner
+          ...(isPublicView
+            ? { visibility: 'LEGACY' } // Public viewers only see LEGACY entries
+            : isOwner
             ? {} // Owner sees all active entries
             : { // Members only see their own entries OR approved shared entries
                 OR: [
@@ -117,7 +172,9 @@ export async function GET(
         where: {
           branchId: branchId,
           status: 'ACTIVE',
-          ...(isOwner
+          ...(isPublicView
+            ? { visibility: 'LEGACY' }
+            : isOwner
             ? {}
             : {
                 OR: [
@@ -134,6 +191,7 @@ export async function GET(
     const branchWithEntries = {
       ...branch,
       entries,
+      isPublicView, // Let frontend know if this is public view
       pagination: {
         page,
         limit,

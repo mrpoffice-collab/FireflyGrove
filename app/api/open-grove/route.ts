@@ -95,6 +95,39 @@ export async function GET(req: NextRequest) {
     // Calculate total memories across all memorials
     const totalMemories = allMemorials.reduce((sum, person) => sum + (person.memoryCount || 0), 0)
 
+    // Fetch memory ages for firefly visualization
+    const memoryAges = await prisma.entry.findMany({
+      where: {
+        branch: {
+          person: {
+            isLegacy: true,
+            discoveryEnabled: true,
+            memberships: {
+              some: {
+                groveId: openGroveId,
+                status: 'active',
+              },
+            },
+          },
+        },
+        status: 'ACTIVE',
+        visibility: 'LEGACY',
+      },
+      select: {
+        createdAt: true,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    })
+
+    // Calculate ages in days
+    const now = new Date()
+    const ages = memoryAges.map((entry) => {
+      const ageMs = now.getTime() - new Date(entry.createdAt).getTime()
+      return Math.floor(ageMs / (1000 * 60 * 60 * 24)) // Convert to days
+    })
+
     return NextResponse.json({
       memorials: memorials.map((person) => ({
         id: person.id,
@@ -115,6 +148,7 @@ export async function GET(req: NextRequest) {
         hasMore: offset + limit < total,
       },
       totalMemories,
+      memoryAges: ages,
     })
   } catch (error: any) {
     console.error('Error fetching Open Grove memorials:', error)

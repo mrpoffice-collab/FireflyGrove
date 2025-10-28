@@ -50,6 +50,7 @@ interface Branch {
     trusteeExpiresAt: string | null
   }
   entries: Entry[]
+  isPublicView?: boolean
   pagination?: {
     page: number
     limit: number
@@ -101,14 +102,8 @@ export default function BranchPage() {
   const [deletingPerson, setDeletingPerson] = useState(false)
 
   useEffect(() => {
-    if (status === 'unauthenticated') {
-      router.push('/login')
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [status])
-
-  useEffect(() => {
-    if (status === 'authenticated' && branchId) {
+    // Load branch data regardless of auth status (API will handle public access)
+    if (status !== 'loading' && branchId) {
       fetchBranch()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -191,8 +186,12 @@ export default function BranchPage() {
         } else {
           setBranch(data)
         }
+      } else if (res.status === 401) {
+        // Unauthorized - redirect to login for private branches
+        router.push('/login')
       } else {
-        router.push('/grove')
+        // Other errors - go to grove or open grove
+        router.push('/open-grove')
       }
     } catch (error) {
       console.error('Failed to fetch branch:', error)
@@ -497,23 +496,26 @@ export default function BranchPage() {
     )
   }
 
-  if (status === 'unauthenticated' || !session || !branch) {
+  if (!branch) {
     return null
   }
 
   const isLegacy = branch.personStatus === 'legacy'
+  const isPublicView = branch.isPublicView || false
+  const isAuthenticated = status === 'authenticated' && session
 
   return (
     <div className="min-h-screen">
-      <Header userName={session.user?.name || ''} />
+      <Header userName={session?.user?.name || ''} />
 
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-3xl mx-auto">
+          {/* Public viewers go back to Open Grove, authenticated users to their grove */}
           <button
-            onClick={() => router.push('/grove')}
+            onClick={() => router.push(isPublicView ? '/open-grove' : '/grove')}
             className="text-text-muted hover:text-text-soft text-sm mb-6 transition-soft"
           >
-            ← Back to Grove
+            ← Back to {isPublicView ? 'Open Grove' : 'Grove'}
           </button>
 
           <div className="mb-8">
@@ -529,7 +531,8 @@ export default function BranchPage() {
                   >
                     {branch.title}
                   </h1>
-                  {branch.owner.id === (session.user as any)?.id && (
+                  {/* Only show edit buttons for authenticated owners */}
+                  {!isPublicView && isAuthenticated && branch.owner.id === (session.user as any)?.id && (
                     <button
                       onClick={handleEditBranch}
                       className="text-text-muted hover:text-firefly-dim transition-soft"
@@ -540,7 +543,7 @@ export default function BranchPage() {
                       </svg>
                     </button>
                   )}
-                  {branch.person && (
+                  {!isPublicView && isAuthenticated && branch.person && (
                     <>
                       <button
                         onClick={handleEditPerson}
@@ -596,7 +599,8 @@ export default function BranchPage() {
                   <p className="text-text-muted">{branch.description}</p>
                 )}
               </div>
-              {branch.owner.id === (session.user as any)?.id && (
+              {/* Only show settings button for authenticated owners */}
+              {!isPublicView && isAuthenticated && branch.owner.id === (session.user as any)?.id && (
                 <button
                   onClick={() => setShowSettings(true)}
                   className="text-text-muted hover:text-text-soft transition-soft"
@@ -626,13 +630,14 @@ export default function BranchPage() {
             </div>
           </div>
 
-          {/* Story Sparks Section */}
-          <div className="mb-8">
-            <h3 className={`text-lg font-medium mb-4 ${
-              isLegacy ? 'text-[var(--legacy-text)]' : 'text-text-soft'
-            }`}>
-              Story Sparks
-            </h3>
+          {/* Story Sparks Section - Only for authenticated users */}
+          {!isPublicView && isAuthenticated && (
+            <div className="mb-8">
+              <h3 className={`text-lg font-medium mb-4 ${
+                isLegacy ? 'text-[var(--legacy-text)]' : 'text-text-soft'
+              }`}>
+                Story Sparks
+              </h3>
 
             <div className="grid md:grid-cols-3 gap-4">
               {/* Story Spark - Rotating helpful prompts */}
@@ -876,7 +881,36 @@ export default function BranchPage() {
                 )}
               </div>
             </div>
-          </div>
+            </div>
+          )}
+
+          {/* Public viewer CTA */}
+          {isPublicView && (
+            <div className="mb-8">
+              <div className="bg-[var(--legacy-amber)]/10 border border-[var(--legacy-amber)]/30 rounded-lg p-6 text-center">
+                <h3 className="text-[var(--legacy-text)] font-medium mb-2">
+                  Preserve This Memory
+                </h3>
+                <p className="text-text-muted text-sm mb-4">
+                  Create a free account to adopt this memorial into your grove and add unlimited memories
+                </p>
+                <div className="flex gap-3 justify-center">
+                  <button
+                    onClick={() => router.push('/login')}
+                    className="px-6 py-3 bg-bg-dark hover:bg-border-subtle text-text-soft rounded font-medium transition-soft border border-border-subtle"
+                  >
+                    Sign In
+                  </button>
+                  <button
+                    onClick={() => router.push('/signup')}
+                    className="px-6 py-3 bg-[var(--legacy-amber)] hover:bg-[var(--legacy-glow)] text-bg-dark rounded font-medium transition-soft"
+                  >
+                    Create Free Account
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
 
           <div className="space-y-6">
             {branch.entries.length === 0 ? (
