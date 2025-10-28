@@ -110,6 +110,27 @@ export default function BranchPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, branchId])
 
+  // Check for nest photo in URL params (from "Hatch from Nest")
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search)
+      const nestPhotoParam = params.get('nestPhoto')
+
+      if (nestPhotoParam) {
+        try {
+          const photoData = JSON.parse(decodeURIComponent(nestPhotoParam))
+          setPrePopulatedPhoto(photoData)
+          setShowNewMemory(true)
+
+          // Clean up URL
+          window.history.replaceState({}, '', `/branch/${branchId}`)
+        } catch (error) {
+          console.error('Failed to parse nest photo data:', error)
+        }
+      }
+    }
+  }, [branchId])
+
   // Initialize spark when branch data is loaded
   useEffect(() => {
     if (branch) {

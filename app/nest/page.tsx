@@ -33,6 +33,10 @@ export default function NestPage() {
   const [dragActive, setDragActive] = useState(false)
   const [uploadQueue, setUploadQueue] = useState<UploadProgress[]>([])
   const [uploadStats, setUploadStats] = useState({ total: 0, completed: 0, failed: 0 })
+  const [showBranchSelector, setShowBranchSelector] = useState(false)
+  const [selectedNestItem, setSelectedNestItem] = useState<NestItem | null>(null)
+  const [branches, setBranches] = useState<any[]>([])
+  const [loadingBranches, setLoadingBranches] = useState(false)
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -212,6 +216,37 @@ export default function NestPage() {
     dragEvent.dataTransfer.setData('nestItem', JSON.stringify(item))
   }
 
+  const handleHatch = async (item: NestItem) => {
+    setSelectedNestItem(item)
+    setShowBranchSelector(true)
+
+    // Fetch user's branches
+    if (branches.length === 0) {
+      setLoadingBranches(true)
+      try {
+        const res = await fetch('/api/branches')
+        if (res.ok) {
+          const data = await res.json()
+          setBranches(data.branches || [])
+        }
+      } catch (error) {
+        console.error('Failed to fetch branches:', error)
+      } finally {
+        setLoadingBranches(false)
+      }
+    }
+  }
+
+  const handleBranchSelect = (branchId: string) => {
+    if (!selectedNestItem) return
+
+    // Navigate to branch with pre-populated photo
+    router.push(`/branch/${branchId}?nestPhoto=${encodeURIComponent(JSON.stringify({
+      url: selectedNestItem.photoUrl,
+      nestItemId: selectedNestItem.id
+    }))}`)
+  }
+
   if (status === 'loading' || loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -375,7 +410,7 @@ export default function NestPage() {
         ) : (
           <div className="max-w-6xl mx-auto">
             <div className="mb-4 text-sm text-text-muted">
-              💡 Tip: Drag photos from here onto any branch to create a memory
+              💡 Tip: Hover over a photo and click "Hatch from Nest" to create a memory (or drag to a branch on desktop)
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
@@ -416,13 +451,22 @@ export default function NestPage() {
                     />
 
                     {/* Overlay on hover */}
-                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2 p-2">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          handleHatch(item)
+                        }}
+                        className="px-4 py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded text-sm font-medium transition-colors w-full"
+                      >
+                        🪺 Hatch from Nest
+                      </button>
                       <button
                         onClick={(e) => {
                           e.stopPropagation()
                           handleDelete(item.id)
                         }}
-                        className="px-3 py-1.5 bg-red-500/80 hover:bg-red-500 text-white rounded text-sm transition-colors"
+                        className="px-3 py-1.5 bg-red-500/80 hover:bg-red-500 text-white rounded text-xs transition-colors w-full"
                       >
                         Remove
                       </button>
@@ -453,15 +497,77 @@ export default function NestPage() {
             <p>🪺 <strong>Upload:</strong> Select up to 50 photos at once (200MB total)</p>
             <p>⚡ <strong>Smart Upload:</strong> Photos upload 3 at a time with progress tracking</p>
             <p>✨ <strong>Glow:</strong> Each photo glows like a firefly, waiting to become a memory</p>
-            <p>🖱️ <strong>Drag:</strong> When ready, drag a photo onto any branch to create a memory</p>
+            <p>🐣 <strong>Hatch:</strong> Hover over a photo and click "Hatch from Nest" to select a branch</p>
+            <p>🖱️ <strong>Or Drag:</strong> Drag photos directly onto branches (desktop only)</p>
             <p>💭 <strong>Write:</strong> The photo pre-populates the form - just add your story</p>
-            <p>🗑️ <strong>Remove:</strong> Hover over any photo and click Remove if you change your mind</p>
+            <p>🗑️ <strong>Remove:</strong> Hover and click Remove if you change your mind</p>
           </div>
           <div className="mt-4 pt-4 border-t border-border-subtle text-xs text-text-muted">
             <strong>Limits:</strong> 10MB per photo • 50 photos per upload • 200MB total per session
           </div>
         </div>
       </div>
+
+      {/* Branch Selector Modal */}
+      {showBranchSelector && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-bg-dark border border-border-subtle rounded-lg max-w-lg w-full p-6">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl text-text-soft">Select a Branch</h2>
+              <button
+                onClick={() => {
+                  setShowBranchSelector(false)
+                  setSelectedNestItem(null)
+                }}
+                className="text-text-muted hover:text-text-soft transition-soft"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            <p className="text-text-muted text-sm mb-6">
+              Choose which branch to create this memory on
+            </p>
+
+            {loadingBranches ? (
+              <div className="text-center py-8 text-text-muted">
+                Loading your branches...
+              </div>
+            ) : branches.length === 0 ? (
+              <div className="text-center py-8">
+                <p className="text-text-muted mb-4">You don't have any branches yet</p>
+                <button
+                  onClick={() => router.push('/grove')}
+                  className="px-4 py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded transition-soft"
+                >
+                  Go to Grove
+                </button>
+              </div>
+            ) : (
+              <div className="space-y-2 max-h-96 overflow-y-auto">
+                {branches.map((branch: any) => (
+                  <button
+                    key={branch.id}
+                    onClick={() => handleBranchSelect(branch.id)}
+                    className="w-full text-left px-4 py-3 bg-bg-darker hover:bg-border-subtle rounded-lg border border-border-subtle hover:border-firefly-dim transition-soft"
+                  >
+                    <div className="font-medium text-text-soft mb-1">
+                      {branch.title}
+                    </div>
+                    {branch.description && (
+                      <div className="text-sm text-text-muted truncate">
+                        {branch.description}
+                      </div>
+                    )}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   )
 }
