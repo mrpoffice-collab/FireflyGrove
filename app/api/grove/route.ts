@@ -86,7 +86,26 @@ export async function GET(req: NextRequest) {
                   },
                 },
                 branches: {
-                  include: {
+                  select: {
+                    id: true,
+                    title: true,
+                    person: {
+                      select: {
+                        isLegacy: true
+                      }
+                    },
+                    entries: {
+                      take: 1,
+                      orderBy: {
+                        createdAt: 'desc'
+                      },
+                      where: {
+                        status: 'ACTIVE'
+                      },
+                      select: {
+                        createdAt: true
+                      }
+                    },
                     _count: {
                       select: {
                         entries: {
@@ -199,7 +218,26 @@ export async function GET(req: NextRequest) {
                     },
                   },
                   branches: {
-                    include: {
+                    select: {
+                      id: true,
+                      title: true,
+                      person: {
+                        select: {
+                          isLegacy: true
+                        }
+                      },
+                      entries: {
+                        take: 1,
+                        orderBy: {
+                          createdAt: 'desc'
+                        },
+                        where: {
+                          status: 'ACTIVE'
+                        },
+                        select: {
+                          createdAt: true
+                        }
+                      },
                       _count: {
                         select: {
                           entries: {
