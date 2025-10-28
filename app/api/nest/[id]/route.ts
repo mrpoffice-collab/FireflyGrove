@@ -40,7 +40,10 @@ export async function DELETE(
 
     // Delete from Vercel Blob
     try {
-      await del(nestItem.photoUrl)
+      const blobUrl = nestItem.photoUrl || nestItem.videoUrl
+      if (blobUrl) {
+        await del(blobUrl)
+      }
     } catch (blobError) {
       console.error('Error deleting from blob:', blobError)
       // Continue even if blob deletion fails

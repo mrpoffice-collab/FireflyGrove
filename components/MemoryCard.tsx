@@ -11,6 +11,7 @@ interface MemoryCardProps {
     text: string
     visibility: string
     mediaUrl: string | null
+    videoUrl: string | null
     audioUrl: string | null
     createdAt: string
     author: {
@@ -269,6 +270,18 @@ export default function MemoryCard({ entry, branchOwnerId, branchId, onWithdraw,
               target.onerror = null // Prevent infinite loop if placeholder also fails
             }}
           />
+        </div>
+      )}
+
+      {entry.videoUrl && (
+        <div className="mt-4">
+          <video
+            src={entry.videoUrl}
+            controls
+            className="rounded-lg max-w-full h-auto"
+          >
+            Your browser does not support the video tag.
+          </video>
         </div>
       )}
 

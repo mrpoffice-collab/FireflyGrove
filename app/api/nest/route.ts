@@ -19,6 +19,12 @@ export async function GET(req: NextRequest) {
 
     const userId = (session.user as any).id
 
+    // Get user to check admin status
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { isAdmin: true }
+    })
+
     const items = await prisma.nestItem.findMany({
       where: {
         userId,
@@ -28,7 +34,10 @@ export async function GET(req: NextRequest) {
       },
     })
 
-    return NextResponse.json({ items })
+    return NextResponse.json({
+      items,
+      isAdmin: user?.isAdmin || false
+    })
   } catch (error: any) {
     console.error('Error fetching nest items:', error)
     return NextResponse.json(

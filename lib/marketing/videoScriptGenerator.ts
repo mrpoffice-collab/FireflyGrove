@@ -1,8 +1,14 @@
 import OpenAI from 'openai'
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-})
+// Lazy initialization to avoid build-time errors
+function getOpenAIClient() {
+  if (!process.env.OPENAI_API_KEY) {
+    throw new Error('OPENAI_API_KEY is required for video script generation')
+  }
+  return new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY,
+  })
+}
 
 interface VideoScriptResult {
   script: string // Full voice-over script
@@ -47,6 +53,7 @@ OUTPUT FORMAT (JSON):
 
 Make it conversational and emotionally engaging. Focus on benefits, not features.`
 
+  const openai = getOpenAIClient()
   const response = await openai.chat.completions.create({
     model: 'gpt-4o-mini',
     messages: [{ role: 'user', content: prompt }],

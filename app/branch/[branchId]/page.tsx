@@ -15,6 +15,7 @@ interface Entry {
   text: string
   visibility: string
   mediaUrl: string | null
+  videoUrl: string | null
   audioUrl: string | null
   createdAt: string
   author: {
@@ -70,8 +71,9 @@ export default function BranchPage() {
   const [loading, setLoading] = useState(true)
   const [loadingMore, setLoadingMore] = useState(false)
   const [showNewMemory, setShowNewMemory] = useState(false)
-  const [prePopulatedPhoto, setPrePopulatedPhoto] = useState<{url: string, nestItemId?: string} | undefined>()
+  const [prePopulatedPhoto, setPrePopulatedPhoto] = useState<{url: string, mediaType?: string, nestItemId?: string} | undefined>()
   const [showSettings, setShowSettings] = useState(false)
+  const [isAdmin, setIsAdmin] = useState(false)
   const [showUndoBanner, setShowUndoBanner] = useState(false)
   const [lastCreatedEntry, setLastCreatedEntry] = useState<{
     id: string
@@ -208,6 +210,10 @@ export default function BranchPage() {
         } else {
           setBranch(data)
         }
+        // Set isAdmin from response if available
+        if (data.isAdmin !== undefined) {
+          setIsAdmin(data.isAdmin)
+        }
       } else if (res.status === 401) {
         // Unauthorized - redirect to login for private branches
         router.push('/login')
@@ -231,7 +237,7 @@ export default function BranchPage() {
     await fetchBranch(nextPage, true)
   }
 
-  // Handle dropping photos from The Nest
+  // Handle dropping media from The Nest
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault()
     e.stopPropagation()
@@ -241,7 +247,8 @@ export default function BranchPage() {
       if (nestItemData) {
         const nestItem = JSON.parse(nestItemData)
         setPrePopulatedPhoto({
-          url: nestItem.photoUrl,
+          url: nestItem.photoUrl || nestItem.videoUrl,
+          mediaType: nestItem.mediaType,
           nestItemId: nestItem.id,
         })
         setShowNewMemory(true)
@@ -1027,6 +1034,7 @@ export default function BranchPage() {
           onRefreshSpark={refreshSpark}
           currentBranchId={branchId}
           prePopulatedPhoto={prePopulatedPhoto}
+          isAdmin={isAdmin}
         />
       )}
 

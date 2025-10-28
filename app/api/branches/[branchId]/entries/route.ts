@@ -19,7 +19,7 @@ export async function POST(
     const branchId = params.branchId
     const body = await req.json()
 
-    const { text, visibility, legacyFlag, mediaUrl, audioUrl, memoryCard, forceDuplicate } = body
+    const { text, visibility, legacyFlag, mediaUrl, videoUrl, audioUrl, memoryCard, forceDuplicate } = body
 
     if (!text) {
       return NextResponse.json({ error: 'Text is required' }, { status: 400 })
@@ -77,7 +77,7 @@ export async function POST(
     }
 
     // Generate content hash for duplicate detection
-    const contentHash = generateContentHash(text, mediaUrl, audioUrl)
+    const contentHash = generateContentHash(text, mediaUrl, audioUrl, videoUrl)
 
     // Check for recent duplicates (unless user explicitly forced)
     if (!forceDuplicate) {
@@ -117,6 +117,7 @@ export async function POST(
         visibility: visibility || 'PRIVATE',
         legacyFlag: legacyFlag || false,
         mediaUrl: mediaUrl || null,
+        videoUrl: videoUrl || null,
         audioUrl: audioUrl || null,
         memoryCard: memoryCard || null,
         approved,

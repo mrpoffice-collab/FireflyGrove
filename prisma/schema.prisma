@@ -257,6 +257,7 @@ model Entry {
   legacyFlag  Boolean  @default(false)
   mediaUrl    String?
   audioUrl    String?
+  videoUrl    String?  // Video memories (admin beta feature)
   memoryCard  String?  // When this memory is from (date, season, phrase)
   approved    Boolean  @default(true)
 
@@ -1210,11 +1211,13 @@ model NestItem {
   id           String   @id @default(cuid())
   userId       String
 
-  // Photo storage
-  photoUrl     String   // Vercel Blob or external URL
+  // Media storage
+  photoUrl     String?  // Vercel Blob or external URL (null if video)
+  videoUrl     String?  // Video memories (admin beta feature)
   thumbnailUrl String?  // Optional smaller version for grid display
   filename     String
   sizeBytes    Int?
+  mediaType    String   @default("photo") // "photo" or "video"
 
   // Optional metadata
   caption      String?  @db.Text // Optional quick note
@@ -1233,4 +1236,5 @@ model NestItem {
   @@index([userId])
   @@index([uploadedAt])
   @@index([expiresAt])
+  @@index([mediaType])
 }

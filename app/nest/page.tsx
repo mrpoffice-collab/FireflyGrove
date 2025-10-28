@@ -8,10 +8,12 @@ import { motion } from 'framer-motion'
 
 interface NestItem {
   id: string
-  photoUrl: string
+  photoUrl: string | null
+  videoUrl: string | null
   thumbnailUrl: string | null
   filename: string
   caption: string | null
+  mediaType: string
   uploadedAt: string
   takenAt: string | null
 }
@@ -37,6 +39,7 @@ export default function NestPage() {
   const [selectedNestItem, setSelectedNestItem] = useState<NestItem | null>(null)
   const [branches, setBranches] = useState<any[]>([])
   const [loadingBranches, setLoadingBranches] = useState(false)
+  const [isAdmin, setIsAdmin] = useState(false)
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -52,6 +55,7 @@ export default function NestPage() {
       if (res.ok) {
         const data = await res.json()
         setNestItems(data.items)
+        setIsAdmin(data.isAdmin || false)
       }
     } catch (error) {
       console.error('Failed to fetch nest items:', error)
@@ -76,7 +80,7 @@ export default function NestPage() {
     setDragActive(false)
 
     const files = Array.from(e.dataTransfer.files).filter((file) =>
-      file.type.startsWith('image/')
+      file.type.startsWith('image/') || (isAdmin && file.type.startsWith('video/'))
     )
 
     if (files.length > 0) {
@@ -244,13 +248,14 @@ export default function NestPage() {
   }
 
   const handleCreateNewBranch = () => {
-    // Close branch selector and navigate to grove with nest photo data
+    // Close branch selector and navigate to grove with nest media data
     setShowBranchSelector(false)
 
     if (selectedNestItem) {
-      // Store nest photo data in URL to carry through branch creation
+      // Store nest media data in URL to carry through branch creation
       const nestPhotoData = encodeURIComponent(JSON.stringify({
-        url: selectedNestItem.photoUrl,
+        url: selectedNestItem.photoUrl || selectedNestItem.videoUrl,
+        mediaType: selectedNestItem.mediaType,
         nestItemId: selectedNestItem.id
       }))
       router.push(`/grove?pendingNestPhoto=${nestPhotoData}`)
@@ -262,9 +267,10 @@ export default function NestPage() {
   const handleBranchSelect = (branchId: string) => {
     if (!selectedNestItem) return
 
-    // Navigate to branch with pre-populated photo
+    // Navigate to branch with pre-populated media (photo or video)
     router.push(`/branch/${branchId}?nestPhoto=${encodeURIComponent(JSON.stringify({
-      url: selectedNestItem.photoUrl,
+      url: selectedNestItem.photoUrl || selectedNestItem.videoUrl,
+      mediaType: selectedNestItem.mediaType,
       nestItemId: selectedNestItem.id
     }))}`)
   }
@@ -322,22 +328,24 @@ export default function NestPage() {
           >
             <div className="text-4xl mb-2">📸</div>
             <h3 className="text-lg text-text-soft mb-2">
-              Drop your photos here
+              Drop your {isAdmin ? 'photos & videos' : 'photos'} here
             </h3>
             <p className="text-text-muted text-sm mb-4">
-              Select all your photos at once • Up to 50 photos (200MB total)
+              {isAdmin
+                ? 'Photos (10MB max) or Videos (500MB max) • Up to 50 files (200MB total for photos)'
+                : 'Select all your photos at once • Up to 50 photos (200MB total)'}
             </p>
             <label className="inline-block">
               <input
                 type="file"
                 multiple
-                accept="image/*"
+                accept={isAdmin ? 'image/*,video/*' : 'image/*'}
                 onChange={handleFileInput}
                 className="hidden"
                 disabled={uploading}
               />
               <span className="px-6 py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg font-medium transition-soft cursor-pointer inline-block">
-                {uploading ? 'Uploading...' : 'Choose Photos'}
+                {uploading ? 'Uploading...' : isAdmin ? 'Choose Photos or Videos' : 'Choose Photos'}
               </span>
             </label>
           </div>
@@ -465,13 +473,34 @@ export default function NestPage() {
                     }}
                   />
 
-                  {/* Photo */}
+                  {/* Media (Photo or Video) */}
                   <div className="relative aspect-square rounded-lg overflow-hidden border border-firefly-dim/30 bg-bg-dark">
-                    <img
-                      src={item.thumbnailUrl || item.photoUrl}
-                      alt={item.caption || item.filename}
-                      className="w-full h-full object-cover transition-transform group-hover:scale-105"
-                    />
+                    {item.mediaType === 'video' ? (
+                      <video
+                        src={item.videoUrl || ''}
+                        className="w-full h-full object-cover"
+                        muted
+                        playsInline
+                        onMouseEnter={(e) => e.currentTarget.play()}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.pause()
+                          e.currentTarget.currentTime = 0
+                        }}
+                      />
+                    ) : (
+                      <img
+                        src={item.thumbnailUrl || item.photoUrl || ''}
+                        alt={item.caption || item.filename}
+                        className="w-full h-full object-cover transition-transform group-hover:scale-105"
+                      />
+                    )}
+
+                    {/* Video Badge */}
+                    {item.mediaType === 'video' && (
+                      <div className="absolute top-2 left-2 bg-black/70 text-white px-2 py-1 rounded text-xs font-medium">
+                        🎥 Video
+                      </div>
+                    )}
 
                     {/* Hover Overlay */}
                     <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-3 p-4 pointer-events-none">
@@ -510,15 +539,16 @@ export default function NestPage() {
         <div className="max-w-6xl mx-auto mt-12 bg-bg-dark border border-border-subtle rounded-lg p-6">
           <h3 className="text-lg text-text-soft mb-3">How The Nest Works</h3>
           <div className="space-y-2 text-sm text-text-muted">
-            <p>🪺 <strong>Upload:</strong> Select up to 50 photos at once (200MB total)</p>
-            <p>⚡ <strong>Smart Upload:</strong> Photos upload 3 at a time with progress tracking</p>
-            <p>🐣 <strong>Hatch:</strong> Hover over a photo and click "🐣 Hatch from Nest" to select a branch</p>
-            <p>💭 <strong>Write:</strong> The photo pre-populates the memory form - just add your story</p>
-            <p>🗑️ <strong>Remove:</strong> Hover over a photo to reveal the Remove button</p>
-            <p>🖱️ <strong>Pro Tip:</strong> You can also drag photos directly onto branches (desktop)</p>
+            <p>🪺 <strong>Upload:</strong> Select up to 50 {isAdmin ? 'photos or videos' : 'photos'} at once</p>
+            <p>⚡ <strong>Smart Upload:</strong> Files upload 3 at a time with progress tracking</p>
+            <p>🐣 <strong>Hatch:</strong> Hover over an item and click "🐣 Hatch from Nest" to select a branch</p>
+            <p>💭 <strong>Write:</strong> The media pre-populates the memory form - just add your story</p>
+            <p>🗑️ <strong>Remove:</strong> Hover over an item to reveal the Remove button</p>
+            {isAdmin && <p>🎥 <strong>Videos:</strong> Hover over a video thumbnail to preview it</p>}
+            <p>🖱️ <strong>Pro Tip:</strong> You can also drag media directly onto branches (desktop)</p>
           </div>
           <div className="mt-4 pt-4 border-t border-border-subtle text-xs text-text-muted">
-            <strong>Limits:</strong> 10MB per photo • 50 photos per upload • 200MB total per session
+            <strong>Limits:</strong> {isAdmin ? '10MB per photo • 500MB per video • 50 files per upload' : '10MB per photo • 50 photos per upload • 200MB total per session'}
           </div>
         </div>
       </div>

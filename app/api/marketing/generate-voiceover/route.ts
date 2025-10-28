@@ -3,9 +3,15 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import OpenAI from 'openai'
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-})
+// Lazy initialization function to avoid build-time errors
+function getOpenAIClient() {
+  if (!process.env.OPENAI_API_KEY) {
+    return null
+  }
+  return new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY,
+  })
+}
 
 /**
  * POST /api/marketing/generate-voiceover
@@ -23,6 +29,14 @@ export async function POST(req: NextRequest) {
 
     if (!text) {
       return NextResponse.json({ error: 'Text required' }, { status: 400 })
+    }
+
+    // Initialize OpenAI client
+    const openai = getOpenAIClient()
+    if (!openai) {
+      return NextResponse.json({
+        error: 'Voice-over feature is not configured. Add OPENAI_API_KEY to enable.'
+      }, { status: 503 })
     }
 
     console.log(`🎤 Generating voice-over (${text.length} chars)...`)

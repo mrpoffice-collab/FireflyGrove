@@ -130,6 +130,16 @@ export async function GET(
     // Check if user is owner to determine what entries to show
     const isOwner = userId && branch.ownerId === userId
 
+    // Get user's admin status
+    let isAdmin = false
+    if (userId) {
+      const user = await prisma.user.findUnique({
+        where: { id: userId },
+        select: { isAdmin: true }
+      })
+      isAdmin = user?.isAdmin || false
+    }
+
     // Pagination params from query string
     const url = new URL(req.url)
     const page = parseInt(url.searchParams.get('page') || '1')
@@ -192,6 +202,7 @@ export async function GET(
       ...branch,
       entries,
       isPublicView, // Let frontend know if this is public view
+      isAdmin, // Let frontend know if user is admin (for video feature)
       pagination: {
         page,
         limit,

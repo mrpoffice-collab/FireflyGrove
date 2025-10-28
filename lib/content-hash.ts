@@ -7,7 +7,8 @@ import crypto from 'crypto'
 export function generateContentHash(
   text: string,
   mediaUrl?: string | null,
-  audioUrl?: string | null
+  audioUrl?: string | null,
+  videoUrl?: string | null
 ): string {
   // Normalize text: lowercase, trim, remove extra whitespace
   const normalizedText = text.toLowerCase().trim().replace(/\s+/g, ' ')
@@ -17,6 +18,7 @@ export function generateContentHash(
     normalizedText,
     mediaUrl || '',
     audioUrl || '',
+    videoUrl || '',
   ].join('|')
 
   // Generate SHA-256 hash

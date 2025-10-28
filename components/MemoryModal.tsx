@@ -16,6 +16,7 @@ interface MemoryModalProps {
     visibility: string
     legacyFlag: boolean
     mediaUrl?: string
+    videoUrl?: string
     audioUrl?: string
     sharedBranchIds?: string[]
     memoryCard?: string | null
@@ -25,16 +26,24 @@ interface MemoryModalProps {
   currentBranchId?: string
   prePopulatedPhoto?: {
     url: string
+    mediaType?: string
     nestItemId?: string
   }
+  isAdmin?: boolean
 }
 
-export default function MemoryModal({ onClose, onSave, spark, onRefreshSpark, currentBranchId, prePopulatedPhoto }: MemoryModalProps) {
+export default function MemoryModal({ onClose, onSave, spark, onRefreshSpark, currentBranchId, prePopulatedPhoto, isAdmin = false }: MemoryModalProps) {
   const [text, setText] = useState('')
   const [visibility, setVisibility] = useState('PRIVATE')
   const [legacyFlag, setLegacyFlag] = useState(false)
   const [image, setImage] = useState<File | null>(null)
-  const [imagePreview, setImagePreview] = useState<string | null>(prePopulatedPhoto?.url || null)
+  const [imagePreview, setImagePreview] = useState<string | null>(
+    prePopulatedPhoto?.mediaType === 'photo' ? prePopulatedPhoto.url : null
+  )
+  const [video, setVideo] = useState<File | null>(null)
+  const [videoPreview, setVideoPreview] = useState<string | null>(
+    prePopulatedPhoto?.mediaType === 'video' ? prePopulatedPhoto.url : null
+  )
   const [nestItemId, setNestItemId] = useState<string | undefined>(prePopulatedPhoto?.nestItemId)
   const [isRecording, setIsRecording] = useState(false)
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null)
@@ -42,6 +51,7 @@ export default function MemoryModal({ onClose, onSave, spark, onRefreshSpark, cu
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [memoryCard, setMemoryCard] = useState('')
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const videoInputRef = useRef<HTMLInputElement>(null)
 
   // Cross-branch sharing state
   const [availableBranches, setAvailableBranches] = useState<Branch[]>([])
@@ -90,9 +100,33 @@ export default function MemoryModal({ onClose, onSave, spark, onRefreshSpark, cu
       }
 
       setImage(file)
+      setVideo(null) // Clear video if image is selected
+      setVideoPreview(null)
       const reader = new FileReader()
       reader.onloadend = () => {
         setImagePreview(reader.result as string)
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
+  const handleVideoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      // Validate file size (max 500MB for admin beta)
+      const maxSize = 500 * 1024 * 1024 // 500MB in bytes
+      if (file.size > maxSize) {
+        alert('Video file is too large. Please select a video under 500MB.')
+        e.target.value = '' // Reset input
+        return
+      }
+
+      setVideo(file)
+      setImage(null) // Clear image if video is selected
+      setImagePreview(null)
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        setVideoPreview(reader.result as string)
       }
       reader.readAsDataURL(file)
     }
@@ -162,13 +196,17 @@ export default function MemoryModal({ onClose, onSave, spark, onRefreshSpark, cu
       data.mediaUrl = imagePreview
     }
 
+    if (videoPreview) {
+      data.videoUrl = videoPreview
+    }
+
     if (audioUrl && audioBlob) {
       // Convert blob to data URL for demo
       const reader = new FileReader()
       reader.onloadend = async () => {
         data.audioUrl = reader.result as string
 
-        // Delete nest item if this photo came from the nest
+        // Delete nest item if this media came from the nest
         if (nestItemId) {
           try {
             await fetch(`/api/nest/${nestItemId}`, { method: 'DELETE' })
@@ -184,7 +222,7 @@ export default function MemoryModal({ onClose, onSave, spark, onRefreshSpark, cu
       return
     }
 
-    // Delete nest item if this photo came from the nest
+    // Delete nest item if this media came from the nest
     if (nestItemId) {
       try {
         await fetch(`/api/nest/${nestItemId}`, { method: 'DELETE' })
@@ -211,8 +249,8 @@ export default function MemoryModal({ onClose, onSave, spark, onRefreshSpark, cu
     try {
       const res = await fetch('/api/nest')
       if (res.ok) {
-        const items = await res.json()
-        setNestItems(items)
+        const data = await res.json()
+        setNestItems(data.items || [])
       }
     } catch (error) {
       console.error('Failed to fetch nest items:', error)
@@ -222,7 +260,15 @@ export default function MemoryModal({ onClose, onSave, spark, onRefreshSpark, cu
   }
 
   const selectNestPhoto = (item: any) => {
-    setImagePreview(item.photoUrl)
+    if (item.mediaType === 'video') {
+      setVideoPreview(item.videoUrl)
+      setImagePreview(null)
+      setImage(null)
+    } else {
+      setImagePreview(item.photoUrl)
+      setVideoPreview(null)
+      setVideo(null)
+    }
     setNestItemId(item.id)
     setShowNestSelector(false)
   }
@@ -303,7 +349,7 @@ export default function MemoryModal({ onClose, onSave, spark, onRefreshSpark, cu
 
           <div>
             <label className="block text-sm text-text-soft mb-2">
-              Add a Photo <span className="text-text-muted text-xs">(max 5MB)</span>
+              Add Media <span className="text-text-muted text-xs">(Photo: 5MB max{isAdmin ? ' • Video: 500MB max' : ''})</span>
             </label>
             <div className="flex gap-3">
               <input
@@ -316,9 +362,10 @@ export default function MemoryModal({ onClose, onSave, spark, onRefreshSpark, cu
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="flex-1 px-3 py-1.5 bg-bg-darker border border-firefly-dim text-firefly-glow rounded hover:bg-firefly-dim hover:text-bg-dark transition-soft text-sm"
+                disabled={!!videoPreview}
+                className="flex-1 px-3 py-1.5 bg-bg-darker border border-firefly-dim text-firefly-glow rounded hover:bg-firefly-dim hover:text-bg-dark transition-soft text-sm disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                📁 Choose File
+                📁 Choose Photo
               </button>
               <button
                 type="button"
@@ -328,12 +375,40 @@ export default function MemoryModal({ onClose, onSave, spark, onRefreshSpark, cu
                 🪺 Choose from Nest
               </button>
             </div>
+            {isAdmin && (
+              <div className="flex gap-3 mt-2">
+                <input
+                  ref={videoInputRef}
+                  type="file"
+                  accept="video/*"
+                  onChange={handleVideoChange}
+                  className="hidden"
+                />
+                <button
+                  type="button"
+                  onClick={() => videoInputRef.current?.click()}
+                  disabled={!!imagePreview}
+                  className="w-full px-3 py-1.5 bg-purple-900/20 border border-purple-500/50 text-purple-300 rounded hover:bg-purple-900/30 transition-soft text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  🎥 Choose Video (Admin Beta)
+                </button>
+              </div>
+            )}
             {imagePreview && (
               <div className="mt-3">
                 <img
                   src={imagePreview}
                   alt="Preview"
                   className="rounded-lg max-h-48 object-cover"
+                />
+              </div>
+            )}
+            {videoPreview && (
+              <div className="mt-3">
+                <video
+                  src={videoPreview}
+                  controls
+                  className="rounded-lg max-h-48 w-full"
                 />
               </div>
             )}
@@ -488,7 +563,7 @@ export default function MemoryModal({ onClose, onSave, spark, onRefreshSpark, cu
             <div className="p-6 border-b border-border-subtle flex items-center justify-between">
               <div>
                 <h3 className="text-xl text-text-soft">Choose from Nest</h3>
-                <p className="text-text-muted text-sm mt-1">Select a photo from your nest</p>
+                <p className="text-text-muted text-sm mt-1">Select media from your nest</p>
               </div>
               <button
                 onClick={() => setShowNestSelector(false)}
@@ -509,7 +584,7 @@ export default function MemoryModal({ onClose, onSave, spark, onRefreshSpark, cu
                 <div className="text-center text-text-muted py-12">
                   <div className="text-4xl mb-3">🪺</div>
                   <p>Your nest is empty</p>
-                  <p className="text-sm mt-2">Upload photos to the nest first</p>
+                  <p className="text-sm mt-2">Upload media to the nest first</p>
                 </div>
               ) : (
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
@@ -519,11 +594,24 @@ export default function MemoryModal({ onClose, onSave, spark, onRefreshSpark, cu
                       onClick={() => selectNestPhoto(item)}
                       className="relative aspect-square rounded-lg overflow-hidden border-2 border-transparent hover:border-firefly-glow transition-all group cursor-pointer"
                     >
-                      <img
-                        src={item.photoUrl}
-                        alt={item.filename}
-                        className="w-full h-full object-cover"
-                      />
+                      {item.mediaType === 'video' ? (
+                        <>
+                          <video
+                            src={item.videoUrl}
+                            className="w-full h-full object-cover"
+                            muted
+                          />
+                          <div className="absolute top-2 left-2 bg-black/70 text-white px-2 py-1 rounded text-xs font-medium">
+                            🎥 Video
+                          </div>
+                        </>
+                      ) : (
+                        <img
+                          src={item.photoUrl}
+                          alt={item.filename}
+                          className="w-full h-full object-cover"
+                        />
+                      )}
                       <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                         <span className="text-white text-sm font-medium">Select</span>
                       </div>
