@@ -21,6 +21,7 @@ interface ContentCalendarItem {
     publishedAt: string | null
     views: number
     signups: number
+    estimatedUsers: number | null
     platform: string
     slug: string | null
   }
@@ -424,6 +425,12 @@ export default function ContentPlanPage() {
                               <span>✨ {item.post.signups} signups</span>
                             </div>
                           )}
+
+                          {item.post?.estimatedUsers && (
+                            <div className="mt-2 text-sm">
+                              <span className="text-firefly-glow font-medium">📊 Est. Users: {item.post.estimatedUsers}</span>
+                            </div>
+                          )}
                         </div>
 
                         <div className="flex flex-col gap-2">
@@ -464,6 +471,7 @@ export default function ContentPlanPage() {
                   <th className="text-left px-6 py-4 text-text-muted text-sm font-medium">Date</th>
                   <th className="text-left px-6 py-4 text-text-muted text-sm font-medium">Topic</th>
                   <th className="text-left px-6 py-4 text-text-muted text-sm font-medium">Keywords</th>
+                  <th className="text-left px-6 py-4 text-text-muted text-sm font-medium">Est. Users</th>
                   <th className="text-left px-6 py-4 text-text-muted text-sm font-medium">Status</th>
                   <th className="text-right px-6 py-4 text-text-muted text-sm font-medium">Actions</th>
                 </tr>
@@ -508,6 +516,15 @@ export default function ContentPlanPage() {
                           </span>
                         )}
                       </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      {item.post?.estimatedUsers ? (
+                        <span className="text-firefly-glow font-medium text-sm">
+                          {item.post.estimatedUsers}
+                        </span>
+                      ) : (
+                        <span className="text-text-muted text-sm">—</span>
+                      )}
                     </td>
                     <td className="px-6 py-4">
                       <span className={`px-2 py-1 rounded text-xs font-medium ${
