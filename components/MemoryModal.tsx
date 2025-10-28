@@ -242,29 +242,31 @@ export default function MemoryModal({ onClose, onSave, spark, onRefreshSpark, cu
       <div className="bg-bg-dark border border-border-subtle rounded-lg max-w-2xl w-full p-6 my-8">
         <h2 className="text-2xl text-text-soft mb-4 text-center">New Memory</h2>
 
-        {/* Centered Spark with Actions */}
-        <div className="mb-6 bg-bg-darker border border-border-subtle rounded-lg p-4">
-          <p className="text-text-muted text-sm italic text-center mb-3">
-            ✨ "{spark}"
-          </p>
-          <div className="flex gap-2 justify-center">
-            <button
-              type="button"
-              onClick={handleUseSpark}
-              className="px-3 py-1.5 bg-firefly-dim/20 border border-firefly-dim text-firefly-glow rounded text-xs hover:bg-firefly-dim/30 transition-soft"
-            >
-              Use This
-            </button>
-            {onRefreshSpark && (
+        {/* Spark Prompt with Actions */}
+        <div className="mb-6 bg-bg-darker border border-firefly-dim/30 rounded-lg p-4">
+          <div className="flex items-center justify-between gap-4">
+            <p className="text-firefly-glow text-base font-medium italic flex-1">
+              ✨ "{spark}"
+            </p>
+            <div className="flex gap-2 flex-shrink-0">
               <button
                 type="button"
-                onClick={onRefreshSpark}
-                className="px-3 py-1.5 bg-bg-dark border border-border-subtle text-text-muted rounded text-xs hover:border-firefly-dim hover:text-firefly-glow transition-soft"
-                title="Get a different spark"
+                onClick={handleUseSpark}
+                className="px-2 py-1 bg-firefly-dim/20 border border-firefly-dim text-firefly-glow rounded text-xs hover:bg-firefly-dim/30 transition-soft"
               >
-                🔄 Refresh
+                Use This
               </button>
-            )}
+              {onRefreshSpark && (
+                <button
+                  type="button"
+                  onClick={onRefreshSpark}
+                  className="px-2 py-1 bg-bg-dark border border-border-subtle text-text-muted rounded text-xs hover:border-firefly-dim hover:text-firefly-glow transition-soft"
+                  title="Get a different spark"
+                >
+                  🔄
+                </button>
+              )}
+            </div>
           </div>
         </div>
 
@@ -278,7 +280,7 @@ export default function MemoryModal({ onClose, onSave, spark, onRefreshSpark, cu
               value={text}
               onChange={(e) => setText(e.target.value)}
               placeholder="Write what comes to mind..."
-              className="w-full px-4 py-3 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-dim transition-soft resize-none"
+              className="w-full px-4 py-3 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-dim transition-soft resize-none text-center"
               rows={6}
               autoFocus
               required
@@ -287,13 +289,13 @@ export default function MemoryModal({ onClose, onSave, spark, onRefreshSpark, cu
 
           <div>
             <label className="block text-sm text-text-soft mb-2">
-              Memory Card <span className="text-text-muted text-xs">(optional)</span>
+              When was this? <span className="text-text-muted text-xs">(optional)</span>
             </label>
             <input
               type="text"
               value={memoryCard}
               onChange={(e) => setMemoryCard(e.target.value)}
-              placeholder="Summer of '92, My birthday, Just last week..."
+              placeholder="Before college," "That summer with Nana," "When the twins were little, 10/19/2025..."
               className="w-full px-4 py-3 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-dim transition-soft"
               maxLength={100}
             />
@@ -320,14 +322,14 @@ export default function MemoryModal({ onClose, onSave, spark, onRefreshSpark, cu
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="flex-1 px-4 py-2 bg-bg-darker border border-firefly-dim text-firefly-glow rounded hover:bg-firefly-dim hover:text-bg-dark transition-soft"
+                className="flex-1 px-3 py-1.5 bg-bg-darker border border-firefly-dim text-firefly-glow rounded hover:bg-firefly-dim hover:text-bg-dark transition-soft text-sm"
               >
                 📁 Choose File
               </button>
               <button
                 type="button"
                 onClick={openNestSelector}
-                className="flex-1 px-4 py-2 bg-bg-darker border border-firefly-dim text-firefly-glow rounded hover:bg-firefly-dim hover:text-bg-dark transition-soft"
+                className="flex-1 px-3 py-1.5 bg-bg-darker border border-firefly-dim text-firefly-glow rounded hover:bg-firefly-dim hover:text-bg-dark transition-soft text-sm"
               >
                 🪺 Choose from Nest
               </button>
@@ -470,14 +472,14 @@ export default function MemoryModal({ onClose, onSave, spark, onRefreshSpark, cu
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 py-2 bg-bg-darker hover:bg-border-subtle text-text-soft rounded transition-soft"
+              className="flex-1 py-1.5 bg-bg-darker hover:bg-border-subtle text-text-soft rounded transition-soft text-sm"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="flex-1 py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded font-medium transition-soft disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 py-1.5 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded font-medium transition-soft disabled:opacity-50 disabled:cursor-not-allowed text-sm"
             >
               {isSubmitting ? 'Saving...' : 'Save Memory'}
             </button>
