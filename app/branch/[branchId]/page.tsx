@@ -584,6 +584,28 @@ export default function BranchPage() {
                   >
                     {branch.title}
                   </h1>
+                  {/* Memory Limit Badge (Open Grove only) */}
+                  {branch.person?.memoryLimit !== null && branch.person?.memoryLimit !== undefined && (
+                    (() => {
+                      const count = branch.person.memoryCount || 0
+                      const limit = branch.person.memoryLimit
+                      const percent = Math.round((count / limit) * 100)
+                      const isUrgent = percent >= 95
+                      const isWarning = percent >= 90
+
+                      return (
+                        <span className={`text-sm px-3 py-1 rounded-full ${
+                          isUrgent
+                            ? 'bg-red-900/30 text-red-400 border border-red-500/50'
+                            : isWarning
+                            ? 'bg-yellow-900/30 text-yellow-400 border border-yellow-500/50'
+                            : 'bg-blue-900/30 text-blue-400 border border-blue-500/50'
+                        }`}>
+                          {count}/{limit} memories ({percent}%)
+                        </span>
+                      )
+                    })()
+                  )}
                   {/* Only show edit buttons for authenticated owners */}
                   {!isPublicView && isAuthenticated && branch.owner.id === (session.user as any)?.id && (
                     <button
@@ -964,6 +986,121 @@ export default function BranchPage() {
               </div>
             </div>
           )}
+
+          {/* Memory Limit Warning Banner */}
+          {branch.person?.memoryLimit !== null && branch.person?.memoryLimit !== undefined && (() => {
+            const count = branch.person.memoryCount || 0
+            const limit = branch.person.memoryLimit
+            const percent = Math.round((count / limit) * 100)
+            const remaining = limit - count
+
+            if (percent >= 90) {
+              return (
+                <div className={`rounded-lg p-4 mb-6 ${
+                  percent >= 100
+                    ? 'bg-red-900/20 border-2 border-red-500/50'
+                    : percent >= 95
+                    ? 'bg-red-900/10 border border-red-500/40'
+                    : 'bg-yellow-900/10 border border-yellow-500/40'
+                }`}>
+                  <div className="flex items-start gap-3">
+                    <span className="text-2xl">
+                      {percent >= 100 ? '🚫' : percent >= 95 ? '⚠️' : '💡'}
+                    </span>
+                    <div className="flex-1">
+                      <h3 className={`font-medium mb-1 ${
+                        percent >= 100 ? 'text-red-400' : percent >= 95 ? 'text-red-300' : 'text-yellow-300'
+                      }`}>
+                        {percent >= 100
+                          ? 'Memory Limit Reached'
+                          : `Only ${remaining} ${remaining === 1 ? 'Memory' : 'Memories'} Remaining`
+                        }
+                      </h3>
+                      <p className="text-sm text-text-muted mb-3">
+                        {percent >= 100
+                          ? `This tree has reached its ${limit} memory limit. Adopt this tree into your private grove for unlimited storage.`
+                          : `This tree is at ${percent}% capacity (${count}/${limit}). Consider adopting it into your private grove for unlimited memories.`
+                        }
+                      </p>
+                      <button
+                        onClick={() => {
+                          // For now, just show info. In production, this would trigger adoption flow
+                          alert('Adoption feature: This would open the adoption dialog to move this tree into your private grove, removing the memory limit.')
+                        }}
+                        className={`text-sm px-4 py-2 rounded font-medium transition-soft ${
+                          percent >= 100
+                            ? 'bg-red-500 hover:bg-red-600 text-white'
+                            : 'bg-yellow-500 hover:bg-yellow-600 text-bg-dark'
+                        }`}
+                      >
+                        Adopt Tree for Unlimited Memories
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )
+            }
+            return null
+          })()}
+
+          {/* Trustee Expiration Warning */}
+          {branch.person?.trusteeExpiresAt && (() => {
+            const expiresAt = new Date(branch.person.trusteeExpiresAt)
+            const now = new Date()
+            const daysUntilExpiry = Math.ceil((expiresAt.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
+            const isExpired = daysUntilExpiry < 0
+            const isUrgent = daysUntilExpiry <= 7 && daysUntilExpiry > 0
+            const isWarning = daysUntilExpiry <= 30 && daysUntilExpiry > 7
+
+            if (isExpired || isUrgent || isWarning) {
+              return (
+                <div className={`rounded-lg p-4 mb-6 ${
+                  isExpired
+                    ? 'bg-red-900/20 border-2 border-red-500/50'
+                    : isUrgent
+                    ? 'bg-orange-900/10 border border-orange-500/40'
+                    : 'bg-blue-900/10 border border-blue-500/40'
+                }`}>
+                  <div className="flex items-start gap-3">
+                    <span className="text-2xl">
+                      {isExpired ? '⏰' : isUrgent ? '⚠️' : 'ℹ️'}
+                    </span>
+                    <div className="flex-1">
+                      <h3 className={`font-medium mb-1 ${
+                        isExpired ? 'text-red-400' : isUrgent ? 'text-orange-300' : 'text-blue-300'
+                      }`}>
+                        {isExpired
+                          ? `Trustee Period Expired ${Math.abs(daysUntilExpiry)} Days Ago`
+                          : isUrgent
+                          ? `Trustee Period Expires in ${daysUntilExpiry} ${daysUntilExpiry === 1 ? 'Day' : 'Days'}`
+                          : `Trustee Period Expires in ${daysUntilExpiry} Days`
+                        }
+                      </h3>
+                      <p className="text-sm text-text-muted mb-3">
+                        {isExpired
+                          ? 'Your temporary trustee period has ended. Adopt this tree into your private grove to maintain permanent access and add unlimited memories.'
+                          : 'Your trustee period for this Open Grove tree is expiring soon. Adopt it into your private grove for permanent ownership and unlimited memories.'
+                        }
+                      </p>
+                      <button
+                        onClick={() => {
+                          alert('Adoption feature: This would open the adoption dialog.')
+                        }}
+                        className={`text-sm px-4 py-2 rounded font-medium transition-soft ${
+                          isExpired || isUrgent
+                            ? 'bg-red-500 hover:bg-red-600 text-white'
+                            : 'bg-blue-500 hover:bg-blue-600 text-white'
+                        }`}
+                      >
+                        Adopt Tree to Your Grove
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )
+            }
+            return null
+          })()}
 
           <div className="space-y-6">
             {branch.entries.length === 0 ? (

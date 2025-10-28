@@ -43,6 +43,8 @@ export default function NestPage() {
   const [branches, setBranches] = useState<any[]>([])
   const [loadingBranches, setLoadingBranches] = useState(false)
   const [isAdmin, setIsAdmin] = useState(false)
+  const [uploadErrors, setUploadErrors] = useState<{filename: string, error: string}[]>([])
+  const [showErrorBanner, setShowErrorBanner] = useState(false)
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -213,17 +215,29 @@ export default function NestPage() {
             i === index ? { ...item, status: 'error', progress: 0, error: errorMsg } : item
           )
         )
+
+        // Add to persistent error list
+        setUploadErrors((prev) => [...prev, { filename: file.name, error: errorMsg }])
+        setShowErrorBanner(true)
+
         return false
       }
     } catch (error) {
       // Network error
+      const errorMsg = 'Network error - please check your connection'
+
       setUploadQueue((prev) =>
         prev.map((item, i) =>
           i === index
-            ? { ...item, status: 'error', progress: 0, error: 'Network error' }
+            ? { ...item, status: 'error', progress: 0, error: errorMsg }
             : item
         )
       )
+
+      // Add to persistent error list
+      setUploadErrors((prev) => [...prev, { filename: file.name, error: errorMsg }])
+      setShowErrorBanner(true)
+
       return false
     }
   }
@@ -379,6 +393,47 @@ export default function NestPage() {
             </label>
           </div>
         </div>
+
+        {/* Persistent Error Banner */}
+        {showErrorBanner && uploadErrors.length > 0 && (
+          <div className="max-w-6xl mx-auto mb-6">
+            <div className="bg-red-900/20 border-2 border-red-500/50 rounded-lg p-4">
+              <div className="flex items-start gap-3">
+                <span className="text-2xl">⚠️</span>
+                <div className="flex-1">
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="font-medium text-red-400">
+                      Upload Errors ({uploadErrors.length})
+                    </h3>
+                    <button
+                      onClick={() => {
+                        setShowErrorBanner(false)
+                        setUploadErrors([])
+                      }}
+                      className="text-text-muted hover:text-text-soft transition-soft"
+                      title="Dismiss errors"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </div>
+                  <p className="text-sm text-text-muted mb-3">
+                    The following files failed to upload. Please try again or check file sizes and formats.
+                  </p>
+                  <div className="max-h-32 overflow-y-auto space-y-1">
+                    {uploadErrors.map((err, idx) => (
+                      <div key={idx} className="text-sm bg-bg-darker/50 rounded p-2">
+                        <span className="text-red-300 font-medium">{err.filename}</span>
+                        <span className="text-text-muted ml-2">- {err.error}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Upload Progress */}
         {uploading && uploadQueue.length > 0 && (
