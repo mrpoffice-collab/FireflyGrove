@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { useSession } from 'next-auth/react'
+import Header from '@/components/Header'
 
 interface AnalyticsData {
   timeframe: string
@@ -29,6 +31,7 @@ interface AnalyticsData {
 }
 
 export default function AnalyticsPage() {
+  const { data: session } = useSession()
   const router = useRouter()
   const [loading, setLoading] = useState(true)
   const [data, setData] = useState<AnalyticsData | null>(null)
@@ -62,23 +65,37 @@ export default function AnalyticsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-bg-dark text-text-soft flex items-center justify-center">
-        <p>Loading analytics...</p>
+      <div className="min-h-screen bg-bg-dark">
+        <Header
+          userName={session?.user?.name || ''}
+          isBetaTester={(session?.user as any)?.isBetaTester || false}
+          isAdmin={(session?.user as any)?.isAdmin || false}
+        />
+        <div className="min-h-screen text-text-soft flex items-center justify-center">
+          <p>Loading analytics...</p>
+        </div>
       </div>
     )
   }
 
   if (error) {
     return (
-      <div className="min-h-screen bg-bg-dark text-text-soft flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-red-400 mb-4">Error: {error}</p>
-          <button
-            onClick={fetchAnalytics}
-            className="px-4 py-2 bg-firefly-dim text-bg-dark rounded"
-          >
-            Retry
-          </button>
+      <div className="min-h-screen bg-bg-dark">
+        <Header
+          userName={session?.user?.name || ''}
+          isBetaTester={(session?.user as any)?.isBetaTester || false}
+          isAdmin={(session?.user as any)?.isAdmin || false}
+        />
+        <div className="min-h-screen text-text-soft flex items-center justify-center">
+          <div className="text-center">
+            <p className="text-red-400 mb-4">Error: {error}</p>
+            <button
+              onClick={fetchAnalytics}
+              className="px-4 py-2 bg-firefly-dim text-bg-dark rounded"
+            >
+              Retry
+            </button>
+          </div>
         </div>
       </div>
     )
@@ -89,13 +106,20 @@ export default function AnalyticsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-bg-dark text-text-soft p-6">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-light text-firefly-glow mb-2">Analytics Dashboard</h1>
-          <p className="text-text-muted">Privacy-respecting user behavior insights</p>
-        </div>
+    <div className="min-h-screen bg-bg-dark text-text-soft">
+      <Header
+        userName={session?.user?.name || ''}
+        isBetaTester={(session?.user as any)?.isBetaTester || false}
+        isAdmin={(session?.user as any)?.isAdmin || false}
+      />
+
+      <div className="p-6">
+        <div className="max-w-7xl mx-auto">
+          {/* Header */}
+          <div className="mb-8">
+            <h1 className="text-3xl font-light text-firefly-glow mb-2">Analytics Dashboard</h1>
+            <p className="text-text-muted">Privacy-respecting user behavior insights</p>
+          </div>
 
         {/* Timeframe Selector */}
         <div className="mb-6 flex gap-2">
@@ -231,6 +255,7 @@ export default function AnalyticsPage() {
             </table>
           </div>
         </div>
+      </div>
       </div>
     </div>
   )
