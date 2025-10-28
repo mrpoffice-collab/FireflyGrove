@@ -205,9 +205,11 @@ export default function NestPage() {
     }
   }
 
-  const handleStartDrag = (e: React.DragEvent, item: NestItem) => {
-    e.dataTransfer.effectAllowed = 'move'
-    e.dataTransfer.setData('nestItem', JSON.stringify(item))
+  const handleStartDrag = (e: any, item: NestItem) => {
+    // Cast to DragEvent for proper typing
+    const dragEvent = e as React.DragEvent
+    dragEvent.dataTransfer.effectAllowed = 'move'
+    dragEvent.dataTransfer.setData('nestItem', JSON.stringify(item))
   }
 
   if (status === 'loading' || loading) {
