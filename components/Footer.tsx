@@ -16,6 +16,20 @@ export default function Footer() {
               © 2025 Firefly Grove · Where memories take root and stories keep growing
             </p>
             <div className="flex flex-wrap justify-center gap-4 text-sm">
+              <Link
+                href="/privacy"
+                className="text-text-muted hover:text-firefly-glow transition-soft"
+              >
+                Privacy Policy
+              </Link>
+              <span className="text-text-muted">·</span>
+              <Link
+                href="/terms"
+                className="text-text-muted hover:text-firefly-glow transition-soft"
+              >
+                Terms of Service
+              </Link>
+              <span className="text-text-muted">·</span>
               <a
                 href="/faq.txt"
                 target="_blank"
