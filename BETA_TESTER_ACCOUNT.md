@@ -193,6 +193,27 @@ When you return to test, try these workflows:
 
 ---
 
+## 🌳 TREE TRANSPLANT TESTING
+
+**Additional Setup:** Enhanced with tree transplant/transfer scenarios!
+
+See **TRANSPLANT_TEST_SCENARIOS.md** for complete transplant testing guide.
+
+**Quick Summary:**
+- **2 test accounts** (Beta Tester + Recipient)
+- **8 trees total** for beta tester (5 original + 3 for transplant)
+- **3 transfer scenarios** (pending, accepted, expired)
+- **1 recipient account** with received tree
+
+**Test Transplant Feature:**
+```bash
+npx tsx scripts/enhance-beta-tester-transplant.ts
+```
+
+---
+
 **Created:** 2025-10-28
 **Last Updated:** 2025-10-28
-**Script Location:** `scripts/seed-beta-tester.ts`
+**Script Locations:**
+- Base account: `scripts/seed-beta-tester.ts`
+- Transplant scenarios: `scripts/enhance-beta-tester-transplant.ts`
