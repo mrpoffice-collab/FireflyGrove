@@ -410,7 +410,7 @@ export default function NestPage() {
         ) : (
           <div className="max-w-6xl mx-auto">
             <div className="mb-4 text-sm text-text-muted">
-              💡 Tip: Hover over a photo and click "Hatch from Nest" to create a memory (or drag to a branch on desktop)
+              💡 Tip: Click "🐣 Hatch" on any photo to select a branch and create your memory
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
@@ -450,34 +450,31 @@ export default function NestPage() {
                       className="w-full h-full object-cover transition-transform group-hover:scale-105"
                     />
 
-                    {/* Overlay on hover */}
-                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2 p-2">
+                    {/* Hatch Button - Always Visible on Bottom */}
+                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/60 to-transparent p-3 pt-12">
                       <button
                         onClick={(e) => {
                           e.stopPropagation()
                           handleHatch(item)
                         }}
-                        className="px-4 py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded text-sm font-medium transition-colors w-full"
+                        className="w-full px-3 py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded text-sm font-medium transition-colors shadow-lg"
                       >
-                        🪺 Hatch from Nest
+                        🐣 Hatch
                       </button>
+                    </div>
+
+                    {/* Hover Overlay - Desktop only */}
+                    <div className="absolute inset-0 bg-black/70 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center p-2 pointer-events-none">
                       <button
                         onClick={(e) => {
                           e.stopPropagation()
                           handleDelete(item.id)
                         }}
-                        className="px-3 py-1.5 bg-red-500/80 hover:bg-red-500 text-white rounded text-xs transition-colors w-full"
+                        className="px-3 py-1.5 bg-red-500/90 hover:bg-red-500 text-white rounded text-xs transition-colors pointer-events-auto"
                       >
                         Remove
                       </button>
                     </div>
-
-                    {/* Caption if exists */}
-                    {item.caption && (
-                      <div className="absolute bottom-0 left-0 right-0 bg-black/70 p-2 text-xs text-white line-clamp-2">
-                        {item.caption}
-                      </div>
-                    )}
                   </div>
 
                   {/* Filename */}
@@ -497,10 +494,10 @@ export default function NestPage() {
             <p>🪺 <strong>Upload:</strong> Select up to 50 photos at once (200MB total)</p>
             <p>⚡ <strong>Smart Upload:</strong> Photos upload 3 at a time with progress tracking</p>
             <p>✨ <strong>Glow:</strong> Each photo glows like a firefly, waiting to become a memory</p>
-            <p>🐣 <strong>Hatch:</strong> Hover over a photo and click "Hatch from Nest" to select a branch</p>
-            <p>🖱️ <strong>Or Drag:</strong> Drag photos directly onto branches (desktop only)</p>
-            <p>💭 <strong>Write:</strong> The photo pre-populates the form - just add your story</p>
-            <p>🗑️ <strong>Remove:</strong> Hover and click Remove if you change your mind</p>
+            <p>🐣 <strong>Hatch:</strong> Click the "🐣 Hatch" button on any photo to select a branch</p>
+            <p>💭 <strong>Write:</strong> The photo pre-populates the memory form - just add your story</p>
+            <p>🗑️ <strong>Remove:</strong> Hover over a photo to reveal the Remove button</p>
+            <p>🖱️ <strong>Pro Tip:</strong> You can also drag photos directly onto branches (desktop)</p>
           </div>
           <div className="mt-4 pt-4 border-t border-border-subtle text-xs text-text-muted">
             <strong>Limits:</strong> 10MB per photo • 50 photos per upload • 200MB total per session
