@@ -227,7 +227,8 @@ export default function NestPage() {
         const res = await fetch('/api/branches')
         if (res.ok) {
           const data = await res.json()
-          setBranches(data.branches || [])
+          // API returns array directly, not wrapped in {branches: ...}
+          setBranches(Array.isArray(data) ? data : [])
         }
       } catch (error) {
         console.error('Failed to fetch branches:', error)
@@ -410,7 +411,7 @@ export default function NestPage() {
         ) : (
           <div className="max-w-6xl mx-auto">
             <div className="mb-4 text-sm text-text-muted">
-              💡 Tip: Click "🐣 Hatch" on any photo to select a branch and create your memory
+              💡 Tip: Hover over any photo to reveal "🐣 Hatch from Nest" and select a branch
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
@@ -450,21 +451,17 @@ export default function NestPage() {
                       className="w-full h-full object-cover transition-transform group-hover:scale-105"
                     />
 
-                    {/* Hatch Button - Always Visible on Bottom */}
-                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/60 to-transparent p-3 pt-12">
+                    {/* Hover Overlay */}
+                    <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-3 p-4 pointer-events-none">
                       <button
                         onClick={(e) => {
                           e.stopPropagation()
                           handleHatch(item)
                         }}
-                        className="w-full px-3 py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded text-sm font-medium transition-colors shadow-lg"
+                        className="px-4 py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded text-sm font-medium transition-colors pointer-events-auto"
                       >
-                        🐣 Hatch
+                        🐣 Hatch from Nest
                       </button>
-                    </div>
-
-                    {/* Hover Overlay - Desktop only */}
-                    <div className="absolute inset-0 bg-black/70 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center p-2 pointer-events-none">
                       <button
                         onClick={(e) => {
                           e.stopPropagation()
@@ -494,7 +491,7 @@ export default function NestPage() {
             <p>🪺 <strong>Upload:</strong> Select up to 50 photos at once (200MB total)</p>
             <p>⚡ <strong>Smart Upload:</strong> Photos upload 3 at a time with progress tracking</p>
             <p>✨ <strong>Glow:</strong> Each photo glows like a firefly, waiting to become a memory</p>
-            <p>🐣 <strong>Hatch:</strong> Click the "🐣 Hatch" button on any photo to select a branch</p>
+            <p>🐣 <strong>Hatch:</strong> Hover over a photo and click "🐣 Hatch from Nest" to select a branch</p>
             <p>💭 <strong>Write:</strong> The photo pre-populates the memory form - just add your story</p>
             <p>🗑️ <strong>Remove:</strong> Hover over a photo to reveal the Remove button</p>
             <p>🖱️ <strong>Pro Tip:</strong> You can also drag photos directly onto branches (desktop)</p>

@@ -44,6 +44,11 @@ export default function MemoryModal({ onClose, onSave, spark, currentBranchId, p
   const [selectedBranchIds, setSelectedBranchIds] = useState<string[]>([])
   const [loadingBranches, setLoadingBranches] = useState(false)
 
+  // Nest photo selection state
+  const [showNestSelector, setShowNestSelector] = useState(false)
+  const [nestItems, setNestItems] = useState<any[]>([])
+  const [loadingNestItems, setLoadingNestItems] = useState(false)
+
   const mediaRecorderRef = useRef<MediaRecorder | null>(null)
   const chunksRef = useRef<Blob[]>([])
 
@@ -195,6 +200,28 @@ export default function MemoryModal({ onClose, onSave, spark, currentBranchId, p
     )
   }
 
+  const openNestSelector = async () => {
+    setShowNestSelector(true)
+    setLoadingNestItems(true)
+    try {
+      const res = await fetch('/api/nest')
+      if (res.ok) {
+        const items = await res.json()
+        setNestItems(items)
+      }
+    } catch (error) {
+      console.error('Failed to fetch nest items:', error)
+    } finally {
+      setLoadingNestItems(false)
+    }
+  }
+
+  const selectNestPhoto = (item: any) => {
+    setImagePreview(item.photoUrl)
+    setNestItemId(item.id)
+    setShowNestSelector(false)
+  }
+
   return (
     <div className="fixed inset-0 bg-black/30 flex items-center justify-center p-4 z-50 overflow-y-auto backdrop-blur-sm">
       <div className="bg-bg-dark border border-border-subtle rounded-lg max-w-2xl w-full p-6 my-8">
@@ -222,12 +249,21 @@ export default function MemoryModal({ onClose, onSave, spark, currentBranchId, p
             <label className="block text-sm text-text-soft mb-2">
               Add a Photo <span className="text-text-muted text-xs">(max 5MB)</span>
             </label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-              className="block w-full text-sm text-text-muted file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:bg-firefly-dim file:text-bg-dark hover:file:bg-firefly-glow transition-soft"
-            />
+            <div className="flex gap-3">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                className="flex-1 block text-sm text-text-muted file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:bg-firefly-dim file:text-bg-dark hover:file:bg-firefly-glow transition-soft"
+              />
+              <button
+                type="button"
+                onClick={openNestSelector}
+                className="px-4 py-2 bg-bg-darker border border-firefly-dim text-firefly-glow rounded hover:bg-firefly-dim hover:text-bg-dark transition-soft whitespace-nowrap"
+              >
+                🪺 Choose from Nest
+              </button>
+            </div>
             {imagePreview && (
               <div className="mt-3">
                 <img
@@ -377,6 +413,61 @@ export default function MemoryModal({ onClose, onSave, spark, currentBranchId, p
           </div>
         </form>
       </div>
+
+      {/* Nest Photo Selector Modal */}
+      {showNestSelector && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-[60] backdrop-blur-sm">
+          <div className="bg-bg-dark border border-border-subtle rounded-lg max-w-4xl w-full max-h-[80vh] overflow-hidden">
+            <div className="p-6 border-b border-border-subtle flex items-center justify-between">
+              <div>
+                <h3 className="text-xl text-text-soft">Choose from Nest</h3>
+                <p className="text-text-muted text-sm mt-1">Select a photo from your nest</p>
+              </div>
+              <button
+                onClick={() => setShowNestSelector(false)}
+                className="text-text-muted hover:text-text-soft transition-soft"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            <div className="p-6 overflow-y-auto max-h-[60vh]">
+              {loadingNestItems ? (
+                <div className="text-center text-text-muted py-12">
+                  Loading nest items...
+                </div>
+              ) : nestItems.length === 0 ? (
+                <div className="text-center text-text-muted py-12">
+                  <div className="text-4xl mb-3">🪺</div>
+                  <p>Your nest is empty</p>
+                  <p className="text-sm mt-2">Upload photos to the nest first</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                  {nestItems.map((item) => (
+                    <button
+                      key={item.id}
+                      onClick={() => selectNestPhoto(item)}
+                      className="relative aspect-square rounded-lg overflow-hidden border-2 border-transparent hover:border-firefly-glow transition-all group cursor-pointer"
+                    >
+                      <img
+                        src={item.photoUrl}
+                        alt={item.filename}
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <span className="text-white text-sm font-medium">Select</span>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
