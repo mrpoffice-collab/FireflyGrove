@@ -50,6 +50,13 @@ interface Branch {
     trusteeExpiresAt: string | null
   }
   entries: Entry[]
+  pagination?: {
+    page: number
+    limit: number
+    total: number
+    totalPages: number
+    hasMore: boolean
+  }
 }
 
 export default function BranchPage() {
@@ -60,6 +67,7 @@ export default function BranchPage() {
 
   const [branch, setBranch] = useState<Branch | null>(null)
   const [loading, setLoading] = useState(true)
+  const [loadingMore, setLoadingMore] = useState(false)
   const [showNewMemory, setShowNewMemory] = useState(false)
   const [showSettings, setShowSettings] = useState(false)
   const [showUndoBanner, setShowUndoBanner] = useState(false)
@@ -169,12 +177,20 @@ export default function BranchPage() {
     }
   }, [status, currentCustomSpark])
 
-  const fetchBranch = async () => {
+  const fetchBranch = async (page = 1, append = false) => {
     try {
-      const res = await fetch(`/api/branches/${branchId}`)
+      const res = await fetch(`/api/branches/${branchId}?page=${page}&limit=20`)
       if (res.ok) {
         const data = await res.json()
-        setBranch(data)
+        if (append && branch) {
+          // Append new entries to existing ones
+          setBranch({
+            ...data,
+            entries: [...branch.entries, ...data.entries],
+          })
+        } else {
+          setBranch(data)
+        }
       } else {
         router.push('/grove')
       }
@@ -182,7 +198,16 @@ export default function BranchPage() {
       console.error('Failed to fetch branch:', error)
     } finally {
       setLoading(false)
+      setLoadingMore(false)
     }
+  }
+
+  const loadMore = async () => {
+    if (!branch?.pagination?.hasMore || loadingMore) return
+
+    setLoadingMore(true)
+    const nextPage = (branch.pagination?.page || 1) + 1
+    await fetchBranch(nextPage, true)
   }
 
   const handleCreateMemory = async (data: {
@@ -866,15 +891,46 @@ export default function BranchPage() {
                 )}
               </div>
             ) : (
-              branch.entries.map((entry) => (
-                <MemoryCard
-                  key={entry.id}
-                  entry={entry}
-                  branchOwnerId={branch.owner.id}
-                  onWithdraw={handleWithdraw}
-                  onHide={handleHide}
-                />
-              ))
+              <>
+                {branch.entries.map((entry) => (
+                  <MemoryCard
+                    key={entry.id}
+                    entry={entry}
+                    branchOwnerId={branch.owner.id}
+                    onWithdraw={handleWithdraw}
+                    onHide={handleHide}
+                  />
+                ))}
+
+                {/* Load More Button */}
+                {branch.pagination?.hasMore && (
+                  <div className="flex justify-center pt-6">
+                    <button
+                      onClick={loadMore}
+                      disabled={loadingMore}
+                      className="px-6 py-3 bg-firefly-dim hover:bg-firefly-glow disabled:bg-gray-600 disabled:cursor-not-allowed text-bg-dark rounded-lg font-medium transition-soft"
+                    >
+                      {loadingMore ? (
+                        <>
+                          <span className="inline-block animate-spin mr-2">⏳</span>
+                          Loading...
+                        </>
+                      ) : (
+                        <>
+                          Load More ({branch.pagination.total - branch.entries.length} remaining)
+                        </>
+                      )}
+                    </button>
+                  </div>
+                )}
+
+                {/* Pagination Info */}
+                {branch.pagination && branch.entries.length > 0 && (
+                  <div className="text-center text-text-muted text-sm pt-4">
+                    Showing {branch.entries.length} of {branch.pagination.total} memories
+                  </div>
+                )}
+              </>
             )}
           </div>
         </div>
