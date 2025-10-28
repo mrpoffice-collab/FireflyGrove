@@ -77,38 +77,70 @@ export async function GET(
     // Check if user is owner to determine what entries to show
     const isOwner = branch.ownerId === userId
 
-    // Fetch entries with appropriate filters
-    const entries = await prisma.entry.findMany({
-      where: {
-        branchId: branchId,
-        status: 'ACTIVE',
-        ...(isOwner
-          ? {} // Owner sees all active entries
-          : { // Members only see their own entries OR approved shared entries
-              OR: [
-                { authorId: userId },
-                { visibility: 'SHARED', approved: true },
-              ],
-            }
-        ),
-      },
-      include: {
-        author: {
-          select: {
-            id: true,
-            name: true,
+    // Pagination params from query string
+    const url = new URL(req.url)
+    const page = parseInt(url.searchParams.get('page') || '1')
+    const limit = parseInt(url.searchParams.get('limit') || '20')
+    const skip = (page - 1) * limit
+
+    // Fetch entries with appropriate filters and pagination
+    const [entries, totalCount] = await Promise.all([
+      prisma.entry.findMany({
+        where: {
+          branchId: branchId,
+          status: 'ACTIVE',
+          ...(isOwner
+            ? {} // Owner sees all active entries
+            : { // Members only see their own entries OR approved shared entries
+                OR: [
+                  { authorId: userId },
+                  { visibility: 'SHARED', approved: true },
+                ],
+              }
+          ),
+        },
+        include: {
+          author: {
+            select: {
+              id: true,
+              name: true,
+            },
           },
         },
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
-    })
+        orderBy: {
+          createdAt: 'desc',
+        },
+        take: limit,
+        skip: skip,
+      }),
+      prisma.entry.count({
+        where: {
+          branchId: branchId,
+          status: 'ACTIVE',
+          ...(isOwner
+            ? {}
+            : {
+                OR: [
+                  { authorId: userId },
+                  { visibility: 'SHARED', approved: true },
+                ],
+              }
+          ),
+        },
+      }),
+    ])
 
-    // Add entries to branch object
+    // Add entries and pagination to branch object
     const branchWithEntries = {
       ...branch,
       entries,
+      pagination: {
+        page,
+        limit,
+        total: totalCount,
+        totalPages: Math.ceil(totalCount / limit),
+        hasMore: page * limit < totalCount,
+      },
     }
 
     // Check and expire trustee if needed (for Person-based legacy trees)

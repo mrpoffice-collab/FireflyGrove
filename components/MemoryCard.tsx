@@ -263,14 +263,29 @@ export default function MemoryCard({ entry, branchOwnerId, branchId, onWithdraw,
             src={entry.mediaUrl}
             alt="Memory"
             className="rounded-lg max-w-full h-auto"
+            onError={(e) => {
+              const target = e.target as HTMLImageElement
+              target.src = '/placeholder-memory.jpg'
+              target.onerror = null // Prevent infinite loop if placeholder also fails
+            }}
           />
         </div>
       )}
 
       {entry.audioUrl && (
         <div className="mt-4">
-          <audio controls className="w-full">
+          <audio
+            controls
+            className="w-full"
+            onError={(e) => {
+              // Hide audio player if source fails to load
+              const target = e.target as HTMLAudioElement
+              target.style.display = 'none'
+            }}
+          >
             <source src={entry.audioUrl} type="audio/webm" />
+            <source src={entry.audioUrl} type="audio/mpeg" />
+            <source src={entry.audioUrl} type="audio/mp3" />
             Your browser does not support audio playback.
           </audio>
         </div>

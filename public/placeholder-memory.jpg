@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+  <rect width="800" height="600" fill="#1a1a1a"/>
+  <text x="400" y="300" font-family="Arial, sans-serif" font-size="24" fill="#666" text-anchor="middle">
+    Memory Photo
+  </text>
+  <text x="400" y="340" font-family="Arial, sans-serif" font-size="16" fill="#555" text-anchor="middle">
+    (Image not available)
+  </text>
+</svg>

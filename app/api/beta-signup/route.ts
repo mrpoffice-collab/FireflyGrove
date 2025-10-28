@@ -78,6 +78,17 @@ export async function POST(req: NextRequest) {
       },
     })
 
+    // Auto-create Grove for new beta tester
+    await prisma.grove.create({
+      data: {
+        userId: user.id,
+        name: `${name.trim()}'s Grove`,
+        planType: 'family', // Beta testers get family plan
+        treeLimit: 10,
+        status: 'active',
+      },
+    })
+
     console.log(`[Beta Signup] New beta tester signed up: ${email}`)
 
     return NextResponse.json({

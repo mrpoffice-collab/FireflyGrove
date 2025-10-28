@@ -68,6 +68,17 @@ export async function POST(req: NextRequest) {
       },
     })
 
+    // Auto-create Grove for new user
+    await prisma.grove.create({
+      data: {
+        userId: user.id,
+        name: `${name}'s Grove`,
+        planType: betaInvite ? 'family' : 'trial', // Beta testers get family plan
+        treeLimit: betaInvite ? 10 : 1,
+        status: 'active',
+      },
+    })
+
     // If they were invited, mark the invite as signed up
     if (betaInvite) {
       await prisma.betaInvite.update({
