@@ -279,7 +279,7 @@ export default function NestPage() {
             <div className="text-right">
               <div className="text-3xl text-firefly-dim mb-1">{nestItems.length}</div>
               <div className="text-xs text-text-muted">
-                {nestItems.length === 1 ? 'firefly' : 'fireflies'} glowing
+                ready to be hatched
               </div>
             </div>
           </div>

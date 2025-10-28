@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import Header from '@/components/Header'
 import Tooltip from '@/components/Tooltip'
+import NestNudge from '@/components/NestNudge'
 import { getPlanById } from '@/lib/plans'
 
 interface Tree {
@@ -197,6 +198,9 @@ export default function GrovePage() {
           treeLimit: grove.treeLimit,
         }}
       />
+
+      {/* Nest Nudge - Shows when user has old photos in nest */}
+      <NestNudge userId={(session.user as any)?.id} />
 
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-5xl mx-auto">
