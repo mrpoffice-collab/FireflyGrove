@@ -209,7 +209,7 @@ export async function GET(req: NextRequest) {
         tree.branches.map(branch => ({
           id: branch.id,
           title: branch.title,
-          personStatus: branch.person.isLegacy ? 'legacy' : 'living',
+          personStatus: branch.person?.isLegacy ? 'legacy' : 'living',
           lastMemoryDate: branch.lastMemoryDate?.toISOString() || null,
           _count: {
             entries: branch._count.entries
