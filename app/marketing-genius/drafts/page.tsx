@@ -21,6 +21,7 @@ interface DraftPost {
   slug: string | null
   keywords: string[]
   topic: string | null
+  estimatedUsers: number | null
   pinDescription: string | null
   image: string | null
   createdAt: string
@@ -645,6 +646,9 @@ export default function DraftsPage() {
                         </div>
                       )}
                       {post.topic && <span>🎯 Topic: {post.topic}</span>}
+                      {post.estimatedUsers && (
+                        <span className="text-firefly-glow font-medium">📊 Est. Users: {post.estimatedUsers}</span>
+                      )}
                       {post.keywords.length > 0 && (
                         <span>🔑 {post.keywords.slice(0, 3).join(', ')}</span>
                       )}
@@ -836,6 +840,9 @@ export default function DraftsPage() {
                           </div>
                         )}
                         {post.topic && <span>🎯 Topic: {post.topic}</span>}
+                        {post.estimatedUsers && (
+                          <span className="text-firefly-glow font-medium">📊 Est. Users: {post.estimatedUsers}</span>
+                        )}
                         {post.keywords.length > 0 && (
                           <span>🔑 {post.keywords.slice(0, 3).join(', ')}</span>
                         )}
