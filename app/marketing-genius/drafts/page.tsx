@@ -41,6 +41,14 @@ export default function DraftsPage() {
   const [publishing, setPublishing] = useState(false)
   const [fixingImages, setFixingImages] = useState(false)
   const [postingToFacebook, setPostingToFacebook] = useState(false)
+  const [generatingVideo, setGeneratingVideo] = useState(false)
+  const [videoPreview, setVideoPreview] = useState<{
+    postId: string
+    script: string
+    scriptBreakdown: { hook: string; keyPoints: string[]; cta: string }
+    audioUrl: string
+    metadata: any
+  } | null>(null)
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -244,6 +252,58 @@ export default function DraftsPage() {
     } finally {
       setPostingToFacebook(false)
     }
+  }
+
+  const generateMarketingVideo = async (postId: string) => {
+    setGeneratingVideo(true)
+    try {
+      const res = await fetch('/api/marketing/posts/generate-marketing-video', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ postId, voice: 'nova' }),
+      })
+
+      if (res.ok) {
+        const data = await res.json()
+
+        // Convert base64 audio to blob URL
+        const audioBlob = await fetch(
+          `data:audio/mp3;base64,${data.video.voiceOver.audio}`
+        ).then((r) => r.blob())
+        const audioUrl = URL.createObjectURL(audioBlob)
+
+        setVideoPreview({
+          postId,
+          script: data.video.script,
+          scriptBreakdown: data.video.scriptBreakdown,
+          audioUrl,
+          metadata: data.video.metadata,
+        })
+      } else {
+        const data = await res.json()
+        alert(data.error || 'Failed to generate marketing video')
+      }
+    } catch (error) {
+      console.error('Error generating marketing video:', error)
+      alert('Error generating marketing video')
+    } finally {
+      setGeneratingVideo(false)
+    }
+  }
+
+  const closeVideoPreview = () => {
+    if (videoPreview?.audioUrl) {
+      URL.revokeObjectURL(videoPreview.audioUrl)
+    }
+    setVideoPreview(null)
+  }
+
+  const downloadAudio = () => {
+    if (!videoPreview) return
+    const a = document.createElement('a')
+    a.href = videoPreview.audioUrl
+    a.download = `${videoPreview.metadata.title.replace(/[^a-z0-9]/gi, '-')}-voiceover.mp3`
+    a.click()
   }
 
   const startEditDate = (post: DraftPost) => {
@@ -662,6 +722,13 @@ export default function DraftsPage() {
                           {publishing ? 'Publishing...' : '🚀 Publish Now'}
                         </button>
                         <button
+                          onClick={() => generateMarketingVideo(post.id)}
+                          disabled={generatingVideo}
+                          className="px-4 py-2 bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-700 hover:to-purple-700 disabled:bg-gray-600 text-white rounded-lg text-sm font-medium transition-soft"
+                        >
+                          {generatingVideo ? '⏳ Generating...' : '🎬 Generate Video'}
+                        </button>
+                        <button
                           onClick={() => postToFacebook(post.id)}
                           disabled={postingToFacebook}
                           className="px-4 py-2 bg-[#1877f2] hover:bg-[#0c63d4] disabled:bg-gray-600 text-white rounded-lg text-sm font-medium transition-soft"
@@ -829,6 +896,13 @@ export default function DraftsPage() {
                             {publishing ? 'Publishing...' : '🚀 Publish Now'}
                           </button>
                           <button
+                            onClick={() => generateMarketingVideo(post.id)}
+                            disabled={generatingVideo}
+                            className="px-4 py-2 bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-700 hover:to-purple-700 disabled:bg-gray-600 text-white rounded-lg text-sm font-medium transition-soft"
+                          >
+                            {generatingVideo ? '⏳ Generating...' : '🎬 Generate Video'}
+                          </button>
+                          <button
                             onClick={() => postToFacebook(post.id)}
                             disabled={postingToFacebook}
                             className="px-4 py-2 bg-[#1877f2] hover:bg-[#0c63d4] disabled:bg-gray-600 text-white rounded-lg text-sm font-medium transition-soft"
@@ -878,6 +952,113 @@ export default function DraftsPage() {
           </div>
         )}
       </div>
+
+      {/* Video Preview Modal */}
+      {videoPreview && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+          <div className="bg-bg-elevated border border-firefly-dim rounded-xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6">
+              {/* Header */}
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-light text-firefly-glow">
+                  🎬 Marketing Video Generated!
+                </h2>
+                <button
+                  onClick={closeVideoPreview}
+                  className="text-text-muted hover:text-text-soft text-2xl"
+                >
+                  ×
+                </button>
+              </div>
+
+              {/* Audio Player */}
+              <div className="mb-6 bg-bg-dark rounded-lg p-4 border border-border-subtle">
+                <h3 className="text-lg font-medium text-text-soft mb-3">🎤 Voice-Over</h3>
+                <audio
+                  controls
+                  src={videoPreview.audioUrl}
+                  className="w-full mb-3"
+                  style={{ colorScheme: 'dark' }}
+                />
+                <button
+                  onClick={downloadAudio}
+                  className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm font-medium transition-soft"
+                >
+                  ⬇️ Download Audio
+                </button>
+              </div>
+
+              {/* Script Breakdown */}
+              <div className="mb-6 bg-bg-dark rounded-lg p-4 border border-border-subtle">
+                <h3 className="text-lg font-medium text-text-soft mb-3">📝 Video Script</h3>
+
+                <div className="space-y-4">
+                  <div>
+                    <div className="text-sm text-firefly-glow font-medium mb-1">Hook (0-3s)</div>
+                    <div className="text-text-soft bg-bg-elevated p-3 rounded">
+                      {videoPreview.scriptBreakdown.hook}
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="text-sm text-firefly-glow font-medium mb-1">Key Points (3-25s)</div>
+                    <ul className="space-y-2">
+                      {videoPreview.scriptBreakdown.keyPoints.map((point, i) => (
+                        <li key={i} className="text-text-soft bg-bg-elevated p-3 rounded">
+                          {i + 1}. {point}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div>
+                    <div className="text-sm text-firefly-glow font-medium mb-1">Call to Action (25-30s)</div>
+                    <div className="text-text-soft bg-bg-elevated p-3 rounded">
+                      {videoPreview.scriptBreakdown.cta}
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="text-sm text-text-muted font-medium mb-1">Full Script</div>
+                    <div className="text-text-soft bg-bg-elevated p-3 rounded text-sm whitespace-pre-wrap">
+                      {videoPreview.script}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Next Steps */}
+              <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-4 mb-4">
+                <h3 className="text-lg font-medium text-blue-400 mb-2">📹 Next Steps</h3>
+                <ol className="text-text-soft space-y-2 text-sm list-decimal list-inside">
+                  <li>Download the voice-over audio (button above)</li>
+                  <li>Go to <Link href="/video-collage" className="text-firefly-glow hover:underline">Video Maker</Link></li>
+                  <li>Upload your blog post image</li>
+                  <li>Add the voice-over audio you just downloaded</li>
+                  <li>Add text overlays with the script above</li>
+                  <li>Export and post to Facebook!</li>
+                </ol>
+              </div>
+
+              {/* Actions */}
+              <div className="flex gap-3">
+                <Link
+                  href="/video-collage"
+                  className="flex-1 px-6 py-3 bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-700 hover:to-purple-700 text-white rounded-lg font-medium text-center transition-soft"
+                >
+                  🎬 Open Video Maker
+                </Link>
+                <button
+                  onClick={closeVideoPreview}
+                  className="px-6 py-3 bg-bg-dark hover:bg-border-subtle text-text-soft rounded-lg font-medium transition-soft"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
