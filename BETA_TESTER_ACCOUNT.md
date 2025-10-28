@@ -212,8 +212,62 @@ npx tsx scripts/enhance-beta-tester-transplant.ts
 
 ---
 
+## 🌲 OPEN GROVE TESTING
+
+**The Most Sacred Feature:** Open Grove - public legacy tree system!
+
+See **OPEN_GROVE_TEST_SCENARIOS.md** for complete Open Grove testing guide.
+
+**Quick Summary:**
+- **3 test accounts** (Beta Tester + Adopter + System)
+- **5 legacy trees in Open Grove** with different scenarios
+- **1 already-adopted tree** in private grove (for comparison)
+- **Memory limit testing** (100 in Open Grove, unlimited after adoption)
+- **Trustee expiration scenarios** (active, expiring soon, expired)
+- **Adoption workflow** (from public → private)
+
+**Open Grove Test Accounts:**
+
+Beta Tester (Creator):
+- Email: beta@fireflygrove.app
+- Password: BetaTest2024!
+- Role: Creates legacy trees, acts as trustee
+- Trees: 4 in Open Grove
+
+Adopter (Receiver):
+- Email: adopter@fireflygrove.app
+- Password: Adopter2024!
+- Role: Browses and adopts legacy trees
+- Trees: 1 in Open Grove + 1 already adopted
+
+**Legacy Trees in Open Grove:**
+1. **John Doe** - 25/100 memories (ready to adopt)
+2. **Jane Smith** - 100/100 memories (AT LIMIT - critical test!)
+3. **Robert Johnson** - 15/100 memories (trustee EXPIRED)
+4. **Mary Williams** - 5/100 memories (owned by adopter)
+5. **James Brown** - 50/100 memories (public, searchable)
+
+**Already Adopted Tree:**
+- **Alice Cooper** - 35 memories in private grove (unlimited, private)
+
+**Test Open Grove Feature:**
+```bash
+npx tsx scripts/setup-open-grove-test.ts
+```
+
+**Critical Test Cases:**
+- Try to add 101st memory to Jane Smith (should fail)
+- Adopt John Doe → verify limit removed
+- Add 101st memory after adoption (should succeed)
+- View trustee expiration warning (Robert Johnson)
+- Test self-adoption (Mary Williams)
+- Verify unlimited memories in private grove (Alice Cooper)
+
+---
+
 **Created:** 2025-10-28
 **Last Updated:** 2025-10-28
 **Script Locations:**
 - Base account: `scripts/seed-beta-tester.ts`
 - Transplant scenarios: `scripts/enhance-beta-tester-transplant.ts`
+- Open Grove scenarios: `scripts/setup-open-grove-test.ts`
