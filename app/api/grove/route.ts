@@ -37,7 +37,10 @@ export async function GET(req: NextRequest) {
               },
             },
             branches: {
-              include: {
+              select: {
+                id: true,
+                title: true,
+                lastMemoryDate: true,
                 person: {
                   select: {
                     isLegacy: true
@@ -136,7 +139,10 @@ export async function GET(req: NextRequest) {
                 },
               },
               branches: {
-                include: {
+                select: {
+                  id: true,
+                  title: true,
+                  lastMemoryDate: true,
                   person: {
                     select: {
                       isLegacy: true
