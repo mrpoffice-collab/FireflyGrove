@@ -267,10 +267,6 @@ export default function TreePage() {
           {/* Tree Stats */}
           <div className="mb-8 flex flex-wrap items-center justify-center gap-3 text-text-muted text-sm">
             <span className="flex items-center gap-1">
-              🌲 <span className="text-text-soft font-medium">1</span> Tree
-            </span>
-            <span>·</span>
-            <span className="flex items-center gap-1">
               🌿 <span className="text-text-soft font-medium">{tree.branches.length}</span> {tree.branches.length === 1 ? 'Branch' : 'Branches'}
             </span>
             <span>·</span>

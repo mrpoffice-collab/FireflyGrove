@@ -299,12 +299,6 @@ export default function MemoryModal({ onClose, onSave, spark, onRefreshSpark, cu
               className="w-full px-4 py-3 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-dim transition-soft"
               maxLength={100}
             />
-            <p className="text-text-muted text-xs mt-1.5">
-              When was this? A date, a season, or just a phrase that fits.
-            </p>
-            <p className="text-text-muted text-xs italic">
-              (However you remember it — no rules.)
-            </p>
           </div>
 
           <div>
@@ -358,7 +352,7 @@ export default function MemoryModal({ onClose, onSave, spark, onRefreshSpark, cu
                   type="button"
                   onClick={startRecording}
                   disabled={!!audioUrl}
-                  className="px-4 py-2 bg-bg-darker border border-firefly-dim text-firefly-glow rounded hover:bg-firefly-dim hover:text-bg-dark transition-soft disabled:opacity-50"
+                  className="px-3 py-1.5 bg-bg-darker border border-firefly-dim text-firefly-glow rounded hover:bg-firefly-dim hover:text-bg-dark transition-soft disabled:opacity-50 text-sm"
                 >
                   {audioUrl ? 'Recording Saved' : 'Start Recording'}
                 </button>
@@ -366,7 +360,7 @@ export default function MemoryModal({ onClose, onSave, spark, onRefreshSpark, cu
                 <button
                   type="button"
                   onClick={stopRecording}
-                  className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-soft animate-pulse"
+                  className="px-3 py-1.5 bg-red-600 text-white rounded hover:bg-red-700 transition-soft animate-pulse text-sm"
                 >
                   Stop Recording
                 </button>

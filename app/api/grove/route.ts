@@ -36,6 +36,24 @@ export async function GET(req: NextRequest) {
                 branches: true,
               },
             },
+            branches: {
+              include: {
+                person: {
+                  select: {
+                    isLegacy: true
+                  }
+                },
+                _count: {
+                  select: {
+                    entries: {
+                      where: {
+                        status: 'ACTIVE'
+                      }
+                    }
+                  }
+                }
+              }
+            }
           },
           orderBy: {
             createdAt: 'desc',
@@ -117,6 +135,24 @@ export async function GET(req: NextRequest) {
                   branches: true,
                 },
               },
+              branches: {
+                include: {
+                  person: {
+                    select: {
+                      isLegacy: true
+                    }
+                  },
+                  _count: {
+                    select: {
+                      entries: {
+                        where: {
+                          status: 'ACTIVE'
+                        }
+                      }
+                    }
+                  }
+                }
+              }
             },
             orderBy: {
               createdAt: 'desc',
@@ -166,6 +202,34 @@ export async function GET(req: NextRequest) {
     const originalPersons = grove.memberships.filter(m => m.isOriginal)
     const rootedPersons = grove.memberships.filter(m => !m.isOriginal && m.adoptionType === 'rooted')
 
+    // Collect all branches for firefly visualization
+    const allBranches = [
+      // Branches from trees
+      ...grove.trees.flatMap(tree =>
+        tree.branches.map(branch => ({
+          id: branch.id,
+          title: branch.title,
+          personStatus: branch.person.isLegacy ? 'legacy' : 'living',
+          lastMemoryDate: branch.lastMemoryDate?.toISOString() || null,
+          _count: {
+            entries: branch._count.entries
+          }
+        }))
+      ),
+      // Branches from persons
+      ...grove.memberships.flatMap(membership =>
+        membership.person.branches.map(branch => ({
+          id: branch.id,
+          title: branch.title,
+          personStatus: membership.person.isLegacy ? 'legacy' : 'living',
+          lastMemoryDate: branch.lastMemoryDate?.toISOString() || null,
+          _count: {
+            entries: branch._count.entries
+          }
+        }))
+      )
+    ]
+
     return NextResponse.json({
       id: grove.id,
       name: grove.name,
@@ -178,6 +242,7 @@ export async function GET(req: NextRequest) {
         description: tree.description,
         status: tree.status,
         createdAt: tree.createdAt.toISOString(),
+        memoryCount: tree.branches.reduce((total, branch) => total + branch._count.entries, 0),
         _count: {
           branches: tree._count.branches,
         },
@@ -204,6 +269,7 @@ export async function GET(req: NextRequest) {
           branches: membership.person._count.branches,
         },
       })),
+      allBranches,
     })
   } catch (error: any) {
     console.error('Error fetching grove:', error)

@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react'
 import Header from '@/components/Header'
 import Tooltip from '@/components/Tooltip'
 import NestNudge from '@/components/NestNudge'
+import FireflyCanvas from '@/components/FireflyCanvas'
 import { getPlanById } from '@/lib/plans'
 
 interface Tree {
@@ -14,6 +15,7 @@ interface Tree {
   description: string | null
   status: string
   createdAt: string
+  memoryCount: number
   _count: {
     branches: number
   }
@@ -32,6 +34,16 @@ interface PersonTree {
   }
 }
 
+interface Branch {
+  id: string
+  title: string
+  personStatus: string
+  lastMemoryDate: string | null
+  _count: {
+    entries: number
+  }
+}
+
 interface Grove {
   id: string
   name: string
@@ -41,6 +53,7 @@ interface Grove {
   trees: Tree[]
   persons?: PersonTree[]
   rootedPersons?: PersonTree[]
+  allBranches?: Branch[]
 }
 
 interface TransplantablePerson {
@@ -318,10 +331,40 @@ export default function GrovePage() {
               </div>
             )}
 
-            <p className="text-text-muted text-sm">
+            <p className="text-text-muted text-sm mb-4">
               Where family, friends, and generations connect through shared memories.
             </p>
+
+            {/* Grove Stats */}
+            <div className="flex flex-wrap items-center justify-center gap-3 text-text-muted text-sm">
+              <span className="flex items-center gap-1">
+                🌲 <span className="text-text-soft font-medium">{grove.trees?.length || 0}</span> {(grove.trees?.length || 0) === 1 ? 'Tree' : 'Trees'}
+              </span>
+              <span>·</span>
+              <span className="flex items-center gap-1">
+                🌿 <span className="text-text-soft font-medium">
+                  {(grove.trees?.reduce((sum, t) => sum + t._count.branches, 0) || 0) +
+                   ((grove.persons?.reduce((sum, p) => sum + p._count.branches, 0) || 0)) +
+                   ((grove.rootedPersons?.reduce((sum, p) => sum + p._count.branches, 0) || 0))}
+                </span> {((grove.trees?.reduce((sum, t) => sum + t._count.branches, 0) || 0) + ((grove.persons?.reduce((sum, p) => sum + p._count.branches, 0) || 0)) + ((grove.rootedPersons?.reduce((sum, p) => sum + p._count.branches, 0) || 0))) === 1 ? 'Branch' : 'Branches'}
+              </span>
+              <span>·</span>
+              <span className="flex items-center gap-1">
+                💫 <span className="text-text-soft font-medium">
+                  {(grove.trees?.reduce((sum, t) => sum + t.memoryCount, 0) || 0) +
+                   ((grove.persons?.reduce((sum, p) => sum + p.memoryCount, 0) || 0)) +
+                   ((grove.rootedPersons?.reduce((sum, p) => sum + p.memoryCount, 0) || 0))}
+                </span> {((grove.trees?.reduce((sum, t) => sum + t.memoryCount, 0) || 0) + ((grove.persons?.reduce((sum, p) => sum + p.memoryCount, 0) || 0)) + ((grove.rootedPersons?.reduce((sum, p) => sum + p.memoryCount, 0) || 0))) === 1 ? 'Memory' : 'Memories'}
+              </span>
+            </div>
           </div>
+
+          {/* Firefly Visualization - Background Layer */}
+          {grove.allBranches && grove.allBranches.length > 0 && (
+            <div className="mb-8">
+              <FireflyCanvas branches={grove.allBranches} />
+            </div>
+          )}
 
           {/* Status Alerts */}
           <div className="mb-8">
