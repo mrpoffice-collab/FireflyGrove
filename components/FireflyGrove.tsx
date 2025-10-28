@@ -190,23 +190,23 @@ export default function FireflyGrove({ memoryCount, memoryAges }: FireflyGrovePr
       />
 
       {/* Legend */}
-      <div className="absolute bottom-4 left-4 bg-bg-dark/80 backdrop-blur-sm border border-[var(--legacy-amber)]/30 rounded px-4 py-2 text-xs">
-        <div className="flex items-center gap-6">
+      <div className="absolute bottom-4 left-4 right-4 bg-bg-dark/80 backdrop-blur-sm border border-[var(--legacy-amber)]/30 rounded px-4 py-3 text-xs">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full bg-[#FFE66D]" style={{ boxShadow: '0 0 10px rgba(255, 230, 109, 0.8)' }}></div>
-            <span className="text-text-muted">New (0-7 days)</span>
+            <div className="w-3 h-3 rounded-full bg-[#FFE66D] flex-shrink-0" style={{ boxShadow: '0 0 10px rgba(255, 230, 109, 0.8)' }}></div>
+            <span className="text-text-muted">Freshly Kindled</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full bg-[#FBBF24]" style={{ boxShadow: '0 0 8px rgba(251, 191, 36, 0.6)' }}></div>
-            <span className="text-text-muted">Recent (8-30 days)</span>
+            <div className="w-3 h-3 rounded-full bg-[#FBBF24] flex-shrink-0" style={{ boxShadow: '0 0 8px rgba(251, 191, 36, 0.6)' }}></div>
+            <span className="text-text-muted">Warmly Glowing</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full bg-[#D99E36]" style={{ boxShadow: '0 0 6px rgba(217, 158, 54, 0.4)' }}></div>
-            <span className="text-text-muted">Fading (31-60 days)</span>
+            <div className="w-3 h-3 rounded-full bg-[#D99E36] flex-shrink-0" style={{ boxShadow: '0 0 6px rgba(217, 158, 54, 0.4)' }}></div>
+            <span className="text-text-muted">Softly Fading</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full bg-[#B48246] opacity-50"></div>
-            <span className="text-text-muted">Old (60+ days)</span>
+            <div className="w-3 h-3 rounded-full bg-[#B48246] opacity-50 flex-shrink-0"></div>
+            <span className="text-text-muted">Peaceful Ember</span>
           </div>
         </div>
       </div>

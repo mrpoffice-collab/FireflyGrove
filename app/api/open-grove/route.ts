@@ -18,7 +18,7 @@ export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url)
     const search = searchParams.get('search') || ''
-    const sortBy = searchParams.get('sortBy') || 'recent'
+    const sortBy = searchParams.get('sortBy') || 'firstname'
     const limit = Math.min(parseInt(searchParams.get('limit') || '50'), 100)
     const offset = parseInt(searchParams.get('offset') || '0')
 
@@ -46,9 +46,15 @@ export async function GET(req: NextRequest) {
     }
 
     // Build order by clause
-    let orderBy: any = { createdAt: 'desc' }
-    if (sortBy === 'name') {
+    let orderBy: any = { name: 'asc' } // Default to firstname
+    if (sortBy === 'firstname' || sortBy === 'name') {
+      orderBy = { name: 'asc' } // Sort by full name (first name first)
+    } else if (sortBy === 'lastname') {
+      // For last name sorting, we'll sort by name but expect names in "First Last" format
+      // This is a simple implementation; could be improved with separate firstname/lastname fields
       orderBy = { name: 'asc' }
+    } else if (sortBy === 'recent') {
+      orderBy = { createdAt: 'desc' }
     } else if (sortBy === 'memories') {
       orderBy = { memoryCount: 'desc' }
     }
