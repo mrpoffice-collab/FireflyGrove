@@ -70,9 +70,11 @@ export async function POST(
         )
       }
 
-      // Check if approaching limit (at 50 memories, show adoption prompt)
-      if (currentCount >= 50 && currentCount < limit) {
-        // We'll return this info with the successful response
+      // Check if approaching limit (at 90% or 50 memories, show adoption prompt)
+      const warningThreshold = Math.max(50, Math.floor(limit * 0.9))
+      if (currentCount >= warningThreshold && currentCount < limit) {
+        // We'll return warning info with the successful response
+        console.log(`⚠️ Memory limit warning: ${currentCount}/${limit} (${Math.round((currentCount/limit)*100)}%)`)
       }
     }
 
@@ -142,12 +144,19 @@ export async function POST(
       })
 
       const newCount = updatedPerson.memoryCount
+      const limit = branch.person.memoryLimit
+      const percentFull = Math.round((newCount / limit) * 100)
+      const warningThreshold = Math.max(50, Math.floor(limit * 0.9))
+      const isNearLimit = newCount >= warningThreshold
+
       memoryStatus = {
         currentCount: newCount,
-        limit: branch.person.memoryLimit,
-        showAdoptionPrompt: newCount === 50,
-        adoptionMessage: newCount === 50
-          ? "Your loved one's light is growing bright 🌟\n\nYou've added 50 memories — consider adopting this tree into a Grove for full storage and lasting access."
+        limit: limit,
+        percentFull: percentFull,
+        showAdoptionPrompt: isNearLimit,
+        warningLevel: newCount >= limit * 0.95 ? 'urgent' : isNearLimit ? 'warning' : 'normal',
+        adoptionMessage: isNearLimit
+          ? `Your loved one's light is growing bright 🌟\n\nYou've added ${newCount} memories (${percentFull}% full). Adopt this tree into a Grove for unlimited storage.`
           : null,
       }
     }

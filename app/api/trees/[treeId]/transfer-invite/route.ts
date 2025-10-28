@@ -45,6 +45,16 @@ export async function POST(
       )
     }
 
+    // Prevent self-transfer
+    const normalizedRecipient = recipientEmail.toLowerCase().trim()
+    const userEmail = session.user.email?.toLowerCase().trim()
+    if (normalizedRecipient === userEmail) {
+      return NextResponse.json(
+        { error: 'You cannot transfer a tree to yourself' },
+        { status: 400 }
+      )
+    }
+
     // Verify the person/tree exists and user has access
     const person = await prisma.person.findFirst({
       where: {

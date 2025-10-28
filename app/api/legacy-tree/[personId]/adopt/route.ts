@@ -81,34 +81,32 @@ export async function POST(
       )
     }
 
-    // Only owner can adopt
-    if (person.ownerId !== userId) {
+    // Check if tree is marked for discovery (public trees can be adopted by anyone)
+    if (!person.discoveryEnabled && person.ownerId !== userId) {
       return NextResponse.json(
-        { error: 'Only the owner can adopt this tree into a grove' },
+        { error: 'This tree is private and can only be adopted by its owner' },
         { status: 403 }
       )
     }
 
     const openGroveId = await getOpenGroveId()
+    const isOwner = person.ownerId === userId
 
-    // Check if tree is currently in Open Grove
-    const currentMembership = await prisma.groveTreeMembership.findFirst({
-      where: {
-        personId,
-        groveId: openGroveId,
-        isOriginal: true,
-      },
-    })
-
-    if (!currentMembership) {
-      return NextResponse.json(
-        { error: 'This tree is not in the Open Grove and cannot be adopted' },
-        { status: 400 }
-      )
-    }
-
-    // Transaction: Move tree from Open Grove to private grove
+    // Transaction: Move tree from Open Grove to private grove (with race condition protection)
     await prisma.$transaction(async (tx) => {
+      // Check if tree is currently in Open Grove (inside transaction for atomic check-and-update)
+      const currentMembership = await tx.groveTreeMembership.findFirst({
+        where: {
+          personId,
+          groveId: openGroveId,
+          isOriginal: true,
+        },
+      })
+
+      if (!currentMembership) {
+        throw new Error('This tree is not in the Open Grove and cannot be adopted (may have been adopted by another user)')
+      }
+
       // Remove from Open Grove
       await tx.groveTreeMembership.delete({
         where: { id: currentMembership.id },
@@ -125,12 +123,21 @@ export async function POST(
         },
       })
 
-      // Update person: remove memory limit
+      // Update person: remove memory limit and transfer ownership if cross-user adoption
+      const personUpdates: any = {
+        memoryLimit: null, // Unlimited memories in private grove
+        trusteeExpiresAt: null, // No longer needs trustee after adoption
+        discoveryEnabled: false, // Private after adoption
+      }
+
+      // Transfer ownership if adopting someone else's tree
+      if (!isOwner) {
+        personUpdates.ownerId = userId
+      }
+
       await tx.person.update({
         where: { id: personId },
-        data: {
-          memoryLimit: null, // Unlimited memories in private grove
-        },
+        data: personUpdates,
       })
 
       // Increment tree count in target grove
@@ -151,6 +158,8 @@ export async function POST(
           fromGrove: openGroveId,
           toGrove: groveId,
           removedMemoryLimit: true,
+          ownershipTransferred: !isOwner,
+          previousOwner: isOwner ? null : person.ownerId,
         }),
       },
     })
