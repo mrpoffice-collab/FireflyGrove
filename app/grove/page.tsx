@@ -217,6 +217,7 @@ export default function GrovePage() {
       <Header
         userName={session.user?.name || ''}
         isBetaTester={(session.user as any)?.isBetaTester || false}
+        isAdmin={(session.user as any)?.isAdmin || false}
         groveInfo={{
           planName: plan.name,
           treeCount,

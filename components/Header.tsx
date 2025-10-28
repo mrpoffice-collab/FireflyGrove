@@ -9,6 +9,7 @@ import FeedbackModal from './FeedbackModal'
 interface HeaderProps {
   userName?: string
   isBetaTester?: boolean
+  isAdmin?: boolean
   groveInfo?: {
     planName: string
     treeCount: number
@@ -16,7 +17,7 @@ interface HeaderProps {
   }
 }
 
-export default function Header({ userName, isBetaTester, groveInfo }: HeaderProps) {
+export default function Header({ userName, isBetaTester, isAdmin, groveInfo }: HeaderProps) {
   const router = useRouter()
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const [isFeedbackOpen, setIsFeedbackOpen] = useState(false)
@@ -124,6 +125,35 @@ export default function Header({ userName, isBetaTester, groveInfo }: HeaderProp
                     </div>
                   )}
                 </div>
+
+                {/* Admin Section */}
+                {isAdmin && (
+                  <>
+                    <div className="px-3 py-1.5 border-b border-border-subtle">
+                      <div className="text-xs text-firefly-glow font-medium uppercase tracking-wide">Admin</div>
+                    </div>
+                    <div className="py-0.5 border-b border-border-subtle">
+                      <button
+                        onClick={() => {
+                          router.push('/marketing-genius')
+                          setIsDropdownOpen(false)
+                        }}
+                        className="w-full text-left px-3 py-1.5 text-sm text-text-muted hover:bg-border-subtle hover:text-text-soft transition-soft"
+                      >
+                        🧠 Marketing Intelligence
+                      </button>
+                      <button
+                        onClick={() => {
+                          router.push('/admin/analytics')
+                          setIsDropdownOpen(false)
+                        }}
+                        className="w-full text-left px-3 py-1.5 text-sm text-text-muted hover:bg-border-subtle hover:text-text-soft transition-soft"
+                      >
+                        📊 Analytics Dashboard
+                      </button>
+                    </div>
+                  </>
+                )}
 
                 <div className="py-0.5">
                   <button
@@ -245,6 +275,29 @@ export default function Header({ userName, isBetaTester, groveInfo }: HeaderProp
             >
               🕯️ Open Grove
             </Link>
+
+            {/* Admin Section - Mobile */}
+            {isAdmin && (
+              <>
+                <div className="border-b border-border-subtle pb-2">
+                  <div className="text-xs text-firefly-glow mb-2 px-2 uppercase tracking-wide font-medium">Admin</div>
+                  <Link
+                    href="/marketing-genius"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="block text-base font-light text-text-soft hover:text-firefly-glow transition-soft py-2 px-2 rounded hover:bg-border-subtle/30"
+                  >
+                    🧠 Marketing Intelligence
+                  </Link>
+                  <Link
+                    href="/admin/analytics"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="block text-base font-light text-text-soft hover:text-firefly-glow transition-soft py-2 px-2 rounded hover:bg-border-subtle/30"
+                  >
+                    📊 Analytics Dashboard
+                  </Link>
+                </div>
+              </>
+            )}
 
             {/* Grove Exchange Products - Only Built Features */}
             <div className="border-b border-border-subtle pb-2">

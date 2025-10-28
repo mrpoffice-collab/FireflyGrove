@@ -168,7 +168,11 @@ export default function MarketingGeniusPage() {
   if (status === 'loading' || loading) {
     return (
       <div className="min-h-screen">
-        <Header userName={session?.user?.name || ''} />
+        <Header
+          userName={session?.user?.name || ''}
+          isBetaTester={(session?.user as any)?.isBetaTester || false}
+          isAdmin={(session?.user as any)?.isAdmin || false}
+        />
         <div className="flex items-center justify-center h-96">
           <div className="text-text-muted">Loading...</div>
         </div>
@@ -178,7 +182,11 @@ export default function MarketingGeniusPage() {
 
   return (
     <div className="min-h-screen bg-bg-dark">
-      <Header userName={session?.user?.name || ''} />
+      <Header
+        userName={session?.user?.name || ''}
+        isBetaTester={(session?.user as any)?.isBetaTester || false}
+        isAdmin={(session?.user as any)?.isAdmin || false}
+      />
 
       <div className="max-w-7xl mx-auto px-4 py-12">
         <div className="mb-8 flex items-center justify-between">
