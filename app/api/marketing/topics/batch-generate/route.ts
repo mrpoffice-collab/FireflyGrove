@@ -97,6 +97,63 @@ export async function POST(req: NextRequest) {
       }
     }
 
+    // Helper function to find random available date within a window
+    // Allows up to 3 posts per day, spreads posts randomly
+    const findRandomAvailableDate = async (
+      baseDate: Date,
+      windowDays: number,
+      minOffsetDays: number
+    ): Promise<Date> => {
+      const maxAttempts = 50 // Prevent infinite loop
+      let attempts = 0
+
+      while (attempts < maxAttempts) {
+        attempts++
+
+        // Calculate random date within window, starting from baseDate + minOffset
+        const startOffset = minOffsetDays
+        const randomOffset = startOffset + Math.floor(Math.random() * (windowDays - startOffset))
+
+        const candidateDate = new Date(baseDate)
+        candidateDate.setDate(candidateDate.getDate() + randomOffset)
+
+        // Create date range for the full day
+        const dayStart = new Date(candidateDate)
+        dayStart.setHours(0, 0, 0, 0)
+        const dayEnd = new Date(candidateDate)
+        dayEnd.setHours(23, 59, 59, 999)
+
+        // Count how many posts are already scheduled for this date
+        const postsOnDate = await prisma.marketingPost.count({
+          where: {
+            status: { in: ['draft', 'scheduled'] }, // Count drafts and scheduled posts
+            scheduledFor: {
+              gte: dayStart,
+              lt: dayEnd,
+            },
+          },
+        })
+
+        // If less than 3 posts on this date, it's available!
+        if (postsOnDate < 3) {
+          console.log(
+            `  📅 Found slot: ${candidateDate.toLocaleDateString()} (${postsOnDate}/3 posts)`
+          )
+          return candidateDate
+        }
+
+        console.log(
+          `  🔄 ${candidateDate.toLocaleDateString()} full (${postsOnDate}/3), trying another date...`
+        )
+      }
+
+      // Fallback: if we couldn't find a slot after 50 tries, just use baseDate + minOffset
+      console.log(`  ⚠️ Couldn't find slot after ${maxAttempts} attempts, using fallback date`)
+      const fallbackDate = new Date(baseDate)
+      fallbackDate.setDate(fallbackDate.getDate() + minOffsetDays)
+      return fallbackDate
+    }
+
     const results = []
     const errors = []
     let currentDate = startDate ? new Date(startDate) : new Date()
@@ -236,20 +293,42 @@ export async function POST(req: NextRequest) {
             generatedPosts.push(newsletterPost)
           }
 
-          // Save Facebook posts
+          // Save Facebook posts with smart scheduling
           if (repurposed.facebook) {
             for (let i = 0; i < repurposed.facebook.length; i++) {
+              const fbContent = repurposed.facebook[i]
+
+              // Extract meaningful title from FB post content
+              // Take first sentence or up to first emoji/newline
+              let fbTitle = fbContent.split(/[.\n\r]/)[0].substring(0, 80).trim()
+
+              // Clean up common sentence endings that might get cut off
+              fbTitle = fbTitle.replace(/[,;:]$/, '')
+
+              // If title is too short, try second sentence
+              if (fbTitle.length < 20) {
+                const sentences = fbContent.split(/[.\n\r]/).filter(s => s.trim().length > 0)
+                fbTitle = sentences.slice(0, 2).join('. ').substring(0, 80).trim()
+              }
+
+              // Find random date within next 30 days, at least 2 days after previous FB post
+              let fbScheduledDate = await findRandomAvailableDate(
+                socialDate, // Start from 1 day after blog
+                30, // Within next 30 days
+                i * 2 // Minimum 2 days between posts from same blog (0, 2, 4)
+              )
+
               const fbPost = await prisma.marketingPost.create({
                 data: {
                   platform: 'facebook',
                   postType: 'social_post',
-                  title: `FB: ${blogContent.title} (${i + 1})`,
-                  content: repurposed.facebook[i],
+                  title: fbTitle,
+                  content: fbContent,
                   excerpt: blogContent.excerpt.substring(0, 100),
                   keywords: brief.targetKeywords,
                   image: blogContent.image, // Inherit from blog post
                   status: 'draft',
-                  scheduledFor: socialDate,
+                  scheduledFor: fbScheduledDate,
                   generatedBy: 'ai',
                   topic: topic.topic,
                 },
