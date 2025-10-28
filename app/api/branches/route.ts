@@ -38,15 +38,16 @@ export async function GET(req: NextRequest) {
             }
           },
         },
+        person: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
         tree: {
-          include: {
-            grove: {
-              select: {
-                id: true,
-                name: true,
-                userId: true,
-              },
-            },
+          select: {
+            id: true,
+            name: true,
           },
         },
       },

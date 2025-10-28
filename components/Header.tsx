@@ -68,7 +68,7 @@ export default function Header({ userName, isBetaTester, groveInfo }: HeaderProp
                 href="/nest"
                 className="text-text-muted hover:text-firefly-dim text-sm transition-soft"
               >
-                🪺 The Nest
+                🪺 My Nest
               </Link>
               <Link
                 href="/open-grove"
@@ -236,7 +236,7 @@ export default function Header({ userName, isBetaTester, groveInfo }: HeaderProp
               onClick={() => setIsMobileMenuOpen(false)}
               className="text-lg font-light text-text-soft hover:text-firefly-dim transition-soft py-2.5 border-b border-border-subtle"
             >
-              🪺 The Nest
+              🪺 My Nest
             </Link>
             <Link
               href="/open-grove"

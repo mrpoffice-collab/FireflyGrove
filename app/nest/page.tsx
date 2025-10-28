@@ -228,7 +228,12 @@ export default function NestPage() {
         if (res.ok) {
           const data = await res.json()
           // API returns array directly, not wrapped in {branches: ...}
-          setBranches(Array.isArray(data) ? data : [])
+          const branchesData = Array.isArray(data) ? data : []
+          // Sort alphabetically by branch title
+          const sortedBranches = branchesData.sort((a: any, b: any) =>
+            a.title.localeCompare(b.title)
+          )
+          setBranches(sortedBranches)
         }
       } catch (error) {
         console.error('Failed to fetch branches:', error)
@@ -236,6 +241,13 @@ export default function NestPage() {
         setLoadingBranches(false)
       }
     }
+  }
+
+  const handleCreateNewBranch = () => {
+    // Close branch selector and navigate to grove to create a new branch
+    setShowBranchSelector(false)
+    setSelectedNestItem(null)
+    router.push('/grove')
   }
 
   const handleBranchSelect = (branchId: string) => {
@@ -273,7 +285,8 @@ export default function NestPage() {
                 🪺 The Nest
               </h1>
               <p className="text-text-muted">
-                A gathering place for photos waiting to become memories
+                Your memories have been waiting softly in The Nest.<br />
+                When you're ready, give them a branch to glow from.
               </p>
             </div>
             <div className="text-right">
@@ -292,17 +305,17 @@ export default function NestPage() {
             onDragLeave={handleDrag}
             onDragOver={handleDrag}
             onDrop={handleDrop}
-            className={`border-2 border-dashed rounded-lg p-12 text-center transition-all ${
+            className={`border-2 border-dashed rounded-lg p-6 text-center transition-all ${
               dragActive
                 ? 'border-firefly-glow bg-firefly-glow/5'
                 : 'border-border-subtle hover:border-firefly-dim/50'
             }`}
           >
-            <div className="text-6xl mb-4">📸</div>
-            <h3 className="text-xl text-text-soft mb-2">
+            <div className="text-4xl mb-2">📸</div>
+            <h3 className="text-lg text-text-soft mb-2">
               Drop your photos here
             </h3>
-            <p className="text-text-muted mb-6">
+            <p className="text-text-muted text-sm mb-4">
               Select all your photos at once • Up to 50 photos (200MB total)
             </p>
             <label className="inline-block">
@@ -411,7 +424,7 @@ export default function NestPage() {
         ) : (
           <div className="max-w-6xl mx-auto">
             <div className="mb-4 text-sm text-text-muted">
-              💡 Tip: Hover over any photo to reveal "🐣 Hatch from Nest" and select a branch
+              💡 Tip: Hover over any photo to reveal "🐣 Hatch from Nest" and select a branch or make a new branch
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
@@ -490,7 +503,6 @@ export default function NestPage() {
           <div className="space-y-2 text-sm text-text-muted">
             <p>🪺 <strong>Upload:</strong> Select up to 50 photos at once (200MB total)</p>
             <p>⚡ <strong>Smart Upload:</strong> Photos upload 3 at a time with progress tracking</p>
-            <p>✨ <strong>Glow:</strong> Each photo glows like a firefly, waiting to become a memory</p>
             <p>🐣 <strong>Hatch:</strong> Hover over a photo and click "🐣 Hatch from Nest" to select a branch</p>
             <p>💭 <strong>Write:</strong> The photo pre-populates the memory form - just add your story</p>
             <p>🗑️ <strong>Remove:</strong> Hover over a photo to reveal the Remove button</p>
@@ -521,7 +533,7 @@ export default function NestPage() {
               </button>
             </div>
 
-            <p className="text-text-muted text-sm mb-6">
+            <p className="text-text-muted text-sm mb-4">
               Choose which branch to create this memory on
             </p>
 
@@ -533,31 +545,48 @@ export default function NestPage() {
               <div className="text-center py-8">
                 <p className="text-text-muted mb-4">You don't have any branches yet</p>
                 <button
-                  onClick={() => router.push('/grove')}
+                  onClick={handleCreateNewBranch}
                   className="px-4 py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded transition-soft"
                 >
-                  Go to Grove
+                  Create New Branch
                 </button>
               </div>
             ) : (
-              <div className="space-y-2 max-h-96 overflow-y-auto">
-                {branches.map((branch: any) => (
-                  <button
-                    key={branch.id}
-                    onClick={() => handleBranchSelect(branch.id)}
-                    className="w-full text-left px-4 py-3 bg-bg-darker hover:bg-border-subtle rounded-lg border border-border-subtle hover:border-firefly-dim transition-soft"
-                  >
-                    <div className="font-medium text-text-soft mb-1">
-                      {branch.title}
-                    </div>
-                    {branch.description && (
-                      <div className="text-sm text-text-muted truncate">
-                        {branch.description}
-                      </div>
-                    )}
-                  </button>
-                ))}
-              </div>
+              <>
+                {/* Create New Branch Button */}
+                <button
+                  onClick={handleCreateNewBranch}
+                  className="w-full mb-4 px-4 py-3 bg-firefly-dim/20 hover:bg-firefly-dim/30 text-firefly-glow rounded-lg border-2 border-firefly-dim hover:border-firefly-glow transition-soft font-medium flex items-center justify-center gap-2"
+                >
+                  <span className="text-xl">+</span>
+                  <span>Create New Branch</span>
+                </button>
+
+                {/* Branches List */}
+                <div className="space-y-2 max-h-96 overflow-y-auto">
+                  {branches.map((branch: any) => {
+                    // Get tree or person name for display
+                    const treeName = branch.person?.name || branch.tree?.name || 'Unknown Tree'
+
+                    return (
+                      <button
+                        key={branch.id}
+                        onClick={() => handleBranchSelect(branch.id)}
+                        className="w-full text-left px-4 py-3 bg-bg-darker hover:bg-border-subtle rounded-lg border border-border-subtle hover:border-firefly-dim transition-soft"
+                      >
+                        <div className="font-medium text-text-soft mb-1">
+                          {branch.title} <span className="text-text-muted font-normal">({treeName})</span>
+                        </div>
+                        {branch.description && (
+                          <div className="text-sm text-text-muted truncate">
+                            {branch.description}
+                          </div>
+                        )}
+                      </button>
+                    )
+                  })}
+                </div>
+              </>
             )}
           </div>
         </div>
