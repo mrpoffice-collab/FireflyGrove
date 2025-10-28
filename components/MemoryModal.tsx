@@ -295,7 +295,7 @@ export default function MemoryModal({ onClose, onSave, spark, onRefreshSpark, cu
               type="text"
               value={memoryCard}
               onChange={(e) => setMemoryCard(e.target.value)}
-              placeholder="Before college," "That summer with Nana," "When the twins were little, 10/19/2025..."
+              placeholder='Before college, "That summer with Nana," When the twins were little, 10/19/2025...'
               className="w-full px-4 py-3 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-dim transition-soft"
               maxLength={100}
             />
