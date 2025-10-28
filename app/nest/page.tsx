@@ -99,16 +99,27 @@ export default function NestPage() {
     // Validate total count
     const MAX_FILES = 50
     if (files.length > MAX_FILES) {
-      alert(`Please select up to ${MAX_FILES} photos at a time`)
+      alert(`Please select up to ${MAX_FILES} files at a time`)
       return
     }
 
-    // Validate total size (200MB limit)
-    const MAX_TOTAL_SIZE = 200 * 1024 * 1024
+    // Check if any videos in the batch
+    const hasVideos = files.some(file => file.type.startsWith('video/'))
+
+    // Validate total size (3GB for videos, 200MB for photos only)
+    const MAX_TOTAL_SIZE = hasVideos ? 3 * 1024 * 1024 * 1024 : 200 * 1024 * 1024
     const totalSize = files.reduce((sum, file) => sum + file.size, 0)
+    const totalSizeLabel = hasVideos ? '3GB' : '200MB'
+    const totalSizeMB = (totalSize / (1024 * 1024)).toFixed(1)
+
     if (totalSize > MAX_TOTAL_SIZE) {
-      alert(`Total size exceeds 200MB limit. Please select fewer photos.`)
+      alert(`Total size (${totalSizeMB}MB) exceeds ${totalSizeLabel} limit. Please select fewer files.`)
       return
+    }
+
+    // Show size info for large uploads
+    if (totalSize > 100 * 1024 * 1024) {
+      console.log(`📦 Uploading ${files.length} files (${totalSizeMB}MB total)`)
     }
 
     setUploading(true)
@@ -142,11 +153,13 @@ export default function NestPage() {
     // Refresh the nest
     await fetchNestItems()
 
-    // Clear queue after a delay
+    // Clear queue after a delay (longer if there were errors)
+    const hasErrors = failCount > 0
+    const clearDelay = hasErrors ? 10000 : 3000 // 10s if errors, 3s if all success
     setTimeout(() => {
       setUploadQueue([])
       setUploading(false)
-    }, 2000)
+    }, clearDelay)
   }
 
   const uploadSingleFile = async (file: File, index: number): Promise<boolean> => {
@@ -175,11 +188,21 @@ export default function NestPage() {
         )
         return true
       } else {
-        // Error
-        const error = await res.text()
+        // Error - parse error message
+        let errorMsg = `Error ${res.status}`
+        try {
+          const errorData = await res.json()
+          errorMsg = errorData.error || errorMsg
+        } catch {
+          const errorText = await res.text()
+          errorMsg = errorText || errorMsg
+        }
+
+        console.error(`Upload failed for ${file.name}:`, errorMsg)
+
         setUploadQueue((prev) =>
           prev.map((item, i) =>
-            i === index ? { ...item, status: 'error', progress: 0, error } : item
+            i === index ? { ...item, status: 'error', progress: 0, error: errorMsg } : item
           )
         )
         return false
@@ -332,7 +355,7 @@ export default function NestPage() {
             </h3>
             <p className="text-text-muted text-sm mb-4">
               {isAdmin
-                ? 'Photos (10MB max) or Videos (500MB max) • Up to 50 files (200MB total for photos)'
+                ? 'Photos (10MB max) or Videos (500MB max) • Up to 50 files • 3GB total per batch'
                 : 'Select all your photos at once • Up to 50 photos (200MB total)'}
             </p>
             <label className="inline-block">
@@ -548,7 +571,7 @@ export default function NestPage() {
             <p>🖱️ <strong>Pro Tip:</strong> You can also drag media directly onto branches (desktop)</p>
           </div>
           <div className="mt-4 pt-4 border-t border-border-subtle text-xs text-text-muted">
-            <strong>Limits:</strong> {isAdmin ? '10MB per photo • 500MB per video • 50 files per upload' : '10MB per photo • 50 photos per upload • 200MB total per session'}
+            <strong>Limits:</strong> {isAdmin ? '10MB per photo • 500MB per video • 50 files per upload • 3GB total per batch' : '10MB per photo • 50 photos per upload • 200MB total per session'}
           </div>
         </div>
       </div>
