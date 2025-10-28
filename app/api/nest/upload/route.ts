@@ -86,6 +86,8 @@ export async function POST(req: NextRequest) {
       },
     })
 
+    console.log(`✅ Nest item created: ${file.name} (${isVideo ? 'VIDEO' : 'PHOTO'}) - ID: ${nestItem.id}`)
+
     return NextResponse.json({ item: nestItem }, { status: 201 })
   } catch (error: any) {
     console.error('Error uploading to nest:', error)

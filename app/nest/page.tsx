@@ -164,6 +164,9 @@ export default function NestPage() {
 
   const uploadSingleFile = async (file: File, index: number): Promise<boolean> => {
     try {
+      const isVideo = file.type.startsWith('video/')
+      console.log(`📤 Uploading ${file.name} (${(file.size / (1024 * 1024)).toFixed(1)}MB, ${isVideo ? 'VIDEO' : 'PHOTO'})`)
+
       // Update status to uploading
       setUploadQueue((prev) =>
         prev.map((item, i) =>
@@ -181,6 +184,8 @@ export default function NestPage() {
 
       if (res.ok) {
         // Success
+        const data = await res.json()
+        console.log(`✅ Upload success: ${file.name} - Type: ${data.item?.mediaType}`)
         setUploadQueue((prev) =>
           prev.map((item, i) =>
             i === index ? { ...item, status: 'success', progress: 100 } : item
