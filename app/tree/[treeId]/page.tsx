@@ -54,6 +54,18 @@ export default function TreePage() {
   const [deletingBranchId, setDeletingBranchId] = useState<string | null>(null)
   const [showTransplantModal, setShowTransplantModal] = useState(false)
   const [showRootModal, setShowRootModal] = useState(false)
+  const [pendingNestPhoto, setPendingNestPhoto] = useState<string | null>(null)
+
+  // Check for pending nest photo from URL
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search)
+      const nestPhotoParam = urlParams.get('pendingNestPhoto')
+      if (nestPhotoParam) {
+        setPendingNestPhoto(nestPhotoParam)
+      }
+    }
+  }, [])
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -285,7 +297,12 @@ export default function TreePage() {
           <div className="mb-6 flex items-center justify-between">
             <h2 className="text-2xl font-light text-text-soft">Branches</h2>
             <button
-              onClick={() => router.push(`/tree/${treeId}/new-branch`)}
+              onClick={() => {
+                const url = pendingNestPhoto
+                  ? `/tree/${treeId}/new-branch?pendingNestPhoto=${pendingNestPhoto}`
+                  : `/tree/${treeId}/new-branch`
+                router.push(url)
+              }}
               className="px-4 py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded font-medium transition-soft"
             >
               + New Branch
@@ -300,7 +317,12 @@ export default function TreePage() {
                 Create your first branch to start capturing memories
               </p>
               <button
-                onClick={() => router.push(`/tree/${treeId}/new-branch`)}
+                onClick={() => {
+                  const url = pendingNestPhoto
+                    ? `/tree/${treeId}/new-branch?pendingNestPhoto=${pendingNestPhoto}`
+                    : `/tree/${treeId}/new-branch`
+                  router.push(url)
+                }}
                 className="px-6 py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded font-medium transition-soft"
               >
                 Create First Branch

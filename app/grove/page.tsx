@@ -69,6 +69,18 @@ export default function GrovePage() {
   const [groveName, setGroveName] = useState('')
   const [transplantable, setTransplantable] = useState<TransplantablePerson[]>([])
   const [transplanting, setTransplanting] = useState<string | null>(null)
+  const [pendingNestPhoto, setPendingNestPhoto] = useState<string | null>(null)
+
+  // Check for pending nest photo from URL
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search)
+      const nestPhotoParam = urlParams.get('pendingNestPhoto')
+      if (nestPhotoParam) {
+        setPendingNestPhoto(nestPhotoParam)
+      }
+    }
+  }, [])
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -358,7 +370,12 @@ export default function GrovePage() {
             {grove.trees?.map((tree) => (
               <div
                 key={tree.id}
-                onClick={() => router.push(`/tree/${tree.id}`)}
+                onClick={() => {
+                  const url = pendingNestPhoto
+                    ? `/tree/${tree.id}?pendingNestPhoto=${pendingNestPhoto}`
+                    : `/tree/${tree.id}`
+                  router.push(url)
+                }}
                 className="flex flex-col items-center gap-3 p-4 rounded-lg hover:bg-bg-dark transition-soft cursor-pointer group"
               >
                 {/* Simple Olive Tree SVG */}
@@ -397,7 +414,14 @@ export default function GrovePage() {
                 content={grove.status === 'canceled' ? 'Reactivate your subscription to plant new trees' : 'Click to plant a new tree'}
               >
                 <div
-                  onClick={() => grove.status !== 'canceled' && router.push('/grove/new-tree')}
+                  onClick={() => {
+                    if (grove.status !== 'canceled') {
+                      const url = pendingNestPhoto
+                        ? `/grove/new-tree?pendingNestPhoto=${pendingNestPhoto}`
+                        : '/grove/new-tree'
+                      router.push(url)
+                    }
+                  }}
                   className={`flex flex-col items-center gap-3 p-4 rounded-lg border-2 border-dashed transition-soft ${
                     grove.status === 'canceled'
                       ? 'border-border-subtle cursor-not-allowed opacity-50'
@@ -452,7 +476,12 @@ export default function GrovePage() {
                 {grove.rootedPersons.map((person) => (
                   <div
                     key={person.id}
-                    onClick={() => router.push(`/tree/${person.id}`)}
+                    onClick={() => {
+                      const url = pendingNestPhoto
+                        ? `/tree/${person.id}?pendingNestPhoto=${pendingNestPhoto}`
+                        : `/tree/${person.id}`
+                      router.push(url)
+                    }}
                     className="bg-bg-dark border border-purple-500/30 rounded-lg p-4 hover:border-purple-400/50 transition-soft cursor-pointer"
                   >
                     <div className="flex items-start justify-between mb-2">

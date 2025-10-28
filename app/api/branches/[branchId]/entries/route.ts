@@ -19,7 +19,7 @@ export async function POST(
     const branchId = params.branchId
     const body = await req.json()
 
-    const { text, visibility, legacyFlag, mediaUrl, audioUrl, forceDuplicate } = body
+    const { text, visibility, legacyFlag, mediaUrl, audioUrl, memoryCard, forceDuplicate } = body
 
     if (!text) {
       return NextResponse.json({ error: 'Text is required' }, { status: 400 })
@@ -118,6 +118,7 @@ export async function POST(
         legacyFlag: legacyFlag || false,
         mediaUrl: mediaUrl || null,
         audioUrl: audioUrl || null,
+        memoryCard: memoryCard || null,
         approved,
         contentHash, // Store the hash
         status: 'ACTIVE', // Set initial status

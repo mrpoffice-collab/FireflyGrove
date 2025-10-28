@@ -18,8 +18,10 @@ interface MemoryModalProps {
     mediaUrl?: string
     audioUrl?: string
     sharedBranchIds?: string[]
+    memoryCard?: string | null
   }) => void
   spark: string
+  onRefreshSpark?: () => void
   currentBranchId?: string
   prePopulatedPhoto?: {
     url: string
@@ -27,7 +29,7 @@ interface MemoryModalProps {
   }
 }
 
-export default function MemoryModal({ onClose, onSave, spark, currentBranchId, prePopulatedPhoto }: MemoryModalProps) {
+export default function MemoryModal({ onClose, onSave, spark, onRefreshSpark, currentBranchId, prePopulatedPhoto }: MemoryModalProps) {
   const [text, setText] = useState('')
   const [visibility, setVisibility] = useState('PRIVATE')
   const [legacyFlag, setLegacyFlag] = useState(false)
@@ -38,6 +40,8 @@ export default function MemoryModal({ onClose, onSave, spark, currentBranchId, p
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null)
   const [audioUrl, setAudioUrl] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [memoryCard, setMemoryCard] = useState('')
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   // Cross-branch sharing state
   const [availableBranches, setAvailableBranches] = useState<Branch[]>([])
@@ -151,6 +155,7 @@ export default function MemoryModal({ onClose, onSave, spark, currentBranchId, p
       visibility,
       legacyFlag: visibility === 'LEGACY' || legacyFlag,
       sharedBranchIds: selectedBranchIds,
+      memoryCard: memoryCard.trim() || null,
     }
 
     if (imagePreview) {
@@ -222,11 +227,46 @@ export default function MemoryModal({ onClose, onSave, spark, currentBranchId, p
     setShowNestSelector(false)
   }
 
+  const handleUseSpark = () => {
+    // Append spark to current text with proper spacing
+    const sparkText = spark
+    if (text.trim()) {
+      setText(text + '\n\n' + sparkText)
+    } else {
+      setText(sparkText)
+    }
+  }
+
   return (
     <div className="fixed inset-0 bg-black/30 flex items-center justify-center p-4 z-50 overflow-y-auto backdrop-blur-sm">
       <div className="bg-bg-dark border border-border-subtle rounded-lg max-w-2xl w-full p-6 my-8">
-        <h2 className="text-2xl text-text-soft mb-2">New Memory</h2>
-        <p className="text-text-muted text-sm italic mb-6">✨ "{spark}"</p>
+        <h2 className="text-2xl text-text-soft mb-4 text-center">New Memory</h2>
+
+        {/* Centered Spark with Actions */}
+        <div className="mb-6 bg-bg-darker border border-border-subtle rounded-lg p-4">
+          <p className="text-text-muted text-sm italic text-center mb-3">
+            ✨ "{spark}"
+          </p>
+          <div className="flex gap-2 justify-center">
+            <button
+              type="button"
+              onClick={handleUseSpark}
+              className="px-3 py-1.5 bg-firefly-dim/20 border border-firefly-dim text-firefly-glow rounded text-xs hover:bg-firefly-dim/30 transition-soft"
+            >
+              Use This
+            </button>
+            {onRefreshSpark && (
+              <button
+                type="button"
+                onClick={onRefreshSpark}
+                className="px-3 py-1.5 bg-bg-dark border border-border-subtle text-text-muted rounded text-xs hover:border-firefly-dim hover:text-firefly-glow transition-soft"
+                title="Get a different spark"
+              >
+                🔄 Refresh
+              </button>
+            )}
+          </div>
+        </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
@@ -247,19 +287,47 @@ export default function MemoryModal({ onClose, onSave, spark, currentBranchId, p
 
           <div>
             <label className="block text-sm text-text-soft mb-2">
+              Memory Card <span className="text-text-muted text-xs">(optional)</span>
+            </label>
+            <input
+              type="text"
+              value={memoryCard}
+              onChange={(e) => setMemoryCard(e.target.value)}
+              placeholder="Summer of '92, My birthday, Just last week..."
+              className="w-full px-4 py-3 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-dim transition-soft"
+              maxLength={100}
+            />
+            <p className="text-text-muted text-xs mt-1.5">
+              When was this? A date, a season, or just a phrase that fits.
+            </p>
+            <p className="text-text-muted text-xs italic">
+              (However you remember it — no rules.)
+            </p>
+          </div>
+
+          <div>
+            <label className="block text-sm text-text-soft mb-2">
               Add a Photo <span className="text-text-muted text-xs">(max 5MB)</span>
             </label>
             <div className="flex gap-3">
               <input
+                ref={fileInputRef}
                 type="file"
                 accept="image/*"
                 onChange={handleImageChange}
-                className="flex-1 block text-sm text-text-muted file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:bg-firefly-dim file:text-bg-dark hover:file:bg-firefly-glow transition-soft"
+                className="hidden"
               />
               <button
                 type="button"
+                onClick={() => fileInputRef.current?.click()}
+                className="flex-1 px-4 py-2 bg-bg-darker border border-firefly-dim text-firefly-glow rounded hover:bg-firefly-dim hover:text-bg-dark transition-soft"
+              >
+                📁 Choose File
+              </button>
+              <button
+                type="button"
                 onClick={openNestSelector}
-                className="px-4 py-2 bg-bg-darker border border-firefly-dim text-firefly-glow rounded hover:bg-firefly-dim hover:text-bg-dark transition-soft whitespace-nowrap"
+                className="flex-1 px-4 py-2 bg-bg-darker border border-firefly-dim text-firefly-glow rounded hover:bg-firefly-dim hover:text-bg-dark transition-soft"
               >
                 🪺 Choose from Nest
               </button>
@@ -274,6 +342,9 @@ export default function MemoryModal({ onClose, onSave, spark, currentBranchId, p
               </div>
             )}
           </div>
+
+          {/* Separator */}
+          <div className="border-t border-border-subtle my-2"></div>
 
           <div>
             <label className="block text-sm text-text-soft mb-2">

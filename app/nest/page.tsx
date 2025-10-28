@@ -244,10 +244,19 @@ export default function NestPage() {
   }
 
   const handleCreateNewBranch = () => {
-    // Close branch selector and navigate to grove to create a new branch
+    // Close branch selector and navigate to grove with nest photo data
     setShowBranchSelector(false)
-    setSelectedNestItem(null)
-    router.push('/grove')
+
+    if (selectedNestItem) {
+      // Store nest photo data in URL to carry through branch creation
+      const nestPhotoData = encodeURIComponent(JSON.stringify({
+        url: selectedNestItem.photoUrl,
+        nestItemId: selectedNestItem.id
+      }))
+      router.push(`/grove?pendingNestPhoto=${nestPhotoData}`)
+    } else {
+      router.push('/grove')
+    }
   }
 
   const handleBranchSelect = (branchId: string) => {

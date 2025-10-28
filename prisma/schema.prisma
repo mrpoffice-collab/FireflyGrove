@@ -257,6 +257,7 @@ model Entry {
   legacyFlag  Boolean  @default(false)
   mediaUrl    String?
   audioUrl    String?
+  memoryCard  String?  // When this memory is from (date, season, phrase)
   approved    Boolean  @default(true)
 
   // Soft delete and control fields

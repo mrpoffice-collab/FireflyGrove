@@ -31,11 +31,23 @@ export default function NewBranchPage() {
   const [description, setDescription] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
+  const [pendingNestPhoto, setPendingNestPhoto] = useState<string | null>(null)
 
   // Person discovery states
   const [searchResults, setSearchResults] = useState<{ registeredUsers: PersonSearchResult[]; persons: PersonSearchResult[] } | null>(null)
   const [searching, setSearching] = useState(false)
   const [selectedPerson, setSelectedPerson] = useState<PersonSearchResult | null>(null)
+
+  // Check for pending nest photo from URL
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search)
+      const nestPhotoParam = urlParams.get('pendingNestPhoto')
+      if (nestPhotoParam) {
+        setPendingNestPhoto(nestPhotoParam)
+      }
+    }
+  }, [])
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -133,18 +145,30 @@ export default function NewBranchPage() {
         if (connectionRes.ok) {
           if (connectionData.autoAccepted) {
             // Branch was auto-linked to person
-            router.push(`/branch/${branchId}?message=auto_linked`)
+            const url = pendingNestPhoto
+              ? `/branch/${branchId}?message=auto_linked&nestPhoto=${pendingNestPhoto}`
+              : `/branch/${branchId}?message=auto_linked`
+            router.push(url)
           } else {
             // Connection request sent
-            router.push(`/branch/${branchId}?message=connection_request_sent`)
+            const url = pendingNestPhoto
+              ? `/branch/${branchId}?message=connection_request_sent&nestPhoto=${pendingNestPhoto}`
+              : `/branch/${branchId}?message=connection_request_sent`
+            router.push(url)
           }
         } else {
           // Connection request failed, but branch was created
-          router.push(`/branch/${branchId}?error=connection_failed`)
+          const url = pendingNestPhoto
+            ? `/branch/${branchId}?error=connection_failed&nestPhoto=${pendingNestPhoto}`
+            : `/branch/${branchId}?error=connection_failed`
+          router.push(url)
         }
       } else {
         // No person selected, just go to the branch
-        router.push(`/branch/${branchId}`)
+        const url = pendingNestPhoto
+          ? `/branch/${branchId}?nestPhoto=${pendingNestPhoto}`
+          : `/branch/${branchId}`
+        router.push(url)
       }
     } catch (error) {
       console.error('Failed to create branch:', error)

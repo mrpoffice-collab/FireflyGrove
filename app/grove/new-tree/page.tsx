@@ -13,6 +13,18 @@ export default function NewTreePage() {
   const [description, setDescription] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
+  const [pendingNestPhoto, setPendingNestPhoto] = useState<string | null>(null)
+
+  // Check for pending nest photo from URL
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search)
+      const nestPhotoParam = urlParams.get('pendingNestPhoto')
+      if (nestPhotoParam) {
+        setPendingNestPhoto(nestPhotoParam)
+      }
+    }
+  }, [])
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -45,7 +57,10 @@ export default function NewTreePage() {
       const data = await res.json()
 
       if (res.ok) {
-        router.push(`/tree/${data.tree.id}`)
+        const url = pendingNestPhoto
+          ? `/tree/${data.tree.id}?pendingNestPhoto=${pendingNestPhoto}`
+          : `/tree/${data.tree.id}`
+        router.push(url)
       } else if (res.status === 403) {
         // At capacity
         setError(data.error || 'You have reached your tree capacity. Upgrade to add more trees.')

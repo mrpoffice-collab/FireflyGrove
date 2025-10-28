@@ -1024,6 +1024,7 @@ export default function BranchPage() {
           }}
           onSave={handleCreateMemory}
           spark={currentSpark}
+          onRefreshSpark={refreshSpark}
           currentBranchId={branchId}
           prePopulatedPhoto={prePopulatedPhoto}
         />
