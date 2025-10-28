@@ -359,13 +359,6 @@ export default function GrovePage() {
             </div>
           </div>
 
-          {/* Firefly Visualization - Background Layer */}
-          {grove.allBranches && grove.allBranches.length > 0 && (
-            <div className="mb-8">
-              <FireflyCanvas branches={grove.allBranches} />
-            </div>
-          )}
-
           {/* Status Alerts */}
           <div className="mb-8">
             {grove.status === 'past_due' && (
@@ -407,8 +400,17 @@ export default function GrovePage() {
             )}
           </div>
 
-          {/* Trees Grid - Olive Grove Style */}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+          {/* Trees Grid with Firefly Background - Olive Grove Style */}
+          <div className="relative">
+            {/* Firefly Visualization - Background Layer */}
+            {grove.allBranches && grove.allBranches.length > 0 && (
+              <div className="absolute inset-0 pointer-events-none">
+                <FireflyCanvas branches={grove.allBranches} />
+              </div>
+            )}
+
+            {/* Trees Grid */}
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 relative z-10">
             {/* Existing Trees */}
             {grove.trees?.map((tree) => (
               <div
@@ -490,6 +492,7 @@ export default function GrovePage() {
                 </div>
               </Tooltip>
             ))}
+            </div>
           </div>
 
           {(grove.trees?.length || 0) === 0 && (
