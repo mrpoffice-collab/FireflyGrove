@@ -90,6 +90,124 @@ export async function runIntegrityCheck() {
   }
 }
 
+// Publish Scheduled Posts (runs daily)
+export async function runPublishScheduled() {
+  try {
+    console.log('Starting scheduled post publisher...')
+
+    const now = new Date()
+
+    // Find all approved draft posts scheduled for today or earlier
+    const postsToPublish = await prisma.marketingPost.findMany({
+      where: {
+        status: 'draft',
+        isApproved: true,
+        scheduledFor: {
+          lte: now,
+        },
+      },
+      orderBy: {
+        scheduledFor: 'asc',
+      },
+    })
+
+    if (postsToPublish.length === 0) {
+      console.log('No posts to publish today')
+      return { success: true, published: 0 }
+    }
+
+    console.log(`Found ${postsToPublish.length} post(s) to publish`)
+
+    const results = {
+      published: [] as string[],
+      failed: [] as { id: string; error: string }[],
+    }
+
+    for (const post of postsToPublish) {
+      try {
+        console.log(`Publishing: ${post.title} (${post.platform})`)
+
+        if (post.platform === 'blog') {
+          // Publish blog post as markdown file
+          const fs = await import('fs')
+          const path = await import('path')
+
+          const blogDir = path.join(process.cwd(), 'content', 'blog')
+          if (!fs.existsSync(blogDir)) {
+            fs.mkdirSync(blogDir, { recursive: true })
+          }
+
+          const slug = post.slug || post.title
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/^-|-$/g, '')
+
+          const filename = `${slug}.md`
+          const filepath = path.join(blogDir, filename)
+
+          const publishDate = new Date()
+          const dateStr = publishDate.toISOString().split('T')[0]
+          const wordCount = post.content.split(/\s+/).length
+          const readTime = Math.ceil(wordCount / 200)
+          const imageUrl = post.image || 'https://images.unsplash.com/photo-1551269901-5c5e14c25df7?w=1200&h=630&fit=crop'
+
+          const markdown = `---
+title: "${post.title.replace(/"/g, '\\"')}"
+date: "${dateStr}"
+excerpt: "${(post.excerpt || post.metaDescription || '').replace(/"/g, '\\"')}"
+author: "Firefly Grove Team"
+category: "Memory Preservation"
+readTime: "${readTime} min read"
+image: "${imageUrl}"
+---
+
+${post.content}
+`
+
+          fs.writeFileSync(filepath, markdown, 'utf-8')
+
+          // Update database
+          await prisma.marketingPost.update({
+            where: { id: post.id },
+            data: {
+              status: 'published',
+              publishedAt: publishDate,
+              slug: slug,
+            },
+          })
+
+          console.log(`  ✅ Published blog: /blog/${slug}`)
+          results.published.push(post.id)
+        } else {
+          // For now, only blog posts are auto-published
+          // Social media posts would need API integrations
+          console.log(`  ⚠️ Skipping ${post.platform} (not yet implemented)`)
+        }
+      } catch (error) {
+        console.error(`  ❌ Failed to publish ${post.id}:`, error)
+        results.failed.push({
+          id: post.id,
+          error: error instanceof Error ? error.message : 'Unknown error',
+        })
+      }
+    }
+
+    console.log(
+      `Publishing complete: ${results.published.length} published, ${results.failed.length} failed`
+    )
+
+    return {
+      success: true,
+      published: results.published.length,
+      failed: results.failed.length,
+      errors: results.failed,
+    }
+  } catch (error: any) {
+    console.error('Scheduled publishing failed:', error)
+    return { success: false, error: error.message }
+  }
+}
+
 // Legacy Monitor (runs daily)
 export async function runLegacyMonitor() {
   try {
@@ -172,7 +290,14 @@ export async function runScheduledJobs(jobType: string) {
     case 'monthly-integrity':
       return await runIntegrityCheck()
     case 'daily-legacy':
-      return await runLegacyMonitor()
+      // Run both legacy monitor AND publish scheduled posts
+      const legacyResult = await runLegacyMonitor()
+      const publishResult = await runPublishScheduled()
+      return {
+        success: legacyResult.success && publishResult.success,
+        legacy: legacyResult,
+        publishing: publishResult,
+      }
     case 'nightly-subscription':
       return await runSubscriptionMonitor()
     default:
