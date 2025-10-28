@@ -16,7 +16,11 @@ export default async function BlogPage() {
 
   return (
     <div className="min-h-screen">
-      <Header userName={session?.user?.name || ''} />
+      <Header
+        userName={session?.user?.name || ''}
+        isBetaTester={(session?.user as any)?.isBetaTester || false}
+        isAdmin={(session?.user as any)?.isAdmin || false}
+      />
 
       <div className="max-w-4xl mx-auto px-4 py-16">
         <div className="text-center mb-16">

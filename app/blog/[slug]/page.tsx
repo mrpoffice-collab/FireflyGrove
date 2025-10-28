@@ -56,7 +56,11 @@ export default async function BlogPost({ params }: Props) {
 
   return (
     <div className="min-h-screen">
-      <Header userName={session?.user?.name || ''} />
+      <Header
+        userName={session?.user?.name || ''}
+        isBetaTester={(session?.user as any)?.isBetaTester || false}
+        isAdmin={(session?.user as any)?.isAdmin || false}
+      />
 
       <article className="max-w-3xl mx-auto px-4 py-16">
         {/* Breadcrumb */}
