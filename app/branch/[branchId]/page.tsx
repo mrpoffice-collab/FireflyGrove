@@ -70,6 +70,7 @@ export default function BranchPage() {
   const [loading, setLoading] = useState(true)
   const [loadingMore, setLoadingMore] = useState(false)
   const [showNewMemory, setShowNewMemory] = useState(false)
+  const [prePopulatedPhoto, setPrePopulatedPhoto] = useState<{url: string, nestItemId?: string} | undefined>()
   const [showSettings, setShowSettings] = useState(false)
   const [showUndoBanner, setShowUndoBanner] = useState(false)
   const [lastCreatedEntry, setLastCreatedEntry] = useState<{
@@ -207,6 +208,30 @@ export default function BranchPage() {
     setLoadingMore(true)
     const nextPage = (branch.pagination?.page || 1) + 1
     await fetchBranch(nextPage, true)
+  }
+
+  // Handle dropping photos from The Nest
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+
+    try {
+      const nestItemData = e.dataTransfer.getData('nestItem')
+      if (nestItemData) {
+        const nestItem = JSON.parse(nestItemData)
+        setPrePopulatedPhoto({
+          url: nestItem.photoUrl,
+          nestItemId: nestItem.id,
+        })
+        setShowNewMemory(true)
+      }
+    } catch (error) {
+      console.error('Failed to handle nest photo drop:', error)
+    }
+  }
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault()
   }
 
   const handleCreateMemory = async (data: {
@@ -505,7 +530,7 @@ export default function BranchPage() {
   const isAuthenticated = status === 'authenticated' && session
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen" onDrop={handleDrop} onDragOver={handleDragOver}>
       <Header userName={session?.user?.name || ''} />
 
       <div className="container mx-auto px-4 py-8">
@@ -972,9 +997,14 @@ export default function BranchPage() {
 
       {showNewMemory && (
         <MemoryModal
-          onClose={() => setShowNewMemory(false)}
+          onClose={() => {
+            setShowNewMemory(false)
+            setPrePopulatedPhoto(undefined)
+          }}
           onSave={handleCreateMemory}
           spark={currentSpark}
+          currentBranchId={branchId}
+          prePopulatedPhoto={prePopulatedPhoto}
         />
       )}
 

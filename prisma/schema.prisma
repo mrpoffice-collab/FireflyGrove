@@ -46,6 +46,7 @@ model User {
   sparks Spark[] @relation("UserSparks")
   sparkCollections SparkCollection[] @relation("UserSparkCollections")
   activeSparkCollections UserSparkCollection[] @relation("UserActiveCollections")
+  nestItems NestItem[] @relation("UserNestItems")
 
   @@index([email])
   @@index([status])
@@ -1201,4 +1202,34 @@ model CompetitorAnalysis {
   @@index([primaryKeyword])
   @@index([domain])
   @@index([analyzedAt])
+}
+
+// The Nest - Temporary holding area for photos waiting to become memories
+model NestItem {
+  id           String   @id @default(cuid())
+  userId       String
+
+  // Photo storage
+  photoUrl     String   // Vercel Blob or external URL
+  thumbnailUrl String?  // Optional smaller version for grid display
+  filename     String
+  sizeBytes    Int?
+
+  // Optional metadata
+  caption      String?  @db.Text // Optional quick note
+  takenAt      DateTime? // Photo date if available (EXIF data)
+
+  // Organization
+  tags         String[] // User-added tags for searching
+
+  // Lifecycle
+  uploadedAt   DateTime @default(now())
+  expiresAt    DateTime? // Optional: auto-delete after X days
+
+  // Relations
+  user         User     @relation("UserNestItems", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([uploadedAt])
+  @@index([expiresAt])
 }

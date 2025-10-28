@@ -21,14 +21,19 @@ interface MemoryModalProps {
   }) => void
   spark: string
   currentBranchId?: string
+  prePopulatedPhoto?: {
+    url: string
+    nestItemId?: string
+  }
 }
 
-export default function MemoryModal({ onClose, onSave, spark, currentBranchId }: MemoryModalProps) {
+export default function MemoryModal({ onClose, onSave, spark, currentBranchId, prePopulatedPhoto }: MemoryModalProps) {
   const [text, setText] = useState('')
   const [visibility, setVisibility] = useState('PRIVATE')
   const [legacyFlag, setLegacyFlag] = useState(false)
   const [image, setImage] = useState<File | null>(null)
-  const [imagePreview, setImagePreview] = useState<string | null>(null)
+  const [imagePreview, setImagePreview] = useState<string | null>(prePopulatedPhoto?.url || null)
+  const [nestItemId, setNestItemId] = useState<string | undefined>(prePopulatedPhoto?.nestItemId)
   const [isRecording, setIsRecording] = useState(false)
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null)
   const [audioUrl, setAudioUrl] = useState<string | null>(null)
@@ -150,13 +155,32 @@ export default function MemoryModal({ onClose, onSave, spark, currentBranchId }:
     if (audioUrl && audioBlob) {
       // Convert blob to data URL for demo
       const reader = new FileReader()
-      reader.onloadend = () => {
+      reader.onloadend = async () => {
         data.audioUrl = reader.result as string
+
+        // Delete nest item if this photo came from the nest
+        if (nestItemId) {
+          try {
+            await fetch(`/api/nest/${nestItemId}`, { method: 'DELETE' })
+          } catch (error) {
+            console.error('Failed to delete nest item:', error)
+          }
+        }
+
         onSave(data)
         // Note: setIsSubmitting is reset in parent component
       }
       reader.readAsDataURL(audioBlob)
       return
+    }
+
+    // Delete nest item if this photo came from the nest
+    if (nestItemId) {
+      try {
+        await fetch(`/api/nest/${nestItemId}`, { method: 'DELETE' })
+      } catch (error) {
+        console.error('Failed to delete nest item:', error)
+      }
     }
 
     onSave(data)
