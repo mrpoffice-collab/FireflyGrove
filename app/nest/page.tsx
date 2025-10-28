@@ -6,6 +6,9 @@ import { useEffect, useState } from 'react'
 import Header from '@/components/Header'
 import { motion } from 'framer-motion'
 
+// Feature flag - disable video uploads
+const ENABLE_VIDEO_UPLOADS = false
+
 interface NestItem {
   id: string
   photoUrl: string | null
@@ -80,7 +83,7 @@ export default function NestPage() {
     setDragActive(false)
 
     const files = Array.from(e.dataTransfer.files).filter((file) =>
-      file.type.startsWith('image/') || (isAdmin && file.type.startsWith('video/'))
+      file.type.startsWith('image/') || (ENABLE_VIDEO_UPLOADS && isAdmin && file.type.startsWith('video/'))
     )
 
     if (files.length > 0) {
@@ -103,8 +106,8 @@ export default function NestPage() {
       return
     }
 
-    // Check if any videos in the batch
-    const hasVideos = files.some(file => file.type.startsWith('video/'))
+    // Check if any videos in the batch (only if video uploads enabled)
+    const hasVideos = ENABLE_VIDEO_UPLOADS && files.some(file => file.type.startsWith('video/'))
 
     // Validate total size (3GB for videos, 200MB for photos only)
     const MAX_TOTAL_SIZE = hasVideos ? 3 * 1024 * 1024 * 1024 : 200 * 1024 * 1024
@@ -356,24 +359,22 @@ export default function NestPage() {
           >
             <div className="text-4xl mb-2">📸</div>
             <h3 className="text-lg text-text-soft mb-2">
-              Drop your {isAdmin ? 'photos & videos' : 'photos'} here
+              Drop your photos here
             </h3>
             <p className="text-text-muted text-sm mb-4">
-              {isAdmin
-                ? 'Photos (10MB max) or Videos (500MB max) • Up to 50 files • 3GB total per batch'
-                : 'Select all your photos at once • Up to 50 photos (200MB total)'}
+              Select all your photos at once • Up to 50 photos (200MB total)
             </p>
             <label className="inline-block">
               <input
                 type="file"
                 multiple
-                accept={isAdmin ? 'image/*,video/*' : 'image/*'}
+                accept="image/*"
                 onChange={handleFileInput}
                 className="hidden"
                 disabled={uploading}
               />
               <span className="px-6 py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg font-medium transition-soft cursor-pointer inline-block">
-                {uploading ? 'Uploading...' : isAdmin ? 'Choose Photos or Videos' : 'Choose Photos'}
+                {uploading ? 'Uploading...' : 'Choose Photos'}
               </span>
             </label>
           </div>
@@ -567,16 +568,15 @@ export default function NestPage() {
         <div className="max-w-6xl mx-auto mt-12 bg-bg-dark border border-border-subtle rounded-lg p-6">
           <h3 className="text-lg text-text-soft mb-3">How The Nest Works</h3>
           <div className="space-y-2 text-sm text-text-muted">
-            <p>🪺 <strong>Upload:</strong> Select up to 50 {isAdmin ? 'photos or videos' : 'photos'} at once</p>
+            <p>🪺 <strong>Upload:</strong> Select up to 50 photos at once</p>
             <p>⚡ <strong>Smart Upload:</strong> Files upload 3 at a time with progress tracking</p>
             <p>🐣 <strong>Hatch:</strong> Hover over an item and click "🐣 Hatch from Nest" to select a branch</p>
-            <p>💭 <strong>Write:</strong> The media pre-populates the memory form - just add your story</p>
+            <p>💭 <strong>Write:</strong> The photo pre-populates the memory form - just add your story</p>
             <p>🗑️ <strong>Remove:</strong> Hover over an item to reveal the Remove button</p>
-            {isAdmin && <p>🎥 <strong>Videos:</strong> Hover over a video thumbnail to preview it</p>}
-            <p>🖱️ <strong>Pro Tip:</strong> You can also drag media directly onto branches (desktop)</p>
+            <p>🖱️ <strong>Pro Tip:</strong> You can also drag photos directly onto branches (desktop)</p>
           </div>
           <div className="mt-4 pt-4 border-t border-border-subtle text-xs text-text-muted">
-            <strong>Limits:</strong> {isAdmin ? '10MB per photo • 500MB per video • 50 files per upload • 3GB total per batch' : '10MB per photo • 50 photos per upload • 200MB total per session'}
+            <strong>Limits:</strong> 10MB per photo • 50 photos per upload • 200MB total per session
           </div>
         </div>
       </div>

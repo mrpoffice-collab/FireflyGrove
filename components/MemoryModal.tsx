@@ -2,6 +2,9 @@
 
 import { useState, useRef, useEffect } from 'react'
 
+// Feature flag - disable video uploads
+const ENABLE_VIDEO_UPLOADS = false
+
 interface Branch {
   id: string
   title: string
@@ -375,7 +378,7 @@ export default function MemoryModal({ onClose, onSave, spark, onRefreshSpark, cu
                 🪺 Choose from Nest
               </button>
             </div>
-            {isAdmin && (
+            {ENABLE_VIDEO_UPLOADS && isAdmin && (
               <div className="flex gap-3 mt-2">
                 <input
                   ref={videoInputRef}
@@ -403,7 +406,7 @@ export default function MemoryModal({ onClose, onSave, spark, onRefreshSpark, cu
                 />
               </div>
             )}
-            {videoPreview && (
+            {ENABLE_VIDEO_UPLOADS && videoPreview && (
               <div className="mt-3">
                 <video
                   src={videoPreview}
