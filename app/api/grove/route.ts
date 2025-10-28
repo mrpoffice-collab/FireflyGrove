@@ -40,10 +40,21 @@ export async function GET(req: NextRequest) {
               select: {
                 id: true,
                 title: true,
-                lastMemoryDate: true,
                 person: {
                   select: {
                     isLegacy: true
+                  }
+                },
+                entries: {
+                  take: 1,
+                  orderBy: {
+                    createdAt: 'desc'
+                  },
+                  where: {
+                    status: 'ACTIVE'
+                  },
+                  select: {
+                    createdAt: true
                   }
                 },
                 _count: {
@@ -142,10 +153,21 @@ export async function GET(req: NextRequest) {
                 select: {
                   id: true,
                   title: true,
-                  lastMemoryDate: true,
                   person: {
                     select: {
                       isLegacy: true
+                    }
+                  },
+                  entries: {
+                    take: 1,
+                    orderBy: {
+                      createdAt: 'desc'
+                    },
+                    where: {
+                      status: 'ACTIVE'
+                    },
+                    select: {
+                      createdAt: true
                     }
                   },
                   _count: {
@@ -216,7 +238,7 @@ export async function GET(req: NextRequest) {
           id: branch.id,
           title: branch.title,
           personStatus: branch.person?.isLegacy ? 'legacy' : 'living',
-          lastMemoryDate: branch.lastMemoryDate?.toISOString() || null,
+          lastMemoryDate: branch.entries[0]?.createdAt?.toISOString() || null,
           _count: {
             entries: branch._count.entries
           }
@@ -228,7 +250,7 @@ export async function GET(req: NextRequest) {
           id: branch.id,
           title: branch.title,
           personStatus: membership.person.isLegacy ? 'legacy' : 'living',
-          lastMemoryDate: branch.lastMemoryDate?.toISOString() || null,
+          lastMemoryDate: branch.entries[0]?.createdAt?.toISOString() || null,
           _count: {
             entries: branch._count.entries
           }
