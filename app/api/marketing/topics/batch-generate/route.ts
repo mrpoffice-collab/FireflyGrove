@@ -221,6 +221,7 @@ export async function POST(req: NextRequest) {
             scheduledFor: currentDate,
             generatedBy: 'ai',
             topic: topic.topic,
+            estimatedUsers: topic.estimatedUsers,
           },
         })
 
@@ -288,6 +289,7 @@ export async function POST(req: NextRequest) {
                 scheduledFor: socialDate,
                 generatedBy: 'ai',
                 topic: topic.topic,
+                estimatedUsers: topic.estimatedUsers,
               },
             })
             generatedPosts.push(newsletterPost)
@@ -331,6 +333,7 @@ export async function POST(req: NextRequest) {
                   scheduledFor: fbScheduledDate,
                   generatedBy: 'ai',
                   topic: topic.topic,
+                  estimatedUsers: topic.estimatedUsers,
                 },
               })
               generatedPosts.push(fbPost)
@@ -354,6 +357,7 @@ export async function POST(req: NextRequest) {
                   scheduledFor: socialDate,
                   generatedBy: 'ai',
                   topic: topic.topic,
+                  estimatedUsers: topic.estimatedUsers,
                   pinDescription: pin.description,
                 },
               })
