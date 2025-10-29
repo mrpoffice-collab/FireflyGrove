@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { BlogVideoSection } from '@/lib/blogVideoParser'
 import { generateSearchQuery } from '@/lib/pexels'
 
@@ -66,6 +66,9 @@ export default function BlogVideoVisualSelector({
   const [searchResults, setSearchResults] = useState<(PexelsPhoto | PexelsVideo)[]>([])
   const [loading, setLoading] = useState(false)
   const [selectedMedia, setSelectedMedia] = useState<{ [sectionId: string]: SectionMedia }>(initialSelections)
+  const [uploading, setUploading] = useState(false)
+  const [uploadedImages, setUploadedImages] = useState<Array<{ url: string; filename: string }>>([])
+  const fileInputRef = React.useRef<HTMLInputElement>(null)
 
   const currentSection = sections[currentSectionIndex]
 
@@ -99,6 +102,59 @@ export default function BlogVideoVisualSelector({
 
   const handleSearch = () => {
     performSearch(searchQuery, searchType)
+  }
+
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    setUploading(true)
+    try {
+      const formData = new FormData()
+      formData.append('file', file)
+
+      const response = await fetch('/api/blog-video/upload-image', {
+        method: 'POST',
+        body: formData,
+      })
+
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.error || 'Upload failed')
+      }
+
+      const data = await response.json()
+      setUploadedImages(prev => [...prev, { url: data.url, filename: data.filename }])
+
+      // Auto-select the uploaded image for current section
+      selectUploadedImage(data.url, data.filename)
+    } catch (error) {
+      console.error('Upload error:', error)
+      alert(error instanceof Error ? error.message : 'Failed to upload image')
+    } finally {
+      setUploading(false)
+      // Reset file input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = ''
+      }
+    }
+  }
+
+  const selectUploadedImage = (url: string, filename: string, style: string = 'full') => {
+    const media: SectionMedia = {
+      type: 'upload',
+      source: 'upload',
+      url: url,
+      thumbnailUrl: url,
+      style: style as any,
+    }
+
+    const newSelections = {
+      ...selectedMedia,
+      [currentSection.id]: media,
+    }
+    setSelectedMedia(newSelections)
+    onMediaSelected(currentSection.id, media)
   }
 
   const selectPhoto = (photo: PexelsPhoto, style: string = 'full') => {
@@ -271,6 +327,21 @@ export default function BlogVideoVisualSelector({
           >
             🎥 Videos
           </button>
+          <div className="flex-1" />
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/jpeg,image/jpg,image/png,image/webp,image/gif"
+            onChange={handleFileSelect}
+            className="hidden"
+          />
+          <button
+            onClick={() => fileInputRef.current?.click()}
+            disabled={uploading}
+            className="px-4 py-2 bg-green-500/20 hover:bg-green-500/30 text-green-400 rounded-lg font-medium transition-soft disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {uploading ? '⏳ Uploading...' : '📤 Upload Image'}
+          </button>
         </div>
 
         <div className="flex gap-2">
@@ -297,6 +368,36 @@ export default function BlogVideoVisualSelector({
           </div>
         )}
       </div>
+
+      {/* Uploaded Images */}
+      {uploadedImages.length > 0 && (
+        <div className="space-y-2">
+          <div className="text-sm text-text-muted">Your Uploaded Images:</div>
+          <div className="grid grid-cols-3 gap-4">
+            {uploadedImages.map((upload, index) => (
+              <div
+                key={index}
+                onClick={() => selectUploadedImage(upload.url, upload.filename)}
+                className="group cursor-pointer relative aspect-video rounded-lg overflow-hidden border-2 border-transparent hover:border-green-400 transition-soft"
+              >
+                <img
+                  src={upload.url}
+                  alt={upload.filename}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="absolute bottom-2 left-2 right-2 text-white text-xs truncate">
+                    {upload.filename}
+                  </div>
+                </div>
+                <div className="absolute top-2 left-2 px-2 py-1 bg-green-500/80 text-white text-xs rounded">
+                  Custom
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Search Results Grid */}
       {loading ? (
