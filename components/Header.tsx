@@ -144,6 +144,15 @@ export default function Header({ userName, isBetaTester, isAdmin, groveInfo }: H
                       </button>
                       <button
                         onClick={() => {
+                          router.push('/blog-video')
+                          setIsDropdownOpen(false)
+                        }}
+                        className="w-full text-left px-3 py-1.5 text-sm text-text-muted hover:bg-border-subtle hover:text-text-soft transition-soft"
+                      >
+                        🎥 Blog Video Builder
+                      </button>
+                      <button
+                        onClick={() => {
                           router.push('/admin/analytics')
                           setIsDropdownOpen(false)
                         }}
@@ -287,6 +296,13 @@ export default function Header({ userName, isBetaTester, isAdmin, groveInfo }: H
                     className="block text-base font-light text-text-soft hover:text-firefly-glow transition-soft py-2 px-2 rounded hover:bg-border-subtle/30"
                   >
                     🧠 Marketing Intelligence
+                  </Link>
+                  <Link
+                    href="/blog-video"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="block text-base font-light text-text-soft hover:text-firefly-glow transition-soft py-2 px-2 rounded hover:bg-border-subtle/30"
+                  >
+                    🎥 Blog Video Builder
                   </Link>
                   <Link
                     href="/admin/analytics"
