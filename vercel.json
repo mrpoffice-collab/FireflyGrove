@@ -5,19 +5,5 @@
       "dev": false,
       "staging": false
     }
-  },
-  "crons": [
-    {
-      "path": "/api/cron?job=daily-legacy",
-      "schedule": "0 9 * * *"
-    },
-    {
-      "path": "/api/cron?job=nightly-subscription",
-      "schedule": "0 0 * * *"
-    },
-    {
-      "path": "/api/cron/publish-scheduled",
-      "schedule": "0 */4 * * *"
-    }
-  ]
+  }
 }
