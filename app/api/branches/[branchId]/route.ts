@@ -18,7 +18,7 @@ export async function GET(
     let isPublicView = false
 
     if (userId) {
-      // Authenticated user - check if they have access
+      // Authenticated user - check if they have access (owner, member, OR public Open Grove tree)
       branch = await prisma.branch.findFirst({
         where: {
           id: branchId,
@@ -30,6 +30,13 @@ export async function GET(
                   userId: userId,
                   approved: true,
                 },
+              },
+            },
+            {
+              // Allow any authenticated user to view Open Grove trees
+              person: {
+                isLegacy: true,
+                discoveryEnabled: true,
               },
             },
           ],
@@ -70,6 +77,11 @@ export async function GET(
           },
         },
       })
+
+      // If found via Open Grove discoveryEnabled, mark as public view
+      if (branch?.person?.isLegacy && branch?.person?.discoveryEnabled && branch.ownerId !== userId) {
+        isPublicView = true
+      }
     }
 
     // If not found and user is not authenticated, check if it's a public Open Grove tree
