@@ -37,7 +37,12 @@ export function parseBlogForVideo(post: BlogPost): BlogVideoScript {
   // Extract sections from the markdown content
   const sections = extractSectionsFromMarkdown(post.content, post.image)
 
-  // Add title slide
+  // Add title slide - ensure voiceover text is under 4000 chars
+  let titleVoiceoverText = `${post.title}. ${post.excerpt}`
+  if (titleVoiceoverText.length > 4000) {
+    titleVoiceoverText = titleVoiceoverText.slice(0, 3997) + '...'
+  }
+
   const titleSlide: BlogVideoSection = {
     id: 'title',
     type: 'title',
@@ -45,7 +50,7 @@ export function parseBlogForVideo(post: BlogPost): BlogVideoScript {
     text: post.excerpt,
     image: post.image,
     duration: 5,
-    voiceoverText: `${post.title}. ${post.excerpt}`,
+    voiceoverText: titleVoiceoverText,
   }
 
   // Add CTA slide at the end
@@ -90,13 +95,18 @@ function extractSectionsFromMarkdown(content: string, defaultImage?: string): Bl
     if (index === 0 && !part.startsWith('#')) {
       const cleanText = cleanTextForTTS(part)
       if (cleanText.length > 50) {
-        sections.push({
-          id: `intro`,
-          type: 'content',
-          text: summarizeForVideo(part),
-          image: defaultImage,
-          duration: estimateDuration(cleanText),
-          voiceoverText: cleanText,
+        // Split intro if it exceeds character limit
+        const introChunks = splitByCharacterLimit(cleanText, 4000)
+
+        introChunks.forEach((chunk, chunkIndex) => {
+          sections.push({
+            id: `intro-${chunkIndex}`,
+            type: 'content',
+            text: summarizeForVideo(chunk),
+            image: defaultImage,
+            duration: estimateDuration(chunk),
+            voiceoverText: chunk,
+          })
         })
       }
       return
@@ -124,22 +134,28 @@ function extractSectionsFromMarkdown(content: string, defaultImage?: string): Bl
     })
 
     // Break long sections into multiple content slides
+    // Split by words first, then ensure each chunk is under 4000 chars (OpenAI limit is 4096)
     const contentChunks = splitIntoChunks(cleanText, 250) // ~250 words per slide
 
     contentChunks.forEach((chunk, chunkIndex) => {
-      const summaryChunk = summarizeForVideo(chunk)
+      // Further split if chunk exceeds OpenAI's 4096 character limit
+      const ttsChunks = splitByCharacterLimit(chunk, 4000)
 
-      // Check if this looks like a quote
-      const isQuote = chunk.includes('"') && chunk.split('"').length > 2
+      ttsChunks.forEach((ttsChunk, ttsIndex) => {
+        const summaryChunk = summarizeForVideo(ttsChunk)
 
-      sections.push({
-        id: `section-${index}-content-${chunkIndex}`,
-        type: isQuote ? 'quote' : 'content',
-        heading: heading,
-        text: summaryChunk,
-        image: defaultImage,
-        duration: estimateDuration(chunk),
-        voiceoverText: chunk,
+        // Check if this looks like a quote
+        const isQuote = ttsChunk.includes('"') && ttsChunk.split('"').length > 2
+
+        sections.push({
+          id: `section-${index}-content-${chunkIndex}-${ttsIndex}`,
+          type: isQuote ? 'quote' : 'content',
+          heading: heading,
+          text: summaryChunk,
+          image: defaultImage,
+          duration: estimateDuration(ttsChunk),
+          voiceoverText: ttsChunk,
+        })
       })
     })
   })
@@ -199,6 +215,69 @@ function summarizeForVideo(text: string): string {
   })
 
   return keyPoints.join('\n')
+}
+
+/**
+ * Split text by character limit (for TTS API limits)
+ * Ensures no chunk exceeds maxChars while preserving sentence boundaries
+ */
+function splitByCharacterLimit(text: string, maxChars: number): string[] {
+  if (text.length <= maxChars) {
+    return [text]
+  }
+
+  const chunks: string[] = []
+  const sentences = text.split(/\.\s+/)
+  let currentChunk = ''
+
+  for (const sentence of sentences) {
+    const sentenceWithPeriod = sentence + '.'
+
+    // If a single sentence is too long, split it by character limit
+    if (sentenceWithPeriod.length > maxChars) {
+      // Save current chunk if it exists
+      if (currentChunk) {
+        chunks.push(currentChunk.trim())
+        currentChunk = ''
+      }
+
+      // Split long sentence into smaller parts at word boundaries
+      const words = sentenceWithPeriod.split(/\s+/)
+      let longSentenceChunk = ''
+
+      for (const word of words) {
+        if ((longSentenceChunk + ' ' + word).length > maxChars) {
+          if (longSentenceChunk) {
+            chunks.push(longSentenceChunk.trim())
+          }
+          longSentenceChunk = word
+        } else {
+          longSentenceChunk += (longSentenceChunk ? ' ' : '') + word
+        }
+      }
+
+      if (longSentenceChunk) {
+        chunks.push(longSentenceChunk.trim())
+      }
+      continue
+    }
+
+    // Check if adding this sentence would exceed limit
+    if ((currentChunk + ' ' + sentenceWithPeriod).length > maxChars) {
+      if (currentChunk) {
+        chunks.push(currentChunk.trim())
+      }
+      currentChunk = sentenceWithPeriod
+    } else {
+      currentChunk += (currentChunk ? ' ' : '') + sentenceWithPeriod
+    }
+  }
+
+  if (currentChunk) {
+    chunks.push(currentChunk.trim())
+  }
+
+  return chunks
 }
 
 /**
