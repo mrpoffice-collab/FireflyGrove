@@ -22,7 +22,8 @@
       "Bash(netstat:*)",
       "Bash(findstr:*)",
       "Bash(taskkill /F /PID 10092)",
-      "Bash(taskkill //F //PID 10092)"
+      "Bash(taskkill //F //PID 10092)",
+      "WebSearch"
     ],
     "deny": [],
     "ask": []
