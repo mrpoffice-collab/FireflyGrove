@@ -85,6 +85,60 @@ export default function BlogVideoBuilder() {
   const [manualContent, setManualContent] = useState('')
   const [manualExcerpt, setManualExcerpt] = useState('')
 
+  // Section editing
+  const [editingSection, setEditingSection] = useState<string | null>(null)
+  const [editedSections, setEditedSections] = useState<{[key: string]: any}>({})
+
+  const updateSection = (sectionId: string, field: string, value: any) => {
+    setEditedSections(prev => ({
+      ...prev,
+      [sectionId]: {
+        ...(prev[sectionId] || {}),
+        [field]: value,
+      }
+    }))
+  }
+
+  const deleteSection = (sectionId: string) => {
+    if (!videoScript) return
+    if (!confirm('Remove this section from the video?')) return
+
+    const updatedSections = videoScript.sections.filter(s => s.id !== sectionId)
+    setVideoScript({
+      ...videoScript,
+      sections: updatedSections,
+      estimatedDuration: updatedSections.reduce((sum, s) => sum + s.duration, 0),
+    })
+  }
+
+  const getSectionData = (section: any) => {
+    const edited = editedSections[section.id] || {}
+    return {
+      ...section,
+      ...edited,
+    }
+  }
+
+  const applyEdits = () => {
+    if (!videoScript) return
+
+    const updatedSections = videoScript.sections.map(section => {
+      const edited = editedSections[section.id]
+      if (edited) {
+        return { ...section, ...edited }
+      }
+      return section
+    })
+
+    setVideoScript({
+      ...videoScript,
+      sections: updatedSections,
+    })
+
+    setEditedSections({})
+    setEditingSection(null)
+  }
+
   const loadSessions = async () => {
     try {
       setLoadingSessions(true)
@@ -712,41 +766,152 @@ More content..."
                 </div>
               </div>
 
-              {/* Sections Preview */}
-              <div className="space-y-3 max-h-96 overflow-y-auto">
-                <h3 className="text-lg font-medium text-text-soft mb-4">
-                  Video Sections ({videoScript.sections.length})
-                </h3>
-                {videoScript.sections.map((section, index) => (
-                  <div key={section.id} className="p-4 bg-bg-dark border border-border-subtle rounded-lg">
-                    <div className="flex items-start justify-between mb-2">
-                      <div className="flex items-center gap-3">
-                        <span className="text-xs text-text-muted">#{index + 1}</span>
-                        <span className={`text-xs px-2 py-1 rounded ${
-                          section.type === 'title' ? 'bg-firefly-glow/20 text-firefly-glow' :
-                          section.type === 'section' ? 'bg-blue-500/20 text-blue-400' :
-                          section.type === 'cta' ? 'bg-green-500/20 text-green-400' :
-                          'bg-bg-elevated text-text-muted'
-                        }`}>
-                          {section.type}
-                        </span>
-                      </div>
-                      <span className="text-xs text-text-muted">
-                        {section.duration}s
-                      </span>
-                    </div>
+              {/* Sections Preview/Edit */}
+              <div className="space-y-3 max-h-[600px] overflow-y-auto">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-medium text-text-soft">
+                    Video Sections ({videoScript.sections.length})
+                  </h3>
+                  {Object.keys(editedSections).length > 0 && (
+                    <button
+                      onClick={applyEdits}
+                      className="px-3 py-1 bg-green-500/20 hover:bg-green-500/30 text-green-400 rounded text-sm font-medium transition-soft"
+                    >
+                      ✓ Apply {Object.keys(editedSections).length} Edit{Object.keys(editedSections).length !== 1 ? 's' : ''}
+                    </button>
+                  )}
+                </div>
 
-                    {section.heading && (
-                      <div className="font-medium text-text-soft mb-2">
-                        {section.heading}
-                      </div>
-                    )}
+                {videoScript.sections.map((section, index) => {
+                  const sectionData = getSectionData(section)
+                  const isEditing = editingSection === section.id
 
-                    <div className="text-sm text-text-muted line-clamp-2">
-                      {section.voiceoverText}
+                  return (
+                    <div key={section.id} className={`p-4 bg-bg-dark border rounded-lg transition-soft ${
+                      isEditing ? 'border-firefly-glow' : 'border-border-subtle'
+                    }`}>
+                      <div className="flex items-start justify-between mb-3">
+                        <div className="flex items-center gap-3">
+                          <span className="text-xs text-text-muted">#{index + 1}</span>
+                          <span className={`text-xs px-2 py-1 rounded ${
+                            section.type === 'title' ? 'bg-firefly-glow/20 text-firefly-glow' :
+                            section.type === 'section' ? 'bg-blue-500/20 text-blue-400' :
+                            section.type === 'cta' ? 'bg-green-500/20 text-green-400' :
+                            'bg-bg-elevated text-text-muted'
+                          }`}>
+                            {section.type}
+                          </span>
+                          <span className="text-xs text-text-muted">
+                            {sectionData.duration}s
+                          </span>
+                        </div>
+
+                        <div className="flex gap-2">
+                          {!isEditing ? (
+                            <>
+                              <button
+                                onClick={() => setEditingSection(section.id)}
+                                className="px-2 py-1 bg-bg-elevated hover:bg-border-subtle text-text-muted hover:text-text-soft rounded text-xs transition-soft"
+                              >
+                                ✏️ Edit
+                              </button>
+                              <button
+                                onClick={() => deleteSection(section.id)}
+                                className="px-2 py-1 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded text-xs transition-soft"
+                              >
+                                🗑️ Delete
+                              </button>
+                            </>
+                          ) : (
+                            <button
+                              onClick={() => setEditingSection(null)}
+                              className="px-2 py-1 bg-green-500/20 hover:bg-green-500/30 text-green-400 rounded text-xs transition-soft"
+                            >
+                              ✓ Done
+                            </button>
+                          )}
+                        </div>
+                      </div>
+
+                      {isEditing ? (
+                        <div className="space-y-3">
+                          {section.heading && (
+                            <div>
+                              <label className="block text-xs text-text-muted mb-1">Heading</label>
+                              <input
+                                type="text"
+                                value={sectionData.heading || ''}
+                                onChange={(e) => updateSection(section.id, 'heading', e.target.value)}
+                                className="w-full px-3 py-2 bg-bg-elevated border border-border-subtle rounded text-text-soft text-sm focus:outline-none focus:border-firefly-dim"
+                              />
+                            </div>
+                          )}
+
+                          <div>
+                            <label className="block text-xs text-text-muted mb-1">
+                              On-Screen Text (what viewers see)
+                            </label>
+                            <textarea
+                              value={sectionData.text || ''}
+                              onChange={(e) => updateSection(section.id, 'text', e.target.value)}
+                              rows={3}
+                              className="w-full px-3 py-2 bg-bg-elevated border border-border-subtle rounded text-text-soft text-sm focus:outline-none focus:border-firefly-dim"
+                            />
+                          </div>
+
+                          <div>
+                            <label className="block text-xs text-text-muted mb-1">
+                              Voiceover Script (what AI reads aloud)
+                            </label>
+                            <textarea
+                              value={sectionData.voiceoverText || ''}
+                              onChange={(e) => updateSection(section.id, 'voiceoverText', e.target.value)}
+                              rows={4}
+                              className="w-full px-3 py-2 bg-bg-elevated border border-border-subtle rounded text-text-soft text-sm focus:outline-none focus:border-firefly-dim font-mono"
+                            />
+                            <div className="text-xs text-text-muted mt-1">
+                              {sectionData.voiceoverText?.split(/\s+/).length || 0} words • ~{Math.ceil((sectionData.voiceoverText?.split(/\s+/).length || 0) / 150 * 60)}s
+                            </div>
+                          </div>
+
+                          <div>
+                            <label className="block text-xs text-text-muted mb-1">
+                              Duration (seconds)
+                            </label>
+                            <input
+                              type="number"
+                              min="1"
+                              max="60"
+                              value={sectionData.duration || 5}
+                              onChange={(e) => updateSection(section.id, 'duration', parseInt(e.target.value))}
+                              className="w-24 px-3 py-2 bg-bg-elevated border border-border-subtle rounded text-text-soft text-sm focus:outline-none focus:border-firefly-dim"
+                            />
+                          </div>
+                        </div>
+                      ) : (
+                        <>
+                          {sectionData.heading && (
+                            <div className="font-medium text-text-soft mb-2">
+                              {sectionData.heading}
+                            </div>
+                          )}
+
+                          <div className="text-sm text-text-muted mb-2">
+                            <div className="font-medium text-xs text-text-muted mb-1">On-Screen:</div>
+                            {sectionData.text}
+                          </div>
+
+                          <div className="text-sm text-text-muted">
+                            <div className="font-medium text-xs text-text-muted mb-1">Voiceover:</div>
+                            <div className="line-clamp-2 font-mono text-xs">
+                              {sectionData.voiceoverText}
+                            </div>
+                          </div>
+                        </>
+                      )}
                     </div>
-                  </div>
-                ))}
+                  )
+                })}
               </div>
 
               <div className="flex gap-4 mt-8">
