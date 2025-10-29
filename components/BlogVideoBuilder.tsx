@@ -1,8 +1,9 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { BlogVideoScript, formatDuration } from '@/lib/blogVideoParser'
 import { VoiceOption } from '@/app/api/generate-voiceover/route'
+import BlogVideoRenderer, { BlogVideoRendererHandle } from './BlogVideoRenderer'
 
 interface VoiceInfo {
   id: VoiceOption
@@ -34,6 +35,12 @@ export default function BlogVideoBuilder() {
   const [voiceoverProgress, setVoiceoverProgress] = useState(0)
   const [audioResults, setAudioResults] = useState<AudioResult[]>([])
   const [playingAudio, setPlayingAudio] = useState<string | null>(null)
+
+  // Video rendering
+  const videoRendererRef = useRef<BlogVideoRendererHandle>(null)
+  const [renderingVideo, setRenderingVideo] = useState(false)
+  const [renderProgress, setRenderProgress] = useState(0)
+  const [videoBlob, setVideoBlob] = useState<Blob | null>(null)
 
   // Load voice options
   useEffect(() => {
@@ -139,6 +146,42 @@ export default function BlogVideoBuilder() {
 
   const stopAudio = () => {
     setPlayingAudio(null)
+  }
+
+  const startVideoRender = () => {
+    if (!videoRendererRef.current || !videoScript) return
+
+    setRenderingVideo(true)
+    setRenderProgress(0)
+    setVideoBlob(null)
+    setError('')
+
+    videoRendererRef.current.renderVideo()
+  }
+
+  const handleVideoComplete = (blob: Blob) => {
+    setVideoBlob(blob)
+    setRenderingVideo(false)
+    setRenderProgress(100)
+    console.log('Video rendering complete:', blob.size, 'bytes')
+  }
+
+  const handleVideoError = (error: string) => {
+    setError(error)
+    setRenderingVideo(false)
+  }
+
+  const downloadVideo = () => {
+    if (!videoBlob) return
+
+    const url = URL.createObjectURL(videoBlob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `${videoScript?.title.slice(0, 50).replace(/[^a-z0-9]/gi, '-').toLowerCase() || 'blog-video'}.webm`
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    URL.revokeObjectURL(url)
   }
 
   return (
@@ -396,22 +439,149 @@ export default function BlogVideoBuilder() {
         )}
 
         {/* Step 4: Render Video */}
-        {step === 4 && (
-          <div className="bg-bg-elevated border border-border-subtle rounded-xl p-8 text-center">
-            <h2 className="text-2xl font-light text-text-soft mb-4">
-              Video Rendering
+        {step === 4 && videoScript && (
+          <div className="bg-bg-elevated border border-border-subtle rounded-xl p-8">
+            <h2 className="text-2xl font-light text-text-soft mb-6">
+              Render Video
             </h2>
-            <p className="text-text-muted mb-8">
-              This feature is coming next! The voiceover audio is ready to be combined with video slides.
-            </p>
 
-            <button
-              onClick={() => setStep(1)}
-              className="px-6 py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg font-medium transition-soft"
-              >
-              Start New Video
-            </button>
+            {!renderingVideo && !videoBlob && (
+              <>
+                <div className="mb-6">
+                  <p className="text-text-muted mb-4">
+                    Ready to create your video! This will combine all {audioResults.length} voiceover clips with animated slides.
+                  </p>
+                  <div className="grid grid-cols-2 gap-4 p-4 bg-bg-dark rounded-lg">
+                    <div>
+                      <div className="text-lg font-light text-firefly-glow">
+                        {formatDuration(videoScript.estimatedDuration)}
+                      </div>
+                      <div className="text-sm text-text-muted">Estimated Duration</div>
+                    </div>
+                    <div>
+                      <div className="text-lg font-light text-firefly-glow">
+                        1920x1080
+                      </div>
+                      <div className="text-sm text-text-muted">Resolution</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex gap-4">
+                  <button
+                    onClick={() => setStep(3)}
+                    className="px-6 py-3 bg-bg-dark border border-border-subtle hover:border-firefly-dim text-text-soft rounded-lg font-medium transition-soft"
+                  >
+                    ← Back
+                  </button>
+                  <button
+                    onClick={startVideoRender}
+                    className="flex-1 px-6 py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg font-medium transition-soft"
+                  >
+                    Start Rendering →
+                  </button>
+                </div>
+              </>
+            )}
+
+            {renderingVideo && (
+              <div className="space-y-6">
+                <div className="text-center">
+                  <div className="text-4xl font-light text-firefly-glow mb-2">
+                    {renderProgress.toFixed(0)}%
+                  </div>
+                  <div className="text-text-muted">Rendering video...</div>
+                </div>
+
+                <div className="w-full bg-bg-dark rounded-full h-4 overflow-hidden">
+                  <div
+                    className="h-full bg-gradient-to-r from-firefly-dim to-firefly-glow transition-all duration-300"
+                    style={{ width: `${renderProgress}%` }}
+                  />
+                </div>
+
+                <div className="text-sm text-text-muted text-center">
+                  This may take 2-5 minutes depending on video length...
+                </div>
+              </div>
+            )}
+
+            {videoBlob && (
+              <div className="space-y-6">
+                <div className="text-center">
+                  <div className="text-6xl mb-4">🎉</div>
+                  <h3 className="text-2xl font-light text-text-soft mb-2">
+                    Video Ready!
+                  </h3>
+                  <p className="text-text-muted">
+                    Your video has been generated successfully.
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-3 gap-4 p-4 bg-bg-dark rounded-lg">
+                  <div>
+                    <div className="text-lg font-light text-firefly-glow">
+                      {(videoBlob.size / (1024 * 1024)).toFixed(1)} MB
+                    </div>
+                    <div className="text-sm text-text-muted">File Size</div>
+                  </div>
+                  <div>
+                    <div className="text-lg font-light text-firefly-glow">
+                      {formatDuration(videoScript.estimatedDuration)}
+                    </div>
+                    <div className="text-sm text-text-muted">Duration</div>
+                  </div>
+                  <div>
+                    <div className="text-lg font-light text-firefly-glow">
+                      WebM
+                    </div>
+                    <div className="text-sm text-text-muted">Format</div>
+                  </div>
+                </div>
+
+                {/* Video Preview */}
+                <div className="bg-bg-dark rounded-lg p-4">
+                  <video
+                    src={URL.createObjectURL(videoBlob)}
+                    controls
+                    className="w-full rounded-lg"
+                  />
+                </div>
+
+                <div className="flex gap-4">
+                  <button
+                    onClick={() => {
+                      setStep(1)
+                      setVideoBlob(null)
+                      setVideoScript(null)
+                      setAudioResults([])
+                    }}
+                    className="px-6 py-3 bg-bg-dark border border-border-subtle hover:border-firefly-dim text-text-soft rounded-lg font-medium transition-soft"
+                  >
+                    Create New Video
+                  </button>
+                  <button
+                    onClick={downloadVideo}
+                    className="flex-1 px-6 py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg font-medium transition-soft"
+                  >
+                    ⬇ Download Video
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
+        )}
+
+        {/* Hidden Video Renderer */}
+        {videoScript && audioResults.length > 0 && (
+          <BlogVideoRenderer
+            ref={videoRendererRef}
+            sections={videoScript.sections}
+            audioResults={audioResults}
+            onProgress={setRenderProgress}
+            onComplete={handleVideoComplete}
+            onError={handleVideoError}
+          />
         )}
       </div>
     </div>
