@@ -42,10 +42,61 @@ export default function BlogVideoBuilder() {
   const [renderProgress, setRenderProgress] = useState(0)
   const [videoBlob, setVideoBlob] = useState<Blob | null>(null)
 
-  // Load voice options
+  // Load voice options and restore saved data
   useEffect(() => {
     loadVoices()
+    restoreSavedData()
   }, [])
+
+  // Save to localStorage whenever audio results change
+  useEffect(() => {
+    if (audioResults.length > 0 && videoScript) {
+      const savedData = {
+        videoScript,
+        audioResults,
+        selectedPost,
+        selectedVoice,
+        voiceSpeed,
+        timestamp: Date.now(),
+      }
+      localStorage.setItem('blog-video-data', JSON.stringify(savedData))
+      console.log('Saved voiceover data to localStorage')
+    }
+  }, [audioResults, videoScript, selectedPost, selectedVoice, voiceSpeed])
+
+  const restoreSavedData = () => {
+    try {
+      const saved = localStorage.getItem('blog-video-data')
+      if (saved) {
+        const data = JSON.parse(saved)
+
+        // Check if data is less than 24 hours old
+        const age = Date.now() - data.timestamp
+        if (age < 24 * 60 * 60 * 1000) {
+          setVideoScript(data.videoScript)
+          setAudioResults(data.audioResults)
+          setSelectedPost(data.selectedPost)
+          setSelectedVoice(data.selectedVoice || 'nova')
+          setVoiceSpeed(data.voiceSpeed || 0.95)
+
+          // Auto-advance to step 3 if we have voiceovers
+          if (data.audioResults.length > 0) {
+            setStep(3)
+            console.log('Restored voiceover data from localStorage')
+          }
+        } else {
+          // Clear old data
+          localStorage.removeItem('blog-video-data')
+        }
+      }
+    } catch (error) {
+      console.error('Error restoring saved data:', error)
+    }
+  }
+
+  const clearSavedData = () => {
+    localStorage.removeItem('blog-video-data')
+  }
 
   const loadVoices = async () => {
     try {
@@ -219,6 +270,13 @@ export default function BlogVideoBuilder() {
             </div>
           ))}
         </div>
+
+        {/* Restored Data Notice */}
+        {step === 3 && audioResults.length > 0 && (
+          <div className="mb-6 p-4 bg-green-500/10 border border-green-500/30 rounded-lg text-green-400">
+            ✓ Restored your previous voiceover session ({audioResults.length} audio clips saved)
+          </div>
+        )}
 
         {/* Error Display */}
         {error && (
@@ -555,6 +613,7 @@ export default function BlogVideoBuilder() {
                       setVideoBlob(null)
                       setVideoScript(null)
                       setAudioResults([])
+                      clearSavedData()
                     }}
                     className="px-6 py-3 bg-bg-dark border border-border-subtle hover:border-firefly-dim text-text-soft rounded-lg font-medium transition-soft"
                   >
