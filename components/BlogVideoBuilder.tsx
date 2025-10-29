@@ -70,23 +70,17 @@ export default function BlogVideoBuilder() {
       if (saved) {
         const data = JSON.parse(saved)
 
-        // Check if data is less than 24 hours old
-        const age = Date.now() - data.timestamp
-        if (age < 24 * 60 * 60 * 1000) {
-          setVideoScript(data.videoScript)
-          setAudioResults(data.audioResults)
-          setSelectedPost(data.selectedPost)
-          setSelectedVoice(data.selectedVoice || 'nova')
-          setVoiceSpeed(data.voiceSpeed || 0.95)
+        // Restore saved data (no expiry - voiceovers cost money!)
+        setVideoScript(data.videoScript)
+        setAudioResults(data.audioResults)
+        setSelectedPost(data.selectedPost)
+        setSelectedVoice(data.selectedVoice || 'nova')
+        setVoiceSpeed(data.voiceSpeed || 0.95)
 
-          // Auto-advance to step 3 if we have voiceovers
-          if (data.audioResults.length > 0) {
-            setStep(3)
-            console.log('Restored voiceover data from localStorage')
-          }
-        } else {
-          // Clear old data
-          localStorage.removeItem('blog-video-data')
+        // Auto-advance to step 3 if we have voiceovers
+        if (data.audioResults.length > 0) {
+          setStep(3)
+          console.log('Restored voiceover data from localStorage')
         }
       }
     } catch (error) {
