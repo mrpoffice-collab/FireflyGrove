@@ -706,7 +706,7 @@ export default function BranchPage() {
           </div>
 
           {/* Story Sparks Section - Only for authenticated users */}
-          {!isPublicView && isAuthenticated && (
+          {isAuthenticated && (
             <div className="mb-8">
               <h3 className={`text-lg font-medium mb-4 ${
                 isLegacy ? 'text-[var(--legacy-text)]' : 'text-text-soft'
@@ -959,8 +959,8 @@ export default function BranchPage() {
             </div>
           )}
 
-          {/* Public viewer CTA */}
-          {isPublicView && (
+          {/* Public viewer CTA - Only show to non-authenticated users */}
+          {isPublicView && !isAuthenticated && (
             <div className="mb-8">
               <div className="bg-[var(--legacy-amber)]/10 border border-[var(--legacy-amber)]/30 rounded-lg p-6 text-center">
                 <h3 className="text-[var(--legacy-text)] font-medium mb-2">
