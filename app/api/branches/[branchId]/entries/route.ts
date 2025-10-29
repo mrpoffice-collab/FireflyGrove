@@ -39,6 +39,12 @@ export async function POST(
               },
             },
           },
+          {
+            // Allow any authenticated user to add to Open Grove trees
+            person: {
+              discoveryEnabled: true,
+            },
+          },
         ],
       },
       include: {
