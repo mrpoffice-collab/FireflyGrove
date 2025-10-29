@@ -42,11 +42,27 @@ export default function BlogVideoBuilder() {
   const [renderProgress, setRenderProgress] = useState(0)
   const [videoBlob, setVideoBlob] = useState<Blob | null>(null)
 
-  // Load voice options and existing sessions
+  // Load voice options, existing sessions, and content sources
   useEffect(() => {
     loadVoices()
     loadSessions()
+    loadContentSources()
   }, [])
+
+  const loadContentSources = async () => {
+    try {
+      setLoadingContentSources(true)
+      const response = await fetch('/api/blog-video/content-sources')
+      if (response.ok) {
+        const data = await response.json()
+        setContentSources(data.sources || [])
+      }
+    } catch (error) {
+      console.error('Error loading content sources:', error)
+    } finally {
+      setLoadingContentSources(false)
+    }
+  }
 
   // Save to database whenever audio results change
   useEffect(() => {
@@ -57,6 +73,17 @@ export default function BlogVideoBuilder() {
 
   const [existingSessions, setExistingSessions] = useState<any[]>([])
   const [loadingSessions, setLoadingSessions] = useState(false)
+
+  // Content sources
+  const [contentSources, setContentSources] = useState<any[]>([])
+  const [loadingContentSources, setLoadingContentSources] = useState(false)
+  const [contentTab, setContentTab] = useState<'browse' | 'manual'>('browse')
+  const [sourceFilter, setSourceFilter] = useState<'all' | 'published-blog' | 'draft-marketing' | 'published-marketing'>('all')
+
+  // Manual content
+  const [manualTitle, setManualTitle] = useState('')
+  const [manualContent, setManualContent] = useState('')
+  const [manualExcerpt, setManualExcerpt] = useState('')
 
   const loadSessions = async () => {
     try {
@@ -157,39 +184,71 @@ export default function BlogVideoBuilder() {
     }
   }
 
-  const handleSelectPost = async (slug: string) => {
-    if (!slug) return
-
-    setSelectedPost(slug)
+  const handleSelectContent = async (source?: any) => {
     setLoading(true)
     setError('')
 
     try {
-      // First, check if there's an existing session for this blog
-      const existingLoaded = await loadSessionFromDatabase(slug)
+      let parseBody: any = {}
 
-      if (existingLoaded) {
-        // Session loaded, user is at step 3 now
-        return
+      if (source) {
+        // Selecting from browse list
+        setSelectedPost(source.slug)
+
+        // Check for existing session first
+        const existingLoaded = await loadSessionFromDatabase(source.slug)
+        if (existingLoaded) {
+          return
+        }
+
+        // Parse fresh content
+        if (source.marketingPostId) {
+          parseBody = { marketingPostId: source.marketingPostId }
+        } else {
+          parseBody = { slug: source.slug }
+        }
+      } else {
+        // Manual content
+        if (!manualTitle || !manualContent) {
+          setError('Title and content are required')
+          setLoading(false)
+          return
+        }
+
+        const generatedSlug = manualTitle.toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 50)
+        setSelectedPost(generatedSlug)
+
+        // Check for existing session
+        const existingLoaded = await loadSessionFromDatabase(generatedSlug)
+        if (existingLoaded) {
+          return
+        }
+
+        parseBody = {
+          manualContent: {
+            title: manualTitle,
+            content: manualContent,
+            excerpt: manualExcerpt || undefined,
+          },
+        }
       }
 
-      // No existing session, parse the blog fresh
       const response = await fetch('/api/blog-video/parse', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ slug }),
+        body: JSON.stringify(parseBody),
       })
 
       if (!response.ok) {
-        throw new Error('Failed to parse blog post')
+        throw new Error('Failed to parse content')
       }
 
       const data = await response.json()
       setVideoScript(data.script)
       setStep(2)
     } catch (err) {
-      console.error('Error parsing blog:', err)
-      setError(err instanceof Error ? err.message : 'Failed to parse blog post')
+      console.error('Error parsing content:', err)
+      setError(err instanceof Error ? err.message : 'Failed to parse content')
     } finally {
       setLoading(false)
     }
@@ -368,7 +427,7 @@ export default function BlogVideoBuilder() {
 
                       <div className="flex gap-2">
                         <button
-                          onClick={() => handleSelectPost(session.blogSlug)}
+                          onClick={() => loadSessionFromDatabase(session.blogSlug)}
                           className="px-4 py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg text-sm font-medium transition-soft"
                         >
                           Continue
@@ -395,34 +454,193 @@ export default function BlogVideoBuilder() {
             {/* New Video */}
             <div className="bg-bg-elevated border border-border-subtle rounded-xl p-8">
               <h2 className="text-2xl font-light text-text-soft mb-6">
-                {existingSessions.length > 0 ? 'Create New Video' : 'Select a Blog Post'}
+                {existingSessions.length > 0 ? 'Create New Video' : 'Select Content'}
               </h2>
 
-              {/* Temporary: Manual slug input */}
-              <div className="space-y-4">
-              <div>
-                <label className="block text-sm text-text-muted mb-2">
-                  Enter Blog Post Slug
-                </label>
-                <input
-                  type="text"
-                  value={selectedPost}
-                  onChange={(e) => setSelectedPost(e.target.value)}
-                  placeholder="e.g., elderly-parents-won-t-record-stories-before-it-s-too-late"
-                  className="w-full px-4 py-3 bg-bg-dark border border-border-subtle rounded-lg text-text-soft focus:outline-none focus:border-firefly-dim"
-                />
+              {/* Tabs: Browse vs Manual */}
+              <div className="flex gap-2 mb-6 border-b border-border-subtle">
+                <button
+                  onClick={() => setContentTab('browse')}
+                  className={`px-4 py-2 font-medium transition-soft border-b-2 ${
+                    contentTab === 'browse'
+                      ? 'border-firefly-glow text-firefly-glow'
+                      : 'border-transparent text-text-muted hover:text-text-soft'
+                  }`}
+                >
+                  📚 Browse Content
+                </button>
+                <button
+                  onClick={() => setContentTab('manual')}
+                  className={`px-4 py-2 font-medium transition-soft border-b-2 ${
+                    contentTab === 'manual'
+                      ? 'border-firefly-glow text-firefly-glow'
+                      : 'border-transparent text-text-muted hover:text-text-soft'
+                  }`}
+                >
+                  ✂️ Paste Content
+                </button>
               </div>
 
-              <button
-                onClick={() => handleSelectPost(selectedPost)}
-                disabled={!selectedPost || loading}
-                className="px-6 py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg font-medium transition-soft disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {loading ? 'Loading...' : 'Parse Blog Post'}
-              </button>
-            </div>
+              {/* Browse Content Tab */}
+              {contentTab === 'browse' && (
+                <div className="space-y-4">
+                  {/* Filter buttons */}
+                  <div className="flex gap-2 flex-wrap">
+                    <button
+                      onClick={() => setSourceFilter('all')}
+                      className={`px-3 py-1 rounded-full text-sm font-medium transition-soft ${
+                        sourceFilter === 'all'
+                          ? 'bg-firefly-dim text-bg-dark'
+                          : 'bg-bg-dark text-text-muted hover:text-text-soft'
+                      }`}
+                    >
+                      All ({contentSources.length})
+                    </button>
+                    <button
+                      onClick={() => setSourceFilter('published-blog')}
+                      className={`px-3 py-1 rounded-full text-sm font-medium transition-soft ${
+                        sourceFilter === 'published-blog'
+                          ? 'bg-firefly-dim text-bg-dark'
+                          : 'bg-bg-dark text-text-muted hover:text-text-soft'
+                      }`}
+                    >
+                      📄 Published Blogs ({contentSources.filter(s => s.type === 'published-blog').length})
+                    </button>
+                    <button
+                      onClick={() => setSourceFilter('draft-marketing')}
+                      className={`px-3 py-1 rounded-full text-sm font-medium transition-soft ${
+                        sourceFilter === 'draft-marketing'
+                          ? 'bg-firefly-dim text-bg-dark'
+                          : 'bg-bg-dark text-text-muted hover:text-text-soft'
+                      }`}
+                    >
+                      ✏️ Drafts ({contentSources.filter(s => s.type === 'draft-marketing').length})
+                    </button>
+                    <button
+                      onClick={() => setSourceFilter('published-marketing')}
+                      className={`px-3 py-1 rounded-full text-sm font-medium transition-soft ${
+                        sourceFilter === 'published-marketing'
+                          ? 'bg-firefly-dim text-bg-dark'
+                          : 'bg-bg-dark text-text-muted hover:text-text-soft'
+                      }`}
+                    >
+                      📱 Published ({contentSources.filter(s => s.type === 'published-marketing').length})
+                    </button>
+                  </div>
 
-              {/* TODO: Add blog post list when API is ready */}
+                  {/* Content list */}
+                  {loadingContentSources ? (
+                    <div className="text-center py-8 text-text-muted">Loading content...</div>
+                  ) : (
+                    <div className="space-y-2 max-h-96 overflow-y-auto">
+                      {contentSources
+                        .filter(source => sourceFilter === 'all' || source.type === sourceFilter)
+                        .map((source) => (
+                          <div
+                            key={source.id}
+                            className="flex items-start justify-between p-4 bg-bg-dark border border-border-subtle rounded-lg hover:border-firefly-dim transition-soft cursor-pointer"
+                            onClick={() => handleSelectContent(source)}
+                          >
+                            <div className="flex-1">
+                              <div className="font-medium text-text-soft mb-1">
+                                {source.title}
+                              </div>
+                              <div className="text-sm text-text-muted line-clamp-2 mb-2">
+                                {source.excerpt}
+                              </div>
+                              <div className="flex items-center gap-2 text-xs text-text-muted">
+                                <span className="px-2 py-0.5 bg-bg-elevated rounded">
+                                  {source.source}
+                                </span>
+                                <span>•</span>
+                                <span>{new Date(source.createdAt).toLocaleDateString()}</span>
+                              </div>
+                            </div>
+                            <button
+                              disabled={loading}
+                              className="ml-4 px-4 py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg text-sm font-medium transition-soft disabled:opacity-50"
+                            >
+                              {loading ? '...' : 'Select'}
+                            </button>
+                          </div>
+                        ))}
+
+                      {contentSources.filter(source => sourceFilter === 'all' || source.type === sourceFilter).length === 0 && (
+                        <div className="text-center py-8 text-text-muted">
+                          No content found. Try switching filters or paste content manually.
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Manual Content Tab */}
+              {contentTab === 'manual' && (
+                <div className="space-y-4">
+                  <p className="text-sm text-text-muted mb-4">
+                    Paste content from anywhere - other websites, Word docs, or write directly.
+                    Supports markdown or plain text.
+                  </p>
+
+                  <div>
+                    <label className="block text-sm font-medium text-text-soft mb-2">
+                      Title *
+                    </label>
+                    <input
+                      type="text"
+                      value={manualTitle}
+                      onChange={(e) => setManualTitle(e.target.value)}
+                      placeholder="e.g., How to Preserve Family Memories"
+                      className="w-full px-4 py-3 bg-bg-dark border border-border-subtle rounded-lg text-text-soft focus:outline-none focus:border-firefly-dim"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-text-soft mb-2">
+                      Excerpt (optional)
+                    </label>
+                    <input
+                      type="text"
+                      value={manualExcerpt}
+                      onChange={(e) => setManualExcerpt(e.target.value)}
+                      placeholder="Short summary (optional)"
+                      className="w-full px-4 py-3 bg-bg-dark border border-border-subtle rounded-lg text-text-soft focus:outline-none focus:border-firefly-dim"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-text-soft mb-2">
+                      Content *
+                    </label>
+                    <textarea
+                      value={manualContent}
+                      onChange={(e) => setManualContent(e.target.value)}
+                      placeholder="Paste or write your content here...
+
+# Use markdown headings to structure your content
+## Section 1
+Your content here...
+
+## Section 2
+More content..."
+                      rows={12}
+                      className="w-full px-4 py-3 bg-bg-dark border border-border-subtle rounded-lg text-text-soft font-mono text-sm focus:outline-none focus:border-firefly-dim"
+                    />
+                    <div className="text-xs text-text-muted mt-2">
+                      {manualContent.split(/\s+/).filter(w => w).length} words • Estimated {Math.ceil(manualContent.split(/\s+/).filter(w => w).length / 150)} min video
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={() => handleSelectContent()}
+                    disabled={!manualTitle || !manualContent || loading}
+                    className="w-full px-6 py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg font-medium transition-soft disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {loading ? 'Parsing...' : 'Parse Content & Continue →'}
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         )}
