@@ -1,0 +1,18 @@
+name: Publish Scheduled Posts
+
+on:
+  schedule:
+    # Run every 4 hours (at :00 minutes)
+    - cron: '0 */4 * * *'
+  workflow_dispatch: # Allows manual trigger from GitHub Actions tab
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger scheduled post publishing
+        run: |
+          curl -X POST https://firefly-grove.vercel.app/api/cron/publish-scheduled \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            -w "\nHTTP Status: %{http_code}\n" \
+            -s -S
