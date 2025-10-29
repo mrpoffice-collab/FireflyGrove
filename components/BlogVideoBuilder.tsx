@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import { BlogVideoScript, formatDuration } from '@/lib/blogVideoParser'
 import { VoiceOption } from '@/app/api/generate-voiceover/route'
 import BlogVideoRenderer, { BlogVideoRendererHandle } from './BlogVideoRenderer'
+import BlogVideoVisualSelector, { SectionMedia } from './BlogVideoVisualSelector'
 
 interface VoiceInfo {
   id: VoiceOption
@@ -88,6 +89,9 @@ export default function BlogVideoBuilder() {
   // Section editing
   const [editingSection, setEditingSection] = useState<string | null>(null)
   const [editedSections, setEditedSections] = useState<{[key: string]: any}>({})
+
+  // Visual media selection
+  const [sectionMedia, setSectionMedia] = useState<{ [sectionId: string]: SectionMedia }>({})
 
   const updateSection = (sectionId: string, field: string, value: any) => {
     setEditedSections(prev => ({
@@ -195,7 +199,7 @@ export default function BlogVideoBuilder() {
         setSelectedPost(session.blogSlug)
         setSelectedVoice(session.selectedVoice)
         setVoiceSpeed(session.voiceSpeed)
-        setStep(3)
+        setStep(4)
 
         console.log('Loaded session from database:', session.id)
       } else if (response.status === 404) {
@@ -339,7 +343,7 @@ export default function BlogVideoBuilder() {
       const data = await response.json()
       setAudioResults(data.results)
       setVoiceoverProgress(100)
-      setStep(3)
+      setStep(4)
 
       console.log('Voiceover generation complete:', data.metadata)
     } catch (err) {
@@ -922,19 +926,62 @@ More content..."
                   ← Back
                 </button>
                 <button
-                  onClick={generateVoiceover}
-                  disabled={generatingVoiceover}
-                  className="flex-1 px-6 py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg font-medium transition-soft disabled:opacity-50 disabled:cursor-not-allowed"
+                  onClick={() => setStep(3)}
+                  className="flex-1 px-6 py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg font-medium transition-soft"
                 >
-                  {generatingVoiceover ? 'Generating Voiceover...' : 'Generate Voiceover →'}
+                  Next: Select Visuals →
                 </button>
               </div>
             </div>
           </div>
         )}
 
-        {/* Step 3: Preview Voiceover */}
-        {step === 3 && audioResults.length > 0 && videoScript && (
+        {/* Step 3: Select Visuals */}
+        {step === 3 && videoScript && (
+          <div className="bg-bg-elevated border border-border-subtle rounded-xl p-8">
+            <h2 className="text-2xl font-light text-text-soft mb-2">
+              Step 3: Select Visuals
+            </h2>
+            <p className="text-text-muted mb-6">
+              Choose images or videos for each section. Auto-suggestions provided based on content.
+            </p>
+
+            <BlogVideoVisualSelector
+              sections={videoScript.sections}
+              onMediaSelected={(sectionId, media) => {
+                if (media) {
+                  setSectionMedia(prev => ({ ...prev, [sectionId]: media }))
+                } else {
+                  setSectionMedia(prev => {
+                    const newMedia = { ...prev }
+                    delete newMedia[sectionId]
+                    return newMedia
+                  })
+                }
+              }}
+              initialSelections={sectionMedia}
+            />
+
+            <div className="flex gap-4 mt-8">
+              <button
+                onClick={() => setStep(2)}
+                className="px-6 py-3 bg-bg-dark border border-border-subtle hover:border-firefly-dim text-text-soft rounded-lg font-medium transition-soft"
+              >
+                ← Back to Edit
+              </button>
+              <button
+                onClick={generateVoiceover}
+                disabled={generatingVoiceover}
+                className="flex-1 px-6 py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg font-medium transition-soft disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {generatingVoiceover ? 'Generating Voiceover...' : 'Generate Voiceover →'}
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Step 4: Preview Voiceover */}
+        {step === 4 && audioResults.length > 0 && videoScript && (
           <div className="bg-bg-elevated border border-border-subtle rounded-xl p-8">
             <h2 className="text-2xl font-light text-text-soft mb-6">
               Voiceover Generated Successfully ✓
@@ -971,13 +1018,13 @@ More content..."
 
             <div className="flex gap-4">
               <button
-                onClick={() => setStep(2)}
+                onClick={() => setStep(3)}
                 className="px-6 py-3 bg-bg-dark border border-border-subtle hover:border-firefly-dim text-text-soft rounded-lg font-medium transition-soft"
               >
-                ← Back
+                ← Back to Visuals
               </button>
               <button
-                onClick={() => setStep(4)}
+                onClick={() => setStep(5)}
                 className="flex-1 px-6 py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg font-medium transition-soft"
               >
                 Continue to Video Rendering →
@@ -986,8 +1033,8 @@ More content..."
           </div>
         )}
 
-        {/* Step 4: Render Video */}
-        {step === 4 && videoScript && (
+        {/* Step 5: Render Video */}
+        {step === 5 && videoScript && (
           <div className="bg-bg-elevated border border-border-subtle rounded-xl p-8">
             <h2 className="text-2xl font-light text-text-soft mb-6">
               Render Video
@@ -1017,7 +1064,7 @@ More content..."
 
                 <div className="flex gap-4">
                   <button
-                    onClick={() => setStep(3)}
+                    onClick={() => setStep(4)}
                     className="px-6 py-3 bg-bg-dark border border-border-subtle hover:border-firefly-dim text-text-soft rounded-lg font-medium transition-soft"
                   >
                     ← Back
