@@ -65,13 +65,6 @@ export default function BlogVideoBuilder() {
     }
   }
 
-  // Save to database whenever audio results change
-  useEffect(() => {
-    if (audioResults.length > 0 && videoScript) {
-      saveSessionToDatabase()
-    }
-  }, [audioResults, videoScript, selectedPost, selectedVoice, voiceSpeed])
-
   const [existingSessions, setExistingSessions] = useState<any[]>([])
   const [loadingSessions, setLoadingSessions] = useState(false)
 
@@ -92,6 +85,13 @@ export default function BlogVideoBuilder() {
 
   // Visual media selection
   const [sectionMedia, setSectionMedia] = useState<{ [sectionId: string]: SectionMedia }>({})
+
+  // Save to database whenever audio results or visual selections change
+  useEffect(() => {
+    if (audioResults.length > 0 && videoScript) {
+      saveSessionToDatabase()
+    }
+  }, [audioResults, videoScript, selectedPost, selectedVoice, voiceSpeed, sectionMedia])
 
   const updateSection = (sectionId: string, field: string, value: any) => {
     setEditedSections(prev => ({
@@ -170,6 +170,7 @@ export default function BlogVideoBuilder() {
           blogTitle: videoScript.title,
           videoScript,
           audioResults,
+          sectionMedia, // Save visual selections
           selectedVoice,
           voiceSpeed,
           generationCost: (videoScript.wordCount / 1000) * 0.03, // Estimate cost
@@ -196,6 +197,7 @@ export default function BlogVideoBuilder() {
 
         setVideoScript(session.videoScript)
         setAudioResults(session.audioResults)
+        setSectionMedia(session.sectionMedia || {}) // Restore visual selections
         setSelectedPost(session.blogSlug)
         setSelectedVoice(session.selectedVoice)
         setVoiceSpeed(session.voiceSpeed)

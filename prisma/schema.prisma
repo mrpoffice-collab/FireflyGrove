@@ -629,6 +629,7 @@ model BlogVideoSession {
   blogTitle         String   // Blog post title
   videoScript       Json     // Parsed video script with sections
   audioResults      Json     // Generated voiceover audio clips (base64)
+  sectionMedia      Json?    // Visual media selections for each section (images/videos)
 
   // Voice settings
   selectedVoice     String   // Voice used: alloy, echo, fable, onyx, nova, shimmer

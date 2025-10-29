@@ -69,6 +69,7 @@ export default function BlogVideoVisualSelector({
   const [uploading, setUploading] = useState(false)
   const [uploadedImages, setUploadedImages] = useState<Array<{ url: string; filename: string }>>([])
   const fileInputRef = React.useRef<HTMLInputElement>(null)
+  const [error, setError] = useState<string>('')
 
   const currentSection = sections[currentSectionIndex]
 
@@ -85,16 +86,22 @@ export default function BlogVideoVisualSelector({
     if (!query.trim()) return
 
     setLoading(true)
+    setError('')
     try {
       const endpoint = type === 'photos' ? '/api/pexels/search-photos' : '/api/pexels/search-videos'
       const response = await fetch(`${endpoint}?query=${encodeURIComponent(query)}&per_page=12`)
 
-      if (response.ok) {
-        const data = await response.json()
-        setSearchResults(data.results[type] || [])
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }))
+        throw new Error(errorData.error || `Search failed: ${response.status}`)
       }
+
+      const data = await response.json()
+      setSearchResults(data.results[type] || [])
     } catch (error) {
       console.error('Error searching Pexels:', error)
+      setError(error instanceof Error ? error.message : 'Failed to search. Please try again.')
+      setSearchResults([])
     } finally {
       setLoading(false)
     }
@@ -303,6 +310,20 @@ export default function BlogVideoVisualSelector({
           </div>
         )}
       </div>
+
+      {/* Error Display */}
+      {error && (
+        <div className="p-4 bg-red-500/20 border border-red-500/30 rounded-lg text-red-400 text-sm">
+          <div className="font-medium mb-1">Search Error</div>
+          {error}
+          <button
+            onClick={() => setError('')}
+            className="ml-3 px-2 py-1 bg-red-500/30 hover:bg-red-500/40 rounded text-xs transition-soft"
+          >
+            Dismiss
+          </button>
+        </div>
+      )}
 
       {/* Search Interface */}
       <div className="space-y-4">
