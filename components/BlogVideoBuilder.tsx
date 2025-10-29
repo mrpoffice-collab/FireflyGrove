@@ -42,54 +42,109 @@ export default function BlogVideoBuilder() {
   const [renderProgress, setRenderProgress] = useState(0)
   const [videoBlob, setVideoBlob] = useState<Blob | null>(null)
 
-  // Load voice options and restore saved data
+  // Load voice options and existing sessions
   useEffect(() => {
     loadVoices()
-    restoreSavedData()
+    loadSessions()
   }, [])
 
-  // Save to localStorage whenever audio results change
+  // Save to database whenever audio results change
   useEffect(() => {
     if (audioResults.length > 0 && videoScript) {
-      const savedData = {
-        videoScript,
-        audioResults,
-        selectedPost,
-        selectedVoice,
-        voiceSpeed,
-        timestamp: Date.now(),
-      }
-      localStorage.setItem('blog-video-data', JSON.stringify(savedData))
-      console.log('Saved voiceover data to localStorage')
+      saveSessionToDatabase()
     }
   }, [audioResults, videoScript, selectedPost, selectedVoice, voiceSpeed])
 
-  const restoreSavedData = () => {
+  const [existingSessions, setExistingSessions] = useState<any[]>([])
+  const [loadingSessions, setLoadingSessions] = useState(false)
+
+  const loadSessions = async () => {
     try {
-      const saved = localStorage.getItem('blog-video-data')
-      if (saved) {
-        const data = JSON.parse(saved)
-
-        // Restore saved data (no expiry - voiceovers cost money!)
-        setVideoScript(data.videoScript)
-        setAudioResults(data.audioResults)
-        setSelectedPost(data.selectedPost)
-        setSelectedVoice(data.selectedVoice || 'nova')
-        setVoiceSpeed(data.voiceSpeed || 0.95)
-
-        // Auto-advance to step 3 if we have voiceovers
-        if (data.audioResults.length > 0) {
-          setStep(3)
-          console.log('Restored voiceover data from localStorage')
-        }
+      setLoadingSessions(true)
+      const response = await fetch('/api/blog-video/sessions')
+      if (response.ok) {
+        const data = await response.json()
+        setExistingSessions(data.sessions || [])
       }
     } catch (error) {
-      console.error('Error restoring saved data:', error)
+      console.error('Error loading sessions:', error)
+    } finally {
+      setLoadingSessions(false)
     }
   }
 
-  const clearSavedData = () => {
-    localStorage.removeItem('blog-video-data')
+  const saveSessionToDatabase = async () => {
+    if (!videoScript || audioResults.length === 0) return
+
+    try {
+      const response = await fetch('/api/blog-video/sessions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          blogSlug: selectedPost,
+          blogTitle: videoScript.title,
+          videoScript,
+          audioResults,
+          selectedVoice,
+          voiceSpeed,
+          generationCost: (videoScript.wordCount / 1000) * 0.03, // Estimate cost
+        }),
+      })
+
+      if (response.ok) {
+        console.log('Saved session to database')
+        loadSessions() // Refresh list
+      }
+    } catch (error) {
+      console.error('Error saving session:', error)
+    }
+  }
+
+  const loadSessionFromDatabase = async (slug: string) => {
+    try {
+      setLoading(true)
+      const response = await fetch(`/api/blog-video/sessions/${encodeURIComponent(slug)}`)
+
+      if (response.ok) {
+        const data = await response.json()
+        const session = data.session
+
+        setVideoScript(session.videoScript)
+        setAudioResults(session.audioResults)
+        setSelectedPost(session.blogSlug)
+        setSelectedVoice(session.selectedVoice)
+        setVoiceSpeed(session.voiceSpeed)
+        setStep(3)
+
+        console.log('Loaded session from database:', session.id)
+      } else if (response.status === 404) {
+        // No existing session, proceed with normal flow
+        return false
+      }
+    } catch (error) {
+      console.error('Error loading session:', error)
+      return false
+    } finally {
+      setLoading(false)
+    }
+    return true
+  }
+
+  const deleteSession = async (id: string) => {
+    if (!confirm('Delete this video session? Voiceovers cannot be recovered.')) return
+
+    try {
+      const response = await fetch(`/api/blog-video/sessions?id=${id}`, {
+        method: 'DELETE',
+      })
+
+      if (response.ok) {
+        console.log('Deleted session:', id)
+        loadSessions() // Refresh list
+      }
+    } catch (error) {
+      console.error('Error deleting session:', error)
+    }
   }
 
   const loadVoices = async () => {
@@ -110,6 +165,15 @@ export default function BlogVideoBuilder() {
     setError('')
 
     try {
+      // First, check if there's an existing session for this blog
+      const existingLoaded = await loadSessionFromDatabase(slug)
+
+      if (existingLoaded) {
+        // Session loaded, user is at step 3 now
+        return
+      }
+
+      // No existing session, parse the blog fresh
       const response = await fetch('/api/blog-video/parse', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -265,13 +329,6 @@ export default function BlogVideoBuilder() {
           ))}
         </div>
 
-        {/* Restored Data Notice */}
-        {step === 3 && audioResults.length > 0 && (
-          <div className="mb-6 p-4 bg-green-500/10 border border-green-500/30 rounded-lg text-green-400">
-            ✓ Restored your previous voiceover session ({audioResults.length} audio clips saved)
-          </div>
-        )}
-
         {/* Error Display */}
         {error && (
           <div className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-lg text-red-400">
@@ -281,13 +338,68 @@ export default function BlogVideoBuilder() {
 
         {/* Step 1: Select Blog Post */}
         {step === 1 && (
-          <div className="bg-bg-elevated border border-border-subtle rounded-xl p-8">
-            <h2 className="text-2xl font-light text-text-soft mb-6">
-              Select a Blog Post
-            </h2>
+          <div className="space-y-6">
+            {/* Existing Sessions */}
+            {existingSessions.length > 0 && (
+              <div className="bg-bg-elevated border border-border-subtle rounded-xl p-8">
+                <h2 className="text-2xl font-light text-text-soft mb-4">
+                  Continue Existing Video
+                </h2>
+                <p className="text-text-muted mb-6">
+                  You have {existingSessions.length} video{existingSessions.length !== 1 ? 's' : ''} in progress with saved voiceovers
+                </p>
 
-            {/* Temporary: Manual slug input */}
-            <div className="space-y-4">
+                <div className="space-y-3">
+                  {existingSessions.map((session) => (
+                    <div
+                      key={session.id}
+                      className="flex items-center justify-between p-4 bg-bg-dark border border-border-subtle rounded-lg hover:border-firefly-dim transition-soft"
+                    >
+                      <div className="flex-1">
+                        <div className="font-medium text-text-soft mb-1">
+                          {session.blogTitle}
+                        </div>
+                        <div className="text-sm text-text-muted">
+                          {session.sectionCount} sections • {formatDuration(session.estimatedDuration)} •
+                          {session.selectedVoice} voice •
+                          Updated {new Date(session.updatedAt).toLocaleDateString()}
+                        </div>
+                      </div>
+
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => handleSelectPost(session.blogSlug)}
+                          className="px-4 py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg text-sm font-medium transition-soft"
+                        >
+                          Continue
+                        </button>
+                        <button
+                          onClick={() => deleteSession(session.id)}
+                          className="px-4 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-lg text-sm font-medium transition-soft"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-6 pt-6 border-t border-border-subtle">
+                  <p className="text-sm text-text-muted">
+                    Or create a new video below
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* New Video */}
+            <div className="bg-bg-elevated border border-border-subtle rounded-xl p-8">
+              <h2 className="text-2xl font-light text-text-soft mb-6">
+                {existingSessions.length > 0 ? 'Create New Video' : 'Select a Blog Post'}
+              </h2>
+
+              {/* Temporary: Manual slug input */}
+              <div className="space-y-4">
               <div>
                 <label className="block text-sm text-text-muted mb-2">
                   Enter Blog Post Slug
@@ -310,7 +422,8 @@ export default function BlogVideoBuilder() {
               </button>
             </div>
 
-            {/* TODO: Add blog post list when API is ready */}
+              {/* TODO: Add blog post list when API is ready */}
+            </div>
           </div>
         )}
 
@@ -607,7 +720,8 @@ export default function BlogVideoBuilder() {
                       setVideoBlob(null)
                       setVideoScript(null)
                       setAudioResults([])
-                      clearSavedData()
+                      setSelectedPost('')
+                      loadSessions() // Refresh the list
                     }}
                     className="px-6 py-3 bg-bg-dark border border-border-subtle hover:border-firefly-dim text-text-soft rounded-lg font-medium transition-soft"
                   >

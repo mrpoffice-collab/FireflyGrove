@@ -42,6 +42,7 @@ model User {
   treeSubscriptions TreeSubscription[]
   sentTreeTransfers TreeTransfer[] @relation("TreeTransferSender")
   videoGenerations VideoGeneration[]
+  blogVideoSessions BlogVideoSession[] @relation("UserBlogVideoSessions")
   soundArts SoundArt[] @relation("UserSoundArt")
   sparks Spark[] @relation("UserSparks")
   sparkCollections SparkCollection[] @relation("UserSparkCollections")
@@ -616,6 +617,50 @@ model VideoGeneration {
   @@index([createdAt])
   @@index([autoDeleteAt])
   @@index([deletedAt])
+}
+
+// Blog Video Session - Saves voiceover sessions for blog-to-video generation
+model BlogVideoSession {
+  id                String   @id @default(cuid())
+  userId            String   // User who owns this session
+
+  // Blog and video data
+  blogSlug          String   // Blog post slug
+  blogTitle         String   // Blog post title
+  videoScript       Json     // Parsed video script with sections
+  audioResults      Json     // Generated voiceover audio clips (base64)
+
+  // Voice settings
+  selectedVoice     String   // Voice used: alloy, echo, fable, onyx, nova, shimmer
+  voiceSpeed        Float    @default(0.95) // Speaking speed
+
+  // Video metadata
+  sectionCount      Int      // Number of sections
+  estimatedDuration Int      // Estimated video duration in seconds
+  wordCount         Int      // Total word count
+
+  // Generation cost tracking
+  generationCost    Float?   // Cost in USD (e.g., 0.44)
+
+  // Status
+  status            String   @default("draft") // draft, voiceover_complete, video_rendered
+
+  // Rendered video (if completed)
+  videoUrl          String?  // Storage URL if video was rendered
+  videoSizeBytes    Int?
+  renderedAt        DateTime?
+
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  // Relations
+  user              User     @relation("UserBlogVideoSessions", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([blogSlug])
+  @@index([status])
+  @@index([createdAt])
+  @@unique([userId, blogSlug]) // One session per user per blog post
 }
 
 // Sound Art - Audio waveform artwork generator
