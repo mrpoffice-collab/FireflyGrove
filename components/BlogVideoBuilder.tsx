@@ -1175,6 +1175,7 @@ More content..."
             ref={videoRendererRef}
             sections={videoScript.sections}
             audioResults={audioResults}
+            sectionMedia={sectionMedia}
             onProgress={setRenderProgress}
             onComplete={handleVideoComplete}
             onError={handleVideoError}

@@ -2,6 +2,7 @@
 
 import { useRef, useState, forwardRef, useImperativeHandle } from 'react'
 import { BlogVideoSection } from '@/lib/blogVideoParser'
+import { SectionMedia } from './BlogVideoVisualSelector'
 
 interface AudioResult {
   sectionId: string
@@ -13,6 +14,7 @@ interface AudioResult {
 interface BlogVideoRendererProps {
   sections: BlogVideoSection[]
   audioResults: AudioResult[]
+  sectionMedia?: { [sectionId: string]: SectionMedia }
   onProgress: (progress: number) => void
   onComplete: (videoBlob: Blob) => void
   onError: (error: string) => void
@@ -23,17 +25,122 @@ export interface BlogVideoRendererHandle {
 }
 
 const BlogVideoRenderer = forwardRef<BlogVideoRendererHandle, BlogVideoRendererProps>(
-  ({ sections, audioResults, onProgress, onComplete, onError }, ref) => {
+  ({ sections, audioResults, sectionMedia = {}, onProgress, onComplete, onError }, ref) => {
     const canvasRef = useRef<HTMLCanvasElement>(null)
     const [rendering, setRendering] = useState(false)
     const mediaRecorderRef = useRef<MediaRecorder | null>(null)
     const chunksRef = useRef<Blob[]>([])
     const audioContextRef = useRef<AudioContext | null>(null)
     const audioElementsRef = useRef<HTMLAudioElement[]>([])
+    const loadedMediaRef = useRef<{ [sectionId: string]: HTMLImageElement | HTMLVideoElement }>({})
 
     useImperativeHandle(ref, () => ({
       renderVideo,
     }))
+
+    // Preload all media (images and videos)
+    const preloadMedia = async (): Promise<void> => {
+      const loadPromises: Promise<void>[] = []
+
+      Object.entries(sectionMedia).forEach(([sectionId, media]) => {
+        if (media.type === 'image') {
+          const promise = new Promise<void>((resolve, reject) => {
+            const img = new Image()
+            img.crossOrigin = 'anonymous'
+            img.onload = () => {
+              loadedMediaRef.current[sectionId] = img
+              resolve()
+            }
+            img.onerror = () => reject(new Error(`Failed to load image for section ${sectionId}`))
+            img.src = media.url
+          })
+          loadPromises.push(promise)
+        } else if (media.type === 'video') {
+          const promise = new Promise<void>((resolve, reject) => {
+            const video = document.createElement('video')
+            video.crossOrigin = 'anonymous'
+            video.preload = 'auto'
+            video.muted = true
+            video.onloadeddata = () => {
+              loadedMediaRef.current[sectionId] = video
+              resolve()
+            }
+            video.onerror = () => reject(new Error(`Failed to load video for section ${sectionId}`))
+            video.src = media.url
+          })
+          loadPromises.push(promise)
+        }
+      })
+
+      await Promise.all(loadPromises)
+    }
+
+    // Draw background media for a section
+    const drawBackgroundMedia = (
+      ctx: CanvasRenderingContext2D,
+      sectionId: string,
+      width: number,
+      height: number,
+      style: string,
+      progress: number = 1
+    ) => {
+      const mediaElement = loadedMediaRef.current[sectionId]
+      if (!mediaElement) return
+
+      ctx.save()
+
+      if (style === 'full') {
+        // Full-screen background
+        drawImageCover(ctx, mediaElement, 0, 0, width, height)
+        // Add dark overlay for text readability
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.4)'
+        ctx.fillRect(0, 0, width, height)
+      } else if (style === 'background-blur') {
+        // Blurred background with sharp image overlay
+        ctx.filter = 'blur(20px) brightness(0.6)'
+        drawImageCover(ctx, mediaElement, 0, 0, width, height)
+        ctx.filter = 'none'
+      } else if (style === 'split-left' || style === 'split-right') {
+        // Split screen layout
+        const imgWidth = width * 0.5
+        const imgX = style === 'split-left' ? 0 : width * 0.5
+        drawImageCover(ctx, mediaElement, imgX, 0, imgWidth, height)
+      } else if (style === 'ken-burns') {
+        // Ken Burns effect (slow zoom/pan)
+        const scale = 1 + progress * 0.1 // Zoom from 1x to 1.1x
+        const offsetX = (width * scale - width) / 2
+        const offsetY = (height * scale - height) / 2
+        ctx.translate(-offsetX, -offsetY)
+        drawImageCover(ctx, mediaElement, 0, 0, width * scale, height * scale)
+        ctx.translate(offsetX, offsetY)
+        // Dark overlay
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.3)'
+        ctx.fillRect(0, 0, width, height)
+      }
+
+      ctx.restore()
+    }
+
+    // Helper to draw image covering the entire area (object-fit: cover)
+    const drawImageCover = (
+      ctx: CanvasRenderingContext2D,
+      media: HTMLImageElement | HTMLVideoElement,
+      x: number,
+      y: number,
+      width: number,
+      height: number
+    ) => {
+      const mediaWidth = media instanceof HTMLVideoElement ? media.videoWidth : media.width
+      const mediaHeight = media instanceof HTMLVideoElement ? media.videoHeight : media.height
+
+      const scale = Math.max(width / mediaWidth, height / mediaHeight)
+      const scaledWidth = mediaWidth * scale
+      const scaledHeight = mediaHeight * scale
+      const offsetX = (width - scaledWidth) / 2
+      const offsetY = (height - scaledHeight) / 2
+
+      ctx.drawImage(media, x + offsetX, y + offsetY, scaledWidth, scaledHeight)
+    }
 
     // Helper to wrap text with max width
     const wrapText = (
@@ -80,20 +187,31 @@ const BlogVideoRenderer = forwardRef<BlogVideoRendererHandle, BlogVideoRendererP
       height: number,
       opacity: number = 1
     ) => {
-      // Dark background
-      ctx.fillStyle = '#0a0f1e'
-      ctx.fillRect(0, 0, width, height)
+      const media = sectionMedia[section.id]
 
-      // Gradient overlay
-      const gradient = ctx.createRadialGradient(width / 2, height / 2, 0, width / 2, height / 2, width / 2)
-      gradient.addColorStop(0, 'rgba(251, 191, 36, 0.15)') // firefly-glow
-      gradient.addColorStop(1, 'rgba(251, 191, 36, 0)')
-      ctx.fillStyle = gradient
-      ctx.globalAlpha = opacity
-      ctx.fillRect(0, 0, width, height)
-      ctx.globalAlpha = 1
+      if (media) {
+        // Draw background media
+        drawBackgroundMedia(ctx, section.id, width, height, media.style, 1)
+      } else {
+        // Dark background
+        ctx.fillStyle = '#0a0f1e'
+        ctx.fillRect(0, 0, width, height)
 
-      // Title
+        // Gradient overlay
+        const gradient = ctx.createRadialGradient(width / 2, height / 2, 0, width / 2, height / 2, width / 2)
+        gradient.addColorStop(0, 'rgba(251, 191, 36, 0.15)') // firefly-glow
+        gradient.addColorStop(1, 'rgba(251, 191, 36, 0)')
+        ctx.fillStyle = gradient
+        ctx.globalAlpha = opacity
+        ctx.fillRect(0, 0, width, height)
+        ctx.globalAlpha = 1
+      }
+
+      // Title (with shadow for readability)
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.8)'
+      ctx.shadowBlur = 20
+      ctx.shadowOffsetX = 0
+      ctx.shadowOffsetY = 4
       ctx.fillStyle = '#fbbf24' // firefly-glow
       ctx.font = 'bold 72px Inter, sans-serif'
       ctx.textAlign = 'center'
@@ -103,10 +221,14 @@ const BlogVideoRenderer = forwardRef<BlogVideoRendererHandle, BlogVideoRendererP
 
       // Subtitle/excerpt
       if (section.text) {
-        ctx.fillStyle = '#9ca3af' // text-muted
+        ctx.fillStyle = '#ffffff' // brighter for better contrast
         ctx.font = '32px Inter, sans-serif'
         wrapText(ctx, section.text, width / 2, height / 2 + 80, width * 0.7, 45)
       }
+
+      // Reset shadow
+      ctx.shadowColor = 'transparent'
+      ctx.shadowBlur = 0
 
       ctx.globalAlpha = 1
     }
@@ -119,9 +241,16 @@ const BlogVideoRenderer = forwardRef<BlogVideoRendererHandle, BlogVideoRendererP
       height: number,
       opacity: number = 1
     ) => {
-      // Dark background with subtle gradient
-      ctx.fillStyle = '#1a1f2e'
-      ctx.fillRect(0, 0, width, height)
+      const media = sectionMedia[section.id]
+
+      if (media) {
+        // Draw background media
+        drawBackgroundMedia(ctx, section.id, width, height, media.style, 1)
+      } else {
+        // Dark background with subtle gradient
+        ctx.fillStyle = '#1a1f2e'
+        ctx.fillRect(0, 0, width, height)
+      }
 
       // Accent bar
       ctx.fillStyle = '#fbbf24'
@@ -129,13 +258,19 @@ const BlogVideoRenderer = forwardRef<BlogVideoRendererHandle, BlogVideoRendererP
       ctx.fillRect(width * 0.1, height / 2 - 3, width * 0.8, 6)
       ctx.globalAlpha = 1
 
-      // Section heading
-      ctx.fillStyle = '#e5e7eb' // text-soft
+      // Section heading (with shadow)
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.8)'
+      ctx.shadowBlur = 15
+      ctx.shadowOffsetX = 0
+      ctx.shadowOffsetY = 3
+      ctx.fillStyle = '#ffffff' // bright white for better contrast
       ctx.font = 'bold 56px Inter, sans-serif'
       ctx.textAlign = 'center'
       ctx.textBaseline = 'middle'
       ctx.globalAlpha = opacity
       wrapText(ctx, section.heading || section.text, width / 2, height / 2, width * 0.8, 70)
+      ctx.shadowColor = 'transparent'
+      ctx.shadowBlur = 0
       ctx.globalAlpha = 1
     }
 
@@ -147,21 +282,35 @@ const BlogVideoRenderer = forwardRef<BlogVideoRendererHandle, BlogVideoRendererP
       height: number,
       progress: number = 1
     ) => {
-      // Background
-      ctx.fillStyle = '#0a0f1e'
-      ctx.fillRect(0, 0, width, height)
+      const media = sectionMedia[section.id]
+      const hasMedia = !!media
 
-      // If image exists, show it on the left side
-      const hasImage = section.image
-      const textStartX = hasImage ? width * 0.55 : width * 0.15
-      const textWidth = hasImage ? width * 0.4 : width * 0.7
-
-      // TODO: Load and draw image if available
-      // For now, just show colored panel where image would go
-      if (hasImage) {
-        ctx.fillStyle = '#1a1f2e'
-        ctx.fillRect(0, 0, width * 0.5, height)
+      if (media) {
+        // Draw background media
+        drawBackgroundMedia(ctx, section.id, width, height, media.style, progress)
+      } else {
+        // Background
+        ctx.fillStyle = '#0a0f1e'
+        ctx.fillRect(0, 0, width, height)
       }
+
+      // Adjust text positioning based on media style
+      let textStartX = width * 0.15
+      let textWidth = width * 0.7
+
+      if (hasMedia && media.style === 'split-left') {
+        textStartX = width * 0.55
+        textWidth = width * 0.4
+      } else if (hasMedia && media.style === 'split-right') {
+        textStartX = width * 0.05
+        textWidth = width * 0.4
+      }
+
+      // Text shadow for readability over images
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.8)'
+      ctx.shadowBlur = 10
+      ctx.shadowOffsetX = 0
+      ctx.shadowOffsetY = 2
 
       // Section heading (small, at top of text area)
       if (section.heading) {
@@ -173,7 +322,7 @@ const BlogVideoRenderer = forwardRef<BlogVideoRendererHandle, BlogVideoRendererP
 
       // Content bullets/text (animated reveal)
       const bullets = section.text.split('\n').filter(b => b.trim())
-      ctx.fillStyle = '#e5e7eb'
+      ctx.fillStyle = '#ffffff'
       ctx.font = '32px Inter, sans-serif'
 
       bullets.forEach((bullet, i) => {
@@ -184,6 +333,10 @@ const BlogVideoRenderer = forwardRef<BlogVideoRendererHandle, BlogVideoRendererP
           wrapText(ctx, `• ${bullet}`, textStartX, yPos, textWidth, 45)
         }
       })
+
+      // Reset shadow
+      ctx.shadowColor = 'transparent'
+      ctx.shadowBlur = 0
 
       ctx.globalAlpha = 1
     }
@@ -196,17 +349,30 @@ const BlogVideoRenderer = forwardRef<BlogVideoRendererHandle, BlogVideoRendererP
       height: number,
       opacity: number = 1
     ) => {
-      // Dark background with gradient
-      ctx.fillStyle = '#0a0f1e'
-      ctx.fillRect(0, 0, width, height)
+      const media = sectionMedia[section.id]
 
-      const gradient = ctx.createLinearGradient(0, 0, 0, height)
-      gradient.addColorStop(0, 'rgba(251, 191, 36, 0.1)')
-      gradient.addColorStop(1, 'rgba(251, 191, 36, 0)')
-      ctx.fillStyle = gradient
-      ctx.globalAlpha = opacity
-      ctx.fillRect(0, 0, width, height)
-      ctx.globalAlpha = 1
+      if (media) {
+        // Draw background media
+        drawBackgroundMedia(ctx, section.id, width, height, media.style, 1)
+      } else {
+        // Dark background with gradient
+        ctx.fillStyle = '#0a0f1e'
+        ctx.fillRect(0, 0, width, height)
+
+        const gradient = ctx.createLinearGradient(0, 0, 0, height)
+        gradient.addColorStop(0, 'rgba(251, 191, 36, 0.1)')
+        gradient.addColorStop(1, 'rgba(251, 191, 36, 0)')
+        ctx.fillStyle = gradient
+        ctx.globalAlpha = opacity
+        ctx.fillRect(0, 0, width, height)
+        ctx.globalAlpha = 1
+      }
+
+      // Text shadow for readability
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.8)'
+      ctx.shadowBlur = 20
+      ctx.shadowOffsetX = 0
+      ctx.shadowOffsetY = 4
 
       // CTA heading
       ctx.fillStyle = '#fbbf24'
@@ -217,7 +383,7 @@ const BlogVideoRenderer = forwardRef<BlogVideoRendererHandle, BlogVideoRendererP
       wrapText(ctx, section.heading || 'Get Started', width / 2, height / 2 - 80, width * 0.8, 80)
 
       // CTA text
-      ctx.fillStyle = '#9ca3af'
+      ctx.fillStyle = '#ffffff'
       ctx.font = '32px Inter, sans-serif'
       wrapText(ctx, section.text, width / 2, height / 2 + 40, width * 0.7, 45)
 
@@ -225,6 +391,10 @@ const BlogVideoRenderer = forwardRef<BlogVideoRendererHandle, BlogVideoRendererP
       ctx.fillStyle = '#fbbf24'
       ctx.font = 'bold 40px Inter, sans-serif'
       ctx.fillText('fireflygrove.app', width / 2, height / 2 + 150)
+
+      // Reset shadow
+      ctx.shadowColor = 'transparent'
+      ctx.shadowBlur = 0
 
       ctx.globalAlpha = 1
     }
@@ -279,6 +449,11 @@ const BlogVideoRenderer = forwardRef<BlogVideoRendererHandle, BlogVideoRendererP
 
         canvas.width = width
         canvas.height = height
+
+        // Preload all media (images and videos)
+        console.log('Preloading media for', Object.keys(sectionMedia).length, 'sections...')
+        await preloadMedia()
+        console.log('Media preloaded successfully!')
 
         // Create audio elements for all sections
         audioElementsRef.current = audioResults.map(result => {
