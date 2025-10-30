@@ -27,7 +27,7 @@ export default function SharePanel({ isOpen, onClose, shareData }: SharePanelPro
   }, [isOpen, onClose])
 
   const handleNativeShare = async () => {
-    if (navigator.share) {
+    if (typeof navigator !== 'undefined' && navigator.share) {
       try {
         await navigator.share(shareData)
         onClose()
@@ -36,6 +36,8 @@ export default function SharePanel({ isOpen, onClose, shareData }: SharePanelPro
       }
     }
   }
+
+  const isNativeShareSupported = typeof navigator !== 'undefined' && 'share' in navigator
 
   const handleFacebookShare = () => {
     const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareData.url)}&quote=${encodeURIComponent(shareData.text)}`
@@ -110,7 +112,7 @@ export default function SharePanel({ isOpen, onClose, shareData }: SharePanelPro
           <div className="flex-1 overflow-y-auto p-6">
             <div className="space-y-3">
               {/* Native Share (mobile/modern browsers) */}
-              {navigator.share && (
+              {isNativeShareSupported && (
                 <button
                   onClick={handleNativeShare}
                   className="w-full flex items-center gap-4 p-4 bg-bg-dark hover:bg-bg-elevated border border-border-subtle rounded-lg transition-soft text-left"
