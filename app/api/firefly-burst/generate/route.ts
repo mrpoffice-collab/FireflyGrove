@@ -83,16 +83,11 @@ export async function POST(request: NextRequest) {
 
     const branchIds = branches.map((b) => b.id)
 
-    // Get all active memories with photos (prioritize visual memories)
+    // Get all active memories (including text-only)
     const allMemories = await prisma.entry.findMany({
       where: {
         branchId: { in: branchIds },
         status: 'ACTIVE',
-        OR: [
-          { mediaUrl: { not: null } },
-          { audioUrl: { not: null } },
-          { videoUrl: { not: null } },
-        ],
       },
       include: {
         author: { select: { id: true, name: true, email: true } },

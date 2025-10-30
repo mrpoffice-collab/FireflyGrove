@@ -56,6 +56,19 @@ export default function FireflyBurst({ memories, burstId, onClose, onViewNext }:
     return duration
   }
 
+  // Duck background audio when memory has audio
+  useEffect(() => {
+    if (!audio) return
+
+    if (currentMemory.audioUrl && audioEnabled) {
+      // Duck to 10% volume when memory audio is present
+      audio.volume = 0.1
+    } else if (audioEnabled) {
+      // Restore to 30% when no memory audio
+      audio.volume = 0.3
+    }
+  }, [currentMemory.audioUrl, audioEnabled, audio])
+
   useEffect(() => {
     // Animation entry effect - longer for smooth fade
     const timer = setTimeout(() => setIsAnimating(false), 600)
@@ -307,18 +320,55 @@ export default function FireflyBurst({ memories, burstId, onClose, onViewNext }:
             </div>
           )}
 
+          {/* Text-only memory - show decorative background */}
+          {!currentMemory.mediaUrl && !currentMemory.audioUrl && (
+            <div className="relative w-full h-64 bg-gradient-to-br from-firefly-dim/20 via-bg-darker to-bg-darker flex items-center justify-center overflow-hidden">
+              {/* Floating firefly decoration */}
+              <div className="absolute inset-0">
+                {[...Array(8)].map((_, i) => (
+                  <div
+                    key={i}
+                    className="absolute w-2 h-2 bg-firefly-glow rounded-full animate-float"
+                    style={{
+                      left: `${20 + i * 12}%`,
+                      top: `${30 + (i % 3) * 20}%`,
+                      animationDelay: `${i * 0.8}s`,
+                      animationDuration: `${4 + i * 0.5}s`,
+                      opacity: 0.3,
+                    }}
+                  />
+                ))}
+              </div>
+              <div className="text-6xl opacity-20">✨</div>
+            </div>
+          )}
+
           {/* Content */}
           <div className="p-6">
-            {/* Branch title */}
-            <button
-              onClick={handleViewBranch}
-              className="text-firefly-glow hover:text-firefly-bright text-sm mb-3 transition-soft inline-flex items-center gap-1"
-            >
-              <span>From {currentMemory.branch.title}</span>
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
+            {/* Branch title and edit button */}
+            <div className="flex items-center justify-between mb-3">
+              <button
+                onClick={handleViewBranch}
+                className="text-firefly-glow hover:text-firefly-bright text-sm transition-soft inline-flex items-center gap-1"
+              >
+                <span>From {currentMemory.branch.title}</span>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+
+              {/* Edit button */}
+              <button
+                onClick={handleViewBranch}
+                className="text-text-muted hover:text-firefly-glow text-xs transition-soft inline-flex items-center gap-1"
+                title="Edit this memory"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                </svg>
+                <span>Edit</span>
+              </button>
+            </div>
 
             {/* Memory text */}
             <p className="text-text-soft text-lg leading-relaxed mb-4">
