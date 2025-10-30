@@ -158,6 +158,9 @@ export async function GET(
     const limit = parseInt(url.searchParams.get('limit') || '20')
     const skip = (page - 1) * limit
 
+    // Check if user is an approved member
+    const isMember = userId && branch.members.some(m => m.userId === userId && m.approved)
+
     // Fetch entries with appropriate filters and pagination
     const [entries, totalCount] = await Promise.all([
       prisma.entry.findMany({
@@ -166,13 +169,11 @@ export async function GET(
           status: 'ACTIVE',
           ...(isPublicView
             ? { visibility: 'LEGACY' } // Public viewers only see LEGACY entries
-            : isOwner
-            ? {} // Owner sees all active entries
-            : { // Members only see their own entries OR approved shared entries
-                OR: [
-                  { authorId: userId },
-                  { visibility: 'SHARED', approved: true },
-                ],
+            : isOwner || isMember
+            ? {} // Owner and approved members see all active entries
+            : { // Non-members only see approved shared entries
+                visibility: 'SHARED',
+                approved: true,
               }
           ),
         },
@@ -196,13 +197,11 @@ export async function GET(
           status: 'ACTIVE',
           ...(isPublicView
             ? { visibility: 'LEGACY' }
-            : isOwner
+            : isOwner || isMember
             ? {}
             : {
-                OR: [
-                  { authorId: userId },
-                  { visibility: 'SHARED', approved: true },
-                ],
+                visibility: 'SHARED',
+                approved: true,
               }
           ),
         },
