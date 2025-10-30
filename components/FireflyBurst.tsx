@@ -32,6 +32,16 @@ export default function FireflyBurst({ memories, burstId, onClose, onViewNext }:
   const router = useRouter()
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isAnimating, setIsAnimating] = useState(true)
+  const [audioEnabled, setAudioEnabled] = useState(false)
+  const [audio] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const bgAudio = new Audio('/sounds/firefly-ambient.mp3')
+      bgAudio.loop = true
+      bgAudio.volume = 0.3
+      return bgAudio
+    }
+    return null
+  })
 
   const currentMemory = memories[currentIndex]
 
@@ -40,6 +50,32 @@ export default function FireflyBurst({ memories, burstId, onClose, onViewNext }:
     const timer = setTimeout(() => setIsAnimating(false), 800)
     return () => clearTimeout(timer)
   }, [currentIndex])
+
+  // Audio management
+  useEffect(() => {
+    if (audio && audioEnabled) {
+      audio.play().catch((err) => console.log('Audio autoplay prevented:', err))
+    }
+
+    return () => {
+      if (audio) {
+        audio.pause()
+        audio.currentTime = 0
+      }
+    }
+  }, [audio, audioEnabled])
+
+  const toggleAudio = () => {
+    if (!audio) return
+
+    if (audioEnabled) {
+      audio.pause()
+      setAudioEnabled(false)
+    } else {
+      audio.play().catch((err) => console.log('Audio play failed:', err))
+      setAudioEnabled(true)
+    }
+  }
 
   const handleNext = () => {
     if (currentIndex < memories.length - 1) {
@@ -112,19 +148,39 @@ export default function FireflyBurst({ memories, burstId, onClose, onViewNext }:
         ))}
       </div>
 
-      {/* Close button */}
-      <button
-        onClick={() => {
-          markAsViewed()
-          onClose()
-        }}
-        className="absolute top-4 right-4 text-text-muted hover:text-text-soft transition-soft z-10"
-        title="Close"
-      >
-        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-        </svg>
-      </button>
+      {/* Top Controls */}
+      <div className="absolute top-4 right-4 flex items-center gap-3 z-10">
+        {/* Audio Toggle */}
+        <button
+          onClick={toggleAudio}
+          className="text-text-muted hover:text-firefly-glow transition-soft"
+          title={audioEnabled ? 'Mute music' : 'Play music'}
+        >
+          {audioEnabled ? (
+            <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+            </svg>
+          ) : (
+            <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
+            </svg>
+          )}
+        </button>
+
+        {/* Close button */}
+        <button
+          onClick={() => {
+            markAsViewed()
+            onClose()
+          }}
+          className="text-text-muted hover:text-text-soft transition-soft"
+          title="Close"
+        >
+          <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
 
       {/* Main content */}
       <div className="max-w-2xl w-full relative">
@@ -206,50 +262,38 @@ export default function FireflyBurst({ memories, burstId, onClose, onViewNext }:
             <span>Previous</span>
           </button>
 
-          {/* Progress indicator */}
+          {/* Progress indicator - clickable dots */}
           <div className="flex items-center gap-2">
             {memories.map((_, index) => (
-              <div
+              <button
                 key={index}
-                className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                onClick={() => {
+                  setIsAnimating(true)
+                  setTimeout(() => setCurrentIndex(index), 300)
+                }}
+                className={`rounded-full transition-all duration-300 cursor-pointer hover:scale-110 ${
                   index === currentIndex
-                    ? 'bg-firefly-glow w-8'
+                    ? 'bg-firefly-glow w-8 h-2'
                     : index < currentIndex
-                    ? 'bg-firefly-dim'
-                    : 'bg-border-subtle'
+                    ? 'bg-firefly-dim w-2 h-2'
+                    : 'bg-border-subtle w-2 h-2'
                 }`}
+                title={`Go to memory ${index + 1}`}
               />
             ))}
           </div>
 
-          {/* Next button */}
+          {/* Done button */}
           <button
-            onClick={handleNext}
-            className="px-4 py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg font-medium transition-soft flex items-center gap-2"
+            onClick={() => {
+              markAsViewed()
+              onClose()
+            }}
+            className="px-4 py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg font-medium transition-soft"
           >
-            <span>{currentIndex === memories.length - 1 ? 'Done' : 'Next'}</span>
-            {currentIndex < memories.length - 1 && (
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            )}
+            Done
           </button>
         </div>
-
-        {/* Get another burst button (shown after viewing all) */}
-        {onViewNext && currentIndex === memories.length - 1 && (
-          <div className="mt-4 text-center">
-            <button
-              onClick={() => {
-                markAsViewed()
-                onViewNext()
-              }}
-              className="text-sm text-text-muted hover:text-firefly-glow transition-soft underline"
-            >
-              Get another burst
-            </button>
-          </div>
-        )}
       </div>
 
       <style jsx>{`
