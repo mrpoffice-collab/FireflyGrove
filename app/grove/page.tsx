@@ -7,6 +7,7 @@ import Header from '@/components/Header'
 import Tooltip from '@/components/Tooltip'
 import NestNudge from '@/components/NestNudge'
 import FireflyCanvas from '@/components/FireflyCanvas'
+import FireflyBurst from '@/components/FireflyBurst'
 import { getPlanById } from '@/lib/plans'
 
 interface Tree {
@@ -84,6 +85,12 @@ export default function GrovePage() {
   const [transplanting, setTransplanting] = useState<string | null>(null)
   const [pendingNestPhoto, setPendingNestPhoto] = useState<string | null>(null)
 
+  // Firefly Burst state
+  const [showBurst, setShowBurst] = useState(false)
+  const [burstMemories, setBurstMemories] = useState<any[]>([])
+  const [burstId, setBurstId] = useState<string | null>(null)
+  const [sessionId] = useState(() => Math.random().toString(36).substring(7))
+
   // Check for pending nest photo from URL
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -105,9 +112,32 @@ export default function GrovePage() {
     if (status === 'authenticated') {
       fetchGrove()
       fetchTransplantable()
+      // Trigger burst on first load
+      generateBurst()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status])
+
+  const generateBurst = async () => {
+    try {
+      const res = await fetch('/api/firefly-burst/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId }),
+      })
+
+      if (res.ok) {
+        const data = await res.json()
+        if (data.memories && data.memories.length > 0) {
+          setBurstMemories(data.memories)
+          setBurstId(data.burst.id)
+          setShowBurst(true)
+        }
+      }
+    } catch (error) {
+      console.error('Failed to generate burst:', error)
+    }
+  }
 
   const fetchGrove = async () => {
     try {
@@ -228,6 +258,20 @@ export default function GrovePage() {
       {/* Nest Nudge - Shows when user has old photos in nest */}
       <NestNudge userId={(session.user as any)?.id} />
 
+      {/* Firefly Burst Modal */}
+      {showBurst && burstMemories.length > 0 && burstId && (
+        <FireflyBurst
+          memories={burstMemories}
+          burstId={burstId}
+          onClose={() => setShowBurst(false)}
+          onViewNext={() => {
+            setShowBurst(false)
+            // Small delay before generating new burst
+            setTimeout(() => generateBurst(), 500)
+          }}
+        />
+      )}
+
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-5xl mx-auto">
           {/* Transplantable Trees Section */}
@@ -335,6 +379,19 @@ export default function GrovePage() {
             <p className="text-text-muted text-sm mb-4">
               Where family, friends, and generations connect through shared memories.
             </p>
+
+            {/* Get Another Burst Button */}
+            {burstMemories.length > 0 && (
+              <div className="mb-4">
+                <button
+                  onClick={generateBurst}
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-firefly-dim/20 hover:bg-firefly-dim/30 border border-firefly-dim/40 text-firefly-glow rounded-lg text-sm font-medium transition-soft"
+                >
+                  <span>✨</span>
+                  <span>Get Another Burst</span>
+                </button>
+              </div>
+            )}
 
             {/* Grove Stats */}
             <div className="flex flex-wrap items-center justify-center gap-3 text-text-muted text-sm">

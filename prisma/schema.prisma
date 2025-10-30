@@ -50,6 +50,8 @@ model User {
   nestItems NestItem[] @relation("UserNestItems")
   facebookToken FacebookToken?
   importJobs ImportJob[]
+  fireflyBursts FireflyBurst[]
+  burstSettings UserBurstSettings?
 
   @@index([email])
   @@index([status])
@@ -1362,4 +1364,63 @@ model ImportJob {
   @@index([status])
   @@index([source])
   @@index([startedAt])
+}
+
+// Firefly Bursts - Surprise memory collections
+model FireflyBurst {
+  id          String   @id @default(cuid())
+  userId      String
+
+  // Configuration
+  memoryCount Int      @default(5) // How many memories in this burst
+
+  // Status tracking
+  viewed      Boolean  @default(false)
+  viewedAt    DateTime?
+
+  // Session tracking - ensure one burst per session
+  sessionId   String?  // Browser session ID to prevent duplicate bursts
+
+  createdAt   DateTime @default(now())
+
+  // Relations
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  memories    BurstMemory[]
+
+  @@index([userId])
+  @@index([viewed])
+  @@index([sessionId])
+  @@index([createdAt])
+}
+
+// Individual memories within a burst
+model BurstMemory {
+  id        String   @id @default(cuid())
+  burstId   String
+  entryId   String
+  position  Int      // Order in burst (1-5)
+
+  createdAt DateTime @default(now())
+
+  // Relations
+  burst     FireflyBurst @relation(fields: [burstId], references: [id], onDelete: Cascade)
+
+  @@index([burstId])
+  @@index([entryId])
+}
+
+// User preferences for burst feature
+model UserBurstSettings {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+
+  enabled   Boolean  @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
