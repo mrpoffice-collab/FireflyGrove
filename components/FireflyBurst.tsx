@@ -33,6 +33,7 @@ export default function FireflyBurst({ memories, burstId, onClose, onViewNext }:
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isAnimating, setIsAnimating] = useState(true)
   const [audioEnabled, setAudioEnabled] = useState(false)
+  const [isPaused, setIsPaused] = useState(false)
   const [audio] = useState(() => {
     if (typeof window !== 'undefined') {
       const bgAudio = new Audio('/sounds/firefly-ambient.mp3')
@@ -45,11 +46,44 @@ export default function FireflyBurst({ memories, burstId, onClose, onViewNext }:
 
   const currentMemory = memories[currentIndex]
 
+  // Calculate duration based on text length
+  const calculateDuration = (memory: Memory) => {
+    const textLength = memory.text.length
+    const lines = Math.ceil(textLength / 80) // Approx 80 chars per line
+
+    // Base: 3 seconds, +1 second per line, min 4s, max 12s
+    const duration = Math.min(Math.max(3000 + (lines * 1000), 4000), 12000)
+    return duration
+  }
+
   useEffect(() => {
     // Animation entry effect - longer for smooth fade
     const timer = setTimeout(() => setIsAnimating(false), 600)
     return () => clearTimeout(timer)
   }, [currentIndex])
+
+  // Auto-advance timer
+  useEffect(() => {
+    if (isPaused || isAnimating) return
+
+    const duration = calculateDuration(currentMemory)
+    const timer = setTimeout(() => {
+      if (currentIndex < memories.length - 1) {
+        setIsAnimating(true)
+        setTimeout(() => {
+          setCurrentIndex((prev) => prev + 1)
+        }, 500)
+      } else {
+        // Reached the end, mark as viewed and close after a pause
+        setTimeout(() => {
+          markAsViewed()
+          onClose()
+        }, 2000)
+      }
+    }, duration)
+
+    return () => clearTimeout(timer)
+  }, [currentIndex, isPaused, isAnimating, currentMemory, memories.length])
 
   // Audio management
   useEffect(() => {
@@ -92,11 +126,16 @@ export default function FireflyBurst({ memories, burstId, onClose, onViewNext }:
 
   const handlePrevious = () => {
     if (currentIndex > 0) {
+      setIsPaused(true) // Pause auto-advance when manually navigating
       setIsAnimating(true)
       setTimeout(() => {
         setCurrentIndex((prev) => prev - 1)
       }, 500)
     }
+  }
+
+  const togglePause = () => {
+    setIsPaused(!isPaused)
   }
 
   const markAsViewed = async () => {
@@ -150,6 +189,24 @@ export default function FireflyBurst({ memories, burstId, onClose, onViewNext }:
 
       {/* Top Controls */}
       <div className="absolute top-4 right-4 flex items-center gap-3 z-10">
+        {/* Pause/Play Toggle */}
+        <button
+          onClick={togglePause}
+          className="text-text-muted hover:text-firefly-glow transition-soft"
+          title={isPaused ? 'Resume slideshow' : 'Pause slideshow'}
+        >
+          {isPaused ? (
+            <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          ) : (
+            <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          )}
+        </button>
+
         {/* Audio Toggle */}
         <button
           onClick={toggleAudio}
@@ -272,6 +329,7 @@ export default function FireflyBurst({ memories, burstId, onClose, onViewNext }:
                 key={index}
                 onClick={() => {
                   if (index !== currentIndex) {
+                    setIsPaused(true) // Pause auto-advance when manually navigating
                     setIsAnimating(true)
                     setTimeout(() => setCurrentIndex(index), 500)
                   }
