@@ -64,10 +64,12 @@ export async function POST(req: NextRequest) {
       data: {
         userId,
         source: 'facebook',
-        status: 'processing',
-        fileName: file.name,
-        fileSize: file.size,
+        status: 'importing',
         startedAt: new Date(),
+        settings: JSON.stringify({
+          fileName: file.name,
+          fileSize: file.size,
+        }),
       },
     })
 
@@ -281,12 +283,12 @@ export async function POST(req: NextRequest) {
           action: 'FACEBOOK_IMPORT',
           targetType: 'IMPORT_JOB',
           targetId: importJob.id,
-          metadata: JSON.stringify({
+          metadata: {
             fileName: file.name,
             totalItems: parsed.totalItems,
             processedItems: processedCount,
             skippedItems: skippedCount,
-          }),
+          },
         },
       })
 
@@ -308,7 +310,7 @@ export async function POST(req: NextRequest) {
         where: { id: importJob.id },
         data: {
           status: 'failed',
-          errorMessage: error.message,
+          error: error.message,
           completedAt: new Date(),
         },
       })
