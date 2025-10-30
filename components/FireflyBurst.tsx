@@ -77,7 +77,7 @@ export default function FireflyBurst({ memories, burstId, onClose, onViewNext }:
         // Reached the end, mark as viewed and close after a pause
         setTimeout(() => {
           markAsViewed()
-          onClose()
+          fadeOutAudio(() => onClose())
         }, 2000)
       }
     }, duration)
@@ -88,6 +88,7 @@ export default function FireflyBurst({ memories, burstId, onClose, onViewNext }:
   // Audio management
   useEffect(() => {
     if (audio && audioEnabled) {
+      audio.volume = 0.3 // Reset volume when enabling
       audio.play().catch((err) => console.log('Audio autoplay prevented:', err))
     }
 
@@ -98,6 +99,30 @@ export default function FireflyBurst({ memories, burstId, onClose, onViewNext }:
       }
     }
   }, [audio, audioEnabled])
+
+  // Fade out audio smoothly
+  const fadeOutAudio = (callback?: () => void) => {
+    if (!audio) {
+      callback?.()
+      return
+    }
+
+    const fadeInterval = 50 // Update every 50ms
+    const fadeDuration = 1000 // 1 second fade
+    const steps = fadeDuration / fadeInterval
+    const volumeStep = audio.volume / steps
+
+    const fade = setInterval(() => {
+      if (audio.volume > volumeStep) {
+        audio.volume = Math.max(0, audio.volume - volumeStep)
+      } else {
+        audio.volume = 0
+        audio.pause()
+        clearInterval(fade)
+        callback?.()
+      }
+    }, fadeInterval)
+  }
 
   const toggleAudio = () => {
     if (!audio) return
@@ -228,7 +253,7 @@ export default function FireflyBurst({ memories, burstId, onClose, onViewNext }:
         <button
           onClick={() => {
             markAsViewed()
-            onClose()
+            fadeOutAudio(() => onClose())
           }}
           className="text-text-muted hover:text-text-soft transition-soft"
           title="Close"
@@ -350,7 +375,7 @@ export default function FireflyBurst({ memories, burstId, onClose, onViewNext }:
           <button
             onClick={() => {
               markAsViewed()
-              onClose()
+              fadeOutAudio(() => onClose())
             }}
             className="px-4 py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg font-medium transition-soft"
           >
