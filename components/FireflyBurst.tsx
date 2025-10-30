@@ -88,6 +88,33 @@ export default function FireflyBurst({ memories, burstId, onClose, onViewNext }:
     if (isPaused || isAnimating) return
 
     const duration = calculateDuration(currentMemory)
+    const isLastMemory = currentIndex === memories.length - 1
+
+    // Start fading audio on last memory
+    if (isLastMemory && audio && audioEnabled) {
+      const fadeInterval = 50 // Update every 50ms
+      const steps = duration / fadeInterval
+      const volumeStep = audio.volume / steps
+      const startVolume = audio.volume
+
+      const fadeTimer = setInterval(() => {
+        if (audio.volume > volumeStep) {
+          audio.volume = Math.max(0, audio.volume - volumeStep)
+        } else {
+          audio.volume = 0
+          clearInterval(fadeTimer)
+        }
+      }, fadeInterval)
+
+      // Clean up fade if user navigates away
+      return () => {
+        clearInterval(fadeTimer)
+        if (audio && audioEnabled) {
+          audio.volume = startVolume // Restore if interrupted
+        }
+      }
+    }
+
     const timer = setTimeout(() => {
       if (currentIndex < memories.length - 1) {
         setIsAnimating(true)
@@ -95,16 +122,20 @@ export default function FireflyBurst({ memories, burstId, onClose, onViewNext }:
           setCurrentIndex((prev) => prev + 1)
         }, 500)
       } else {
-        // Reached the end, mark as viewed and close after a pause
+        // Reached the end, audio already faded, close after a pause
         setTimeout(() => {
           markAsViewed()
-          fadeOutAudio(() => onClose())
+          if (audio) {
+            audio.pause()
+            audio.currentTime = 0
+          }
+          onClose()
         }, 2000)
       }
     }, duration)
 
     return () => clearTimeout(timer)
-  }, [currentIndex, isPaused, isAnimating, currentMemory, memories.length])
+  }, [currentIndex, isPaused, isAnimating, currentMemory, memories.length, audio, audioEnabled])
 
   // Audio management
   useEffect(() => {
