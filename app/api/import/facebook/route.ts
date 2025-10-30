@@ -187,15 +187,15 @@ export async function POST(req: NextRequest) {
               caption: caption,
               takenAt: date,
               uploadedAt: new Date(),
-              importMeta: JSON.stringify({
+              importMeta: {
                 originalPath: photo.uri,
                 place: photo.place,
                 tags: photo.tags,
-              }),
+                importJobId: importJob.id,
+              },
               mediaUrls: [photoUrl],
               status: 'pending',
               importedAt: date,
-              importJobId: importJob.id,
             },
           })
 
@@ -244,14 +244,14 @@ export async function POST(req: NextRequest) {
                 caption: caption,
                 takenAt: date,
                 uploadedAt: new Date(),
-                importMeta: JSON.stringify({
+                importMeta: {
                   place: post.place,
                   tags: post.tags,
-                }),
+                  importJobId: importJob.id,
+                },
                 mediaUrls: uploadedPhotoUrls,
                 status: 'pending',
                 importedAt: date,
-                importJobId: importJob.id,
               },
             })
 
