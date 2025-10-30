@@ -2,6 +2,7 @@
 
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState, Suspense } from 'react'
+import { useSession } from 'next-auth/react'
 import Header from '@/components/Header'
 
 interface Memorial {
@@ -20,6 +21,7 @@ interface Memorial {
 function MemorialsContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
+  const { data: session } = useSession()
 
   const [memorials, setMemorials] = useState<Memorial[]>([])
   const [loading, setLoading] = useState(true)
@@ -28,6 +30,13 @@ function MemorialsContent() {
   const [hasMore, setHasMore] = useState(false)
   const [total, setTotal] = useState(0)
   const [page, setPage] = useState(1)
+  const [isAdmin, setIsAdmin] = useState(false)
+
+  useEffect(() => {
+    if (session?.user) {
+      setIsAdmin((session.user as any).isAdmin || false)
+    }
+  }, [session])
 
   useEffect(() => {
     const searchParam = searchParams.get('search')
@@ -75,7 +84,7 @@ function MemorialsContent() {
 
   return (
     <div className="min-h-screen">
-      <Header />
+      <Header userName={session?.user?.name || ''} isAdmin={isAdmin} />
 
       <div className="container mx-auto px-4 py-8">
         {/* Header */}

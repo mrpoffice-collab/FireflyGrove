@@ -1,16 +1,25 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { useSession } from 'next-auth/react'
 import Header from '@/components/Header'
 
 export default function BetaInvitesPage() {
   const router = useRouter()
+  const { data: session } = useSession()
   const [email, setEmail] = useState('')
   const [name, setName] = useState('')
   const [message, setMessage] = useState('')
   const [sending, setSending] = useState(false)
   const [result, setResult] = useState<{ type: 'success' | 'error'; message: string } | null>(null)
+  const [isAdmin, setIsAdmin] = useState(false)
+
+  useEffect(() => {
+    if (session?.user) {
+      setIsAdmin((session.user as any).isAdmin || false)
+    }
+  }, [session])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -54,7 +63,7 @@ export default function BetaInvitesPage() {
 
   return (
     <div className="min-h-screen bg-bg-dark">
-      <Header />
+      <Header userName={session?.user?.name || ''} isAdmin={isAdmin} />
 
       <main className="container mx-auto px-4 py-12 max-w-2xl">
         <div className="mb-8">

@@ -1,11 +1,22 @@
 'use client'
 
+import { useSession } from 'next-auth/react'
+import { useState, useEffect } from 'react'
 import Header from '@/components/Header'
 
 export default function PrivacyPolicyPage() {
+  const { data: session } = useSession()
+  const [isAdmin, setIsAdmin] = useState(false)
+
+  useEffect(() => {
+    if (session?.user) {
+      setIsAdmin((session.user as any).isAdmin || false)
+    }
+  }, [session])
+
   return (
     <div className="min-h-screen bg-bg-dark">
-      <Header />
+      <Header userName={session?.user?.name || ''} isAdmin={isAdmin} />
 
       <div className="max-w-4xl mx-auto px-4 py-16">
         <div className="bg-bg-elevated border border-border-subtle rounded-lg p-8 md:p-12">
