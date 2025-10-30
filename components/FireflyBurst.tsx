@@ -53,12 +53,14 @@ export default function FireflyBurst({ memories, burstId, onClose, onViewNext }:
 
     // If memory has image/video, add extra time to view both text and media
     const hasMedia = memory.mediaUrl || memory.videoUrl
-    const baseTime = hasMedia ? 5000 : 3000 // 5s base for media, 3s for text-only
-    const extraTime = hasMedia ? 1500 : 1000 // More time per line when there's media
 
-    // Calculate duration: base + (lines * extraTime), min 6s for media / 4s for text, max 15s
-    const minTime = hasMedia ? 6000 : 4000
-    const maxTime = 15000
+    // Doubled timing based on actual reading speed
+    const baseTime = hasMedia ? 6000 : 4000 // 6s base for media, 4s for text-only
+    const extraTime = hasMedia ? 3000 : 2000 // 3s per line with media, 2s per line text-only
+
+    // Calculate duration: base + (lines * extraTime), min 8s for media / 6s for text, max 25s
+    const minTime = hasMedia ? 8000 : 6000
+    const maxTime = 25000
     const duration = Math.min(Math.max(baseTime + (lines * extraTime), minTime), maxTime)
 
     return duration
