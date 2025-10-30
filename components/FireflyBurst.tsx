@@ -32,7 +32,7 @@ export default function FireflyBurst({ memories, burstId, onClose, onViewNext }:
   const router = useRouter()
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isAnimating, setIsAnimating] = useState(true)
-  const [audioEnabled, setAudioEnabled] = useState(false)
+  const [audioEnabled, setAudioEnabled] = useState(true) // Default to ON
   const [isPaused, setIsPaused] = useState(false)
   const [audio] = useState(() => {
     if (typeof window !== 'undefined') {
