@@ -31,8 +31,10 @@ export async function generateMetadata({
       }
     }
 
-    const imageUrl = branch.entries[0]?.mediaUrl || 'https://firefly-grove.vercel.app/og-default.jpg'
+    const imageUrl = branch.entries[0]?.mediaUrl || 'https://firefly-grove.vercel.app/icon.svg'
     const description = branch.description || `Memories and stories about ${branch.title}`
+
+    console.log(`[OG Meta] Branch: ${branch.title}, Image: ${imageUrl}`)
 
     return {
       title: `${branch.title} - Firefly Grove`,

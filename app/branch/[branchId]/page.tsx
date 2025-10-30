@@ -1370,7 +1370,7 @@ export default function BranchPage() {
         shareData={{
           title: `${branch.title} - Firefly Grove`,
           text: branch.description || `Check out this memory branch about ${branch.title}`,
-          url: typeof window !== 'undefined' ? `${window.location.origin}/branch/${branchId}` : '',
+          url: typeof window !== 'undefined' ? `${window.location.origin}/branch/${branchId}?share=${Date.now()}` : '',
         }}
       />
     </div>

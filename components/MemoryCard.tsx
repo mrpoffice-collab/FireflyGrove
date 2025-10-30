@@ -452,7 +452,7 @@ export default function MemoryCard({ entry, branchOwnerId, branchId, branchTitle
         shareData={{
           title: branchTitle ? `${branchTitle} - Memory by ${entry.author.name}` : `Memory by ${entry.author.name}`,
           text: entry.text.length > 100 ? entry.text.substring(0, 100) + '...' : entry.text,
-          url: typeof window !== 'undefined' && branchId ? `${window.location.origin}/branch/${branchId}` : (typeof window !== 'undefined' ? window.location.href : ''),
+          url: typeof window !== 'undefined' && branchId ? `${window.location.origin}/branch/${branchId}?share=${Date.now()}` : (typeof window !== 'undefined' ? window.location.href : ''),
         }}
       />
     </div>
