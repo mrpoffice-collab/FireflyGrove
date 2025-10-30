@@ -46,13 +46,21 @@ export default function FireflyBurst({ memories, burstId, onClose, onViewNext }:
 
   const currentMemory = memories[currentIndex]
 
-  // Calculate duration based on text length
+  // Calculate duration based on text length and media presence
   const calculateDuration = (memory: Memory) => {
     const textLength = memory.text.length
     const lines = Math.ceil(textLength / 80) // Approx 80 chars per line
 
-    // Base: 3 seconds, +1 second per line, min 4s, max 12s
-    const duration = Math.min(Math.max(3000 + (lines * 1000), 4000), 12000)
+    // If memory has image/video, add extra time to view both text and media
+    const hasMedia = memory.mediaUrl || memory.videoUrl
+    const baseTime = hasMedia ? 5000 : 3000 // 5s base for media, 3s for text-only
+    const extraTime = hasMedia ? 1500 : 1000 // More time per line when there's media
+
+    // Calculate duration: base + (lines * extraTime), min 6s for media / 4s for text, max 15s
+    const minTime = hasMedia ? 6000 : 4000
+    const maxTime = 15000
+    const duration = Math.min(Math.max(baseTime + (lines * extraTime), minTime), maxTime)
+
     return duration
   }
 
