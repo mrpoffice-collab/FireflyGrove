@@ -10,7 +10,8 @@ export async function sendMemberInviteEmail(
   branchTitle: string,
   inviterName: string,
   branchUrl: string,
-  isNewUser: boolean = false
+  isNewUser: boolean = false,
+  personalMessage?: string
 ) {
   if (!resend) {
     console.log('Resend not configured - email not sent')
@@ -48,6 +49,17 @@ export async function sendMemberInviteEmail(
               <p>Hi ${recipientName || 'there'},</p>
 
               <p><strong>${inviterName}</strong> has invited you to collaborate on the branch <strong>"${branchTitle}"</strong> in Firefly Grove.</p>
+
+              ${personalMessage ? `
+              <div style="background: #fff4d4; border-left: 4px solid #ffd700; padding: 16px; margin: 20px 0; border-radius: 4px;">
+                <div style="color: #333; font-size: 14px; font-style: italic; line-height: 1.6;">
+                  "${personalMessage}"
+                </div>
+                <div style="color: #999; font-size: 12px; margin-top: 8px; text-align: right;">
+                  — ${inviterName}
+                </div>
+              </div>
+              ` : ''}
 
               <p style="color: #666; font-size: 14px; margin-bottom: 20px;">${instructions}</p>
 

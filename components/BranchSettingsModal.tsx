@@ -52,6 +52,7 @@ export default function BranchSettingsModal({
   const [invitingMember, setInvitingMember] = useState(false)
   const [newHeirEmail, setNewHeirEmail] = useState('')
   const [newMemberEmail, setNewMemberEmail] = useState('')
+  const [inviteMessage, setInviteMessage] = useState('')
   const [releaseCondition, setReleaseCondition] = useState('AFTER_DEATH')
   const [releaseDate, setReleaseDate] = useState('')
   const [error, setError] = useState('')
@@ -196,7 +197,11 @@ export default function BranchSettingsModal({
     setGeneratingLink(true)
     try {
       const res = await fetch(`/api/branches/${branchId}/shareable-link`, {
-        method: 'POST'
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: inviteMessage || undefined
+        })
       })
 
       if (res.ok) {
@@ -403,7 +408,10 @@ export default function BranchSettingsModal({
       const res = await fetch(`/api/branches/${branchId}/members`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: newMemberEmail }),
+        body: JSON.stringify({
+          email: newMemberEmail,
+          message: inviteMessage || undefined
+        }),
       })
 
       if (res.ok) {
@@ -414,10 +422,12 @@ export default function BranchSettingsModal({
           // Existing user was added directly
           setMembers([...members, data.member])
           setNewMemberEmail('')
+          setInviteMessage('')
           alert('Member added successfully!')
         } else if (data.type === 'invite') {
           // New user - invitation sent
           setNewMemberEmail('')
+          setInviteMessage('')
           alert(`Invitation sent to ${data.invite.email}! They'll receive an email to create an account and join this branch.`)
         }
       } else {
@@ -744,6 +754,24 @@ export default function BranchSettingsModal({
                 />
                 <p className="text-text-muted text-xs mt-1">
                   Note: They must have an account to be invited
+                </p>
+              </div>
+
+              <div>
+                <label className="block text-sm text-text-soft mb-2">
+                  Personal Message (Optional)
+                </label>
+                <textarea
+                  value={inviteMessage}
+                  onChange={(e) => setInviteMessage(e.target.value)}
+                  className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-dim transition-soft resize-none"
+                  placeholder="Add a personal note to your invitation..."
+                  rows={3}
+                  maxLength={500}
+                  disabled={invitingMember}
+                />
+                <p className="text-text-muted text-xs mt-1">
+                  Share why this branch is special or what memories you hope to preserve together
                 </p>
               </div>
 

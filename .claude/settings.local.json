@@ -23,7 +23,8 @@
       "Bash(findstr:*)",
       "Bash(taskkill /F /PID 10092)",
       "Bash(taskkill //F //PID 10092)",
-      "WebSearch"
+      "WebSearch",
+      "Bash(vercel deploy:*)"
     ],
     "deny": [],
     "ask": []

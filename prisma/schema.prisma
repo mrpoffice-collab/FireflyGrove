@@ -342,6 +342,7 @@ model Invite {
   email       String
   branchId    String
   token       String   @unique
+  message     String?  @db.Text // Personal message from inviter
   status      String   @default("PENDING") // PENDING, ACCEPTED, EXPIRED
   expiresAt   DateTime
   createdAt   DateTime @default(now())

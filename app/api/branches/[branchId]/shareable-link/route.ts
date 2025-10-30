@@ -24,6 +24,7 @@ export async function POST(
 
     const userId = (session.user as any).id
     const branchId = params.branchId
+    const { message } = await req.json().catch(() => ({}))
 
     // Verify ownership
     const branch = await prisma.branch.findFirst({
@@ -85,6 +86,7 @@ export async function POST(
         email: 'shareable@link', // Special email to indicate shareable link
         branchId,
         token,
+        message,
         status: 'PENDING',
         expiresAt,
       },

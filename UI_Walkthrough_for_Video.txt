@@ -1,0 +1,715 @@
+================================================================================
+🎬 FIREFLY GROVE UI WALKTHROUGH FOR VIDEO
+Exact Buttons, Screens, and Navigation Paths
+================================================================================
+
+This document tells your grandson EXACTLY where to tap, what screens he'll
+see, and what each button does. Based on the actual Firefly Grove code.
+
+================================================================================
+📱 APP NAVIGATION OVERVIEW
+================================================================================
+
+MAIN SECTIONS OF FIREFLY GROVE:
+1. Grove Page - Your main dashboard with all your trees/branches
+2. Branch Page - Individual memorial/person page with memories
+3. Branch Settings - Manage members, heirs, and settings
+
+================================================================================
+🎯 VIDEO FLOW 1: CREATING A THANKSGIVING BRANCH
+================================================================================
+
+STARTING POINT: Grove Page (fireflygrove.app/grove)
+----------------------------------------------------
+
+SCREEN: Grove Dashboard
+-----------------------
+You'll see:
+- Header with "Firefly Grove" logo (golden text)
+- Your grove name at the top
+- List of existing trees/branches
+- "+ Create New Tree" button (golden button at bottom)
+
+STEP 1: Click "+ Plant New Tree"
+---------------------------------
+Location: Bottom of grove page
+Button appearance: Golden button with text "+ Plant New Tree"
+
+SCREEN THAT APPEARS: New Tree Page
+-----------------------------------
+You'll see a form with:
+- "Tree Name" field
+- "Description" field (optional)
+- "Cancel" button (left, gray)
+- "Plant Tree" button (right, golden)
+
+STEP 2: Fill in Tree Details
+-----------------------------
+In "Tree Name" field, type: "The [Your Last Name] Family"
+In "Description" field, type: "Stories from our family gatherings"
+
+Then click "Plant Tree" button
+
+SCREEN THAT APPEARS: Tree Detail Page
+--------------------------------------
+Now you'll see your new tree with:
+- Tree name at the top
+- "This tree has no branches yet" message
+- "+ New Branch" button (golden)
+
+STEP 3: Click "+ New Branch"
+-----------------------------
+Location: Center of screen
+Button appearance: Golden button with text "+ New Branch"
+
+SCREEN THAT APPEARS: Create New Branch
+---------------------------------------
+You'll see a form with these fields:
+
+Field 1: "Branch Title" (required, has red asterisk *)
+- Placeholder text: "e.g., Mom, Grandpa Joe, My Journey"
+- Helper text below: "This could be a person's name, nickname, or a
+  relationship label"
+
+Field 2: "Description (optional)"
+- Large text box
+- Placeholder: "Add details about this person or branch"
+- Character counter: "0 / 500"
+
+Buttons at bottom:
+- "Cancel" (left, gray)
+- "Create Branch" (right, golden)
+
+STEP 4: Create Thanksgiving Branch
+-----------------------------------
+In "Branch Title", type: "Thanksgiving 2024 - The [Family Name] Stories"
+
+In "Description", type: "Stories we shared around the table this year,
+preserving Grandma's memory and the moments that made us laugh"
+
+Click "Create Branch" button (golden, on the right)
+
+RESULT: Branch Page Opens
+-------------------------
+You'll now see your new branch page with:
+- Branch title at top: "Thanksgiving 2024 - The [Family Name] Stories"
+- Description below it
+- A golden prompt box (Memory Spark) with a writing prompt
+- "+ Add Memory" button (large, golden, center)
+- "Branch Settings" icon (gear icon, top right)
+
+================================================================================
+🎯 VIDEO FLOW 2: ADDING A VOICE MEMORY
+================================================================================
+
+STARTING POINT: Branch Page
+----------------------------
+
+SCREEN: Branch Page
+-------------------
+You'll see:
+- Branch title at top
+- Memory Spark (golden box with prompt)
+- "+ Add Memory" button (golden, prominent)
+- Any existing memories below (if any)
+
+STEP 1: Click "+ Add Memory"
+-----------------------------
+Location: Center of screen, large golden button
+Button text: "+ Add Memory"
+
+SCREEN THAT APPEARS: Memory Modal (Full-Screen Pop-up)
+-------------------------------------------------------
+This is a large modal that takes up most of the screen.
+
+TOP SECTION shows:
+- Memory Spark prompt in italics (e.g., "What's a story they told that you
+  never want to forget?")
+- Small "🎲 New Prompt" button (to get different prompt)
+- Close button (X) in top right corner
+
+MAIN SECTION has:
+- Large text area for writing
+  - Placeholder: "Write your memory here..."
+  - You can type text story
+
+MEDIA UPLOAD OPTIONS (buttons in a row):
+- 📷 "Photo" button (gray, with camera icon)
+- 🎙️ "Voice" button (gray, with microphone icon)
+- 📝 "Text Only" (this is selected if you just type)
+
+BOTTOM SECTION has:
+- "Visibility" dropdown (defaults to PRIVATE)
+- "Memory Card" field (optional - when this happened)
+- "Cancel" button (left, gray)
+- "Save Memory" button (right, golden)
+
+STEP 2: Record Voice Memory
+----------------------------
+1. Click the 🎙️ "Voice" button
+
+WHAT HAPPENS:
+- Browser will ask for microphone permission (click "Allow")
+- Button changes to "🔴 Recording..." (red dot, pulsing)
+- You'll see a waveform animation while recording
+
+2. Start speaking your memory
+Example: "Uncle Joe just told the story about Grandma's pie disaster in 1987.
+She forgot to add sugar and served it to 20 people at Thanksgiving. Everyone
+was too polite to say anything until Grandpa took a bite and said 'Well,
+that's... healthy!' The whole table erupted in laughter."
+
+3. Click "⏹️ Stop" when done
+
+WHAT YOU'LL SEE:
+- Recording stops
+- Audio player appears showing your recording
+- Playback controls (▶️ play button, timestamp)
+- Small "🗑️ Delete" button to re-record if needed
+
+STEP 3: Add Title and Save
+---------------------------
+In the text area above the audio, add a title:
+Type: "Uncle Joe - Grandma's Pie Disaster of 1987"
+
+Optional - Add "Memory Card":
+In "Memory Card" field, type: "Thanksgiving 1987"
+
+Click "Save Memory" button (golden, bottom right)
+
+RESULT: Memory Saved
+--------------------
+- Modal closes
+- You're back on Branch Page
+- Your new memory appears at the top
+- It shows:
+  * Your name and "just now"
+  * The text you wrote
+  * Audio player with play button
+  * Small speaker icon indicating voice memory
+
+================================================================================
+🎯 VIDEO FLOW 3: ADDING A PHOTO MEMORY
+================================================================================
+
+STARTING POINT: Branch Page (with one memory already added)
+------------------------------------------------------------
+
+STEP 1: Click "+ Add Memory" again
+-----------------------------------
+
+STEP 2: Add Photo from Camera Roll
+-----------------------------------
+1. Click the 📷 "Photo" button
+
+WHAT HAPPENS:
+- File picker opens (your phone's photo library)
+- Select a photo from your camera roll
+
+2. Choose old family photo
+Example: Photo of Grandma and Grandpa from 1965
+
+WHAT YOU'LL SEE:
+- Photo appears in the modal as a preview
+- Image fills the preview area
+- Small "🗑️ Remove" button to deselect if you want different photo
+
+STEP 3: Add Caption
+-------------------
+In the text area, type:
+"Grandma & Grandpa's first Thanksgiving as a married couple, 1965. Look at
+those outfits! Grandma insisted on wearing her Sunday best even though she'd
+be cooking all day."
+
+In "Memory Card" field, type: "Thanksgiving 1965"
+
+STEP 4: Save
+------------
+Click "Save Memory" button (golden)
+
+RESULT: Photo Memory Saved
+---------------------------
+- Modal closes
+- New memory appears on Branch Page
+- Shows your photo with caption
+- Displays "Memory Card" date badge
+
+================================================================================
+🎯 VIDEO FLOW 4: USING MEMORY SPARKS (THE PROMPTS)
+================================================================================
+
+STARTING POINT: In the "Add Memory" Modal
+------------------------------------------
+
+WHAT IS MEMORY SPARK:
+---------------------
+At the top of every "Add Memory" modal, you'll see a golden prompt box with
+an italicized writing prompt. Examples:
+- "What's a story they told that you never want to forget?"
+- "Describe a moment when their presence changed everything."
+- "What's something they said that you still carry with you?"
+
+These prompts help you know WHAT to write when you're feeling stuck.
+
+HOW TO GET NEW PROMPTS:
+-----------------------
+If you don't like the current prompt, click the "🎲 New Prompt" button
+
+WHAT HAPPENS:
+- The prompt instantly changes to a different one
+- You can click multiple times to find one that resonates
+- Each prompt is designed to help unlock memories
+
+USING THE PROMPT:
+-----------------
+1. Read the prompt
+2. Think about it for a moment
+3. Type your response in the text area
+4. The prompt won't appear in your saved memory - it's just a guide
+
+Example:
+--------
+Prompt: "What was your favorite tradition with this person?"
+
+Your response might be:
+"Every Thanksgiving, Grandma made her famous apple pie. But the real
+tradition was letting us grandkids help. She'd let us roll out the dough,
+and we'd always make it too thick. She'd smile and say 'Perfect!' anyway.
+I can still smell the cinnamon..."
+
+================================================================================
+🎯 VIDEO FLOW 5: INVITING FAMILY MEMBERS
+================================================================================
+
+STARTING POINT: Branch Page
+----------------------------
+
+STEP 1: Open Branch Settings
+-----------------------------
+Look for the ⚙️ (gear icon) in the top right of the branch page
+Click it
+
+SCREEN THAT APPEARS: Branch Settings Modal
+-------------------------------------------
+This is a large pop-up with several sections:
+
+SECTIONS YOU'LL SEE:
+1. "Branch Members" - shows current members
+2. "Invite Member by Email" - form to add new people
+3. "Legacy Heirs" - for legacy planning
+4. "Legacy Mode" - mark as memorial
+5. "Close" button at bottom
+
+STEP 2: Scroll to "Invite Member" Section
+------------------------------------------
+You'll see a form with these fields:
+
+Field 1: "Invite Member by Email"
+- Input box for email address
+- Placeholder: "member@example.com"
+- Helper text: "Note: They must have an account to be invited"
+
+Field 2: "Personal Message (Optional)" ⭐ NEW FEATURE!
+- Large text area
+- Placeholder: "Add a personal note to your invitation..."
+- Helper text: "Share why this branch is special or what memories you hope
+  to preserve together"
+- Character limit: 500 characters
+
+Button: "Invite Member" (golden button at bottom)
+
+STEP 3: Fill in Invitation
+---------------------------
+In email field, type: aunt.susan@email.com
+
+In personal message field, type:
+"Aunt Susan - we're all gathered at Grandma's house for the first time without
+her. Would love for you to add your memories of Mom to this branch. We're all
+sharing stories today and want to make sure these moments aren't lost. Your
+perspective means so much to us. ❤️"
+
+STEP 4: Send Invitation
+------------------------
+Click "Invite Member" button (golden)
+
+WHAT HAPPENS:
+- Button changes to "Inviting..." briefly
+- Success message appears: "Invitation sent to aunt.susan@email.com! They'll
+  receive an email to create an account and join this branch."
+- Email field and message field clear
+- Modal stays open (you can invite more people)
+
+WHAT AUNT SUSAN RECEIVES:
+--------------------------
+1. EMAIL arrives with subject: "[Your Name] invited you to collaborate on
+   'Thanksgiving 2024 - The [Family Name] Stories'"
+
+2. Email content shows:
+   - Firefly Grove header (gold logo)
+   - "You've Been Invited!" headline
+   - "[Your Name] has invited you to collaborate on the branch 'Thanksgiving
+     2024 - The [Family Name] Stories' in Firefly Grove"
+   - YOUR PERSONAL MESSAGE in a golden highlighted box:
+     * Light golden background
+     * Your message in italics with quotes
+     * Your name at the bottom right
+   - List of what they can do as a member
+   - "Create Account & Join" button (golden)
+   - Expires in 7 days notice
+
+3. When she clicks the button, she goes to signup page where she can:
+   - Create her account
+   - Immediately join your branch
+   - Start adding her own memories
+
+STEP 5: Close Settings
+-----------------------
+Click "Close" button at bottom of settings modal
+
+RESULT: Back to Branch Page
+----------------------------
+You're back on the branch page, and Aunt Susan has been invited!
+
+================================================================================
+🎯 VIDEO FLOW 6: THE FINAL RESULT VIEW
+================================================================================
+
+SCREEN: Branch Page After Adding Multiple Memories
+---------------------------------------------------
+
+WHAT YOUR GRANDSON SHOULD SHOW:
+--------------------------------
+Scroll through the branch to show all the memories that were added:
+
+Top of page:
+- Branch title: "Thanksgiving 2024 - The [Family Name] Stories"
+- Description
+- Branch stats: "12 memories • 7 members contributed"
+
+Memories displayed (scroll through):
+1. Voice memory with audio player and text
+   - Shows author name and "2 hours ago"
+   - Play button for audio
+   - Written context
+
+2. Photo memory
+   - Full photo displayed
+   - Caption below
+   - Memory card badge showing date
+
+3. Text-only memory
+   - Written story
+   - Author name
+   - Timestamp
+
+Bottom of page:
+- "+ Add Memory" button (always available)
+- Shows you can keep adding more
+
+OPTIONAL: Show member count
+----------------------------
+If members were invited, show:
+- "7 people" contributed
+- Different names on different memories
+- This shows collaboration in action
+
+================================================================================
+🎯 VIDEO FLOW 7: SHAREABLE LINK (BONUS FEATURE)
+================================================================================
+
+If you want to show the shareable link feature:
+
+STARTING POINT: Branch Settings Modal
+--------------------------------------
+
+STEP 1: Scroll to "Shareable Invitation Link" Section
+------------------------------------------------------
+You'll see a section with:
+- Heading: "🔗 Shareable Invitation Link"
+- Description: "Create a link that can be shared via SMS, WhatsApp, Messenger,
+  or any platform"
+- "+ Create Shareable Link" button (gray)
+
+STEP 2: Create Link
+--------------------
+Click "+ Create Shareable Link" button
+
+WHAT HAPPENS:
+- Button changes to "Generating Link..."
+- Link appears in a box with:
+  * Full URL displayed
+  * "Copy" button next to it
+  * Expiration date shown
+  * Social share buttons: WhatsApp, Messenger, Share
+
+STEP 3: Copy or Share
+----------------------
+Option A: Click "Copy" button
+- Link copies to clipboard
+- Button changes to "✓ Copied!" briefly
+- You can paste this link anywhere (text, email, social media)
+
+Option B: Click "WhatsApp" button
+- Opens WhatsApp with pre-filled message
+- Message includes invitation text and link
+- Ready to send to any contact
+
+Option C: Click "Share" button (mobile only)
+- Opens phone's native share sheet
+- Can share via any app
+
+WHAT THE LINK DOES:
+-------------------
+Anyone with the link can:
+- Click it and see the invitation
+- Create a Firefly Grove account
+- Automatically join this branch
+- NO email address needed up front (they provide it during signup)
+
+Perfect for:
+- Group texts
+- Family WhatsApp chats
+- Social media posts
+- Anywhere you can share a link
+
+================================================================================
+📊 KEY UI ELEMENTS TO HIGHLIGHT IN VIDEO
+================================================================================
+
+FIREFLY GROVE VISUAL THEME:
+---------------------------
+- Main color: Golden yellow (#FFD700) - represents fireflies
+- Background: Dark theme (black/dark gray)
+- Accent: Soft glows and subtle gradients
+- Buttons: Golden for primary actions, gray for secondary
+- Text: Soft white/gray for readability
+
+IMPORTANT UI PATTERNS:
+----------------------
+1. Memory Sparks (Golden Prompt Boxes)
+   - Always at top of "Add Memory" modal
+   - Italicized text
+   - Gentle, thoughtful prompts
+   - Can refresh for new prompt
+
+2. Undo Banner
+   - Appears after deleting a memory
+   - Yellow banner at bottom of screen
+   - "Memory deleted. Undo?" with countdown timer
+   - Can restore within 10 seconds
+
+3. Memory Cards
+   - Each memory is a card on the branch page
+   - Shows: author name, timestamp, content, media
+   - Clean, readable layout
+   - Photo/audio/video embedded
+
+4. Personal Message Highlight
+   - In emails: Golden background box
+   - On invitation page: Golden border card
+   - Makes the personal message stand out beautifully
+   - Shows sender's name in attribution
+
+================================================================================
+🎥 SCREEN RECORDING TIPS
+================================================================================
+
+WHAT TO SHOW CLEARLY:
+---------------------
+1. Button States
+   - Show button BEFORE clicking (so viewer sees what to look for)
+   - Pause briefly on buttons before clicking
+   - Show button state changes (Loading..., Success, etc.)
+
+2. Form Fields
+   - Show empty field first
+   - Type slowly enough that viewer can read
+   - Show placeholder text
+   - Show helper text below fields
+
+3. Navigation Flow
+   - Show where you are before navigating
+   - Show transition between screens
+   - Show where you end up
+
+4. Results
+   - After any action, show the result
+   - Pause on success messages
+   - Show the created/saved item
+
+PACING:
+-------
+- Take your time - this isn't a race
+- Pause 2-3 seconds on important screens
+- Wait 1 second between clicks/taps
+- Read text out loud (or in your head) before clicking
+- Show consequences of each action
+
+WHAT NOT TO SHOW:
+-----------------
+- Loading spinners (edit these out if possible)
+- Error states or failed actions
+- Personal emails or real names (use example names)
+- Notification badges or popups from other apps
+
+================================================================================
+🎬 SUGGESTED SHOT SEQUENCE FOR VIDEO
+================================================================================
+
+For the 3-minute tutorial, show in this order:
+
+1. Grove Dashboard (5 sec)
+   - Starting point, shows app home
+
+2. Create Branch Flow (15 sec)
+   - Click "+ New Branch"
+   - Fill in form
+   - Click "Create Branch"
+   - Show result
+
+3. Add Voice Memory (25 sec)
+   - Click "+ Add Memory"
+   - Show Memory Spark prompt
+   - Click Voice button
+   - Record audio (speed up in editing)
+   - Add title
+   - Save
+   - Show saved memory
+
+4. Add Photo Memory (20 sec)
+   - Click "+ Add Memory" again
+   - Click Photo button
+   - Select photo
+   - Add caption
+   - Save
+   - Show result
+
+5. Invite Member (25 sec)
+   - Open Branch Settings (gear icon)
+   - Scroll to Invite section
+   - Fill in email
+   - Type personal message (show this clearly!)
+   - Send invitation
+   - Show success message
+
+6. Show Collected Memories (10 sec)
+   - Scroll through branch page
+   - Show multiple memories
+   - Show stats (12 memories, 7 contributors)
+
+Total: ~100 seconds
+Plus transitions, titles, outro = 3 minutes perfect
+
+================================================================================
+📝 VOICEOVER SCRIPT SYNCHRONIZED WITH UI
+================================================================================
+
+Use this to narrate while showing each screen:
+
+SCREEN: Grove Dashboard
+VOICEOVER: "First, open Firefly Grove and create a new branch for today."
+
+SCREEN: Create Branch Form
+VOICEOVER: "I'm naming this 'Thanksgiving 2024 - The [Family Name] Stories.'
+This is for my grandmother who passed last year."
+
+SCREEN: Branch Page with Spark
+VOICEOVER: "Notice this golden box - that's a Memory Spark. It gives you a
+writing prompt to help unlock memories."
+
+SCREEN: Adding Voice Memory
+VOICEOVER: "As stories come up during dinner, just hit 'Add Memory,' tap the
+microphone, and record."
+
+(Show Uncle Joe talking)
+VOICEOVER: "Uncle Joe just told this amazing story about Grandma's pie. I'm
+capturing it right now, while it's fresh."
+
+SCREEN: Saved voice memory
+VOICEOVER: "And it's saved - with his voice, so we'll always remember how he
+tells it."
+
+SCREEN: Adding photo
+VOICEOVER: "Someone brought out old photos. Perfect - I'll add this one from
+1965."
+
+SCREEN: Invite member screen with personal message
+VOICEOVER: "The beautiful thing? I don't have to do this alone. I'm inviting
+Aunt Susan, who lives across the country. And here's the new feature - I can
+add a personal message explaining why this matters."
+
+(Show typing personal message)
+VOICEOVER: "This message will appear in her invitation email, so she knows
+exactly why we want her memories too."
+
+SCREEN: Final branch with multiple memories
+VOICEOVER: "By the end of Thanksgiving, we captured 12 memories from 7 family
+members. Grandma's not at the table this year, but her story? That's still
+being written."
+
+================================================================================
+✅ GRANDSON'S PRE-FLIGHT CHECKLIST
+================================================================================
+
+Before filming, make sure:
+
+[ ] Firefly Grove app is installed and working
+[ ] You have a test account created
+[ ] You've practiced the flows at least once
+[ ] Phone is at 100% battery
+[ ] Phone is in Do Not Disturb mode
+[ ] All notifications are cleared
+[ ] Screen is clean (wipe with cloth)
+[ ] You have good lighting
+[ ] You know exactly what to click
+[ ] You have this guide nearby for reference
+
+During filming, remember:
+[ ] Wait 2 seconds after each screen loads
+[ ] Pause 1 second between taps
+[ ] Show full screens (don't crop anything off)
+[ ] Keep phone steady
+[ ] Tap deliberately (not too fast)
+[ ] Show button states before clicking
+[ ] Show results after actions
+
+After filming, verify:
+[ ] You captured all key screens
+[ ] Text is readable in all shots
+[ ] No personal info is visible
+[ ] Audio is clear (if recording voiceover)
+[ ] Transitions are smooth
+[ ] Nothing is cut off at edges
+
+================================================================================
+❓ TROUBLESHOOTING
+================================================================================
+
+If a button isn't where this guide says:
+- Take a screenshot and send to grandpa
+- He'll update the guide
+
+If a feature doesn't work:
+- Don't stress, just skip that part
+- Film what does work
+- Note what didn't work for grandpa
+
+If you make a mistake while recording:
+- Keep going! You'll edit it out later
+- Or pause, collect yourself, restart that section
+- No need to re-film everything
+
+If the app looks different:
+- It might have been updated
+- Use your best judgment
+- Film what you see
+- Grandpa can adjust the script
+
+================================================================================
+END OF UI WALKTHROUGH
+================================================================================
+
+Questions? Need clarification on any screen or button?
+Text grandpa with a screenshot and he'll help!
+
+Good luck! 🎥✨

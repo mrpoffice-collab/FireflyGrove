@@ -9,6 +9,7 @@ interface InviteData {
   branchTitle: string
   inviterName: string
   email: string | null
+  message?: string
   expired: boolean
   isShareableLink: boolean
 }
@@ -163,9 +164,22 @@ export default function InvitePage() {
             <p className="text-text-soft mb-2">
               <strong>{invite.inviterName}</strong> invited you to collaborate on:
             </p>
-            <p className="text-firefly-dim text-lg font-medium">
+            <p className="text-firefly-dim text-lg font-medium mb-4">
               "{invite.branchTitle}"
             </p>
+
+            {invite.message && (
+              <div className="mt-4 pt-4 border-t border-border-subtle">
+                <div className="bg-gradient-to-r from-firefly-dim/10 to-transparent border-l-4 border-firefly-dim p-4 rounded">
+                  <p className="text-text-soft italic text-sm leading-relaxed">
+                    "{invite.message}"
+                  </p>
+                  <p className="text-text-muted text-xs mt-2 text-right">
+                    — {invite.inviterName}
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 

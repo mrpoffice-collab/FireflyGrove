@@ -43,6 +43,7 @@ export async function GET(
       branchTitle: invite.branch.title,
       inviterName: invite.inviter.name,
       email: isShareableLink ? null : invite.email,
+      message: invite.message,
       expired,
       isShareableLink,
     })

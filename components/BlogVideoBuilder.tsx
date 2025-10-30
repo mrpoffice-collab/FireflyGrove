@@ -1,10 +1,12 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
+import { useSession } from 'next-auth/react'
 import { BlogVideoScript, formatDuration } from '@/lib/blogVideoParser'
 import { VoiceOption } from '@/app/api/generate-voiceover/route'
 import BlogVideoRenderer, { BlogVideoRendererHandle } from './BlogVideoRenderer'
 import BlogVideoVisualSelector, { SectionMedia } from './BlogVideoVisualSelector'
+import Header from './Header'
 
 interface VoiceInfo {
   id: VoiceOption
@@ -20,11 +22,13 @@ interface AudioResult {
 }
 
 export default function BlogVideoBuilder() {
+  const { data: session } = useSession()
   const [step, setStep] = useState(1)
   const [selectedPost, setSelectedPost] = useState<string>('')
   const [videoScript, setVideoScript] = useState<BlogVideoScript | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string>('')
+  const [isAdmin, setIsAdmin] = useState(false)
 
   // Voice settings
   const [voices, setVoices] = useState<VoiceInfo[]>([])
@@ -42,6 +46,18 @@ export default function BlogVideoBuilder() {
   const [renderingVideo, setRenderingVideo] = useState(false)
   const [renderProgress, setRenderProgress] = useState(0)
   const [videoBlob, setVideoBlob] = useState<Blob | null>(null)
+
+  // Fetch admin status
+  useEffect(() => {
+    if (session?.user) {
+      fetch('/api/user/profile')
+        .then((res) => res.json())
+        .then((data) => {
+          setIsAdmin(data.isAdmin || false)
+        })
+        .catch((err) => console.error('Failed to fetch user profile:', err))
+    }
+  }, [session])
 
   // Load voice options, existing sessions, and content sources
   useEffect(() => {
@@ -414,14 +430,19 @@ export default function BlogVideoBuilder() {
 
   return (
     <div className="min-h-screen bg-bg-dark">
+      <Header
+        userName={session?.user?.name || ''}
+        isAdmin={isAdmin}
+      />
+
       <div className="max-w-6xl mx-auto px-4 py-8">
-        {/* Header */}
+        {/* Page Title */}
         <div className="mb-8">
           <h1 className="text-4xl font-light text-text-soft mb-2">
-            Blog Video <span className="text-firefly-glow">Builder</span>
+            Amazing Video <span className="text-firefly-glow">Builder</span>
           </h1>
           <p className="text-text-muted">
-            Transform your blog posts into engaging videos with AI voiceover
+            Transform your content into engaging videos with AI voiceover
           </p>
         </div>
 

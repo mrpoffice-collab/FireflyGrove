@@ -5,8 +5,8 @@ import { redirect } from 'next/navigation'
 import BlogVideoBuilder from '@/components/BlogVideoBuilder'
 
 export const metadata: Metadata = {
-  title: 'Blog Video Builder - Firefly Grove',
-  description: 'Transform your blog posts into engaging videos with AI voiceover',
+  title: 'Amazing Video Builder - Firefly Grove',
+  description: 'Transform your content into engaging videos with AI voiceover',
 }
 
 export default async function BlogVideoPage() {

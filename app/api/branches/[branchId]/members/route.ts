@@ -20,7 +20,7 @@ export async function POST(
 
     const userId = (session.user as any).id
     const branchId = params.branchId
-    const { email } = await req.json()
+    const { email, message } = await req.json()
 
     if (!email) {
       return NextResponse.json(
@@ -112,7 +112,8 @@ export async function POST(
         branchWithOwner.title,
         branchWithOwner.owner.name,
         branchUrl,
-        false // Existing user
+        false, // Existing user
+        message // Personal message from inviter
       )
 
       return NextResponse.json({ success: true, type: 'member', member })
@@ -148,6 +149,7 @@ export async function POST(
           email,
           branchId,
           token,
+          message,
           status: 'PENDING',
           expiresAt,
         },
@@ -161,7 +163,8 @@ export async function POST(
         branchWithOwner.title,
         branchWithOwner.owner.name,
         inviteUrl,
-        true // New user - needs to sign up
+        true, // New user - needs to sign up
+        message // Personal message from inviter
       )
 
       return NextResponse.json({
