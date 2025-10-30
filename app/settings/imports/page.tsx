@@ -2,10 +2,10 @@
 
 import { useSession } from 'next-auth/react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, Suspense } from 'react'
 import Header from '@/components/Header'
 
-export default function ImportsPage() {
+function ImportsContent() {
   const { data: session, status } = useSession()
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -219,5 +219,17 @@ export default function ImportsPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function ImportsPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-text-muted">Loading...</div>
+      </div>
+    }>
+      <ImportsContent />
+    </Suspense>
   )
 }
