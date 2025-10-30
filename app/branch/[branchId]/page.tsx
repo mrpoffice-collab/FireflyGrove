@@ -3,6 +3,7 @@
 import { useSession } from 'next-auth/react'
 import { useRouter, useParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import Head from 'next/head'
 import Header from '@/components/Header'
 import MemoryCard from '@/components/MemoryCard'
 import MemoryModal from '@/components/MemoryModal'
@@ -559,9 +560,33 @@ export default function BranchPage() {
   const isPublicView = branch.isPublicView || false
   const isAuthenticated = status === 'authenticated' && session
 
+  // Get first image from entries for Open Graph preview
+  const firstImageEntry = branch.entries.find(entry => entry.mediaUrl)
+  const ogImage = firstImageEntry?.mediaUrl || '/og-default.jpg'
+  const ogDescription = branch.description || `Memories and stories about ${branch.title}`
+
   return (
-    <div className="min-h-screen" onDrop={handleDrop} onDragOver={handleDragOver}>
-      <Header userName={session?.user?.name || ''} />
+    <>
+      <Head>
+        <title>{branch.title} - Firefly Grove</title>
+        <meta name="description" content={ogDescription} />
+
+        {/* Open Graph / Facebook */}
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content={`${branch.title} - Firefly Grove`} />
+        <meta property="og:description" content={ogDescription} />
+        <meta property="og:image" content={ogImage} />
+        <meta property="og:url" content={typeof window !== 'undefined' ? window.location.href : ''} />
+
+        {/* Twitter */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={`${branch.title} - Firefly Grove`} />
+        <meta name="twitter:description" content={ogDescription} />
+        <meta name="twitter:image" content={ogImage} />
+      </Head>
+
+      <div className="min-h-screen" onDrop={handleDrop} onDragOver={handleDragOver}>
+        <Header userName={session?.user?.name || ''} />
 
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-3xl mx-auto">
@@ -1373,6 +1398,7 @@ export default function BranchPage() {
           url: typeof window !== 'undefined' ? `${window.location.origin}/branch/${branchId}` : '',
         }}
       />
-    </div>
+      </div>
+    </>
   )
 }
