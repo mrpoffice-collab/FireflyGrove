@@ -176,6 +176,15 @@ export default function Header({ userName, isBetaTester, isAdmin, groveInfo }: H
                 <div className="py-0.5">
                   <button
                     onClick={() => {
+                      router.push('/settings/imports')
+                      setIsDropdownOpen(false)
+                    }}
+                    className="w-full text-left px-3 py-1.5 text-sm text-text-muted hover:bg-border-subtle hover:text-text-soft transition-soft"
+                  >
+                    📥 Import Memories
+                  </button>
+                  <button
+                    onClick={() => {
                       router.push('/billing')
                       setIsDropdownOpen(false)
                     }}
@@ -292,6 +301,13 @@ export default function Header({ userName, isBetaTester, isAdmin, groveInfo }: H
               className="text-lg font-light text-text-soft hover:text-[var(--legacy-glow)] transition-soft py-2.5 border-b border-border-subtle"
             >
               🕯️ Open Grove
+            </Link>
+            <Link
+              href="/settings/imports"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="text-lg font-light text-text-soft hover:text-firefly-glow transition-soft py-2.5 border-b border-border-subtle"
+            >
+              📥 Import Memories
             </Link>
 
             {/* Admin Section - Mobile */}

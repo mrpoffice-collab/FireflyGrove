@@ -48,6 +48,8 @@ model User {
   sparkCollections SparkCollection[] @relation("UserSparkCollections")
   activeSparkCollections UserSparkCollection[] @relation("UserActiveCollections")
   nestItems NestItem[] @relation("UserNestItems")
+  facebookToken FacebookToken?
+  importJobs ImportJob[]
 
   @@index([email])
   @@index([status])
@@ -270,6 +272,11 @@ model Entry {
   deletedAt   DateTime?
   hiddenBy    String?  // User ID who hid it
   deletedBy   String?  // User ID who deleted it
+
+  // Import tracking
+  importSource   String?  // 'facebook', 'instagram', 'manual'
+  importSourceId String?  // Original post/photo ID
+  importedAt     DateTime?
 
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -1274,8 +1281,23 @@ model NestItem {
   // Organization
   tags         String[] // User-added tags for searching
 
+  // Import metadata (for Facebook/Instagram imports)
+  source       String?  // 'facebook', 'instagram', 'manual'
+  sourceId     String?  // Original Facebook post/photo ID
+  importMeta   Json?    // Original captions, comments, tags, location
+  mediaUrls    String[] @default([]) // Multiple images per post
+
+  // AI analysis results
+  contentType  String?  // 'photo', 'landscape', 'meme', 'mixed'
+  confidence   Float?   // AI confidence score (0-1)
+  suggestedBranchId String? // AI suggested destination branch
+
+  // Status
+  status       String   @default("pending") // 'pending', 'reviewed', 'hatched'
+
   // Lifecycle
   uploadedAt   DateTime @default(now())
+  importedAt   DateTime?
   expiresAt    DateTime? // Optional: auto-delete after X days
 
   // Relations
@@ -1285,4 +1307,59 @@ model NestItem {
   @@index([uploadedAt])
   @@index([expiresAt])
   @@index([mediaType])
+  @@index([source])
+  @@index([status])
+  @@index([suggestedBranchId])
+}
+
+// Facebook OAuth tokens for import feature
+model FacebookToken {
+  id           String   @id @default(cuid())
+  userId       String   @unique
+  accessToken  String   @db.Text
+  refreshToken String?  @db.Text
+  expiresAt    DateTime?
+  scope        String?
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+// Background import job tracking
+model ImportJob {
+  id              String   @id @default(cuid())
+  userId          String
+
+  source          String   // 'facebook', 'instagram'
+  status          String   // 'analyzing', 'importing', 'complete', 'failed'
+
+  // Counts
+  totalItems      Int      @default(0)
+  processedItems  Int      @default(0)
+  importedItems   Int      @default(0)
+  skippedItems    Int      @default(0)
+
+  // Routing results
+  autoRouted      Int      @default(0)
+  needsReview     Int      @default(0)
+
+  // Metadata
+  settings        Json?    // User's import preferences
+  error           String?  @db.Text
+
+  // Timestamps
+  startedAt       DateTime @default(now())
+  completedAt     DateTime?
+
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([status])
+  @@index([source])
+  @@index([startedAt])
 }
