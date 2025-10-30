@@ -10,14 +10,8 @@ export const dynamic = 'force-dynamic'
 export const runtime = 'nodejs'
 export const maxDuration = 300 // 5 minutes max execution time
 
-// Increase max file size to 500MB
-export const config = {
-  api: {
-    bodyParser: {
-      sizeLimit: '500mb',
-    },
-  },
-}
+// Note: Next.js App Router handles large file uploads automatically
+// The bodyParser config is not needed in App Router
 
 /**
  * Upload a photo buffer to Vercel Blob storage
