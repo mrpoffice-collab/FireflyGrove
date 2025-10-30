@@ -52,6 +52,7 @@ model User {
   importJobs ImportJob[]
   fireflyBursts FireflyBurst[]
   burstSettings UserBurstSettings?
+  audioSparks AudioSpark[] @relation("UserAudioSparks")
 
   @@index([email])
   @@index([status])
@@ -1423,4 +1424,82 @@ model UserBurstSettings {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
+}
+
+// ============================================
+// AUDIO SPARKS - Prompt-based audio memories
+// ============================================
+
+// Audio Spark Prompts - Questions to evoke short meaningful stories
+model AudioPrompt {
+  id          String   @id @default(cuid())
+
+  // Prompt content
+  question    String   @db.Text // The prompt question (e.g., "What was your favorite childhood memory?")
+  category    String   // "childhood", "family", "career", "traditions", "holidays", "wisdom", "funny", etc.
+
+  // Organization
+  isFeatured  Boolean  @default(false) // Admin-highlighted prompts
+  isActive    Boolean  @default(true)
+  displayOrder Int     @default(0)
+
+  // Usage tracking
+  usageCount  Int      @default(0)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  recordings  AudioSpark[]
+
+  @@index([category])
+  @@index([isFeatured])
+  @@index([isActive])
+  @@index([displayOrder])
+  @@index([usageCount])
+}
+
+// Audio Spark Recordings - Individual audio memory captures
+model AudioSpark {
+  id              String   @id @default(cuid())
+  userId          String   // User who recorded/owns this
+  promptId        String?  // Optional: which prompt was used
+
+  // Audio storage
+  audioUrl        String   // Vercel Blob storage URL
+  audioFilename   String
+  audioSizeBytes  Int
+  audioDuration   Float    // Duration in seconds
+
+  // Recording metadata
+  recordedAt      DateTime @default(now())
+  recordedBy      String?  // Name of person speaking (e.g., "Papa", "Nana")
+
+  // Content
+  title           String?  // Optional title for the memory
+  description     String?  @db.Text // Optional context/notes
+  customPrompt    String?  @db.Text // If user created custom prompt instead of using library
+
+  // Destination
+  branchId        String?  // Destination branch (null = nest only)
+  entryId         String?  // If converted to full Entry, link it
+  status          String   @default("draft") // draft, saved, converted_to_entry
+
+  // Editing metadata
+  originalDuration Float?  // If trimmed, store original duration
+  trimStart       Float?   // Trim start time in seconds
+  trimEnd         Float?   // Trim end time in seconds
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relations
+  user            User         @relation("UserAudioSparks", fields: [userId], references: [id], onDelete: Cascade)
+  prompt          AudioPrompt? @relation(fields: [promptId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([promptId])
+  @@index([branchId])
+  @@index([status])
+  @@index([recordedAt])
 }

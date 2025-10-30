@@ -8,6 +8,7 @@ import Tooltip from '@/components/Tooltip'
 import NestNudge from '@/components/NestNudge'
 import FireflyCanvas from '@/components/FireflyCanvas'
 import FireflyBurst from '@/components/FireflyBurst'
+import AudioSparks from '@/components/AudioSparks'
 import { getPlanById } from '@/lib/plans'
 
 interface Tree {
@@ -90,6 +91,9 @@ export default function GrovePage() {
   const [burstMemories, setBurstMemories] = useState<any[]>([])
   const [burstId, setBurstId] = useState<string | null>(null)
   const [sessionId] = useState(() => Math.random().toString(36).substring(7))
+
+  // Audio Sparks state
+  const [showAudioSparks, setShowAudioSparks] = useState(false)
 
   // Check for pending nest photo from URL
   useEffect(() => {
@@ -272,6 +276,14 @@ export default function GrovePage() {
         />
       )}
 
+      {/* Audio Sparks Modal */}
+      {showAudioSparks && (
+        <AudioSparks
+          onClose={() => setShowAudioSparks(false)}
+          branches={grove.allBranches || []}
+        />
+      )}
+
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-5xl mx-auto">
           {/* Transplantable Trees Section */}
@@ -380,9 +392,9 @@ export default function GrovePage() {
               Where family, friends, and generations connect through shared memories.
             </p>
 
-            {/* Get Another Burst Button */}
-            {burstMemories.length > 0 && (
-              <div className="mb-4">
+            {/* Quick Actions */}
+            <div className="mb-4 flex flex-wrap items-center justify-center gap-3">
+              {burstMemories.length > 0 && (
                 <button
                   onClick={generateBurst}
                   className="inline-flex items-center gap-2 px-4 py-2 bg-firefly-dim/20 hover:bg-firefly-dim/30 border border-firefly-dim/40 text-firefly-glow rounded-lg text-sm font-medium transition-soft"
@@ -390,8 +402,15 @@ export default function GrovePage() {
                   <span>✨</span>
                   <span>Get Another Burst</span>
                 </button>
-              </div>
-            )}
+              )}
+              <button
+                onClick={() => setShowAudioSparks(true)}
+                className="inline-flex items-center gap-2 px-4 py-2 bg-firefly-glow hover:bg-firefly-bright text-bg-darker rounded-lg text-sm font-medium transition-soft"
+              >
+                <span>🎙️</span>
+                <span>Audio Sparks</span>
+              </button>
+            </div>
 
             {/* Grove Stats */}
             <div className="flex flex-wrap items-center justify-center gap-3 text-text-muted text-sm">
