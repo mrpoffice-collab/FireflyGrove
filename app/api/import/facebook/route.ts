@@ -283,12 +283,12 @@ export async function POST(req: NextRequest) {
           action: 'FACEBOOK_IMPORT',
           targetType: 'IMPORT_JOB',
           targetId: importJob.id,
-          metadata: {
+          metadata: JSON.stringify({
             fileName: file.name,
             totalItems: parsed.totalItems,
             processedItems: processedCount,
             skippedItems: skippedCount,
-          },
+          }),
         },
       })
 
