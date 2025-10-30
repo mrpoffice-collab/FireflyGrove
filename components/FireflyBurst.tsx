@@ -46,8 +46,8 @@ export default function FireflyBurst({ memories, burstId, onClose, onViewNext }:
   const currentMemory = memories[currentIndex]
 
   useEffect(() => {
-    // Animation entry effect
-    const timer = setTimeout(() => setIsAnimating(false), 800)
+    // Animation entry effect - longer for smooth fade
+    const timer = setTimeout(() => setIsAnimating(false), 600)
     return () => clearTimeout(timer)
   }, [currentIndex])
 
@@ -82,7 +82,7 @@ export default function FireflyBurst({ memories, burstId, onClose, onViewNext }:
       setIsAnimating(true)
       setTimeout(() => {
         setCurrentIndex((prev) => prev + 1)
-      }, 300)
+      }, 500)
     } else {
       // Reached the end, mark as viewed and close
       markAsViewed()
@@ -95,7 +95,7 @@ export default function FireflyBurst({ memories, burstId, onClose, onViewNext }:
       setIsAnimating(true)
       setTimeout(() => {
         setCurrentIndex((prev) => prev - 1)
-      }, 300)
+      }, 500)
     }
   }
 
@@ -196,17 +196,20 @@ export default function FireflyBurst({ memories, burstId, onClose, onViewNext }:
 
         {/* Memory card */}
         <div
-          className={`bg-bg-elevated border border-firefly-dim/30 rounded-lg overflow-hidden transition-all duration-500 ${
+          className={`bg-bg-elevated border border-firefly-dim/30 rounded-lg overflow-hidden transition-all duration-700 ${
             isAnimating ? 'opacity-0 scale-95' : 'opacity-100 scale-100'
           }`}
         >
           {/* Media */}
           {currentMemory.mediaUrl && (
-            <div className="relative w-full h-80 bg-bg-darker">
+            <div className="relative w-full h-80 bg-bg-darker overflow-hidden">
               <img
+                key={currentMemory.id}
                 src={currentMemory.mediaUrl}
                 alt="Memory"
-                className="w-full h-full object-cover"
+                className={`w-full h-full object-cover transition-opacity duration-700 ${
+                  isAnimating ? 'opacity-0' : 'opacity-100'
+                }`}
               />
               {/* Glowing overlay effect */}
               <div className="absolute inset-0 bg-gradient-to-t from-bg-elevated/80 to-transparent pointer-events-none" />
@@ -268,8 +271,10 @@ export default function FireflyBurst({ memories, burstId, onClose, onViewNext }:
               <button
                 key={index}
                 onClick={() => {
-                  setIsAnimating(true)
-                  setTimeout(() => setCurrentIndex(index), 300)
+                  if (index !== currentIndex) {
+                    setIsAnimating(true)
+                    setTimeout(() => setCurrentIndex(index), 500)
+                  }
                 }}
                 className={`rounded-full transition-all duration-300 cursor-pointer hover:scale-110 ${
                   index === currentIndex
