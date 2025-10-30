@@ -41,6 +41,8 @@ export default function MemoryCard({ entry, branchOwnerId, branchId, branchTitle
     sharedBranches: string[]
   } | null>(null)
   const [showSharePanel, setShowSharePanel] = useState(false)
+  const [isEditing, setIsEditing] = useState(false)
+  const [editedText, setEditedText] = useState(entry.text)
 
   const userId = (session?.user as any)?.id
   const isAuthor = entry.author.id === userId
@@ -190,6 +192,46 @@ export default function MemoryCard({ entry, branchOwnerId, branchId, branchTitle
     }
   }
 
+  const handleEdit = () => {
+    setIsEditing(true)
+    setShowMenu(false)
+  }
+
+  const handleSaveEdit = async () => {
+    if (editedText.trim() === '') {
+      alert('Memory text cannot be empty')
+      return
+    }
+
+    setIsProcessing(true)
+
+    try {
+      const res = await fetch(`/api/entries/${entry.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: editedText }),
+      })
+
+      if (res.ok) {
+        entry.text = editedText
+        setIsEditing(false)
+      } else {
+        const data = await res.json()
+        alert(data.error || 'Failed to update memory')
+      }
+    } catch (error) {
+      console.error('Error updating memory:', error)
+      alert('Failed to update memory')
+    } finally {
+      setIsProcessing(false)
+    }
+  }
+
+  const handleCancelEdit = () => {
+    setEditedText(entry.text)
+    setIsEditing(false)
+  }
+
   const handleRemoveFromBranch = async () => {
     if (!confirm('Remove this memory from this branch? It will remain visible in other branches where it\'s shared.')) {
       return
@@ -310,13 +352,25 @@ export default function MemoryCard({ entry, branchOwnerId, branchId, branchTitle
                   />
                   <div className="absolute right-0 top-8 z-20 bg-bg-darker border border-border-subtle rounded-lg shadow-xl min-w-[180px]">
                     {isAuthor && (
-                      <button
-                        onClick={handleWithdraw}
-                        disabled={isProcessing}
-                        className="w-full text-left px-4 py-2 text-sm text-text-soft hover:bg-bg-dark transition-soft disabled:opacity-50"
-                      >
-                        Withdraw
-                      </button>
+                      <>
+                        <button
+                          onClick={handleEdit}
+                          disabled={isProcessing}
+                          className="w-full text-left px-4 py-2 text-sm text-firefly-glow hover:bg-bg-dark transition-soft disabled:opacity-50 flex items-center gap-2"
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                          </svg>
+                          Edit
+                        </button>
+                        <button
+                          onClick={handleWithdraw}
+                          disabled={isProcessing}
+                          className="w-full text-left px-4 py-2 text-sm text-text-soft hover:bg-bg-dark transition-soft disabled:opacity-50"
+                        >
+                          Withdraw
+                        </button>
+                      </>
                     )}
                     {isBranchOwner && !isAuthor && (
                       <button
@@ -354,9 +408,37 @@ export default function MemoryCard({ entry, branchOwnerId, branchId, branchTitle
         </div>
       </div>
 
-      <p className="text-text-soft leading-relaxed whitespace-pre-wrap">
-        {entry.text}
-      </p>
+      {isEditing ? (
+        <div className="space-y-3">
+          <textarea
+            value={editedText}
+            onChange={(e) => setEditedText(e.target.value)}
+            className="w-full px-4 py-3 bg-bg-darker border border-firefly-dim/50 rounded-lg text-text-soft placeholder-text-muted focus:outline-none focus:border-firefly-glow transition-soft resize-y min-h-[120px]"
+            placeholder="Share your memory..."
+            disabled={isProcessing}
+          />
+          <div className="flex gap-2">
+            <button
+              onClick={handleSaveEdit}
+              disabled={isProcessing || editedText.trim() === ''}
+              className="px-4 py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg font-medium transition-soft disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isProcessing ? 'Saving...' : 'Save Changes'}
+            </button>
+            <button
+              onClick={handleCancelEdit}
+              disabled={isProcessing}
+              className="px-4 py-2 bg-bg-darker hover:bg-border-subtle text-text-muted rounded-lg font-medium transition-soft disabled:opacity-50"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      ) : (
+        <p className="text-text-soft leading-relaxed whitespace-pre-wrap">
+          {entry.text}
+        </p>
+      )}
 
       {entry.mediaUrl && (
         <div className="mt-4">
