@@ -1136,6 +1136,8 @@ export default function BranchPage() {
                     key={entry.id}
                     entry={entry}
                     branchOwnerId={branch.owner.id}
+                    branchId={branchId}
+                    branchTitle={branch.title}
                     onWithdraw={handleWithdraw}
                     onHide={handleHide}
                   />

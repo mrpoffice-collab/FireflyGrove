@@ -22,12 +22,13 @@ interface MemoryCardProps {
   }
   branchOwnerId?: string
   branchId?: string
+  branchTitle?: string
   onWithdraw?: (entryId: string) => void
   onHide?: (entryId: string) => void
   onRemoveFromBranch?: (entryId: string) => void
 }
 
-export default function MemoryCard({ entry, branchOwnerId, branchId, onWithdraw, onHide, onRemoveFromBranch }: MemoryCardProps) {
+export default function MemoryCard({ entry, branchOwnerId, branchId, branchTitle, onWithdraw, onHide, onRemoveFromBranch }: MemoryCardProps) {
   const { data: session } = useSession()
   const [showMenu, setShowMenu] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
@@ -449,9 +450,9 @@ export default function MemoryCard({ entry, branchOwnerId, branchId, onWithdraw,
         isOpen={showSharePanel}
         onClose={() => setShowSharePanel(false)}
         shareData={{
-          title: `Memory by ${entry.author.name}`,
+          title: branchTitle ? `${branchTitle} - Memory by ${entry.author.name}` : `Memory by ${entry.author.name}`,
           text: entry.text.length > 100 ? entry.text.substring(0, 100) + '...' : entry.text,
-          url: typeof window !== 'undefined' ? `${window.location.origin}/memory/${entry.id}` : '',
+          url: typeof window !== 'undefined' && branchId ? `${window.location.origin}/branch/${branchId}` : (typeof window !== 'undefined' ? window.location.href : ''),
         }}
       />
     </div>

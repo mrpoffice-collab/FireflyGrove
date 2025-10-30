@@ -89,8 +89,8 @@ export default function SharePanel({ isOpen, onClose, shareData }: SharePanelPro
 
       {/* Slide-out Panel */}
       <div
-        className={`fixed right-0 top-0 h-full w-80 bg-bg-elevated border-l border-border-subtle z-50 shadow-2xl transform transition-transform duration-300 ease-out ${
-          isOpen ? 'translate-x-0' : 'translate-x-full'
+        className={`fixed left-0 top-0 h-full w-80 bg-bg-elevated border-r border-border-subtle z-50 shadow-2xl transform transition-transform duration-300 ease-out ${
+          isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
         <div className="flex flex-col h-full">
