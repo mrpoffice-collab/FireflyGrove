@@ -143,7 +143,7 @@ export default function PinterestAdminPage() {
           {/* Header */}
           <div className="mb-8">
             <h1 className="text-4xl font-light text-text-soft mb-2">
-              Pinterest <span className="text-red-500">Integration</span>
+              Pinterest <span className="text-error-text">Integration</span>
             </h1>
             <p className="text-text-muted">
               Manage your Pinterest boards and share Firefly Grove memories
@@ -151,7 +151,7 @@ export default function PinterestAdminPage() {
           </div>
 
           {error && (
-            <div className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-lg text-red-400">
+            <div className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-lg text-error-text">
               {error}
             </div>
           )}
@@ -181,7 +181,7 @@ export default function PinterestAdminPage() {
                 </div>
                 <div className="bg-bg-elevated p-4 rounded-lg">
                   <div className="text-text-muted text-sm mb-1">Outbound Clicks</div>
-                  <div className="text-3xl text-green-400 font-light">
+                  <div className="text-3xl text-success-text font-light">
                     {analytics.all_time.outbound_click.toLocaleString()}
                   </div>
                 </div>
@@ -217,9 +217,9 @@ export default function PinterestAdminPage() {
                       <h3 className="text-lg text-text-soft font-medium">{board.name}</h3>
                       <span className={`text-xs px-2 py-1 rounded ${
                         board.privacy === 'PUBLIC'
-                          ? 'bg-green-500/20 text-green-400'
+                          ? 'bg-green-500/20 text-success-text'
                           : board.privacy === 'SECRET'
-                          ? 'bg-red-500/20 text-red-400'
+                          ? 'bg-red-500/20 text-error-text'
                           : 'bg-yellow-500/20 text-yellow-400'
                       }`}>
                         {board.privacy}
@@ -234,7 +234,7 @@ export default function PinterestAdminPage() {
                         href={`https://pinterest.com/`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-red-500 hover:text-red-400"
+                        className="text-error-text hover:text-error-text"
                       >
                         View on Pinterest →
                       </a>
@@ -358,7 +358,7 @@ export default function PinterestAdminPage() {
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 py-2 bg-red-500 hover:bg-red-600 text-white rounded transition-soft disabled:opacity-50"
+                  className="flex-1 py-2 bg-red-500 hover:bg-red-600 text-white rounded transition-soft disabled:bg-gray-800 disabled:text-gray-600"
                   disabled={creatingBoard}
                 >
                   {creatingBoard ? 'Creating...' : 'Create Board'}

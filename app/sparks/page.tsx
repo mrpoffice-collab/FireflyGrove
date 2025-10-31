@@ -301,7 +301,7 @@ export default function SparksPage() {
                     value={newSparkText}
                     onChange={(e) => setNewSparkText(e.target.value)}
                     placeholder="e.g., What was your first memory with this person?"
-                    className="w-full px-4 py-3 bg-bg-dark border border-border-subtle rounded-lg text-text-soft placeholder-text-muted focus:outline-none focus:border-firefly-dim resize-none"
+                    className="w-full px-4 py-3 bg-bg-dark border border-border-subtle rounded-lg text-text-soft placeholder:text-placeholder focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50 resize-none"
                     rows={3}
                     required
                   />
@@ -313,7 +313,7 @@ export default function SparksPage() {
                   <select
                     value={newSparkCategory}
                     onChange={(e) => setNewSparkCategory(e.target.value)}
-                    className="w-full px-4 py-3 bg-bg-dark border border-border-subtle rounded-lg text-text-soft focus:outline-none focus:border-firefly-dim"
+                    className="w-full px-4 py-3 bg-bg-dark border border-border-subtle rounded-lg text-text-soft focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50"
                   >
                     <option value="">No category</option>
                     {CATEGORIES.filter((c) => c !== 'All').map((cat) => (
@@ -392,7 +392,7 @@ export default function SparksPage() {
                         <textarea
                           value={editText}
                           onChange={(e) => setEditText(e.target.value)}
-                          className="w-full px-4 py-3 bg-bg-dark border border-border-subtle rounded-lg text-text-soft focus:outline-none focus:border-firefly-dim resize-none"
+                          className="w-full px-4 py-3 bg-bg-dark border border-border-subtle rounded-lg text-text-soft focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50 resize-none"
                           rows={2}
                         />
                       ) : (
@@ -406,7 +406,7 @@ export default function SparksPage() {
                           </span>
                         )}
                         {spark.isGlobal && (
-                          <span className="px-2 py-1 bg-green-500/10 text-green-400 rounded">
+                          <span className="px-2 py-1 bg-green-500/10 text-success-text rounded">
                             Global
                           </span>
                         )}
@@ -453,14 +453,14 @@ export default function SparksPage() {
                               className={`px-3 py-1 rounded text-sm transition-soft ${
                                 spark.isActive
                                   ? 'bg-yellow-500/20 hover:bg-yellow-500/30 text-yellow-400'
-                                  : 'bg-green-500/20 hover:bg-green-500/30 text-green-400'
+                                  : 'bg-green-500/20 hover:bg-green-500/30 text-success-text'
                               }`}
                             >
                               {spark.isActive ? 'Deactivate' : 'Activate'}
                             </button>
                             <button
                               onClick={() => handleDeleteSpark(spark.id)}
-                              className="px-3 py-1 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded text-sm transition-soft"
+                              className="px-3 py-1 bg-red-500/20 hover:bg-red-500/30 text-error-text rounded text-sm transition-soft"
                             >
                               Delete
                             </button>

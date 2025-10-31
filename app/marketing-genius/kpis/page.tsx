@@ -194,7 +194,7 @@ export default function KPIsPage() {
               <h2 className="text-2xl font-light text-text-soft mb-1">🎯 North Star Metric</h2>
               <p className="text-text-muted">Total Active Users</p>
             </div>
-            <div className={`px-4 py-2 rounded-lg ${onTrack ? 'bg-green-500/20 text-green-400' : 'bg-yellow-500/20 text-yellow-400'}`}>
+            <div className={`px-4 py-2 rounded-lg ${onTrack ? 'bg-green-500/20 text-success-text' : 'bg-yellow-500/20 text-yellow-400'}`}>
               {onTrack ? '✅ On Track' : '⚠️ Action Needed'}
             </div>
           </div>
@@ -247,7 +247,7 @@ export default function KPIsPage() {
 
             <div className="space-y-4">
               <div>
-                <div className="text-3xl font-light text-green-400 mb-1">
+                <div className="text-3xl font-light text-success-text mb-1">
                   {kpis.acquisition.newUsersThisMonth}
                 </div>
                 <div className="text-text-muted text-sm">New Users (30d)</div>
@@ -280,7 +280,7 @@ export default function KPIsPage() {
 
             <div className="space-y-4">
               <div>
-                <div className="text-3xl font-light text-blue-400 mb-1">
+                <div className="text-3xl font-light text-info-text mb-1">
                   {kpis.content.publishedPosts}
                 </div>
                 <div className="text-text-muted text-sm">Published Posts</div>
@@ -313,7 +313,7 @@ export default function KPIsPage() {
 
             <div className="space-y-4">
               <div>
-                <div className="text-3xl font-light text-purple-400 mb-1">
+                <div className="text-3xl font-light text-purple-300 mb-1">
                   {kpis.engagement.totalMemories}
                 </div>
                 <div className="text-text-muted text-sm">Memories Created</div>
@@ -344,7 +344,7 @@ export default function KPIsPage() {
             <div className="p-4 bg-bg-dark rounded-lg">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-text-muted">SEO / Blog</span>
-                <span className="text-green-400 text-sm">✅ Active</span>
+                <span className="text-success-text text-sm">✅ Active</span>
               </div>
               <div className="text-2xl font-light text-text-soft mb-1">
                 {kpis.content.totalViews.toLocaleString()}
@@ -409,7 +409,7 @@ export default function KPIsPage() {
                       <div className="text-text-muted">signups</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-green-400 font-medium">
+                      <div className="text-success-text font-medium">
                         {post.views > 0 ? ((post.signups / post.views) * 100).toFixed(1) : '0.0'}%
                       </div>
                       <div className="text-text-muted">CVR</div>
@@ -432,21 +432,21 @@ export default function KPIsPage() {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div>
                 <div className="text-text-muted text-sm mb-1">Monthly Revenue</div>
-                <div className="text-xl font-light text-green-400">{formatCurrency(targetMetrics.revenue)}</div>
+                <div className="text-xl font-light text-success-text">{formatCurrency(targetMetrics.revenue)}</div>
               </div>
               <div>
                 <div className="text-text-muted text-sm mb-1">Monthly Costs</div>
-                <div className="text-xl font-light text-red-400">{formatCurrency(targetMetrics.costs)}</div>
+                <div className="text-xl font-light text-error-text">{formatCurrency(targetMetrics.costs)}</div>
               </div>
               <div>
                 <div className="text-text-muted text-sm mb-1">Monthly Profit</div>
-                <div className={`text-xl font-light ${targetMetrics.profit >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                <div className={`text-xl font-light ${targetMetrics.profit >= 0 ? 'text-success-text' : 'text-error-text'}`}>
                   {formatCurrency(targetMetrics.profit)}
                 </div>
               </div>
               <div>
                 <div className="text-text-muted text-sm mb-1">Annual Profit</div>
-                <div className={`text-xl font-light ${targetMetrics.profit >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                <div className={`text-xl font-light ${targetMetrics.profit >= 0 ? 'text-success-text' : 'text-error-text'}`}>
                   {formatCurrency(targetMetrics.profit * 12)}
                 </div>
               </div>
@@ -605,25 +605,25 @@ export default function KPIsPage() {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div>
                 <div className="text-text-muted text-sm mb-1">Monthly Revenue</div>
-                <div className={`text-xl font-light ${currentMetrics.revenue >= fixedCosts ? 'text-green-400' : 'text-yellow-400'}`}>
+                <div className={`text-xl font-light ${currentMetrics.revenue >= fixedCosts ? 'text-success-text' : 'text-yellow-400'}`}>
                   {formatCurrency(currentMetrics.revenue)}
                 </div>
               </div>
               <div>
                 <div className="text-text-muted text-sm mb-1">Monthly Costs</div>
-                <div className="text-xl font-light text-red-400">
+                <div className="text-xl font-light text-error-text">
                   {formatCurrency(currentMetrics.costs)}
                 </div>
               </div>
               <div>
                 <div className="text-text-muted text-sm mb-1">Monthly Profit</div>
-                <div className={`text-xl font-light ${currentMetrics.profit >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                <div className={`text-xl font-light ${currentMetrics.profit >= 0 ? 'text-success-text' : 'text-error-text'}`}>
                   {formatCurrency(currentMetrics.profit)}
                 </div>
               </div>
               <div>
                 <div className="text-text-muted text-sm mb-1">Profit Margin</div>
-                <div className={`text-xl font-light ${currentMetrics.margin >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                <div className={`text-xl font-light ${currentMetrics.margin >= 0 ? 'text-success-text' : 'text-error-text'}`}>
                   {currentMetrics.margin.toFixed(0)}%
                 </div>
               </div>
@@ -651,9 +651,9 @@ export default function KPIsPage() {
                         {month.month === 0 ? 'Now' : `Month ${month.month}`}
                       </td>
                       <td className="py-2 text-right text-text-soft">{month.users}</td>
-                      <td className="py-2 text-right text-green-400">{formatCurrency(month.revenue)}</td>
-                      <td className="py-2 text-right text-red-400">{formatCurrency(month.costs)}</td>
-                      <td className={`py-2 text-right font-medium ${month.profit >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                      <td className="py-2 text-right text-success-text">{formatCurrency(month.revenue)}</td>
+                      <td className="py-2 text-right text-error-text">{formatCurrency(month.costs)}</td>
+                      <td className={`py-2 text-right font-medium ${month.profit >= 0 ? 'text-success-text' : 'text-error-text'}`}>
                         {formatCurrency(month.profit)}
                       </td>
                     </tr>
@@ -673,13 +673,13 @@ export default function KPIsPage() {
               <h4 className="text-sm font-medium text-firefly-glow mb-3">Monthly Targets</h4>
               <ul className="space-y-2 text-sm text-text-muted">
                 <li className="flex items-center gap-2">
-                  <span className={kpis.acquisition.newUsersThisMonth >= 10 ? 'text-green-400' : 'text-yellow-400'}>
+                  <span className={kpis.acquisition.newUsersThisMonth >= 10 ? 'text-success-text' : 'text-yellow-400'}>
                     {kpis.acquisition.newUsersThisMonth >= 10 ? '✅' : '⏳'}
                   </span>
                   <span>10+ new users/month</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <span className={kpis.content.publishedPosts >= 3 ? 'text-green-400' : 'text-yellow-400'}>
+                  <span className={kpis.content.publishedPosts >= 3 ? 'text-success-text' : 'text-yellow-400'}>
                     {kpis.content.publishedPosts >= 3 ? '✅' : '⏳'}
                   </span>
                   <span>2-3 blog posts/month</span>

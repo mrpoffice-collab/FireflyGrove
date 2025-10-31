@@ -211,7 +211,7 @@ export default function FBPostPage() {
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       required
-                      className="w-full bg-bg-dark border border-border-subtle rounded px-4 py-3 text-text-soft focus:outline-none focus:border-firefly-dim/50 transition-soft"
+                      className="w-full bg-bg-dark border border-border-subtle rounded px-4 py-3 text-text-soft focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50/50 transition-soft"
                       placeholder="Your name"
                       disabled={loading}
                     />
@@ -223,7 +223,7 @@ export default function FBPostPage() {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       required
-                      className="w-full bg-bg-dark border border-border-subtle rounded px-4 py-3 text-text-soft focus:outline-none focus:border-firefly-dim/50 transition-soft"
+                      className="w-full bg-bg-dark border border-border-subtle rounded px-4 py-3 text-text-soft focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50/50 transition-soft"
                       placeholder="your@email.com"
                       disabled={loading}
                     />
@@ -236,7 +236,7 @@ export default function FBPostPage() {
                       onChange={(e) => setPassword(e.target.value)}
                       required
                       minLength={6}
-                      className="w-full bg-bg-dark border border-border-subtle rounded px-4 py-3 text-text-soft focus:outline-none focus:border-firefly-dim/50 transition-soft"
+                      className="w-full bg-bg-dark border border-border-subtle rounded px-4 py-3 text-text-soft focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50/50 transition-soft"
                       placeholder="At least 6 characters"
                       disabled={loading}
                     />
@@ -244,7 +244,7 @@ export default function FBPostPage() {
 
                   {error && (
                     <div className="bg-red-500/10 border border-red-500/30 rounded p-3">
-                      <p className="text-red-400 text-sm">{error}</p>
+                      <p className="text-error-text text-sm">{error}</p>
                     </div>
                   )}
 
@@ -252,7 +252,7 @@ export default function FBPostPage() {
                     <button
                       type="submit"
                       disabled={loading}
-                      className="flex-1 px-6 py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded font-medium transition-soft disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="flex-1 px-6 py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded font-medium transition-soft disabled:bg-gray-700 disabled:text-gray-500 disabled:cursor-not-allowed"
                     >
                       {loading ? 'Creating Account...' : 'Create Beta Account'}
                     </button>

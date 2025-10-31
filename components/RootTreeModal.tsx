@@ -180,12 +180,12 @@ export default function RootTreeModal({
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
                 placeholder="Try: first name, last name, or year (e.g., 1950)..."
-                className="flex-1 bg-bg-dark border border-border-subtle rounded px-4 py-3 text-text-soft focus:outline-none focus:border-firefly-dim/50 transition-soft"
+                className="flex-1 bg-bg-dark border border-border-subtle rounded px-4 py-3 text-text-soft focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50/50 transition-soft"
               />
               <button
                 onClick={handleSearch}
                 disabled={searching}
-                className="px-6 py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded font-medium transition-soft disabled:opacity-50 whitespace-nowrap"
+                className="px-6 py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded font-medium transition-soft disabled:bg-gray-700 disabled:text-gray-500 whitespace-nowrap"
               >
                 {searching ? 'Searching...' : 'Search'}
               </button>
@@ -265,7 +265,7 @@ export default function RootTreeModal({
           {/* Error Message */}
           {error && (
             <div className="bg-red-500/10 border border-red-500/30 rounded p-4">
-              <p className="text-red-400 text-sm">{error}</p>
+              <p className="text-error-text text-sm">{error}</p>
             </div>
           )}
         </div>
@@ -275,14 +275,14 @@ export default function RootTreeModal({
           <button
             onClick={onClose}
             disabled={loading}
-            className="px-6 py-3 bg-bg-dark hover:bg-border-subtle text-text-muted rounded font-medium transition-soft disabled:opacity-50"
+            className="px-6 py-3 bg-bg-dark hover:bg-border-subtle text-text-muted rounded font-medium transition-soft disabled:bg-gray-800 disabled:text-gray-600"
           >
             Cancel
           </button>
           <button
             onClick={handleCreateRoot}
             disabled={loading || !selectedPersonId}
-            className="px-6 py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded font-medium transition-soft disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-6 py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded font-medium transition-soft disabled:bg-gray-700 disabled:text-gray-500 disabled:cursor-not-allowed"
           >
             {loading ? 'Creating Root...' : 'Root Trees'}
           </button>

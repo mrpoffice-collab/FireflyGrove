@@ -617,10 +617,10 @@ export default function BranchPage() {
                       return (
                         <span className={`text-xs sm:text-sm px-2 sm:px-3 py-1 rounded-full whitespace-nowrap ${
                           isUrgent
-                            ? 'bg-red-900/30 text-red-400 border border-red-500/50'
+                            ? 'bg-red-900/30 text-error-text border border-red-500/50'
                             : isWarning
                             ? 'bg-yellow-900/30 text-yellow-400 border border-yellow-500/50'
-                            : 'bg-blue-900/30 text-blue-400 border border-blue-500/50'
+                            : 'bg-blue-900/30 text-info-text border border-blue-500/50'
                         }`}>
                           {count}/{limit} <span className="hidden xs:inline">memories </span>({percent}%)
                         </span>
@@ -656,7 +656,7 @@ export default function BranchPage() {
                         <button
                           onClick={handleDeletePerson}
                           disabled={deletingPerson}
-                          className="text-text-muted hover:text-red-400 transition-soft disabled:opacity-50 min-w-[44px] min-h-[44px] flex items-center justify-center"
+                          className="text-text-muted hover:text-error-text transition-soft disabled:opacity-50 min-w-[44px] min-h-[44px] flex items-center justify-center"
                           title="Delete memorial tree"
                           aria-label="Delete memorial tree"
                         >
@@ -1053,7 +1053,7 @@ export default function BranchPage() {
                     </span>
                     <div className="flex-1 min-w-0">
                       <h3 className={`font-medium mb-1 text-sm sm:text-base ${
-                        percent >= 100 ? 'text-red-400' : percent >= 95 ? 'text-red-300' : 'text-yellow-300'
+                        percent >= 100 ? 'text-error-text' : percent >= 95 ? 'text-red-300' : 'text-yellow-300'
                       }`}>
                         {percent >= 100
                           ? 'Memory Limit Reached'
@@ -1109,7 +1109,7 @@ export default function BranchPage() {
                     </span>
                     <div className="flex-1 min-w-0">
                       <h3 className={`font-medium mb-1 text-sm sm:text-base ${
-                        isExpired ? 'text-red-400' : isUrgent ? 'text-orange-300' : 'text-blue-300'
+                        isExpired ? 'text-error-text' : isUrgent ? 'text-orange-300' : 'text-blue-300'
                       }`}>
                         {isExpired
                           ? `Trustee Period Expired ${Math.abs(daysUntilExpiry)} Days Ago`
@@ -1287,7 +1287,7 @@ export default function BranchPage() {
                   type="text"
                   value={editTitle}
                   onChange={(e) => setEditTitle(e.target.value)}
-                  className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-dim transition-soft"
+                  className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50 transition-soft"
                   placeholder="Enter branch name"
                   autoFocus
                 />
@@ -1300,7 +1300,7 @@ export default function BranchPage() {
                 <textarea
                   value={editDescription}
                   onChange={(e) => setEditDescription(e.target.value)}
-                  className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-dim transition-soft resize-none"
+                  className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50 transition-soft resize-none"
                   placeholder="Add a description"
                   rows={3}
                 />
@@ -1379,7 +1379,7 @@ export default function BranchPage() {
                 <button
                   onClick={handleSavePerson}
                   disabled={updatingPerson}
-                  className="flex-1 py-2 bg-[var(--legacy-amber)] hover:bg-[var(--legacy-glow)] text-bg-dark rounded font-medium transition-soft disabled:opacity-50"
+                  className="flex-1 py-2 bg-[var(--legacy-amber)] hover:bg-[var(--legacy-glow)] text-bg-dark rounded font-medium transition-soft disabled:bg-gray-700 disabled:text-gray-500"
                 >
                   {updatingPerson ? 'Saving...' : 'Save Changes'}
                 </button>

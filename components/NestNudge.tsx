@@ -137,7 +137,7 @@ export default function NestNudge({ userId }: NestNudgeProps) {
           </p>
           <p className="text-text-muted text-sm">
             Your oldest photo has been waiting for{' '}
-            <span className="text-orange-400 font-medium">{oldestDays} days</span>
+            <span className="text-warning-text font-medium">{oldestDays} days</span>
           </p>
         </div>
 

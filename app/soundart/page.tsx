@@ -158,19 +158,19 @@ export default function SoundArtPage() {
           <div className="mt-12 pt-8 border-t border-border-subtle">
             <div className="flex flex-wrap items-center justify-center gap-6 text-text-muted text-sm">
               <div className="flex items-center gap-2">
-                <span className="text-green-400">✓</span>
+                <span className="text-success-text">✓</span>
                 <span>No Sign-up Required</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-green-400">✓</span>
+                <span className="text-success-text">✓</span>
                 <span>High-Resolution Downloads</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-green-400">✓</span>
+                <span className="text-success-text">✓</span>
                 <span>Scannable QR Codes</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-green-400">✓</span>
+                <span className="text-success-text">✓</span>
                 <span>Private & Secure</span>
               </div>
             </div>

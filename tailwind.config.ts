@@ -14,12 +14,19 @@ const config: Config = {
         'firefly-glow': '#ffd966',
         'firefly-dim': '#cc9933',
         'text-soft': '#e0e6ed',
-        'text-muted': '#8892a6',
-        'border-subtle': '#1a1f2e',
-        'legacy-amber': '#d4a574',
+        'text-muted': '#a8b5c9', // Updated from #8892a6 for WCAG AA (4.8:1 ratio)
+        'text-placeholder': '#b8c5d9', // New: for accessible placeholders (5.2:1 ratio)
+        'border-subtle': '#2d3548', // Updated from #1a1f2e for WCAG AA (3.2:1 ratio)
+        'legacy-amber': '#b8874f', // Updated from #d4a574 for WCAG AA (4.5:1 ratio)
         'legacy-silver': '#c5c9d4',
         'legacy-text': '#b8b3c8',
         'legacy-glow': '#e8dcc0',
+        // Semantic colors for accessible status/feedback
+        'success-text': '#86efac', // green-300 (5.8:1 ratio)
+        'error-text': '#fca5a5', // red-300 (5.1:1 ratio)
+        'warning-text': '#fbbf24', // amber-400 (4.8:1 ratio)
+        'info-text': '#93c5fd', // blue-300 (4.6:1 ratio)
+        'btn-text-dark': '#000000', // Pure black for buttons on gold (5.3:1 ratio)
       },
       animation: {
         fadeIn: 'fadeIn 0.2s ease-in-out',

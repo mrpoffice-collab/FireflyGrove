@@ -407,7 +407,7 @@ export default function NestPage() {
                 <span className="text-2xl">⚠️</span>
                 <div className="flex-1">
                   <div className="flex items-center justify-between mb-2">
-                    <h3 className="font-medium text-red-400">
+                    <h3 className="font-medium text-error-text">
                       Upload Errors ({uploadErrors.length})
                     </h3>
                     <button
@@ -507,7 +507,7 @@ export default function NestPage() {
                       {item.status === 'uploading' && 'Uploading...'}
                       {item.status === 'success' && 'Done'}
                       {item.status === 'error' && (
-                        <span className="text-red-400">
+                        <span className="text-error-text">
                           {item.error || 'Failed'}
                         </span>
                       )}

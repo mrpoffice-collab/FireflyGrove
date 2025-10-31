@@ -255,14 +255,14 @@ export default function PendingApprovalsModal({
                           <button
                             onClick={() => handleApprove(item.id)}
                             disabled={processing === item.id}
-                            className="px-4 py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded font-medium transition-soft disabled:opacity-50"
+                            className="px-4 py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded font-medium transition-soft disabled:bg-gray-700 disabled:text-gray-500"
                           >
                             {processing === item.id ? 'Processing...' : 'Approve'}
                           </button>
                           <button
                             onClick={() => handleDecline(item.id)}
                             disabled={processing === item.id}
-                            className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded font-medium transition-soft disabled:opacity-50"
+                            className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded font-medium transition-soft disabled:bg-gray-800 disabled:text-gray-600"
                           >
                             Decline
                           </button>

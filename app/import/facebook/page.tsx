@@ -149,10 +149,10 @@ export default function FacebookImportPage() {
             <div
               className={`mb-6 p-4 rounded-lg border ${
                 message.type === 'success'
-                  ? 'bg-green-500/10 border-green-500/30 text-green-400'
+                  ? 'bg-green-500/10 border-green-500/30 text-success-text'
                   : message.type === 'error'
-                  ? 'bg-red-500/10 border-red-500/30 text-red-400'
-                  : 'bg-blue-500/10 border-blue-500/30 text-blue-400'
+                  ? 'bg-red-500/10 border-red-500/30 text-error-text'
+                  : 'bg-blue-500/10 border-blue-500/30 text-info-text'
               }`}
             >
               {message.text}
@@ -263,7 +263,7 @@ export default function FacebookImportPage() {
               ) : (
                 <div className="space-y-4">
                   <div className="flex items-center justify-center gap-3 text-text-soft">
-                    <svg className="w-6 h-6 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                    <svg className="w-6 h-6 text-success-text" fill="currentColor" viewBox="0 0 20 20">
                       <path
                         fillRule="evenodd"
                         d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
@@ -280,7 +280,7 @@ export default function FacebookImportPage() {
                     <button
                       onClick={handleUpload}
                       disabled={uploading}
-                      className="px-6 py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded transition-soft disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="px-6 py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded transition-soft disabled:bg-gray-700 disabled:text-gray-500 disabled:cursor-not-allowed"
                     >
                       {uploading ? 'Uploading...' : 'Start Import'}
                     </button>

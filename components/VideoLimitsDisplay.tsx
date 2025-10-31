@@ -70,7 +70,7 @@ export default function VideoLimitsDisplay() {
         </div>
         <div className={`
           px-2 py-1 rounded text-xs font-medium
-          ${atLimit ? 'bg-red-500/20 text-red-400 border border-red-500/30' :
+          ${atLimit ? 'bg-red-500/20 text-error-text border border-red-500/30' :
             isNearLimit ? 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30' :
             'bg-firefly-dim/20 text-firefly-glow border border-firefly-dim/30'}
         `}>
@@ -107,7 +107,7 @@ export default function VideoLimitsDisplay() {
 
       {atLimit && (
         <div className="mt-4 pt-4 border-t border-border-subtle">
-          <p className="text-red-400 text-xs mb-3">
+          <p className="text-error-text text-xs mb-3">
             You've reached your monthly limit. Upgrade for more videos!
           </p>
           <Link

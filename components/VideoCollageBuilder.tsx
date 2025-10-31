@@ -440,7 +440,7 @@ export default function VideoCollageBuilder() {
                       <button
                         onClick={importSelectedPhotos}
                         disabled={selectedPhotoIds.size === 0}
-                        className="flex-1 px-6 py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg font-medium transition-soft disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="flex-1 px-6 py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg font-medium transition-soft disabled:bg-gray-700 disabled:text-gray-500 disabled:cursor-not-allowed"
                       >
                         Import {selectedPhotoIds.size} Photo{selectedPhotoIds.size !== 1 ? 's' : ''}
                       </button>
@@ -485,7 +485,7 @@ export default function VideoCollageBuilder() {
                   <h3 className="text-lg text-text-soft">{photos.length} Photos Added</h3>
                   <button
                     onClick={() => setPhotos([])}
-                    className="text-sm text-text-muted hover:text-red-400 transition-soft"
+                    className="text-sm text-text-muted hover:text-error-text transition-soft"
                   >
                     Clear All
                   </button>
@@ -753,7 +753,7 @@ export default function VideoCollageBuilder() {
             {/* Error Message */}
             {error && (
               <div className="bg-red-900/20 border border-red-700/50 rounded-lg p-4 mb-6">
-                <p className="text-red-400 text-sm">{error}</p>
+                <p className="text-error-text text-sm">{error}</p>
               </div>
             )}
 
@@ -820,7 +820,7 @@ export default function VideoCollageBuilder() {
                 </p>
 
                 {limitsError && !canGenerate && (
-                  <div className="bg-red-900/20 border border-red-700/50 rounded-lg p-4 mb-6 text-sm text-red-400">
+                  <div className="bg-red-900/20 border border-red-700/50 rounded-lg p-4 mb-6 text-sm text-error-text">
                     {limitsError}
                   </div>
                 )}
@@ -844,7 +844,7 @@ export default function VideoCollageBuilder() {
                       }
                     }}
                     disabled={!canGenerate}
-                    className="block w-full max-w-md mx-auto px-8 py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg font-medium transition-soft disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="block w-full max-w-md mx-auto px-8 py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg font-medium transition-soft disabled:bg-gray-700 disabled:text-gray-500 disabled:cursor-not-allowed"
                   >
                     🎬 Generate Video
                   </button>

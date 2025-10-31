@@ -162,7 +162,7 @@ export default function FeatureUpdatesPage() {
                   {updates.length > 1 && (
                     <button
                       onClick={() => removeUpdate(index)}
-                      className="text-red-400 hover:text-red-300 text-sm"
+                      className="text-error-text hover:text-red-300 text-sm"
                     >
                       Remove
                     </button>
@@ -229,7 +229,7 @@ export default function FeatureUpdatesPage() {
           {/* Result */}
           {result && (
             <div className="mt-6 bg-green-500/10 border border-green-500/30 rounded-lg p-6">
-              <h3 className="text-lg text-green-400 mb-2">✅ Emails Sent!</h3>
+              <h3 className="text-lg text-success-text mb-2">✅ Emails Sent!</h3>
               <div className="text-text-muted text-sm space-y-1">
                 <p>Total recipients: {result.results.total}</p>
                 <p>Successfully sent: {result.results.sent}</p>
@@ -237,7 +237,7 @@ export default function FeatureUpdatesPage() {
               </div>
               {result.results.errors.length > 0 && (
                 <div className="mt-4">
-                  <p className="text-red-400 text-sm mb-2">Errors:</p>
+                  <p className="text-error-text text-sm mb-2">Errors:</p>
                   <div className="text-xs text-text-muted max-h-40 overflow-y-auto">
                     {result.results.errors.map((error: string, i: number) => (
                       <div key={i}>{error}</div>

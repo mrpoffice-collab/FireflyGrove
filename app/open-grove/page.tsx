@@ -172,7 +172,7 @@ export default function OpenGrovePage() {
                 }
               }}
               disabled={!search.trim()}
-              className="w-full mt-3 px-4 py-2 bg-[var(--legacy-amber)]/20 hover:bg-[var(--legacy-amber)]/30 text-[var(--legacy-text)] rounded border border-[var(--legacy-amber)]/40 transition-soft disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full mt-3 px-4 py-2 bg-[var(--legacy-amber)]/20 hover:bg-[var(--legacy-amber)]/30 text-[var(--legacy-text)] rounded border border-[var(--legacy-amber)]/40 transition-soft disabled:bg-gray-700 disabled:text-gray-500 disabled:cursor-not-allowed"
             >
               Search
             </button>

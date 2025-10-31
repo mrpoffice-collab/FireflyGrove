@@ -102,7 +102,7 @@ export default function TestEmailPage() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-dim transition-soft"
+                  className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50 transition-soft"
                   placeholder="test@example.com"
                 />
                 <p className="text-text-muted text-xs mt-1">
@@ -118,7 +118,7 @@ export default function TestEmailPage() {
                   type="text"
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
-                  className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-dim transition-soft"
+                  className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50 transition-soft"
                   placeholder="Test Email from Firefly Grove"
                 />
               </div>
@@ -127,8 +127,8 @@ export default function TestEmailPage() {
                 <div
                   className={`p-4 rounded text-sm whitespace-pre-line ${
                     result.success
-                      ? 'bg-green-500/10 border border-green-500/30 text-green-400'
-                      : 'bg-red-500/10 border border-red-500/30 text-red-400'
+                      ? 'bg-green-500/10 border border-green-500/30 text-success-text'
+                      : 'bg-red-500/10 border border-red-500/30 text-error-text'
                   }`}
                 >
                   {result.message}
@@ -138,7 +138,7 @@ export default function TestEmailPage() {
               <button
                 onClick={handleSendTest}
                 disabled={sending || !email}
-                className="w-full py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded font-medium transition-soft disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded font-medium transition-soft disabled:bg-gray-700 disabled:text-gray-500 disabled:cursor-not-allowed"
               >
                 {sending ? 'Sending...' : '📧 Send Test Email'}
               </button>
@@ -146,7 +146,7 @@ export default function TestEmailPage() {
           </div>
 
           <div className="mt-6 bg-blue-500/10 border border-blue-500/30 rounded-lg p-4">
-            <div className="text-blue-400 text-sm font-medium mb-2">
+            <div className="text-info-text text-sm font-medium mb-2">
               💡 Setup Instructions
             </div>
             <div className="text-text-muted text-sm space-y-2">

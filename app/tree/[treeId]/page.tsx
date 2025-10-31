@@ -203,7 +203,7 @@ export default function TreePage() {
                 <textarea
                   value={treeDescription}
                   onChange={(e) => setTreeDescription(e.target.value)}
-                  className="w-full max-w-md mx-auto bg-bg-dark border border-border-subtle rounded px-3 py-2 text-text-muted focus:outline-none focus:border-firefly-dim/50 resize-none text-center"
+                  className="w-full max-w-md mx-auto bg-bg-dark border border-border-subtle rounded px-3 py-2 text-text-muted focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50/50 resize-none text-center"
                   rows={2}
                   placeholder="Description (optional)"
                   maxLength={500}
@@ -383,7 +383,7 @@ export default function TreePage() {
                         handleDeleteBranch(branch.id, branch.title)
                       }}
                       disabled={deletingBranchId === branch.id}
-                      className="absolute top-2 right-2 p-2 text-text-muted hover:text-red-400 transition-soft disabled:opacity-50"
+                      className="absolute top-2 right-2 p-2 text-text-muted hover:text-error-text transition-soft disabled:opacity-50"
                       title="Delete empty branch"
                     >
                       {deletingBranchId === branch.id ? (

@@ -159,7 +159,7 @@ export default function CardDesigner({ sentiment, categoryId }: CardDesignerProp
               value={senderName}
               onChange={(e) => setSenderName(e.target.value)}
               placeholder="e.g., John & Jane Smith"
-              className="w-full px-4 py-2 bg-[#1a1a1a] border border-border-subtle rounded text-white focus:outline-none focus:border-firefly-dim placeholder:text-text-muted"
+              className="w-full px-4 py-2 bg-[#1a1a1a] border border-border-subtle rounded text-white focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50 placeholder:text-placeholder"
             />
           </div>
 
@@ -180,7 +180,7 @@ export default function CardDesigner({ sentiment, categoryId }: CardDesignerProp
               value={signature}
               onChange={(e) => setSignature(e.target.value)}
               placeholder="e.g., With love, The Smith Family"
-              className="w-full px-4 py-2 bg-[#1a1a1a] border border-border-subtle rounded text-white focus:outline-none focus:border-firefly-dim italic placeholder:text-text-muted"
+              className="w-full px-4 py-2 bg-[#1a1a1a] border border-border-subtle rounded text-white focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50 italic placeholder:text-placeholder"
               style={{ fontFamily: '"Brush Script MT", cursive' }}
             />
             <p className="text-text-muted text-xs mt-1">
@@ -218,7 +218,7 @@ export default function CardDesigner({ sentiment, categoryId }: CardDesignerProp
             <button
               onClick={() => setShowPhotoPicker(true)}
               disabled={selectedPhotos.length >= maxPhotos}
-              className="w-full py-2 bg-bg-elevated border border-border-subtle rounded text-text-soft hover:border-firefly-dim transition-soft disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full py-2 bg-bg-elevated border border-border-subtle rounded text-text-soft hover:border-firefly-dim transition-soft disabled:bg-gray-800 disabled:text-gray-600 disabled:cursor-not-allowed"
             >
               {selectedPhotos.length === 0 ? 'Add Photos or Soundwaves' : 'Change Selection'}
             </button>
@@ -236,7 +236,7 @@ export default function CardDesigner({ sentiment, categoryId }: CardDesignerProp
                 value={recipientEmail}
                 onChange={(e) => setRecipientEmail(e.target.value)}
                 placeholder="recipient@example.com"
-                className="w-full px-4 py-2 bg-[#1a1a1a] border border-border-subtle rounded text-white focus:outline-none focus:border-firefly-dim placeholder:text-text-muted"
+                className="w-full px-4 py-2 bg-[#1a1a1a] border border-border-subtle rounded text-white focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50 placeholder:text-placeholder"
               />
             ) : (
               <div className="space-y-3">
@@ -245,21 +245,21 @@ export default function CardDesigner({ sentiment, categoryId }: CardDesignerProp
                   value={recipientName}
                   onChange={(e) => setRecipientName(e.target.value)}
                   placeholder="Recipient Name"
-                  className="w-full px-4 py-2 bg-[#1a1a1a] border border-border-subtle rounded text-white focus:outline-none focus:border-firefly-dim placeholder:text-text-muted"
+                  className="w-full px-4 py-2 bg-[#1a1a1a] border border-border-subtle rounded text-white focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50 placeholder:text-placeholder"
                 />
                 <input
                   type="text"
                   value={recipientAddress.line1}
                   onChange={(e) => setRecipientAddress({ ...recipientAddress, line1: e.target.value })}
                   placeholder="Street Address"
-                  className="w-full px-4 py-2 bg-[#1a1a1a] border border-border-subtle rounded text-white focus:outline-none focus:border-firefly-dim placeholder:text-text-muted"
+                  className="w-full px-4 py-2 bg-[#1a1a1a] border border-border-subtle rounded text-white focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50 placeholder:text-placeholder"
                 />
                 <input
                   type="text"
                   value={recipientAddress.line2}
                   onChange={(e) => setRecipientAddress({ ...recipientAddress, line2: e.target.value })}
                   placeholder="Apt, Suite, etc. (optional)"
-                  className="w-full px-4 py-2 bg-[#1a1a1a] border border-border-subtle rounded text-white focus:outline-none focus:border-firefly-dim placeholder:text-text-muted"
+                  className="w-full px-4 py-2 bg-[#1a1a1a] border border-border-subtle rounded text-white focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50 placeholder:text-placeholder"
                 />
                 <div className="grid grid-cols-2 gap-3">
                   <input
@@ -267,14 +267,14 @@ export default function CardDesigner({ sentiment, categoryId }: CardDesignerProp
                     value={recipientAddress.city}
                     onChange={(e) => setRecipientAddress({ ...recipientAddress, city: e.target.value })}
                     placeholder="City"
-                    className="w-full px-4 py-2 bg-[#1a1a1a] border border-border-subtle rounded text-white focus:outline-none focus:border-firefly-dim placeholder:text-text-muted"
+                    className="w-full px-4 py-2 bg-[#1a1a1a] border border-border-subtle rounded text-white focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50 placeholder:text-placeholder"
                   />
                   <input
                     type="text"
                     value={recipientAddress.state}
                     onChange={(e) => setRecipientAddress({ ...recipientAddress, state: e.target.value })}
                     placeholder="State"
-                    className="w-full px-4 py-2 bg-[#1a1a1a] border border-border-subtle rounded text-white focus:outline-none focus:border-firefly-dim placeholder:text-text-muted"
+                    className="w-full px-4 py-2 bg-[#1a1a1a] border border-border-subtle rounded text-white focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50 placeholder:text-placeholder"
                   />
                 </div>
                 <input
@@ -282,7 +282,7 @@ export default function CardDesigner({ sentiment, categoryId }: CardDesignerProp
                   value={recipientAddress.zip}
                   onChange={(e) => setRecipientAddress({ ...recipientAddress, zip: e.target.value })}
                   placeholder="ZIP Code"
-                  className="w-full px-4 py-2 bg-[#1a1a1a] border border-border-subtle rounded text-white focus:outline-none focus:border-firefly-dim placeholder:text-text-muted"
+                  className="w-full px-4 py-2 bg-[#1a1a1a] border border-border-subtle rounded text-white focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50 placeholder:text-placeholder"
                 />
               </div>
             )}
@@ -321,7 +321,7 @@ export default function CardDesigner({ sentiment, categoryId }: CardDesignerProp
                 <button
                   onClick={handleCheckout}
                   disabled={processing}
-                  className="w-full py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg font-medium transition-soft disabled:opacity-50"
+                  className="w-full py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg font-medium transition-soft disabled:bg-gray-700 disabled:text-gray-500"
                 >
                   {processing ? 'Processing...' : (isGroveOwner ? 'Send Card' : 'Proceed to Payment')}
                 </button>

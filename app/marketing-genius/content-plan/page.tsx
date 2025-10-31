@@ -208,11 +208,11 @@ export default function ContentPlanPage() {
             <div className="text-text-muted text-sm">Total Scheduled</div>
           </div>
           <div className="bg-bg-elevated border border-green-500/30 rounded-lg p-4">
-            <div className="text-2xl font-light text-green-400">{stats.approved}</div>
+            <div className="text-2xl font-light text-success-text">{stats.approved}</div>
             <div className="text-text-muted text-sm">Ready to Publish</div>
           </div>
           <div className="bg-bg-elevated border border-blue-500/30 rounded-lg p-4">
-            <div className="text-2xl font-light text-blue-400">{stats.published}</div>
+            <div className="text-2xl font-light text-info-text">{stats.published}</div>
             <div className="text-text-muted text-sm">Published</div>
           </div>
           <div className="bg-bg-elevated border border-firefly-dim/30 rounded-lg p-4">
@@ -360,8 +360,8 @@ export default function ContentPlanPage() {
                               </span>
                             )}
                             <span className={`px-2 py-1 rounded text-xs font-medium ${
-                              item.status === 'published' ? 'bg-green-500/20 text-green-400' :
-                              'bg-blue-500/20 text-blue-400'
+                              item.status === 'published' ? 'bg-green-500/20 text-success-text' :
+                              'bg-blue-500/20 text-info-text'
                             }`}>
                               {item.status === 'published' ? '✅ Published' : '📅 Scheduled'}
                             </span>
@@ -377,13 +377,13 @@ export default function ContentPlanPage() {
                                 />
                                 <button
                                   onClick={() => handleSaveDate(item.postId!)}
-                                  className="px-2 py-1 bg-green-500/20 hover:bg-green-500/30 text-green-400 rounded text-xs"
+                                  className="px-2 py-1 bg-green-500/20 hover:bg-green-500/30 text-success-text rounded text-xs"
                                 >
                                   Save
                                 </button>
                                 <button
                                   onClick={handleCancelEdit}
-                                  className="px-2 py-1 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded text-xs"
+                                  className="px-2 py-1 bg-red-500/20 hover:bg-red-500/30 text-error-text rounded text-xs"
                                 >
                                   Cancel
                                 </button>
@@ -446,7 +446,7 @@ export default function ContentPlanPage() {
                             <Link
                               href={`/blog/${item.post.slug}`}
                               target="_blank"
-                              className="px-3 py-1 bg-green-500/20 hover:bg-green-500/30 text-green-400 rounded text-sm transition-soft text-center"
+                              className="px-3 py-1 bg-green-500/20 hover:bg-green-500/30 text-success-text rounded text-sm transition-soft text-center"
                             >
                               View Post →
                             </Link>
@@ -528,8 +528,8 @@ export default function ContentPlanPage() {
                     </td>
                     <td className="px-6 py-4">
                       <span className={`px-2 py-1 rounded text-xs font-medium ${
-                        item.status === 'published' ? 'bg-green-500/20 text-green-400' :
-                        'bg-blue-500/20 text-blue-400'
+                        item.status === 'published' ? 'bg-green-500/20 text-success-text' :
+                        'bg-blue-500/20 text-info-text'
                       }`}>
                         {item.status === 'published' ? '✅ Published' : '📅 Scheduled'}
                       </span>

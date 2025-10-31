@@ -24,7 +24,10 @@
       "Bash(taskkill /F /PID 10092)",
       "Bash(taskkill //F //PID 10092)",
       "WebSearch",
-      "Bash(vercel deploy:*)"
+      "Bash(vercel deploy:*)",
+      "Bash(powershell -Command:*)",
+      "Bash(node fix-colors.js:*)",
+      "Bash(node fix-remaining.js:*)"
     ],
     "deny": [],
     "ask": []

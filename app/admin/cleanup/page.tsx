@@ -81,7 +81,7 @@ export default function AdminCleanupPage() {
             <button
               onClick={handleCleanup}
               disabled={cleaning}
-              className="px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded transition-soft disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded transition-soft disabled:bg-gray-800 disabled:text-gray-600 disabled:cursor-not-allowed"
             >
               {cleaning ? 'Cleaning...' : 'Delete Test Memorials'}
             </button>
@@ -89,8 +89,8 @@ export default function AdminCleanupPage() {
             {result && (
               <div className={`mt-6 p-4 rounded-lg border ${
                 result.error
-                  ? 'bg-red-500/10 border-red-500/30 text-red-400'
-                  : 'bg-green-500/10 border-green-500/30 text-green-400'
+                  ? 'bg-red-500/10 border-red-500/30 text-error-text'
+                  : 'bg-green-500/10 border-green-500/30 text-success-text'
               }`}>
                 {result.error ? (
                   <div>

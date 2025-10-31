@@ -93,7 +93,7 @@ export default function SignUpPage() {
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-dim transition-soft disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50 transition-soft disabled:bg-gray-800 disabled:text-gray-600 disabled:cursor-not-allowed"
                 required
                 disabled={loading || isDemoMode}
               />
@@ -108,7 +108,7 @@ export default function SignUpPage() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-dim transition-soft disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50 transition-soft disabled:bg-gray-800 disabled:text-gray-600 disabled:cursor-not-allowed"
                 required
                 disabled={loading || isDemoMode}
               />
@@ -123,7 +123,7 @@ export default function SignUpPage() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-dim transition-soft disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50 transition-soft disabled:bg-gray-800 disabled:text-gray-600 disabled:cursor-not-allowed"
                 required
                 disabled={loading || isDemoMode}
                 minLength={6}
@@ -136,13 +136,13 @@ export default function SignUpPage() {
             </div>
 
             {error && (
-              <div className="text-red-400 text-sm text-center">{error}</div>
+              <div className="text-error-text text-sm text-center">{error}</div>
             )}
 
             <button
               type="submit"
               disabled={loading || isDemoMode}
-              className="w-full py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded font-medium transition-soft disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded font-medium transition-soft disabled:bg-gray-700 disabled:text-gray-500 disabled:cursor-not-allowed"
               title={isDemoMode ? 'Registration is disabled in beta mode' : ''}
             >
               {loading ? 'Creating Account...' : isDemoMode ? 'Registration Disabled' : 'Create Account'}

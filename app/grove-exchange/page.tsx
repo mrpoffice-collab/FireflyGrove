@@ -36,7 +36,7 @@ export default function GroveExchangePage() {
       price: 'Complimentary',
       href: '/video-collage',
       badge: 'Complimentary',
-      badgeColor: 'bg-green-500/20 text-green-400 border-green-500/30',
+      badgeColor: 'bg-green-500/20 text-success-text border-green-500/30',
     },
     {
       id: 'sound-wave-art',
@@ -46,7 +46,7 @@ export default function GroveExchangePage() {
       price: 'Complimentary',
       href: '/soundart',
       badge: 'Complimentary',
-      badgeColor: 'bg-green-500/20 text-green-400 border-green-500/30',
+      badgeColor: 'bg-green-500/20 text-success-text border-green-500/30',
     },
     {
       id: 'forever-kit',
@@ -76,7 +76,7 @@ export default function GroveExchangePage() {
       price: 'Coming Soon',
       href: '#',
       badge: 'Coming Soon',
-      badgeColor: 'bg-blue-500/20 text-blue-400 border-blue-500/30',
+      badgeColor: 'bg-blue-500/20 text-info-text border-blue-500/30',
     },
     {
       id: 'memorial-prints',
@@ -86,7 +86,7 @@ export default function GroveExchangePage() {
       price: 'Coming Soon',
       href: '#',
       badge: 'Coming Soon',
-      badgeColor: 'bg-blue-500/20 text-blue-400 border-blue-500/30',
+      badgeColor: 'bg-blue-500/20 text-info-text border-blue-500/30',
     },
   ]
 

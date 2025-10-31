@@ -113,7 +113,7 @@ export default function DuplicateMemorialModal({
                       }
                     }}
                     disabled={!match.branchId}
-                    className="flex-1 px-4 py-2 bg-border-subtle hover:bg-text-muted/20 text-text-soft rounded text-sm font-medium transition-soft disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex-1 px-4 py-2 bg-border-subtle hover:bg-text-muted/20 text-text-soft rounded text-sm font-medium transition-soft disabled:bg-gray-800 disabled:text-gray-600 disabled:cursor-not-allowed"
                   >
                     👁️ View Memorial
                   </button>

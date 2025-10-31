@@ -170,7 +170,7 @@ export default function HomePage() {
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="Enter your email"
                     required
-                    className="flex-1 px-4 py-3 bg-bg-elevated border border-border-subtle rounded-lg text-text-soft focus:outline-none focus:border-firefly-dim placeholder:text-text-muted"
+                    className="flex-1 px-4 py-3 bg-bg-elevated border border-border-subtle rounded-lg text-text-soft focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50 placeholder:text-placeholder"
                   />
                   <button
                     type="submit"
@@ -180,7 +180,7 @@ export default function HomePage() {
                   </button>
                 </div>
                 {subscribed && (
-                  <p className="text-green-400 text-sm mt-2 text-center">✓ Thanks! We'll be in touch soon.</p>
+                  <p className="text-success-text text-sm mt-2 text-center">✓ Thanks! We'll be in touch soon.</p>
                 )}
                 <p className="text-text-muted text-xs mt-2 text-center">
                   Complimentary forever • No credit card required

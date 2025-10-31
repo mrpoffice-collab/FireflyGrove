@@ -117,7 +117,7 @@ export default function FeedbackModal({ isOpen, onClose }: FeedbackModalProps) {
               {/* Header */}
               <div className="flex items-center justify-between px-4 py-3 border-b border-border-subtle">
                 <div className="flex items-center gap-2">
-                  <span className="text-blue-400">💬</span>
+                  <span className="text-info-text">💬</span>
                   <h3 id="feedback-modal-title" className="text-sm font-medium text-text-soft">Beta Feedback</h3>
                 </div>
                 <button
@@ -138,7 +138,7 @@ export default function FeedbackModal({ isOpen, onClose }: FeedbackModalProps) {
                     <select
                       value={formData.severity}
                       onChange={(e) => setFormData({ ...formData, severity: e.target.value })}
-                      className="w-full px-3 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-dim transition-soft text-sm"
+                      className="w-full px-3 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50 transition-soft text-sm"
                     >
                       <option value="suggestion">💡 Suggestion</option>
                       <option value="minor">🐛 Bug - Minor</option>
@@ -154,7 +154,7 @@ export default function FeedbackModal({ isOpen, onClose }: FeedbackModalProps) {
                       value={formData.description}
                       onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                       placeholder="What happened? What would you like to see?"
-                      className="w-full px-3 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-dim transition-soft resize-none text-sm"
+                      className="w-full px-3 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50 transition-soft resize-none text-sm"
                       rows={4}
                       required
                     />
@@ -178,7 +178,7 @@ export default function FeedbackModal({ isOpen, onClose }: FeedbackModalProps) {
                   <button
                     type="submit"
                     disabled={!formData.description}
-                    className="flex-1 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded font-medium transition-soft disabled:opacity-50 text-sm"
+                    className="flex-1 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded font-medium transition-soft disabled:bg-gray-800 disabled:text-gray-600 text-sm"
                   >
                     Send
                   </button>

@@ -239,7 +239,7 @@ export default function MarketingGeniusPage() {
             <button
               onClick={handleGenerateContentPlan}
               disabled={generatingPlan}
-              className="flex-1 px-8 py-4 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg font-medium transition-soft disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 px-8 py-4 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg font-medium transition-soft disabled:bg-gray-700 disabled:text-gray-500 disabled:cursor-not-allowed"
             >
               {generatingPlan ? '🎯 Planning...' : '🎯 Step 1: Generate Content Plan (12 topics)'}
             </button>
@@ -247,7 +247,7 @@ export default function MarketingGeniusPage() {
             <button
               onClick={handleAutoWriteAll}
               disabled={autoWriting}
-              className="flex-1 px-8 py-4 bg-green-500/80 hover:bg-green-500 text-white rounded-lg font-medium transition-soft disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 px-8 py-4 bg-green-500/80 hover:bg-green-500 text-white rounded-lg font-medium transition-soft disabled:bg-gray-800 disabled:text-gray-600 disabled:cursor-not-allowed"
             >
               {autoWriting ? '✍️ Writing...' : '✍️ Step 2: Auto-Write All Posts (5 at a time)'}
             </button>
@@ -276,7 +276,7 @@ export default function MarketingGeniusPage() {
                 value={topic}
                 onChange={(e) => setTopic(e.target.value)}
                 placeholder="e.g., How to preserve family memories before it's too late"
-                className="w-full px-4 py-3 bg-bg-dark border border-border-subtle rounded-lg text-text-soft focus:outline-none focus:border-firefly-dim placeholder:text-text-muted"
+                className="w-full px-4 py-3 bg-bg-dark border border-border-subtle rounded-lg text-text-soft focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50 placeholder:text-placeholder"
               />
             </div>
 
@@ -289,14 +289,14 @@ export default function MarketingGeniusPage() {
                 value={keywords}
                 onChange={(e) => setKeywords(e.target.value)}
                 placeholder="e.g., memory preservation, family history, sound wave art"
-                className="w-full px-4 py-3 bg-bg-dark border border-border-subtle rounded-lg text-text-soft focus:outline-none focus:border-firefly-dim placeholder:text-text-muted"
+                className="w-full px-4 py-3 bg-bg-dark border border-border-subtle rounded-lg text-text-soft focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50 placeholder:text-placeholder"
               />
             </div>
 
             <button
               onClick={handleGeneratePost}
               disabled={generating}
-              className="px-8 py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg font-medium transition-soft disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-8 py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg font-medium transition-soft disabled:bg-gray-700 disabled:text-gray-500 disabled:cursor-not-allowed"
             >
               {generating ? '✨ Generating with AI...' : '✨ Generate Blog Post'}
             </button>
@@ -334,7 +334,7 @@ export default function MarketingGeniusPage() {
 
                     <button
                       onClick={() => handlePublishPost(post.id)}
-                      className="px-6 py-2 bg-green-500/20 hover:bg-green-500/30 text-green-400 rounded font-medium transition-soft whitespace-nowrap"
+                      className="px-6 py-2 bg-green-500/20 hover:bg-green-500/30 text-success-text rounded font-medium transition-soft whitespace-nowrap"
                     >
                       Publish
                     </button>

@@ -100,7 +100,7 @@ export default async function BlogPage() {
               type="email"
               placeholder="Enter your email"
               required
-              className="flex-1 px-4 py-3 bg-bg-dark border border-border-subtle rounded-lg text-text-soft focus:outline-none focus:border-firefly-dim"
+              className="flex-1 px-4 py-3 bg-bg-dark border border-border-subtle rounded-lg text-text-soft focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50"
             />
             <button
               type="submit"

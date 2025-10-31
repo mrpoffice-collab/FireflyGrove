@@ -88,7 +88,7 @@ export default function LoginPage() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-dim transition-soft"
+                className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50 transition-soft"
                 required
                 disabled={loading}
               />
@@ -103,20 +103,20 @@ export default function LoginPage() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-dim transition-soft"
+                className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50 transition-soft"
                 required
                 disabled={loading}
               />
             </div>
 
             {error && (
-              <div className="text-red-400 text-sm text-center">{error}</div>
+              <div className="text-error-text text-sm text-center">{error}</div>
             )}
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded font-medium transition-soft disabled:opacity-50"
+              className="w-full py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded font-medium transition-soft disabled:bg-gray-700 disabled:text-gray-500"
             >
               {loading ? 'Signing in...' : 'Sign In'}
             </button>
@@ -143,14 +143,14 @@ export default function LoginPage() {
                 <button
                   onClick={() => handleDemoLogin('alice@demo.local')}
                   disabled={loading}
-                  className="w-full py-2 bg-bg-darker hover:bg-border-subtle text-text-soft rounded text-sm transition-soft disabled:opacity-50"
+                  className="w-full py-2 bg-bg-darker hover:bg-border-subtle text-text-soft rounded text-sm transition-soft disabled:bg-gray-800 disabled:text-gray-600"
                 >
                   Login as Alice
                 </button>
                 <button
                   onClick={() => handleDemoLogin('bob@demo.local')}
                   disabled={loading}
-                  className="w-full py-2 bg-bg-darker hover:bg-border-subtle text-text-soft rounded text-sm transition-soft disabled:opacity-50"
+                  className="w-full py-2 bg-bg-darker hover:bg-border-subtle text-text-soft rounded text-sm transition-soft disabled:bg-gray-800 disabled:text-gray-600"
                 >
                   Login as Bob
                 </button>

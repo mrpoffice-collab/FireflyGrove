@@ -139,7 +139,7 @@ export default function TransplantTreeModal({
               value={recipientEmail}
               onChange={(e) => setRecipientEmail(e.target.value)}
               placeholder="example@email.com"
-              className="w-full bg-bg-dark border border-border-subtle rounded px-4 py-3 text-text-soft focus:outline-none focus:border-firefly-dim/50 transition-soft"
+              className="w-full bg-bg-dark border border-border-subtle rounded px-4 py-3 text-text-soft focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50/50 transition-soft"
             />
           </div>
 
@@ -154,7 +154,7 @@ export default function TransplantTreeModal({
               placeholder="Add a personal message..."
               rows={3}
               maxLength={500}
-              className="w-full bg-bg-dark border border-border-subtle rounded px-4 py-3 text-text-soft focus:outline-none focus:border-firefly-dim/50 transition-soft resize-none"
+              className="w-full bg-bg-dark border border-border-subtle rounded px-4 py-3 text-text-soft focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50/50 transition-soft resize-none"
             />
             <p className="text-xs text-text-muted mt-1">
               {message.length}/500 characters
@@ -175,7 +175,7 @@ export default function TransplantTreeModal({
           {/* Error Message */}
           {error && (
             <div className="bg-red-500/10 border border-red-500/30 rounded p-4">
-              <p className="text-red-400 text-sm">{error}</p>
+              <p className="text-error-text text-sm">{error}</p>
             </div>
           )}
         </div>
@@ -185,14 +185,14 @@ export default function TransplantTreeModal({
           <button
             onClick={onClose}
             disabled={loading}
-            className="px-6 py-3 bg-bg-dark hover:bg-border-subtle text-text-muted rounded font-medium transition-soft disabled:opacity-50"
+            className="px-6 py-3 bg-bg-dark hover:bg-border-subtle text-text-muted rounded font-medium transition-soft disabled:bg-gray-800 disabled:text-gray-600"
           >
             Cancel
           </button>
           <button
             onClick={handleSendInvitation}
             disabled={loading}
-            className="px-6 py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded font-medium transition-soft disabled:opacity-50"
+            className="px-6 py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded font-medium transition-soft disabled:bg-gray-700 disabled:text-gray-500"
           >
             {loading ? 'Sending...' : 'Send Invitation'}
           </button>

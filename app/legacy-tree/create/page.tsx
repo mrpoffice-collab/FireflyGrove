@@ -98,13 +98,13 @@ export default function CreateLegacyTreePage() {
               {/* Name */}
               <div>
                 <label className="block text-sm text-text-soft mb-2">
-                  Name <span className="text-red-400">*</span>
+                  Name <span className="text-error-text">*</span>
                 </label>
                 <input
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-dim transition-soft"
+                  className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50 transition-soft"
                   placeholder="Full name"
                   required
                   disabled={creating}
@@ -115,13 +115,13 @@ export default function CreateLegacyTreePage() {
               {/* Birth Date */}
               <div>
                 <label className="block text-sm text-text-soft mb-2">
-                  Birth Date <span className="text-red-400">*</span>
+                  Birth Date <span className="text-error-text">*</span>
                 </label>
                 <input
                   type="date"
                   value={birthDate}
                   onChange={(e) => setBirthDate(e.target.value)}
-                  className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-dim transition-soft"
+                  className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50 transition-soft"
                   required
                   disabled={creating}
                 />
@@ -130,14 +130,14 @@ export default function CreateLegacyTreePage() {
               {/* Death Date */}
               <div>
                 <label className="block text-sm text-text-soft mb-2">
-                  Date of Passing <span className="text-red-400">*</span>
+                  Date of Passing <span className="text-error-text">*</span>
                 </label>
                 <input
                   type="date"
                   value={deathDate}
                   onChange={(e) => setDeathDate(e.target.value)}
                   max={maxDeathDate}
-                  className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-dim transition-soft"
+                  className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50 transition-soft"
                   required
                   disabled={creating}
                 />
@@ -214,13 +214,13 @@ export default function CreateLegacyTreePage() {
               )}
 
               {error && (
-                <div className="text-red-400 text-sm">{error}</div>
+                <div className="text-error-text text-sm">{error}</div>
               )}
 
               <button
                 type="submit"
                 disabled={creating}
-                className="w-full py-3 bg-[var(--legacy-amber)] hover:bg-[var(--legacy-glow)] text-bg-dark rounded font-medium transition-soft disabled:opacity-50"
+                className="w-full py-3 bg-[var(--legacy-amber)] hover:bg-[var(--legacy-glow)] text-bg-dark rounded font-medium transition-soft disabled:bg-gray-700 disabled:text-gray-500"
               >
                 {creating ? 'Creating Legacy Tree...' : 'Create Legacy Tree'}
               </button>

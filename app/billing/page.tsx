@@ -179,17 +179,17 @@ export default function BillingPage() {
                     {currentPlan.name}
                   </span>
                   {grove.status === 'active' && (
-                    <span className="px-3 py-1 text-xs rounded-full bg-green-500/20 text-green-400 border border-green-500/30">
+                    <span className="px-3 py-1 text-xs rounded-full bg-green-500/20 text-success-text border border-green-500/30">
                       Active
                     </span>
                   )}
                   {grove.status === 'past_due' && (
-                    <span className="px-3 py-1 text-xs rounded-full bg-orange-500/20 text-orange-400 border border-orange-500/30">
+                    <span className="px-3 py-1 text-xs rounded-full bg-orange-500/20 text-warning-text border border-orange-500/30">
                       Past Due
                     </span>
                   )}
                   {grove.status === 'canceled' && (
-                    <span className="px-3 py-1 text-xs rounded-full bg-red-500/20 text-red-400 border border-red-500/30">
+                    <span className="px-3 py-1 text-xs rounded-full bg-red-500/20 text-error-text border border-red-500/30">
                       Canceled
                     </span>
                   )}
@@ -218,7 +218,7 @@ export default function BillingPage() {
               <button
                 onClick={handleManageSubscription}
                 disabled={loadingPortal}
-                className="w-full py-3 bg-bg-darker hover:bg-border-subtle text-text-soft rounded transition-soft disabled:opacity-50"
+                className="w-full py-3 bg-bg-darker hover:bg-border-subtle text-text-soft rounded transition-soft disabled:bg-gray-800 disabled:text-gray-600"
               >
                 {loadingPortal ? 'Loading...' : 'Manage Payment Method & Billing'}
               </button>
@@ -296,7 +296,7 @@ export default function BillingPage() {
                     <button
                       onClick={() => handleChangePlan(plan.id)}
                       disabled={changingPlan !== null}
-                      className="w-full py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded font-medium transition-soft disabled:opacity-50"
+                      className="w-full py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded font-medium transition-soft disabled:bg-gray-700 disabled:text-gray-500"
                     >
                       {changingPlan === plan.id ? 'Processing...' : 'Select Plan'}
                     </button>
@@ -329,22 +329,22 @@ export default function BillingPage() {
                             {sub.person.name}
                           </h3>
                           {sub.status === 'active' && (
-                            <span className="px-2 py-1 text-xs rounded-full bg-green-500/20 text-green-400 border border-green-500/30">
+                            <span className="px-2 py-1 text-xs rounded-full bg-green-500/20 text-success-text border border-green-500/30">
                               Active
                             </span>
                           )}
                           {sub.status === 'past_due' && (
-                            <span className="px-2 py-1 text-xs rounded-full bg-orange-500/20 text-orange-400 border border-orange-500/30">
+                            <span className="px-2 py-1 text-xs rounded-full bg-orange-500/20 text-warning-text border border-orange-500/30">
                               Past Due
                             </span>
                           )}
                           {sub.status === 'canceled' && (
-                            <span className="px-2 py-1 text-xs rounded-full bg-red-500/20 text-red-400 border border-red-500/30">
+                            <span className="px-2 py-1 text-xs rounded-full bg-red-500/20 text-error-text border border-red-500/30">
                               Canceled
                             </span>
                           )}
                           {sub.status === 'frozen' && (
-                            <span className="px-2 py-1 text-xs rounded-full bg-blue-500/20 text-blue-400 border border-blue-500/30">
+                            <span className="px-2 py-1 text-xs rounded-full bg-blue-500/20 text-info-text border border-blue-500/30">
                               Frozen
                             </span>
                           )}
@@ -375,7 +375,7 @@ export default function BillingPage() {
                       <button
                         onClick={handleManageSubscription}
                         disabled={loadingPortal}
-                        className="mt-4 px-4 py-2 bg-bg-darker hover:bg-border-subtle text-text-soft rounded text-sm transition-soft disabled:opacity-50"
+                        className="mt-4 px-4 py-2 bg-bg-darker hover:bg-border-subtle text-text-soft rounded text-sm transition-soft disabled:bg-gray-800 disabled:text-gray-600"
                       >
                         {loadingPortal ? 'Loading...' : 'Manage Subscription'}
                       </button>

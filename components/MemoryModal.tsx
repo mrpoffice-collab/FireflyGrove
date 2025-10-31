@@ -370,7 +370,7 @@ export default function MemoryModal({ onClose, onSave, spark, onRefreshSpark, cu
               value={text}
               onChange={(e) => setText(e.target.value)}
               placeholder="Write what comes to mind..."
-              className="w-full px-4 py-3 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-dim transition-soft resize-none text-center"
+              className="w-full px-4 py-3 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50 transition-soft resize-none text-center"
               rows={6}
               autoFocus
               required
@@ -386,7 +386,7 @@ export default function MemoryModal({ onClose, onSave, spark, onRefreshSpark, cu
               value={memoryCard}
               onChange={(e) => setMemoryCard(e.target.value)}
               placeholder='Before college, "That summer with Nana," When the twins were little, 10/19/2025...'
-              className="w-full px-4 py-3 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-dim transition-soft"
+              className="w-full px-4 py-3 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50 transition-soft"
               maxLength={100}
             />
           </div>
@@ -407,7 +407,7 @@ export default function MemoryModal({ onClose, onSave, spark, onRefreshSpark, cu
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
                 disabled={!!videoPreview}
-                className="flex-1 px-3 py-1.5 bg-bg-darker border border-firefly-dim text-firefly-glow rounded hover:bg-firefly-dim hover:text-bg-dark transition-soft text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 px-3 py-1.5 bg-bg-darker border border-firefly-dim text-firefly-glow rounded hover:bg-firefly-dim hover:text-bg-dark transition-soft text-sm disabled:bg-gray-800 disabled:text-gray-600 disabled:cursor-not-allowed"
                 aria-label="Choose photo file"
               >
                 📁 Choose Photo
@@ -474,7 +474,7 @@ export default function MemoryModal({ onClose, onSave, spark, onRefreshSpark, cu
                   type="button"
                   onClick={startRecording}
                   disabled={!!audioUrl}
-                  className="px-3 py-1.5 bg-bg-darker border border-firefly-dim text-firefly-glow rounded hover:bg-firefly-dim hover:text-bg-dark transition-soft disabled:opacity-50 text-sm"
+                  className="px-3 py-1.5 bg-bg-darker border border-firefly-dim text-firefly-glow rounded hover:bg-firefly-dim hover:text-bg-dark transition-soft disabled:bg-gray-700 disabled:text-gray-500 text-sm"
                   aria-label={audioUrl ? 'Audio recording saved' : 'Start audio recording'}
                 >
                   {audioUrl ? 'Recording Saved' : 'Start Recording'}
@@ -527,7 +527,7 @@ export default function MemoryModal({ onClose, onSave, spark, onRefreshSpark, cu
                       <div className="flex-1">
                         <div className="text-text-soft text-sm">{branch.title}</div>
                         {!branch.canBeTagged && (
-                          <div className="text-orange-400 text-xs">Cannot be tagged</div>
+                          <div className="text-warning-text text-xs">Cannot be tagged</div>
                         )}
                         {branch.requiresApproval && branch.canBeTagged && (
                           <div className="text-text-muted text-xs">Requires approval</div>
@@ -597,7 +597,7 @@ export default function MemoryModal({ onClose, onSave, spark, onRefreshSpark, cu
             <button
               type="submit"
               disabled={isSubmitting}
-              className="flex-1 py-1.5 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded font-medium transition-soft disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+              className="flex-1 py-1.5 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded font-medium transition-soft disabled:bg-gray-700 disabled:text-gray-500 disabled:cursor-not-allowed text-sm"
             >
               {isSubmitting ? 'Saving...' : 'Save Memory'}
             </button>

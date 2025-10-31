@@ -134,7 +134,7 @@ export default function SparkPicker({ onSelect, onClose }: SparkPickerProps) {
                 value={customPrompt}
                 onChange={(e) => setCustomPrompt(e.target.value)}
                 placeholder="What would you like to remember about?"
-                className="w-full px-3 py-2 bg-bg-dark border border-border-subtle rounded text-text-soft placeholder-text-muted focus:outline-none focus:border-firefly-dim resize-none mb-3"
+                className="w-full px-3 py-2 bg-bg-dark border border-border-subtle rounded text-text-soft placeholder:text-placeholder focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50 resize-none mb-3"
                 rows={2}
                 autoFocus
               />
@@ -142,7 +142,7 @@ export default function SparkPicker({ onSelect, onClose }: SparkPickerProps) {
                 <button
                   onClick={handleCustomSubmit}
                   disabled={!customPrompt.trim()}
-                  className="px-4 py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded font-medium transition-soft disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-4 py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded font-medium transition-soft disabled:bg-gray-700 disabled:text-gray-500 disabled:cursor-not-allowed"
                 >
                   Use This Prompt
                 </button>
@@ -216,7 +216,7 @@ export default function SparkPicker({ onSelect, onClose }: SparkPickerProps) {
                           </p>
                           <div className="flex items-center gap-2 flex-shrink-0">
                             {spark.isGlobal && (
-                              <span className="px-2 py-1 bg-green-500/10 text-green-400 rounded text-xs">
+                              <span className="px-2 py-1 bg-green-500/10 text-success-text rounded text-xs">
                                 Popular
                               </span>
                             )}

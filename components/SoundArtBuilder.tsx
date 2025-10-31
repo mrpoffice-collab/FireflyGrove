@@ -757,7 +757,7 @@ export default function SoundArtBuilder() {
 
               {error && (
                 <div className="mt-4 p-4 bg-red-500/10 border border-red-500/30 rounded-lg">
-                  <p className="text-red-400 text-sm">{error}</p>
+                  <p className="text-error-text text-sm">{error}</p>
                 </div>
               )}
             </div>
@@ -934,7 +934,7 @@ export default function SoundArtBuilder() {
                               setBackgroundImage(null)
                               setBackgroundImageElement(null)
                             }}
-                            className="text-xs text-text-muted hover:text-red-400 transition-soft"
+                            className="text-xs text-text-muted hover:text-error-text transition-soft"
                           >
                             ✕ Remove image
                           </button>
@@ -1203,7 +1203,7 @@ export default function SoundArtBuilder() {
                           }
                         }}
                         disabled={isGroveOwner === null}
-                        className="px-6 py-3 bg-border-subtle hover:bg-text-muted/20 text-text-soft rounded-lg font-medium transition-soft disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="px-6 py-3 bg-border-subtle hover:bg-text-muted/20 text-text-soft rounded-lg font-medium transition-soft disabled:bg-gray-800 disabled:text-gray-600 disabled:cursor-not-allowed"
                       >
                         📥 Download {isGroveOwner === false && `($${SOUNDART_PRICE.toFixed(2)})`}
                       </button>
@@ -1226,7 +1226,7 @@ export default function SoundArtBuilder() {
                       disabled={!showQRCode || isUploading || isSaved}
                       className={`w-full px-6 py-3 rounded-lg font-medium transition-soft ${
                         isSaved
-                          ? 'bg-green-500/20 text-green-400 border border-green-500/30 cursor-not-allowed'
+                          ? 'bg-green-500/20 text-success-text border border-green-500/30 cursor-not-allowed'
                           : isUploading
                           ? 'bg-firefly-dim/40 text-text-soft cursor-wait'
                           : showQRCode
@@ -1243,7 +1243,7 @@ export default function SoundArtBuilder() {
 
                     {isSaved && playUrl && (
                       <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-4">
-                        <p className="text-green-400 text-sm font-medium mb-2">
+                        <p className="text-success-text text-sm font-medium mb-2">
                           🎉 Your sound art is saved!
                         </p>
                         <p className="text-text-muted text-xs mb-2">
@@ -1404,7 +1404,7 @@ export default function SoundArtBuilder() {
                   {/* Success message */}
                   {savedToBranch && (
                     <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-3">
-                      <p className="text-green-400 text-sm">
+                      <p className="text-success-text text-sm">
                         ✓ Saved to branch successfully!
                       </p>
                     </div>
@@ -1413,7 +1413,7 @@ export default function SoundArtBuilder() {
                   {/* Error message */}
                   {error && (
                     <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-3">
-                      <p className="text-red-400 text-sm">{error}</p>
+                      <p className="text-error-text text-sm">{error}</p>
                     </div>
                   )}
                 </>
@@ -1434,7 +1434,7 @@ export default function SoundArtBuilder() {
                   disabled={isSavingToBranch || savedToBranch}
                   className={`flex-1 px-4 py-2 rounded-lg font-medium transition-soft ${
                     savedToBranch
-                      ? 'bg-green-500/20 text-green-400 cursor-not-allowed'
+                      ? 'bg-green-500/20 text-success-text cursor-not-allowed'
                       : isSavingToBranch
                       ? 'bg-firefly-dim/40 text-text-soft cursor-wait'
                       : 'bg-firefly-dim hover:bg-firefly-glow text-bg-dark'

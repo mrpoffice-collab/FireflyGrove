@@ -96,8 +96,8 @@ export default function MemoryCard({ entry, branchOwnerId, branchId, branchTitle
   }, [entry.id, branchId])
   const visibilityColors = {
     PRIVATE: 'text-text-muted',
-    SHARED: 'text-blue-400',
-    LEGACY: 'text-purple-400',
+    SHARED: 'text-info-text',
+    LEGACY: 'text-purple-300',
   }
 
   const visibilityLabels = {
@@ -493,7 +493,7 @@ export default function MemoryCard({ entry, branchOwnerId, branchId, branchTitle
               <button
                 onClick={handlePinToPinterest}
                 disabled={pinningToPinterest}
-                className="text-text-muted hover:text-red-500 transition-soft disabled:opacity-50"
+                className="text-text-muted hover:text-error-text transition-soft disabled:opacity-50"
                 aria-label={pinningToPinterest ? "Sharing to Pinterest" : "Share to Pinterest"}
               >
                 {pinningToPinterest ? (
@@ -540,7 +540,7 @@ export default function MemoryCard({ entry, branchOwnerId, branchId, branchTitle
                         <button
                           onClick={handleEdit}
                           disabled={isProcessing}
-                          className="w-full text-left px-4 py-2 text-sm text-firefly-glow hover:bg-bg-dark transition-soft disabled:opacity-50 flex items-center gap-2"
+                          className="w-full text-left px-4 py-2 text-sm text-firefly-glow hover:bg-bg-dark transition-soft disabled:bg-gray-800 disabled:text-gray-600 flex items-center gap-2"
                         >
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
@@ -550,7 +550,7 @@ export default function MemoryCard({ entry, branchOwnerId, branchId, branchTitle
                         <button
                           onClick={handleWithdraw}
                           disabled={isProcessing}
-                          className="w-full text-left px-4 py-2 text-sm text-text-soft hover:bg-bg-dark transition-soft disabled:opacity-50"
+                          className="w-full text-left px-4 py-2 text-sm text-text-soft hover:bg-bg-dark transition-soft disabled:bg-gray-800 disabled:text-gray-600"
                         >
                           Withdraw
                         </button>
@@ -560,7 +560,7 @@ export default function MemoryCard({ entry, branchOwnerId, branchId, branchTitle
                       <button
                         onClick={handleHide}
                         disabled={isProcessing}
-                        className="w-full text-left px-4 py-2 text-sm text-orange-400 hover:bg-bg-dark transition-soft disabled:opacity-50"
+                        className="w-full text-left px-4 py-2 text-sm text-warning-text hover:bg-bg-dark transition-soft disabled:bg-gray-800 disabled:text-gray-600"
                       >
                         Hide from Branch
                       </button>
@@ -569,7 +569,7 @@ export default function MemoryCard({ entry, branchOwnerId, branchId, branchTitle
                       <button
                         onClick={handleHide}
                         disabled={isProcessing}
-                        className="w-full text-left px-4 py-2 text-sm text-text-soft hover:bg-bg-dark transition-soft disabled:opacity-50"
+                        className="w-full text-left px-4 py-2 text-sm text-text-soft hover:bg-bg-dark transition-soft disabled:bg-gray-800 disabled:text-gray-600"
                       >
                         Hide from Branch
                       </button>
@@ -579,7 +579,7 @@ export default function MemoryCard({ entry, branchOwnerId, branchId, branchTitle
                       <button
                         onClick={handleRemoveFromBranch}
                         disabled={isProcessing}
-                        className="w-full text-left px-4 py-2 text-sm text-text-soft hover:bg-bg-dark transition-soft disabled:opacity-50 border-t border-border-subtle"
+                        className="w-full text-left px-4 py-2 text-sm text-text-soft hover:bg-bg-dark transition-soft disabled:bg-gray-800 disabled:text-gray-600 border-t border-border-subtle"
                       >
                         Remove from this Branch
                       </button>
@@ -653,7 +653,7 @@ export default function MemoryCard({ entry, branchOwnerId, branchId, branchTitle
               isGlowing
                 ? 'bg-firefly-glow/20 text-firefly-glow border border-firefly-glow/40'
                 : 'bg-bg-darker text-text-muted hover:text-firefly-dim hover:border-firefly-dim/30 border border-border-subtle'
-            } disabled:opacity-50 disabled:cursor-not-allowed`}
+            } disabled:bg-gray-700 disabled:text-gray-500 disabled:cursor-not-allowed`}
             aria-label={isGlowing ? 'Remove your glow from this memory' : 'Add your glow to this memory'}
             aria-pressed={isGlowing}
           >
@@ -674,7 +674,7 @@ export default function MemoryCard({ entry, branchOwnerId, branchId, branchTitle
           <button
             onClick={handleOpenThreadModal}
             disabled={!userId}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-bg-darker border border-border-subtle text-text-muted hover:text-white hover:border-firefly-dim/40 transition-all text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-bg-darker border border-border-subtle text-text-muted hover:text-white hover:border-firefly-dim/40 transition-all text-sm disabled:bg-gray-800 disabled:text-gray-600 disabled:cursor-not-allowed"
             aria-label="Add a related memory about the same person or topic"
           >
             <span>💬</span>
@@ -683,7 +683,7 @@ export default function MemoryCard({ entry, branchOwnerId, branchId, branchTitle
           <button
             onClick={handleOpenInspiredModal}
             disabled={!userId}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-bg-darker border border-border-subtle text-text-muted hover:text-white hover:border-firefly-dim/40 transition-all text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-bg-darker border border-border-subtle text-text-muted hover:text-white hover:border-firefly-dim/40 transition-all text-sm disabled:bg-gray-800 disabled:text-gray-600 disabled:cursor-not-allowed"
             aria-label="Add a memory this reminds you of"
           >
             <span>💭</span>
@@ -722,7 +722,7 @@ export default function MemoryCard({ entry, branchOwnerId, branchId, branchTitle
                       key={board.id}
                       onClick={() => handleSelectBoardAndPin(board.id)}
                       disabled={pinningToPinterest}
-                      className="w-full text-left p-4 bg-bg-elevated hover:bg-border-subtle border border-border-subtle rounded transition-soft disabled:opacity-50"
+                      className="w-full text-left p-4 bg-bg-elevated hover:bg-border-subtle border border-border-subtle rounded transition-soft disabled:bg-gray-800 disabled:text-gray-600"
                     >
                       <div className="font-medium text-text-soft">{board.name}</div>
                       {board.description && (

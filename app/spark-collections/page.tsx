@@ -228,7 +228,7 @@ export default function SparkCollectionsPage() {
                       {/* Delete Button */}
                       <button
                         onClick={() => handleDelete(collection.id, collection.name)}
-                        className="px-3 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded text-sm transition-soft"
+                        className="px-3 py-2 bg-red-500/20 hover:bg-red-500/30 text-error-text rounded text-sm transition-soft"
                       >
                         Delete
                       </button>
@@ -331,7 +331,7 @@ export default function SparkCollectionsPage() {
                   value={uploadName}
                   onChange={(e) => setUploadName(e.target.value)}
                   placeholder="e.g., Family Memories, Bible Verses, Recovery Journey"
-                  className="w-full px-4 py-3 bg-bg-elevated border border-border-subtle rounded-lg text-text-soft focus:outline-none focus:border-firefly-dim placeholder:text-text-muted"
+                  className="w-full px-4 py-3 bg-bg-elevated border border-border-subtle rounded-lg text-text-soft focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50 placeholder:text-placeholder"
                   required
                 />
               </div>
@@ -347,7 +347,7 @@ export default function SparkCollectionsPage() {
                   onChange={(e) => setUploadIcon(e.target.value)}
                   placeholder="e.g., 📖, 💙, 🎄"
                   maxLength={2}
-                  className="w-full px-4 py-3 bg-bg-elevated border border-border-subtle rounded-lg text-text-soft focus:outline-none focus:border-firefly-dim placeholder:text-text-muted"
+                  className="w-full px-4 py-3 bg-bg-elevated border border-border-subtle rounded-lg text-text-soft focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50 placeholder:text-placeholder"
                 />
               </div>
 
@@ -360,7 +360,7 @@ export default function SparkCollectionsPage() {
                   value={uploadDescription}
                   onChange={(e) => setUploadDescription(e.target.value)}
                   placeholder="What is this collection about?"
-                  className="w-full px-4 py-3 bg-bg-elevated border border-border-subtle rounded-lg text-text-soft focus:outline-none focus:border-firefly-dim placeholder:text-text-muted resize-none"
+                  className="w-full px-4 py-3 bg-bg-elevated border border-border-subtle rounded-lg text-text-soft focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50 placeholder:text-placeholder resize-none"
                   rows={3}
                 />
               </div>
@@ -370,7 +370,7 @@ export default function SparkCollectionsPage() {
                 <button
                   type="submit"
                   disabled={uploading}
-                  className="flex-1 px-6 py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg font-medium transition-soft disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex-1 px-6 py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg font-medium transition-soft disabled:bg-gray-700 disabled:text-gray-500 disabled:cursor-not-allowed"
                 >
                   {uploading ? 'Uploading...' : 'Upload Collection'}
                 </button>

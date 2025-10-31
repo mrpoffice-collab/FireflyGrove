@@ -782,7 +782,7 @@ export default function BranchSettingsModal({
                   type="email"
                   value={newMemberEmail}
                   onChange={(e) => setNewMemberEmail(e.target.value)}
-                  className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-dim transition-soft"
+                  className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50 transition-soft"
                   placeholder="member@example.com"
                   required
                   disabled={invitingMember}
@@ -799,7 +799,7 @@ export default function BranchSettingsModal({
                 <textarea
                   value={inviteMessage}
                   onChange={(e) => setInviteMessage(e.target.value)}
-                  className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-dim transition-soft resize-none"
+                  className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50 transition-soft resize-none"
                   placeholder="Add a personal note to your invitation..."
                   rows={3}
                   maxLength={500}
@@ -811,13 +811,13 @@ export default function BranchSettingsModal({
               </div>
 
               {memberError && (
-                <div className="text-red-400 text-sm">{memberError}</div>
+                <div className="text-error-text text-sm">{memberError}</div>
               )}
 
               <button
                 type="submit"
                 disabled={invitingMember}
-                className="w-full py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded font-medium transition-soft disabled:opacity-50"
+                className="w-full py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded font-medium transition-soft disabled:bg-gray-700 disabled:text-gray-500"
               >
                 {invitingMember ? 'Inviting...' : 'Invite Member'}
               </button>
@@ -837,7 +837,7 @@ export default function BranchSettingsModal({
                 <button
                   onClick={handleGenerateShareableLink}
                   disabled={generatingLink}
-                  className="w-full py-2 bg-border-subtle hover:bg-text-muted/20 text-text-soft rounded font-medium transition-soft disabled:opacity-50"
+                  className="w-full py-2 bg-border-subtle hover:bg-text-muted/20 text-text-soft rounded font-medium transition-soft disabled:bg-gray-800 disabled:text-gray-600"
                 >
                   {generatingLink ? 'Generating Link...' : '+ Create Shareable Link'}
                 </button>
@@ -894,7 +894,7 @@ export default function BranchSettingsModal({
                   {/* Delete link button */}
                   <button
                     onClick={handleDeleteShareableLink}
-                    className="w-full py-2 text-red-400 hover:text-red-300 text-sm transition-soft"
+                    className="w-full py-2 text-error-text hover:text-red-300 text-sm transition-soft"
                   >
                     Delete Link
                   </button>
@@ -1108,7 +1108,7 @@ export default function BranchSettingsModal({
                   type="email"
                   value={newHeirEmail}
                   onChange={(e) => setNewHeirEmail(e.target.value)}
-                  className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-dim transition-soft"
+                  className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50 transition-soft"
                   placeholder="heir@example.com"
                   required
                   disabled={addingHeir}
@@ -1122,7 +1122,7 @@ export default function BranchSettingsModal({
                 <select
                   value={releaseCondition}
                   onChange={(e) => setReleaseCondition(e.target.value)}
-                  className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-dim transition-soft"
+                  className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50 transition-soft"
                   disabled={addingHeir}
                 >
                   <option value="AFTER_DEATH">After Death (requires verification)</option>
@@ -1140,7 +1140,7 @@ export default function BranchSettingsModal({
                     type="date"
                     value={releaseDate}
                     onChange={(e) => setReleaseDate(e.target.value)}
-                    className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-dim transition-soft"
+                    className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50 transition-soft"
                     required
                     disabled={addingHeir}
                   />
@@ -1148,13 +1148,13 @@ export default function BranchSettingsModal({
               )}
 
               {error && (
-                <div className="text-red-400 text-sm">{error}</div>
+                <div className="text-error-text text-sm">{error}</div>
               )}
 
               <button
                 type="submit"
                 disabled={addingHeir}
-                className="w-full py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded font-medium transition-soft disabled:opacity-50"
+                className="w-full py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded font-medium transition-soft disabled:bg-gray-700 disabled:text-gray-500"
               >
                 {addingHeir ? 'Adding...' : 'Add Heir'}
               </button>
@@ -1225,7 +1225,7 @@ export default function BranchSettingsModal({
                         </div>
                         <div>
                           <label className="block text-xs text-text-soft mb-1">
-                            Death Date <span className="text-red-400">*</span>
+                            Death Date <span className="text-error-text">*</span>
                           </label>
                           <input
                             type="date"
@@ -1238,13 +1238,13 @@ export default function BranchSettingsModal({
                           />
                         </div>
                         {legacyError && (
-                          <div className="text-red-400 text-xs">{legacyError}</div>
+                          <div className="text-error-text text-xs">{legacyError}</div>
                         )}
                         <div className="flex gap-2">
                           <button
                             type="submit"
                             disabled={updatingDates}
-                            className="flex-1 py-2 bg-[var(--legacy-amber)] hover:bg-[var(--legacy-glow)] text-bg-dark rounded text-sm font-medium transition-soft disabled:opacity-50"
+                            className="flex-1 py-2 bg-[var(--legacy-amber)] hover:bg-[var(--legacy-glow)] text-bg-dark rounded text-sm font-medium transition-soft disabled:bg-gray-700 disabled:text-gray-500"
                           >
                             {updatingDates ? 'Updating...' : 'Save Dates'}
                           </button>
@@ -1264,7 +1264,7 @@ export default function BranchSettingsModal({
                               }
                             }}
                             disabled={updatingDates}
-                            className="px-4 py-2 bg-bg-darker hover:bg-border-subtle text-text-muted rounded text-sm transition-soft disabled:opacity-50"
+                            className="px-4 py-2 bg-bg-darker hover:bg-border-subtle text-text-muted rounded text-sm transition-soft disabled:bg-gray-800 disabled:text-gray-600"
                           >
                             Cancel
                           </button>
@@ -1289,21 +1289,21 @@ export default function BranchSettingsModal({
                     type="date"
                     value={birthDate}
                     onChange={(e) => setBirthDate(e.target.value)}
-                    className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-dim transition-soft"
+                    className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50 transition-soft"
                     disabled={settingLegacy}
                   />
                 </div>
 
                 <div>
                   <label className="block text-sm text-text-soft mb-2">
-                    Death Date <span className="text-red-400">*</span>
+                    Death Date <span className="text-error-text">*</span>
                   </label>
                   <input
                     type="date"
                     value={deathDate}
                     onChange={(e) => setDeathDate(e.target.value)}
                     max={new Date().toISOString().split('T')[0]}
-                    className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-dim transition-soft"
+                    className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50 transition-soft"
                     required
                     disabled={settingLegacy}
                   />
@@ -1313,13 +1313,13 @@ export default function BranchSettingsModal({
                 </div>
 
                 {legacyError && (
-                  <div className="text-red-400 text-sm">{legacyError}</div>
+                  <div className="text-error-text text-sm">{legacyError}</div>
                 )}
 
                 <button
                   type="submit"
                   disabled={settingLegacy}
-                  className="w-full py-2 bg-[var(--legacy-amber)] hover:bg-[var(--legacy-glow)] text-bg-dark rounded font-medium transition-soft disabled:opacity-50"
+                  className="w-full py-2 bg-[var(--legacy-amber)] hover:bg-[var(--legacy-glow)] text-bg-dark rounded font-medium transition-soft disabled:bg-gray-700 disabled:text-gray-500"
                 >
                   {settingLegacy ? 'Setting Legacy...' : 'Enter Legacy Mode'}
                 </button>
@@ -1402,7 +1402,7 @@ export default function BranchSettingsModal({
 
                   return (
                     <div className="mb-4 pb-4 border-b border-[var(--legacy-amber)]/30">
-                      <div className={`text-sm font-medium mb-1 ${hasExpired ? 'text-red-400' : isExpiringSoon ? 'text-orange-400' : 'text-[var(--legacy-text)]'}`}>
+                      <div className={`text-sm font-medium mb-1 ${hasExpired ? 'text-error-text' : isExpiringSoon ? 'text-warning-text' : 'text-[var(--legacy-text)]'}`}>
                         {hasExpired ? '⚠️ Trustee Period Expired' : isExpiringSoon ? '⚠️ Trustee Period Expiring Soon' : '🕒 Trustee Period Active'}
                       </div>
                       <div className="text-text-muted text-xs">
@@ -1445,14 +1445,14 @@ export default function BranchSettingsModal({
                   </div>
 
                   {transferError && (
-                    <div className="text-red-400 text-sm">{transferError}</div>
+                    <div className="text-error-text text-sm">{transferError}</div>
                   )}
 
                   <Tooltip content="Transfer full control and ownership to a family member">
                     <button
                       type="submit"
                       disabled={transferring}
-                      className="w-full py-2 bg-[var(--legacy-amber)] hover:bg-[var(--legacy-glow)] text-bg-dark rounded font-medium transition-soft disabled:opacity-50"
+                      className="w-full py-2 bg-[var(--legacy-amber)] hover:bg-[var(--legacy-glow)] text-bg-dark rounded font-medium transition-soft disabled:bg-gray-700 disabled:text-gray-500"
                     >
                       {transferring ? 'Transferring...' : 'Transfer Ownership'}
                     </button>
@@ -1503,21 +1503,21 @@ export default function BranchSettingsModal({
                     <div className="text-text-muted text-xs">
                       {branch.person.memoryCount} / {branch.person.memoryLimit} memories used
                       {branch.person.memoryCount >= branch.person.memoryLimit && (
-                        <span className="text-red-400 ml-1">(Limit reached)</span>
+                        <span className="text-error-text ml-1">(Limit reached)</span>
                       )}
                     </div>
                   </div>
                 )}
 
                 {adoptError && (
-                  <div className="text-red-400 text-sm mb-4">{adoptError}</div>
+                  <div className="text-error-text text-sm mb-4">{adoptError}</div>
                 )}
 
                 <Tooltip content="Move to your private grove for unlimited memories and enhanced privacy">
                   <button
                     onClick={handleAdoptTree}
                     disabled={adopting}
-                    className="w-full py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded font-medium transition-soft disabled:opacity-50"
+                    className="w-full py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded font-medium transition-soft disabled:bg-gray-700 disabled:text-gray-500"
                   >
                     {adopting ? 'Adopting Tree...' : 'Adopt Into Your Grove'}
                   </button>
@@ -1564,7 +1564,7 @@ export default function BranchSettingsModal({
                 </div>
 
                 <div className="mb-4 p-3 bg-blue-500/10 border border-blue-500/30 rounded">
-                  <div className="text-blue-400 text-xs font-medium mb-1">
+                  <div className="text-info-text text-xs font-medium mb-1">
                     💡 When to Root vs Adopt
                   </div>
                   <div className="text-text-muted text-xs">
@@ -1574,14 +1574,14 @@ export default function BranchSettingsModal({
                 </div>
 
                 {rootError && (
-                  <div className="text-red-400 text-sm mb-4">{rootError}</div>
+                  <div className="text-error-text text-sm mb-4">{rootError}</div>
                 )}
 
                 <Tooltip content="Link to your grove while keeping memorial public">
                   <button
                     onClick={handleRootTree}
                     disabled={rooting}
-                    className="w-full py-2 bg-border-subtle hover:bg-text-muted text-text-soft rounded font-medium transition-soft disabled:opacity-50"
+                    className="w-full py-2 bg-border-subtle hover:bg-text-muted text-text-soft rounded font-medium transition-soft disabled:bg-gray-800 disabled:text-gray-600"
                   >
                     {rooting ? 'Rooting Tree...' : 'Root (Link) to Your Grove'}
                   </button>

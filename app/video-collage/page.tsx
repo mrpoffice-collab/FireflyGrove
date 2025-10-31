@@ -175,7 +175,7 @@ export default function VideoCollagePage() {
                 )}
               </p>
               {!limits.usage.canGenerate && (
-                <p className="text-red-400 mt-2">
+                <p className="text-error-text mt-2">
                   ⚠ Monthly limit reached.{' '}
                   <Link href="/billing" className="underline hover:text-red-300">
                     Upgrade for more videos
@@ -197,19 +197,19 @@ export default function VideoCollagePage() {
           <div className="mt-12 pt-8 border-t border-border-subtle">
             <div className="flex flex-wrap items-center justify-center gap-6 text-text-muted text-sm">
               <div className="flex items-center gap-2">
-                <span className="text-green-400">✓</span>
+                <span className="text-success-text">✓</span>
                 <span>Complimentary Service</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-green-400">✓</span>
+                <span className="text-success-text">✓</span>
                 <span>Professional Quality</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-green-400">✓</span>
+                <span className="text-success-text">✓</span>
                 <span>No Sign-up Required</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-green-400">✓</span>
+                <span className="text-success-text">✓</span>
                 <span>Private & Secure</span>
               </div>
             </div>

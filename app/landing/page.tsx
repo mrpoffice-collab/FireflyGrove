@@ -58,19 +58,19 @@ export default function LandingPage() {
 
             <div className="flex items-center justify-center gap-8 text-text-muted text-sm">
               <div className="flex items-center gap-2">
-                <svg className="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="w-5 h-5 text-success-text" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                 </svg>
                 <span>No credit card required</span>
               </div>
               <div className="flex items-center gap-2">
-                <svg className="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="w-5 h-5 text-success-text" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                 </svg>
                 <span>Free forever plan</span>
               </div>
               <div className="flex items-center gap-2">
-                <svg className="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="w-5 h-5 text-success-text" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                 </svg>
                 <span>Cancel anytime</span>
@@ -292,7 +292,7 @@ export default function LandingPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email"
                 required
-                className="flex-1 px-4 py-3 bg-bg-elevated border border-border-subtle rounded-lg text-text-soft focus:outline-none focus:border-firefly-dim"
+                className="flex-1 px-4 py-3 bg-bg-elevated border border-border-subtle rounded-lg text-text-soft focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50"
               />
               <button
                 type="submit"
@@ -302,7 +302,7 @@ export default function LandingPage() {
               </button>
             </div>
             {subscribed && (
-              <p className="text-green-400 text-sm mt-2">✓ Thanks! We'll be in touch soon.</p>
+              <p className="text-success-text text-sm mt-2">✓ Thanks! We'll be in touch soon.</p>
             )}
           </form>
 

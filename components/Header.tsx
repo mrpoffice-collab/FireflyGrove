@@ -96,7 +96,7 @@ export default function Header({ userName, isBetaTester, isAdmin, groveInfo }: H
             {/* Beta Feedback Button - Visible to all users */}
             <button
               onClick={() => setIsFeedbackOpen(true)}
-              className="min-h-[44px] px-3 py-2 bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 border border-blue-500/30 rounded text-xs font-medium transition-soft flex items-center gap-1"
+              className="min-h-[44px] px-3 py-2 bg-blue-500/10 hover:bg-blue-500/20 text-info-text border border-blue-500/30 rounded text-xs font-medium transition-soft flex items-center gap-1"
               aria-label="Send beta feedback"
             >
               <span>💬</span>

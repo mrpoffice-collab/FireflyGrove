@@ -277,7 +277,7 @@ export default function BlogVideoVisualSelector({
           {currentMedia && (
             <button
               onClick={clearSelection}
-              className="ml-4 px-3 py-1.5 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded text-sm transition-soft"
+              className="ml-4 px-3 py-1.5 bg-red-500/20 hover:bg-red-500/30 text-error-text rounded text-sm transition-soft"
             >
               Clear
             </button>
@@ -313,7 +313,7 @@ export default function BlogVideoVisualSelector({
 
       {/* Error Display */}
       {error && (
-        <div className="p-4 bg-red-500/20 border border-red-500/30 rounded-lg text-red-400 text-sm">
+        <div className="p-4 bg-red-500/20 border border-red-500/30 rounded-lg text-error-text text-sm">
           <div className="font-medium mb-1">Search Error</div>
           {error}
           <button
@@ -359,7 +359,7 @@ export default function BlogVideoVisualSelector({
           <button
             onClick={() => fileInputRef.current?.click()}
             disabled={uploading}
-            className="px-4 py-2 bg-green-500/20 hover:bg-green-500/30 text-green-400 rounded-lg font-medium transition-soft disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-4 py-2 bg-green-500/20 hover:bg-green-500/30 text-success-text rounded-lg font-medium transition-soft disabled:bg-gray-800 disabled:text-gray-600 disabled:cursor-not-allowed"
           >
             {uploading ? '⏳ Uploading...' : '📤 Upload Image'}
           </button>
@@ -372,12 +372,12 @@ export default function BlogVideoVisualSelector({
             onChange={(e) => setSearchQuery(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
             placeholder={`Search ${searchType}...`}
-            className="flex-1 px-4 py-3 bg-bg-dark border border-border-subtle rounded-lg text-text-soft focus:outline-none focus:border-firefly-dim"
+            className="flex-1 px-4 py-3 bg-bg-dark border border-border-subtle rounded-lg text-text-soft focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50"
           />
           <button
             onClick={handleSearch}
             disabled={loading}
-            className="px-6 py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg font-medium transition-soft disabled:opacity-50"
+            className="px-6 py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg font-medium transition-soft disabled:bg-gray-700 disabled:text-gray-500"
           >
             {loading ? '...' : 'Search'}
           </button>

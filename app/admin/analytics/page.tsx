@@ -88,7 +88,7 @@ export default function AnalyticsPage() {
         />
         <div className="min-h-screen text-text-soft flex items-center justify-center">
           <div className="text-center">
-            <p className="text-red-400 mb-4">Error: {error}</p>
+            <p className="text-error-text mb-4">Error: {error}</p>
             <button
               onClick={fetchAnalytics}
               className="px-4 py-2 bg-firefly-dim text-bg-dark rounded"
@@ -154,7 +154,7 @@ export default function AnalyticsPage() {
           </div>
           <div className="bg-bg-elevated border border-border-subtle rounded-lg p-6">
             <p className="text-text-muted text-sm mb-1">Errors</p>
-            <p className="text-3xl text-red-400">{data.summary.errorEvents.toLocaleString()}</p>
+            <p className="text-3xl text-error-text">{data.summary.errorEvents.toLocaleString()}</p>
           </div>
           <div className="bg-bg-elevated border border-border-subtle rounded-lg p-6">
             <p className="text-text-muted text-sm mb-1">Abandoned</p>
@@ -234,7 +234,7 @@ export default function AnalyticsPage() {
                     <td className="py-2 pr-4 text-text-muted">{event.action}</td>
                     <td className="py-2">
                       {event.isError && (
-                        <span className="px-2 py-1 bg-red-500/20 text-red-400 rounded text-xs">
+                        <span className="px-2 py-1 bg-red-500/20 text-error-text rounded text-xs">
                           Error
                         </span>
                       )}
@@ -244,7 +244,7 @@ export default function AnalyticsPage() {
                         </span>
                       )}
                       {event.isSuccess && !event.isError && !event.isAbandoned && (
-                        <span className="px-2 py-1 bg-green-500/20 text-green-400 rounded text-xs">
+                        <span className="px-2 py-1 bg-green-500/20 text-success-text rounded text-xs">
                           Success
                         </span>
                       )}

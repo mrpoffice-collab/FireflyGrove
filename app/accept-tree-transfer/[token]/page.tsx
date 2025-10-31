@@ -290,7 +290,7 @@ export default function AcceptTreeTransferPage() {
 
           {error && (
             <div className="bg-red-500/10 border border-red-500/30 rounded p-4 mb-6">
-              <p className="text-red-400 text-sm">{error}</p>
+              <p className="text-error-text text-sm">{error}</p>
             </div>
           )}
 
@@ -298,14 +298,14 @@ export default function AcceptTreeTransferPage() {
             <button
               onClick={() => router.push('/')}
               disabled={accepting}
-              className="flex-1 px-6 py-3 bg-bg-dark hover:bg-border-subtle text-text-muted border border-border-subtle rounded font-medium transition-soft disabled:opacity-50"
+              className="flex-1 px-6 py-3 bg-bg-dark hover:bg-border-subtle text-text-muted border border-border-subtle rounded font-medium transition-soft disabled:bg-gray-800 disabled:text-gray-600"
             >
               Decline
             </button>
             <button
               onClick={handleAccept}
               disabled={accepting || !selectedOption}
-              className="flex-1 px-6 py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded font-medium transition-soft disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 px-6 py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded font-medium transition-soft disabled:bg-gray-700 disabled:text-gray-500 disabled:cursor-not-allowed"
             >
               {accepting ? 'Accepting...' : 'Accept Tree'}
             </button>

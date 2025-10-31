@@ -473,7 +473,7 @@ export default function DraftsPage() {
           </div>
           <div className="bg-bg-elevated border border-green-500/30 rounded-lg p-4">
             <div className="text-text-muted text-sm mb-1">Approved</div>
-            <div className="text-3xl font-light text-green-400">
+            <div className="text-3xl font-light text-success-text">
               {approvedDrafts.length}
             </div>
             <div className="text-text-muted text-xs">Ready to publish</div>
@@ -561,7 +561,7 @@ export default function DraftsPage() {
                         {post.platform}
                       </span>
                       {post.isApproved && (
-                        <span className="px-2 py-1 bg-green-500/20 text-green-400 text-xs rounded">
+                        <span className="px-2 py-1 bg-green-500/20 text-success-text text-xs rounded">
                           ✅ Approved
                         </span>
                       )}
@@ -589,13 +589,13 @@ export default function DraftsPage() {
                               />
                               <button
                                 onClick={() => saveDate(post.id)}
-                                className="px-2 py-1 bg-green-500/20 hover:bg-green-500/30 text-green-400 rounded text-xs"
+                                className="px-2 py-1 bg-green-500/20 hover:bg-green-500/30 text-success-text rounded text-xs"
                               >
                                 Save
                               </button>
                               <button
                                 onClick={cancelEditDate}
-                                className="px-2 py-1 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded text-xs"
+                                className="px-2 py-1 bg-red-500/20 hover:bg-red-500/30 text-error-text rounded text-xs"
                               >
                                 Cancel
                               </button>
@@ -624,13 +624,13 @@ export default function DraftsPage() {
                               />
                               <button
                                 onClick={() => saveImage(post.id)}
-                                className="px-2 py-1 bg-green-500/20 hover:bg-green-500/30 text-green-400 rounded text-xs"
+                                className="px-2 py-1 bg-green-500/20 hover:bg-green-500/30 text-success-text rounded text-xs"
                               >
                                 Save
                               </button>
                               <button
                                 onClick={cancelEditImage}
-                                className="px-2 py-1 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded text-xs"
+                                className="px-2 py-1 bg-red-500/20 hover:bg-red-500/30 text-error-text rounded text-xs"
                               >
                                 Cancel
                               </button>
@@ -770,7 +770,7 @@ export default function DraftsPage() {
         {/* SECTION 2: Approved & Ready to Publish */}
         {approvedDrafts.length > 0 && (
           <div className="mb-12">
-            <h2 className="text-2xl font-light text-green-400 mb-6">
+            <h2 className="text-2xl font-light text-success-text mb-6">
               ✅ Approved & Ready to Publish ({approvedDrafts.length})
             </h2>
             <p className="text-text-muted mb-6">
@@ -791,7 +791,7 @@ export default function DraftsPage() {
                         <span className="text-xs uppercase font-medium text-text-muted">
                           {post.platform}
                         </span>
-                        <span className="px-2 py-1 bg-green-500/20 text-green-400 text-xs rounded">
+                        <span className="px-2 py-1 bg-green-500/20 text-success-text text-xs rounded">
                           ✅ Approved
                         </span>
                       </div>
@@ -818,13 +818,13 @@ export default function DraftsPage() {
                                 />
                                 <button
                                   onClick={() => saveDate(post.id)}
-                                  className="px-2 py-1 bg-green-500/20 hover:bg-green-500/30 text-green-400 rounded text-xs"
+                                  className="px-2 py-1 bg-green-500/20 hover:bg-green-500/30 text-success-text rounded text-xs"
                                 >
                                   Save
                                 </button>
                                 <button
                                   onClick={cancelEditDate}
-                                  className="px-2 py-1 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded text-xs"
+                                  className="px-2 py-1 bg-red-500/20 hover:bg-red-500/30 text-error-text rounded text-xs"
                                 >
                                   Cancel
                                 </button>
@@ -832,7 +832,7 @@ export default function DraftsPage() {
                             ) : (
                               <button
                                 onClick={() => startEditDate(post)}
-                                className="text-green-400 hover:text-firefly-glow transition-soft"
+                                className="text-success-text hover:text-firefly-glow transition-soft"
                               >
                                 📅 Publishing: {new Date(post.scheduledFor).toLocaleDateString()}
                               </button>
@@ -1036,7 +1036,7 @@ export default function DraftsPage() {
 
               {/* Next Steps */}
               <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-4 mb-4">
-                <h3 className="text-lg font-medium text-blue-400 mb-2">📹 Next Steps</h3>
+                <h3 className="text-lg font-medium text-info-text mb-2">📹 Next Steps</h3>
                 <ol className="text-text-soft space-y-2 text-sm list-decimal list-inside">
                   <li>Download the voice-over audio (button above)</li>
                   <li>Go to <Link href="/video-collage" className="text-firefly-glow hover:underline">Video Maker</Link></li>

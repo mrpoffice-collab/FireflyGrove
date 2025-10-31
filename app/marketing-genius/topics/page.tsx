@@ -362,7 +362,7 @@ export default function TopicsPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
           <div className="bg-bg-elevated border border-green-500/30 rounded-lg p-4">
             <div className="text-text-muted text-sm mb-1">High Confidence</div>
-            <div className="text-3xl font-light text-green-400">
+            <div className="text-3xl font-light text-success-text">
               {highConfidence.length}
             </div>
             <div className="text-text-muted text-xs">80%+ success rate</div>
@@ -580,7 +580,7 @@ export default function TopicsPage() {
                   <div className="p-4 bg-bg-elevated rounded-lg">
                     <div className="flex items-center justify-between mb-2">
                       <label className="text-text-soft text-sm font-medium">📝 Blog Post</label>
-                      <span className="text-xs text-green-400">Main content</span>
+                      <span className="text-xs text-success-text">Main content</span>
                     </div>
                     <input
                       type="number"
@@ -718,10 +718,10 @@ export default function TopicsPage() {
                     <div
                       className={`text-3xl font-light mb-1 ${
                         topic.confidenceScore >= 80
-                          ? 'text-green-400'
+                          ? 'text-success-text'
                           : topic.confidenceScore >= 65
                           ? 'text-yellow-400'
-                          : 'text-red-400'
+                          : 'text-error-text'
                       }`}
                     >
                       {topic.confidenceScore}%
@@ -767,7 +767,7 @@ export default function TopicsPage() {
                   <div className="flex items-center gap-3">
                     <span className={`px-3 py-1 rounded text-xs ${
                       topic.status === 'candidate' ? 'bg-yellow-500/20 text-yellow-400' :
-                      topic.status === 'approved' ? 'bg-green-500/20 text-green-400' :
+                      topic.status === 'approved' ? 'bg-green-500/20 text-success-text' :
                       'bg-gray-500/20 text-gray-400'
                     }`}>
                       {topic.status}
@@ -789,7 +789,7 @@ export default function TopicsPage() {
                     </button>
                     <button
                       onClick={() => deleteTopic(topic.id)}
-                      className="px-4 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-lg text-sm font-medium transition-soft"
+                      className="px-4 py-2 bg-red-500/20 hover:bg-red-500/30 text-error-text rounded-lg text-sm font-medium transition-soft"
                       title="Delete topic permanently"
                     >
                       🗑️

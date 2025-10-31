@@ -120,10 +120,10 @@ export default function PerformancePage() {
 
   const getVarianceColor = (variance: number | null) => {
     if (variance === null) return 'text-text-muted'
-    if (variance > 20) return 'text-green-400' // Beat estimate by 20%+
+    if (variance > 20) return 'text-success-text' // Beat estimate by 20%+
     if (variance > 0) return 'text-green-300' // Beat estimate
     if (variance > -20) return 'text-yellow-400' // Within 20%
-    return 'text-red-400' // Missed by 20%+
+    return 'text-error-text' // Missed by 20%+
   }
 
   const getVarianceLabel = (variance: number | null) => {
@@ -191,7 +191,7 @@ export default function PerformancePage() {
 
           <div className="bg-bg-elevated border border-blue-500/30 rounded-lg p-4">
             <div className="text-text-muted text-sm mb-1">Estimated Users</div>
-            <div className="text-3xl font-light text-blue-400">
+            <div className="text-3xl font-light text-info-text">
               {data.overview.estimatedUsers}
             </div>
             <div className="text-text-muted text-xs">Projected signups</div>
@@ -199,7 +199,7 @@ export default function PerformancePage() {
 
           <div className="bg-bg-elevated border border-green-500/30 rounded-lg p-4">
             <div className="text-text-muted text-sm mb-1">Actual Users</div>
-            <div className="text-3xl font-light text-green-400">
+            <div className="text-3xl font-light text-success-text">
               {data.overview.actualUsers}
             </div>
             <div className="text-text-muted text-xs">
@@ -209,7 +209,7 @@ export default function PerformancePage() {
 
           <div className="bg-bg-elevated border border-purple-500/30 rounded-lg p-4">
             <div className="text-text-muted text-sm mb-1">Accuracy</div>
-            <div className="text-3xl font-light text-purple-400">
+            <div className="text-3xl font-light text-purple-300">
               {data.overview.accuracy !== null ? `${data.overview.accuracy}%` : 'N/A'}
             </div>
             <div className="text-text-muted text-xs">Estimation accuracy</div>
@@ -237,18 +237,18 @@ export default function PerformancePage() {
                   <div className="space-y-2">
                     <div className="flex justify-between text-sm">
                       <span className="text-text-muted">Estimated:</span>
-                      <span className="text-blue-400">{stats.estimatedUsers}</span>
+                      <span className="text-info-text">{stats.estimatedUsers}</span>
                     </div>
                     <div className="flex justify-between text-sm">
                       <span className="text-text-muted">Actual:</span>
-                      <span className="text-green-400">{stats.actualUsers}</span>
+                      <span className="text-success-text">{stats.actualUsers}</span>
                     </div>
                     <div className="flex justify-between text-sm font-medium">
                       <span className="text-text-muted">Variance:</span>
                       <span
                         className={
                           stats.actualUsers > stats.estimatedUsers
-                            ? 'text-green-400'
+                            ? 'text-success-text'
                             : 'text-yellow-400'
                         }
                       >
@@ -284,8 +284,8 @@ export default function PerformancePage() {
                   {data.topPerformers.map((topic, i) => (
                     <tr key={i} className="border-t border-border-subtle">
                       <td className="p-4 text-text-soft">{topic.topic}</td>
-                      <td className="p-4 text-right text-blue-400">{topic.estimated}</td>
-                      <td className="p-4 text-right text-green-400">{topic.actual}</td>
+                      <td className="p-4 text-right text-info-text">{topic.estimated}</td>
+                      <td className="p-4 text-right text-success-text">{topic.actual}</td>
                       <td className={`p-4 text-right font-medium ${getVarianceColor(topic.variance)}`}>
                         {getVarianceLabel(topic.variance)}
                       </td>
@@ -338,15 +338,15 @@ export default function PerformancePage() {
                       <td className="p-4 text-center">
                         <span className={`px-2 py-1 rounded text-sm ${
                           topic.confidenceScore >= 70
-                            ? 'bg-green-500/20 text-green-400'
+                            ? 'bg-green-500/20 text-success-text'
                             : topic.confidenceScore >= 50
                             ? 'bg-yellow-500/20 text-yellow-400'
-                            : 'bg-red-500/20 text-red-400'
+                            : 'bg-red-500/20 text-error-text'
                         }`}>
                           {topic.confidenceScore}
                         </span>
                       </td>
-                      <td className="p-4 text-right text-blue-400">
+                      <td className="p-4 text-right text-info-text">
                         {topic.estimatedUsers || 0}
                       </td>
                       <td className="p-4 text-right">
@@ -362,13 +362,13 @@ export default function PerformancePage() {
                             <button
                               onClick={() => saveEdit(topic.id)}
                               disabled={updating}
-                              className="px-2 py-1 bg-green-500/20 hover:bg-green-500/30 text-green-400 rounded text-xs"
+                              className="px-2 py-1 bg-green-500/20 hover:bg-green-500/30 text-success-text rounded text-xs"
                             >
                               ✓
                             </button>
                             <button
                               onClick={cancelEdit}
-                              className="px-2 py-1 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded text-xs"
+                              className="px-2 py-1 bg-red-500/20 hover:bg-red-500/30 text-error-text rounded text-xs"
                             >
                               ✗
                             </button>
@@ -376,7 +376,7 @@ export default function PerformancePage() {
                         ) : (
                           <button
                             onClick={() => startEdit(topic.id, topic.actualUsers)}
-                            className="text-green-400 hover:text-green-300"
+                            className="text-success-text hover:text-green-300"
                           >
                             {topic.actualUsers !== null ? topic.actualUsers : '—'}
                           </button>
@@ -388,7 +388,7 @@ export default function PerformancePage() {
                       <td className="p-4">
                         <span className={`px-2 py-1 rounded text-xs ${
                           topic.status === 'published'
-                            ? 'bg-green-500/20 text-green-400'
+                            ? 'bg-green-500/20 text-success-text'
                             : 'bg-yellow-500/20 text-yellow-400'
                         }`}>
                           {topic.status}
@@ -404,7 +404,7 @@ export default function PerformancePage() {
 
         {/* Instructions */}
         <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-6">
-          <h3 className="text-lg font-medium text-blue-400 mb-2">
+          <h3 className="text-lg font-medium text-info-text mb-2">
             💡 How to Use This Dashboard
           </h3>
           <ul className="text-text-muted space-y-2 text-sm">

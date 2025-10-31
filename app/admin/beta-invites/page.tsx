@@ -87,7 +87,7 @@ export default function BetaInvitesPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="beta-tester@example.com"
-              className="w-full px-4 py-2 bg-bg-dark border border-border-subtle rounded-lg text-text-soft placeholder-text-muted focus:outline-none focus:border-firefly-dim transition-soft"
+              className="w-full px-4 py-2 bg-bg-dark border border-border-subtle rounded-lg text-text-soft placeholder:text-placeholder focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50 transition-soft"
               required
               disabled={sending}
             />
@@ -104,7 +104,7 @@ export default function BetaInvitesPage() {
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="John Smith"
-              className="w-full px-4 py-2 bg-bg-dark border border-border-subtle rounded-lg text-text-soft placeholder-text-muted focus:outline-none focus:border-firefly-dim transition-soft"
+              className="w-full px-4 py-2 bg-bg-dark border border-border-subtle rounded-lg text-text-soft placeholder:text-placeholder focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50 transition-soft"
               disabled={sending}
             />
             <p className="mt-1 text-xs text-text-muted">
@@ -123,7 +123,7 @@ export default function BetaInvitesPage() {
               onChange={(e) => setMessage(e.target.value)}
               placeholder="I think you'd be perfect for testing this because..."
               rows={4}
-              className="w-full px-4 py-2 bg-bg-dark border border-border-subtle rounded-lg text-text-soft placeholder-text-muted focus:outline-none focus:border-firefly-dim transition-soft resize-y"
+              className="w-full px-4 py-2 bg-bg-dark border border-border-subtle rounded-lg text-text-soft placeholder:text-placeholder focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50 transition-soft resize-y"
               disabled={sending}
             />
             <p className="mt-1 text-xs text-text-muted">
@@ -136,8 +136,8 @@ export default function BetaInvitesPage() {
             <div
               className={`p-4 rounded-lg border ${
                 result.type === 'success'
-                  ? 'bg-green-900/20 border-green-700/50 text-green-400'
-                  : 'bg-red-900/20 border-red-700/50 text-red-400'
+                  ? 'bg-green-900/20 border-green-700/50 text-success-text'
+                  : 'bg-red-900/20 border-red-700/50 text-error-text'
               }`}
             >
               {result.message}
@@ -149,7 +149,7 @@ export default function BetaInvitesPage() {
             <button
               type="submit"
               disabled={sending || !email.trim()}
-              className="flex-1 py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg font-medium transition-soft disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg font-medium transition-soft disabled:bg-gray-700 disabled:text-gray-500 disabled:cursor-not-allowed"
             >
               {sending ? 'Sending...' : 'Send Beta Invite'}
             </button>

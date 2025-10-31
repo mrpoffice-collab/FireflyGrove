@@ -176,11 +176,11 @@ export default function OrdersPage() {
                       <div className="mb-2">
                         <span className={`inline-block px-3 py-1 rounded text-xs font-medium ${
                           order.status === 'completed'
-                            ? 'bg-green-500/20 text-green-400'
+                            ? 'bg-green-500/20 text-success-text'
                             : order.status === 'processing'
-                            ? 'bg-blue-500/20 text-blue-400'
+                            ? 'bg-blue-500/20 text-info-text'
                             : order.status === 'failed'
-                            ? 'bg-red-500/20 text-red-400'
+                            ? 'bg-red-500/20 text-error-text'
                             : 'bg-yellow-500/20 text-yellow-400'
                         }`}>
                           {order.status}

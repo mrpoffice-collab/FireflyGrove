@@ -226,7 +226,7 @@ export default function AudioSparks({ onClose, branches }: AudioSparksProps) {
                   value={customPrompt}
                   onChange={(e) => setCustomPrompt(e.target.value)}
                   placeholder="Write your own prompt..."
-                  className="w-full px-4 py-3 bg-bg-darker border border-firefly-dim/50 rounded-lg text-white placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-firefly-glow/50 resize-none"
+                  className="w-full px-4 py-3 bg-bg-darker border border-firefly-dim/50 rounded-lg text-white placeholder:text-placeholder focus:outline-none focus:ring-2 focus:ring-firefly-glow/50 resize-none"
                   rows={3}
                 />
               ) : (
@@ -319,7 +319,7 @@ export default function AudioSparks({ onClose, branches }: AudioSparksProps) {
                   <button
                     onClick={startRecording}
                     disabled={!selectedPrompt && !customPrompt}
-                    className="flex-1 py-3 bg-firefly-glow text-bg-darker font-medium rounded-lg hover:bg-firefly-bright transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex-1 py-3 bg-firefly-glow text-bg-darker font-medium rounded-lg hover:bg-firefly-bright transition-all disabled:bg-gray-700 disabled:text-gray-500 disabled:cursor-not-allowed"
                   >
                     🎙️ Start Recording
                   </button>
@@ -366,7 +366,7 @@ export default function AudioSparks({ onClose, branches }: AudioSparksProps) {
                   value={recordedBy}
                   onChange={(e) => setRecordedBy(e.target.value)}
                   placeholder="Papa, Nana, Mom, etc."
-                  className="w-full px-4 py-2 bg-bg-darker border border-firefly-dim/50 rounded-lg text-white placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-firefly-glow/50"
+                  className="w-full px-4 py-2 bg-bg-darker border border-firefly-dim/50 rounded-lg text-white placeholder:text-placeholder focus:outline-none focus:ring-2 focus:ring-firefly-glow/50"
                 />
               </div>
 
@@ -379,7 +379,7 @@ export default function AudioSparks({ onClose, branches }: AudioSparksProps) {
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   placeholder="Give this memory a name"
-                  className="w-full px-4 py-2 bg-bg-darker border border-firefly-dim/50 rounded-lg text-white placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-firefly-glow/50"
+                  className="w-full px-4 py-2 bg-bg-darker border border-firefly-dim/50 rounded-lg text-white placeholder:text-placeholder focus:outline-none focus:ring-2 focus:ring-firefly-glow/50"
                 />
               </div>
 
@@ -391,7 +391,7 @@ export default function AudioSparks({ onClose, branches }: AudioSparksProps) {
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="Add any context or notes about this memory"
-                  className="w-full px-4 py-2 bg-bg-darker border border-firefly-dim/50 rounded-lg text-white placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-firefly-glow/50 resize-none"
+                  className="w-full px-4 py-2 bg-bg-darker border border-firefly-dim/50 rounded-lg text-white placeholder:text-placeholder focus:outline-none focus:ring-2 focus:ring-firefly-glow/50 resize-none"
                   rows={3}
                 />
               </div>
@@ -417,7 +417,7 @@ export default function AudioSparks({ onClose, branches }: AudioSparksProps) {
               <button
                 onClick={handleSave}
                 disabled={isSaving}
-                className="w-full py-3 bg-firefly-glow text-bg-darker font-medium rounded-lg hover:bg-firefly-bright transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full py-3 bg-firefly-glow text-bg-darker font-medium rounded-lg hover:bg-firefly-bright transition-all disabled:bg-gray-700 disabled:text-gray-500 disabled:cursor-not-allowed"
               >
                 {isSaving ? 'Saving...' : '✨ Save Audio Spark'}
               </button>

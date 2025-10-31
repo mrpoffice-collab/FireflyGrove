@@ -122,7 +122,7 @@ export default function BranchModal({ onClose, onSave }: BranchModalProps) {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="e.g., Grandma Rose, College Days, Mom"
-              className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-dim transition-soft"
+              className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50 transition-soft"
               autoFocus
               required
             />
@@ -242,7 +242,7 @@ export default function BranchModal({ onClose, onSave }: BranchModalProps) {
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="A few words about this person or time..."
-              className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-dim transition-soft resize-none"
+              className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50 transition-soft resize-none"
               rows={3}
             />
           </div>

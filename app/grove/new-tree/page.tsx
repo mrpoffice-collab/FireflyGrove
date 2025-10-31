@@ -174,7 +174,7 @@ export default function NewTreePage() {
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full px-4 py-3 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-dim transition-soft"
+                  className="w-full px-4 py-3 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50 transition-soft"
                   placeholder="e.g., Smith Family, Mom's Side, Dad's Lineage"
                   autoFocus
                   maxLength={100}
@@ -188,7 +188,7 @@ export default function NewTreePage() {
                 <textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  className="w-full px-4 py-3 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-dim transition-soft resize-none"
+                  className="w-full px-4 py-3 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50 transition-soft resize-none"
                   placeholder="Add details about this tree"
                   rows={4}
                   maxLength={500}
@@ -201,10 +201,10 @@ export default function NewTreePage() {
               {error && (
                 <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4">
                   <div className="flex items-start gap-3">
-                    <svg className="w-5 h-5 text-red-400 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <svg className="w-5 h-5 text-error-text mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
                     </svg>
-                    <div className="text-red-400 text-sm">{error}</div>
+                    <div className="text-error-text text-sm">{error}</div>
                   </div>
                 </div>
               )}
@@ -220,7 +220,7 @@ export default function NewTreePage() {
                 <button
                   type="submit"
                   disabled={submitting || !name.trim()}
-                  className="flex-1 py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded font-medium transition-soft disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex-1 py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded font-medium transition-soft disabled:bg-gray-700 disabled:text-gray-500 disabled:cursor-not-allowed"
                 >
                   {submitting ? 'Creating...' : 'Create Tree'}
                 </button>

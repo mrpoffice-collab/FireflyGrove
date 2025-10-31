@@ -292,7 +292,7 @@ function MemorialsContent() {
                   <button
                     onClick={() => setPage(Math.max(1, page - 1))}
                     disabled={page === 1}
-                    className="px-4 py-2 bg-bg-dark hover:bg-border-subtle text-text-soft rounded border border-border-subtle transition-soft disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-4 py-2 bg-bg-dark hover:bg-border-subtle text-text-soft rounded border border-border-subtle transition-soft disabled:bg-gray-800 disabled:text-gray-600 disabled:cursor-not-allowed"
                   >
                     Previous
                   </button>
@@ -329,7 +329,7 @@ function MemorialsContent() {
                   <button
                     onClick={() => setPage(Math.min(totalPages, page + 1))}
                     disabled={page === totalPages}
-                    className="px-4 py-2 bg-bg-dark hover:bg-border-subtle text-text-soft rounded border border-border-subtle transition-soft disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-4 py-2 bg-bg-dark hover:bg-border-subtle text-text-soft rounded border border-border-subtle transition-soft disabled:bg-gray-800 disabled:text-gray-600 disabled:cursor-not-allowed"
                   >
                     Next
                   </button>

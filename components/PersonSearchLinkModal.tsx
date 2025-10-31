@@ -204,7 +204,7 @@ export default function PersonSearchLinkModal({
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Enter a person's name..."
-            className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-dim transition-soft"
+            className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50 transition-soft"
             autoFocus
             disabled={linking}
           />
@@ -250,7 +250,7 @@ export default function PersonSearchLinkModal({
                         <button
                           onClick={() => handleLinkPerson(user)}
                           disabled={linking || !user.hasPersonEntity}
-                          className="px-4 py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded transition-soft disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium"
+                          className="px-4 py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded transition-soft disabled:bg-gray-700 disabled:text-gray-500 disabled:cursor-not-allowed text-sm font-medium"
                         >
                           {linking ? 'Linking...' : 'Link'}
                         </button>
@@ -315,7 +315,7 @@ export default function PersonSearchLinkModal({
                         <button
                           onClick={() => handleLinkPerson(person)}
                           disabled={linking}
-                          className="px-4 py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded transition-soft disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium"
+                          className="px-4 py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded transition-soft disabled:bg-gray-700 disabled:text-gray-500 disabled:cursor-not-allowed text-sm font-medium"
                         >
                           {linking ? 'Linking...' : 'Link'}
                         </button>

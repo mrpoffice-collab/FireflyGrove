@@ -124,7 +124,7 @@ export default function FeedbackPage() {
                     value={formData.page}
                     onChange={(e) => setFormData({ ...formData, page: e.target.value })}
                     placeholder="The page you were on will appear here"
-                    className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-dim transition-soft"
+                    className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50 transition-soft"
                   />
                   <p className="text-xs text-text-muted mt-1">
                     You can edit this if needed
@@ -138,7 +138,7 @@ export default function FeedbackPage() {
                   <select
                     value={formData.severity}
                     onChange={(e) => setFormData({ ...formData, severity: e.target.value })}
-                    className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-dim transition-soft"
+                    className="w-full px-4 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50 transition-soft"
                   >
                     <option value="suggestion">💡 Suggestion / Feature Request</option>
                     <option value="minor">🐛 Bug - Minor (small annoyance)</option>
@@ -157,7 +157,7 @@ export default function FeedbackPage() {
                     value={formData.description}
                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                     placeholder="For bugs: What were you trying to do? What happened instead?&#10;For suggestions: What would you like to see? How would it help?"
-                    className="w-full px-4 py-3 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-dim transition-soft resize-none"
+                    className="w-full px-4 py-3 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50 transition-soft resize-none"
                     rows={6}
                     required
                   />
@@ -188,7 +188,7 @@ export default function FeedbackPage() {
               <button
                 type="submit"
                 disabled={!formData.description}
-                className="flex-1 py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg font-medium transition-soft disabled:opacity-50"
+                className="flex-1 py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg font-medium transition-soft disabled:bg-gray-700 disabled:text-gray-500"
               >
                 Send Feedback
               </button>

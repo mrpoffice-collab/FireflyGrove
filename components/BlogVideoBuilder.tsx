@@ -471,7 +471,7 @@ export default function BlogVideoBuilder() {
 
         {/* Error Display */}
         {error && (
-          <div className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-lg text-red-400">
+          <div className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-lg text-error-text">
             {error}
           </div>
         )}
@@ -515,7 +515,7 @@ export default function BlogVideoBuilder() {
                         </button>
                         <button
                           onClick={() => deleteSession(session.id)}
-                          className="px-4 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-lg text-sm font-medium transition-soft"
+                          className="px-4 py-2 bg-red-500/20 hover:bg-red-500/30 text-error-text rounded-lg text-sm font-medium transition-soft"
                         >
                           Delete
                         </button>
@@ -639,7 +639,7 @@ export default function BlogVideoBuilder() {
                             </div>
                             <button
                               disabled={loading}
-                              className="ml-4 px-4 py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg text-sm font-medium transition-soft disabled:opacity-50"
+                              className="ml-4 px-4 py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg text-sm font-medium transition-soft disabled:bg-gray-700 disabled:text-gray-500"
                             >
                               {loading ? '...' : 'Select'}
                             </button>
@@ -673,7 +673,7 @@ export default function BlogVideoBuilder() {
                       value={manualTitle}
                       onChange={(e) => setManualTitle(e.target.value)}
                       placeholder="e.g., How to Preserve Family Memories"
-                      className="w-full px-4 py-3 bg-bg-dark border border-border-subtle rounded-lg text-text-soft focus:outline-none focus:border-firefly-dim"
+                      className="w-full px-4 py-3 bg-bg-dark border border-border-subtle rounded-lg text-text-soft focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50"
                     />
                   </div>
 
@@ -686,7 +686,7 @@ export default function BlogVideoBuilder() {
                       value={manualExcerpt}
                       onChange={(e) => setManualExcerpt(e.target.value)}
                       placeholder="Short summary (optional)"
-                      className="w-full px-4 py-3 bg-bg-dark border border-border-subtle rounded-lg text-text-soft focus:outline-none focus:border-firefly-dim"
+                      className="w-full px-4 py-3 bg-bg-dark border border-border-subtle rounded-lg text-text-soft focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50"
                     />
                   </div>
 
@@ -706,7 +706,7 @@ Your content here...
 ## Section 2
 More content..."
                       rows={12}
-                      className="w-full px-4 py-3 bg-bg-dark border border-border-subtle rounded-lg text-text-soft font-mono text-sm focus:outline-none focus:border-firefly-dim"
+                      className="w-full px-4 py-3 bg-bg-dark border border-border-subtle rounded-lg text-text-soft font-mono text-sm focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50"
                     />
                     <div className="text-xs text-text-muted mt-2">
                       {manualContent.split(/\s+/).filter(w => w).length} words • Estimated {Math.ceil(manualContent.split(/\s+/).filter(w => w).length / 150)} min video
@@ -716,7 +716,7 @@ More content..."
                   <button
                     onClick={() => handleSelectContent()}
                     disabled={!manualTitle || !manualContent || loading}
-                    className="w-full px-6 py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg font-medium transition-soft disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full px-6 py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg font-medium transition-soft disabled:bg-gray-700 disabled:text-gray-500 disabled:cursor-not-allowed"
                   >
                     {loading ? 'Parsing...' : 'Parse Content & Continue →'}
                   </button>
@@ -767,7 +767,7 @@ More content..."
                   <select
                     value={selectedVoice}
                     onChange={(e) => setSelectedVoice(e.target.value as VoiceOption)}
-                    className="w-full px-4 py-3 bg-bg-dark border border-border-subtle rounded-lg text-text-soft focus:outline-none focus:border-firefly-dim"
+                    className="w-full px-4 py-3 bg-bg-dark border border-border-subtle rounded-lg text-text-soft focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50"
                   >
                     {voices.map(voice => (
                       <option key={voice.id} value={voice.id}>
@@ -802,7 +802,7 @@ More content..."
                   {Object.keys(editedSections).length > 0 && (
                     <button
                       onClick={applyEdits}
-                      className="px-3 py-1 bg-green-500/20 hover:bg-green-500/30 text-green-400 rounded text-sm font-medium transition-soft"
+                      className="px-3 py-1 bg-green-500/20 hover:bg-green-500/30 text-success-text rounded text-sm font-medium transition-soft"
                     >
                       ✓ Apply {Object.keys(editedSections).length} Edit{Object.keys(editedSections).length !== 1 ? 's' : ''}
                     </button>
@@ -822,8 +822,8 @@ More content..."
                           <span className="text-xs text-text-muted">#{index + 1}</span>
                           <span className={`text-xs px-2 py-1 rounded ${
                             section.type === 'title' ? 'bg-firefly-glow/20 text-firefly-glow' :
-                            section.type === 'section' ? 'bg-blue-500/20 text-blue-400' :
-                            section.type === 'cta' ? 'bg-green-500/20 text-green-400' :
+                            section.type === 'section' ? 'bg-blue-500/20 text-info-text' :
+                            section.type === 'cta' ? 'bg-green-500/20 text-success-text' :
                             'bg-bg-elevated text-text-muted'
                           }`}>
                             {section.type}
@@ -844,7 +844,7 @@ More content..."
                               </button>
                               <button
                                 onClick={() => deleteSection(section.id)}
-                                className="px-2 py-1 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded text-xs transition-soft"
+                                className="px-2 py-1 bg-red-500/20 hover:bg-red-500/30 text-error-text rounded text-xs transition-soft"
                               >
                                 🗑️ Delete
                               </button>
@@ -852,7 +852,7 @@ More content..."
                           ) : (
                             <button
                               onClick={() => setEditingSection(null)}
-                              className="px-2 py-1 bg-green-500/20 hover:bg-green-500/30 text-green-400 rounded text-xs transition-soft"
+                              className="px-2 py-1 bg-green-500/20 hover:bg-green-500/30 text-success-text rounded text-xs transition-soft"
                             >
                               ✓ Done
                             </button>
@@ -869,7 +869,7 @@ More content..."
                                 type="text"
                                 value={sectionData.heading || ''}
                                 onChange={(e) => updateSection(section.id, 'heading', e.target.value)}
-                                className="w-full px-3 py-2 bg-bg-elevated border border-border-subtle rounded text-text-soft text-sm focus:outline-none focus:border-firefly-dim"
+                                className="w-full px-3 py-2 bg-bg-elevated border border-border-subtle rounded text-text-soft text-sm focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50"
                               />
                             </div>
                           )}
@@ -882,7 +882,7 @@ More content..."
                               value={sectionData.text || ''}
                               onChange={(e) => updateSection(section.id, 'text', e.target.value)}
                               rows={3}
-                              className="w-full px-3 py-2 bg-bg-elevated border border-border-subtle rounded text-text-soft text-sm focus:outline-none focus:border-firefly-dim"
+                              className="w-full px-3 py-2 bg-bg-elevated border border-border-subtle rounded text-text-soft text-sm focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50"
                             />
                           </div>
 
@@ -894,7 +894,7 @@ More content..."
                               value={sectionData.voiceoverText || ''}
                               onChange={(e) => updateSection(section.id, 'voiceoverText', e.target.value)}
                               rows={4}
-                              className="w-full px-3 py-2 bg-bg-elevated border border-border-subtle rounded text-text-soft text-sm focus:outline-none focus:border-firefly-dim font-mono"
+                              className="w-full px-3 py-2 bg-bg-elevated border border-border-subtle rounded text-text-soft text-sm focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50 font-mono"
                             />
                             <div className="text-xs text-text-muted mt-1">
                               {sectionData.voiceoverText?.split(/\s+/).length || 0} words • ~{Math.ceil((sectionData.voiceoverText?.split(/\s+/).length || 0) / 150 * 60)}s
@@ -911,7 +911,7 @@ More content..."
                               max="60"
                               value={sectionData.duration || 5}
                               onChange={(e) => updateSection(section.id, 'duration', parseInt(e.target.value))}
-                              className="w-24 px-3 py-2 bg-bg-elevated border border-border-subtle rounded text-text-soft text-sm focus:outline-none focus:border-firefly-dim"
+                              className="w-24 px-3 py-2 bg-bg-elevated border border-border-subtle rounded text-text-soft text-sm focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50"
                             />
                           </div>
                         </div>
@@ -995,7 +995,7 @@ More content..."
               <button
                 onClick={generateVoiceover}
                 disabled={generatingVoiceover}
-                className="flex-1 px-6 py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg font-medium transition-soft disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 px-6 py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg font-medium transition-soft disabled:bg-gray-700 disabled:text-gray-500 disabled:cursor-not-allowed"
               >
                 {generatingVoiceover ? 'Generating Voiceover...' : 'Generate Voiceover →'}
               </button>
