@@ -45,7 +45,7 @@ export default function Header({ userName, isBetaTester, isAdmin, groveInfo }: H
             {/* Hamburger Menu Button */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="text-text-muted hover:text-firefly-glow transition-soft p-1"
+              className="text-text-muted hover:text-firefly-glow transition-soft min-w-[44px] min-h-[44px] flex items-center justify-center"
               aria-label="Menu"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -85,7 +85,7 @@ export default function Header({ userName, isBetaTester, isAdmin, groveInfo }: H
             {isBetaTester && (
               <button
                 onClick={() => router.push('/admin/beta-invites')}
-                className="px-3 py-1.5 bg-firefly-dim/20 hover:bg-firefly-dim/30 text-firefly-glow border border-firefly-dim/40 rounded text-xs font-medium transition-soft flex items-center gap-1.5"
+                className="min-h-[44px] px-3 py-2 bg-firefly-dim/20 hover:bg-firefly-dim/30 text-firefly-glow border border-firefly-dim/40 rounded text-xs font-medium transition-soft flex items-center gap-1.5"
               >
                 <span>📧</span>
                 <span className="hidden sm:inline">Invite Friends</span>
@@ -95,7 +95,7 @@ export default function Header({ userName, isBetaTester, isAdmin, groveInfo }: H
             {/* Beta Feedback Button - Visible to all users */}
             <button
               onClick={() => setIsFeedbackOpen(true)}
-              className="px-2 py-1 bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 border border-blue-500/30 rounded text-xs font-medium transition-soft flex items-center gap-1"
+              className="min-h-[44px] px-3 py-2 bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 border border-blue-500/30 rounded text-xs font-medium transition-soft flex items-center gap-1"
             >
               <span>💬</span>
               <span className="hidden sm:inline">Beta Feedback</span>
@@ -106,7 +106,9 @@ export default function Header({ userName, isBetaTester, isAdmin, groveInfo }: H
                 <>
                   <button
                     onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                    className="flex items-center gap-2 text-text-muted hover:text-text-soft text-sm transition-soft"
+                    className="min-h-[44px] flex items-center gap-2 text-text-muted hover:text-text-soft text-sm transition-soft px-2"
+                    aria-label="User menu"
+                    aria-expanded={isDropdownOpen}
                   >
                     <span>{userName}</span>
                     <svg
@@ -149,7 +151,7 @@ export default function Header({ userName, isBetaTester, isAdmin, groveInfo }: H
                           router.push('/marketing-genius')
                           setIsDropdownOpen(false)
                         }}
-                        className="w-full text-left px-3 py-1.5 text-sm text-text-muted hover:bg-border-subtle hover:text-text-soft transition-soft"
+                        className="w-full text-left px-3 py-2.5 text-sm text-text-muted hover:bg-border-subtle hover:text-text-soft transition-soft"
                       >
                         🧠 Marketing Intelligence
                       </button>
@@ -158,7 +160,7 @@ export default function Header({ userName, isBetaTester, isAdmin, groveInfo }: H
                           router.push('/blog-video')
                           setIsDropdownOpen(false)
                         }}
-                        className="w-full text-left px-3 py-1.5 text-sm text-text-muted hover:bg-border-subtle hover:text-text-soft transition-soft"
+                        className="w-full text-left px-3 py-2.5 text-sm text-text-muted hover:bg-border-subtle hover:text-text-soft transition-soft"
                       >
                         🎥 Amazing Video Builder
                       </button>
@@ -167,7 +169,7 @@ export default function Header({ userName, isBetaTester, isAdmin, groveInfo }: H
                           router.push('/admin/analytics')
                           setIsDropdownOpen(false)
                         }}
-                        className="w-full text-left px-3 py-1.5 text-sm text-text-muted hover:bg-border-subtle hover:text-text-soft transition-soft"
+                        className="w-full text-left px-3 py-2.5 text-sm text-text-muted hover:bg-border-subtle hover:text-text-soft transition-soft"
                       >
                         📊 Analytics Dashboard
                       </button>
@@ -176,7 +178,7 @@ export default function Header({ userName, isBetaTester, isAdmin, groveInfo }: H
                           router.push('/admin/pinterest')
                           setIsDropdownOpen(false)
                         }}
-                        className="w-full text-left px-3 py-1.5 text-sm text-text-muted hover:bg-border-subtle hover:text-text-soft transition-soft"
+                        className="w-full text-left px-3 py-2.5 text-sm text-text-muted hover:bg-border-subtle hover:text-text-soft transition-soft"
                       >
                         📌 Pinterest Integration
                       </button>
@@ -185,7 +187,7 @@ export default function Header({ userName, isBetaTester, isAdmin, groveInfo }: H
                           router.push('/admin/feature-updates')
                           setIsDropdownOpen(false)
                         }}
-                        className="w-full text-left px-3 py-1.5 text-sm text-text-muted hover:bg-border-subtle hover:text-text-soft transition-soft"
+                        className="w-full text-left px-3 py-2.5 text-sm text-text-muted hover:bg-border-subtle hover:text-text-soft transition-soft"
                       >
                         📧 Feature Updates
                       </button>
@@ -200,7 +202,7 @@ export default function Header({ userName, isBetaTester, isAdmin, groveInfo }: H
                         router.push('/admin/beta-invites')
                         setIsDropdownOpen(false)
                       }}
-                      className="w-full text-left px-3 py-1.5 text-sm text-blue-300 hover:bg-blue-500/20 hover:text-blue-200 transition-soft font-medium"
+                      className="w-full text-left px-3 py-2.5 text-sm text-blue-300 hover:bg-blue-500/20 hover:text-blue-200 transition-soft font-medium"
                     >
                       📧 Invite Friends to Beta
                     </button>
@@ -210,7 +212,7 @@ export default function Header({ userName, isBetaTester, isAdmin, groveInfo }: H
                       router.push('/settings/imports')
                       setIsDropdownOpen(false)
                     }}
-                    className="w-full text-left px-3 py-1.5 text-sm text-text-muted hover:bg-border-subtle hover:text-text-soft transition-soft"
+                    className="w-full text-left px-3 py-2.5 text-sm text-text-muted hover:bg-border-subtle hover:text-text-soft transition-soft"
                   >
                     📥 Import Memories
                   </button>
@@ -219,7 +221,7 @@ export default function Header({ userName, isBetaTester, isAdmin, groveInfo }: H
                       router.push('/billing')
                       setIsDropdownOpen(false)
                     }}
-                    className="w-full text-left px-3 py-1.5 text-sm text-text-muted hover:bg-border-subtle hover:text-text-soft transition-soft"
+                    className="w-full text-left px-3 py-2.5 text-sm text-text-muted hover:bg-border-subtle hover:text-text-soft transition-soft"
                   >
                     Manage Plan
                   </button>
@@ -228,7 +230,7 @@ export default function Header({ userName, isBetaTester, isAdmin, groveInfo }: H
                       router.push('/spark-collections')
                       setIsDropdownOpen(false)
                     }}
-                    className="w-full text-left px-3 py-1.5 text-sm text-text-muted hover:bg-border-subtle hover:text-text-soft transition-soft"
+                    className="w-full text-left px-3 py-2.5 text-sm text-text-muted hover:bg-border-subtle hover:text-text-soft transition-soft"
                   >
                     ✨ Manage Spark Collections
                   </button>
@@ -237,7 +239,7 @@ export default function Header({ userName, isBetaTester, isAdmin, groveInfo }: H
                       setIsFeedbackOpen(true)
                       setIsDropdownOpen(false)
                     }}
-                    className="w-full text-left px-3 py-1.5 text-sm text-text-muted hover:bg-border-subtle hover:text-text-soft transition-soft"
+                    className="w-full text-left px-3 py-2.5 text-sm text-text-muted hover:bg-border-subtle hover:text-text-soft transition-soft"
                   >
                     🐛 Report an Issue
                   </button>
@@ -245,7 +247,7 @@ export default function Header({ userName, isBetaTester, isAdmin, groveInfo }: H
                     onClick={() => {
                       signOut({ callbackUrl: '/login' })
                     }}
-                    className="w-full text-left px-3 py-1.5 text-sm text-text-muted hover:bg-border-subtle hover:text-text-soft transition-soft"
+                    className="w-full text-left px-3 py-2.5 text-sm text-text-muted hover:bg-border-subtle hover:text-text-soft transition-soft"
                   >
                     Sign Out
                   </button>
@@ -256,7 +258,7 @@ export default function Header({ userName, isBetaTester, isAdmin, groveInfo }: H
               ) : (
                 <Link
                   href="/login"
-                  className="px-4 py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded text-sm font-medium transition-soft"
+                  className="min-h-[44px] px-4 py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded text-sm font-medium transition-soft flex items-center"
                 >
                   Sign In
                 </Link>
@@ -290,7 +292,7 @@ export default function Header({ userName, isBetaTester, isAdmin, groveInfo }: H
               </div>
               <button
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="text-text-muted hover:text-firefly-glow transition-soft p-2"
+                className="text-text-muted hover:text-firefly-glow transition-soft min-w-[44px] min-h-[44px] flex items-center justify-center"
                 aria-label="Close menu"
               >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
