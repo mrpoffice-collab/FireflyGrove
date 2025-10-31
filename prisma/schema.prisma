@@ -505,7 +505,7 @@ model BetaInvite {
   email       String   // Email address invited
   name        String?  // Optional name of invitee
   message     String?  // Custom message from sender
-  sentBy      String   // User ID who sent the invite
+  sentBy      String?  // User ID who sent the invite (null for self-signups)
   signedUp    Boolean  @default(false) // True once they create account
   signedUpAt  DateTime?
   createdAt   DateTime @default(now())
