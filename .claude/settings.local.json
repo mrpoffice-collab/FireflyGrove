@@ -28,7 +28,8 @@
       "Bash(powershell -Command:*)",
       "Bash(node fix-colors.js:*)",
       "Bash(node fix-remaining.js:*)",
-      "Bash(npm test)"
+      "Bash(npm test)",
+      "Bash(npm test:*)"
     ],
     "deny": [],
     "ask": []
