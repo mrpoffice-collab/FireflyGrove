@@ -69,8 +69,8 @@ export const PLANS: Record<string, Plan> = {
     ],
     stripePriceId: process.env.STRIPE_PRICE_ANCESTRY,
   },
-  institutional: {
-    id: 'institutional',
+  community: {
+    id: 'community',
     name: 'Community Grove',
     description: 'For organizations and large families',
     price: 9900, // $99/year
@@ -86,7 +86,7 @@ export const PLANS: Record<string, Plan> = {
       'Dedicated support',
       'Custom branding (coming soon)',
     ],
-    stripePriceId: process.env.STRIPE_PRICE_INSTITUTIONAL,
+    stripePriceId: process.env.STRIPE_PRICE_COMMUNITY,
   },
 }
 

@@ -64,7 +64,7 @@ model Grove {
   id          String   @id @default(cuid())
   userId      String   @unique // One Grove per user
   name        String
-  planType    String   @default("trial") // trial, family, ancestry, institutional
+  planType    String   @default("trial") // trial, family, ancestry, community
   treeLimit   Int      @default(1)
   treeCount   Int      @default(0) // Count of original trees only
   status      String   @default("active") // active, past_due, canceled, frozen
