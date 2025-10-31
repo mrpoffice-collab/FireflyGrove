@@ -119,6 +119,12 @@ export async function GET(req: NextRequest) {
                 }
               },
             },
+            subscription: {
+              select: {
+                id: true,
+                status: true,
+              },
+            },
           },
           orderBy: {
             createdAt: 'desc',
@@ -251,6 +257,12 @@ export async function GET(req: NextRequest) {
                   }
                 },
               },
+              subscription: {
+                select: {
+                  id: true,
+                  status: true,
+                },
+              },
             },
             orderBy: {
               createdAt: 'desc',
@@ -319,6 +331,12 @@ export async function GET(req: NextRequest) {
         isLegacy: membership.person.isLegacy,
         memoryCount: membership.person.branches.reduce((total, branch) => total + branch._count.entries, 0),
         createdAt: membership.createdAt.toISOString(),
+        membershipId: membership.id,
+        isOriginal: membership.isOriginal,
+        adoptionType: membership.adoptionType,
+        membershipStatus: membership.status,
+        hasSubscription: !!membership.subscription,
+        subscriptionStatus: membership.subscription?.status || null,
         _count: {
           branches: membership.person._count.branches,
         },
@@ -331,6 +349,12 @@ export async function GET(req: NextRequest) {
         birthDate: membership.person.birthDate?.toISOString() || null,
         deathDate: membership.person.deathDate?.toISOString() || null,
         createdAt: membership.createdAt.toISOString(),
+        membershipId: membership.id,
+        isOriginal: membership.isOriginal,
+        adoptionType: membership.adoptionType,
+        membershipStatus: membership.status,
+        hasSubscription: !!membership.subscription,
+        subscriptionStatus: membership.subscription?.status || null,
         _count: {
           branches: membership.person._count.branches,
         },
