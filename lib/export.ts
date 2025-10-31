@@ -1,6 +1,45 @@
 import archiver from 'archiver'
 import { prisma } from './prisma'
 
+/**
+ * Escape HTML to prevent XSS attacks
+ */
+function escapeHtml(unsafe: string): string {
+  if (!unsafe) return ''
+  return unsafe
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;')
+}
+
+/**
+ * Sanitize URLs to prevent javascript: and data: XSS attacks
+ */
+function sanitizeUrl(url: string | null): string {
+  if (!url) return ''
+
+  try {
+    const parsed = new URL(url)
+    // Only allow safe protocols
+    if (['http:', 'https:'].includes(parsed.protocol)) {
+      return url
+    }
+    // Allow data URLs but only for media types
+    if (parsed.protocol === 'data:') {
+      const mediaTypes = ['image/', 'audio/', 'video/']
+      if (mediaTypes.some(type => url.startsWith(`data:${type}`))) {
+        return url
+      }
+    }
+  } catch {
+    // Invalid URL
+  }
+
+  return '' // Return empty string for invalid/unsafe URLs
+}
+
 export async function createForeverKit(branchId: string, userId: string) {
   // Verify user has access to branch
   const branch = await prisma.branch.findFirst({
@@ -55,21 +94,25 @@ function generateHTML(branch: any): string {
       day: 'numeric',
     })
 
+    // Sanitize all user-generated content to prevent XSS
     let mediaHTML = ''
-    if (entry.mediaUrl) {
-      mediaHTML = `<div class="memory-image"><img src="${entry.mediaUrl}" alt="Memory photo" /></div>`
+    const sanitizedMediaUrl = sanitizeUrl(entry.mediaUrl)
+    const sanitizedAudioUrl = sanitizeUrl(entry.audioUrl)
+
+    if (sanitizedMediaUrl) {
+      mediaHTML = `<div class="memory-image"><img src="${sanitizedMediaUrl}" alt="Memory photo" /></div>`
     }
-    if (entry.audioUrl) {
-      mediaHTML += `<div class="memory-audio"><audio controls src="${entry.audioUrl}"></audio></div>`
+    if (sanitizedAudioUrl) {
+      mediaHTML += `<div class="memory-audio"><audio controls src="${sanitizedAudioUrl}"></audio></div>`
     }
 
     return `
       <div class="memory">
         <div class="memory-header">
-          <span class="author">${entry.author.name}</span>
+          <span class="author">${escapeHtml(entry.author.name)}</span>
           <span class="date">${date}</span>
         </div>
-        <div class="memory-text">${entry.text.replace(/\n/g, '<br>')}</div>
+        <div class="memory-text">${escapeHtml(entry.text).replace(/\n/g, '<br>')}</div>
         ${mediaHTML}
       </div>
     `
@@ -81,7 +124,7 @@ function generateHTML(branch: any): string {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${branch.title} - Forever Kit</title>
+  <title>${escapeHtml(branch.title)} - Forever Kit</title>
   <style>
     * {
       margin: 0;
@@ -175,8 +218,8 @@ function generateHTML(branch: any): string {
   <div class="container">
     <div class="header">
       <div class="firefly">✦</div>
-      <h1 class="title">${branch.title}</h1>
-      ${branch.description ? `<p class="description">${branch.description}</p>` : ''}
+      <h1 class="title">${escapeHtml(branch.title)}</h1>
+      ${branch.description ? `<p class="description">${escapeHtml(branch.description)}</p>` : ''}
     </div>
 
     <div class="memories">

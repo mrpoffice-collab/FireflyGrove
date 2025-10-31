@@ -41,10 +41,10 @@ async function getPostsFromDatabase(): Promise<BlogPost[]> {
     for (const post of posts) {
       if (!post.slug) continue
 
-      // Convert markdown content to HTML
+      // Convert markdown content to HTML with sanitization
       const processedContent = await remark()
         .use(remarkGfm)
-        .use(html, { sanitize: false })
+        .use(html)
         .process(post.content)
       const contentHtml = processedContent.toString()
 
@@ -118,10 +118,10 @@ async function getPostFromFile(slug: string): Promise<BlogPost | null> {
     // Parse metadata
     const { data, content } = matter(fileContents)
 
-    // Convert markdown to HTML with enhanced formatting
+    // Convert markdown to HTML with sanitization for security
     const processedContent = await remark()
       .use(remarkGfm) // GitHub Flavored Markdown for better formatting
-      .use(html, { sanitize: false }) // Allow all HTML for better formatting
+      .use(html) // Sanitize HTML to prevent XSS attacks
       .process(content)
     const contentHtml = processedContent.toString()
 
