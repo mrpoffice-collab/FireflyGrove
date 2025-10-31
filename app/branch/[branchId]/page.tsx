@@ -581,22 +581,22 @@ export default function BranchPage() {
     <div className="min-h-screen" onDrop={handleDrop} onDragOver={handleDragOver}>
       <Header userName={session?.user?.name || ''} />
 
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-3 sm:px-4 py-6 sm:py-8">
         <div className="max-w-3xl mx-auto">
           {/* Public viewers go back to Open Grove, authenticated users to their grove */}
           <button
             onClick={() => router.push(isPublicView ? '/open-grove' : '/grove')}
-            className="text-text-muted hover:text-text-soft text-sm mb-6 transition-soft"
+            className="text-text-muted hover:text-text-soft text-sm mb-4 sm:mb-6 transition-soft min-h-[44px] inline-flex items-center"
           >
             ← Back to {isPublicView ? 'Open Grove' : 'Grove'}
           </button>
 
-          <div className="mb-8">
-            <div className="flex justify-between items-start">
-              <div className="flex-1">
-                <div className="flex items-center gap-3 mb-2">
+          <div className="mb-6 sm:mb-8">
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3">
+              <div className="flex-1 min-w-0">
+                <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-2">
                   <h1
-                    className={`text-3xl font-light ${
+                    className={`text-2xl sm:text-3xl font-light ${
                       branch.personStatus === 'legacy'
                         ? 'text-[var(--legacy-text)]'
                         : 'text-text-soft'
@@ -614,14 +614,14 @@ export default function BranchPage() {
                       const isWarning = percent >= 90
 
                       return (
-                        <span className={`text-sm px-3 py-1 rounded-full ${
+                        <span className={`text-xs sm:text-sm px-2 sm:px-3 py-1 rounded-full whitespace-nowrap ${
                           isUrgent
                             ? 'bg-red-900/30 text-red-400 border border-red-500/50'
                             : isWarning
                             ? 'bg-yellow-900/30 text-yellow-400 border border-yellow-500/50'
                             : 'bg-blue-900/30 text-blue-400 border border-blue-500/50'
                         }`}>
-                          {count}/{limit} memories ({percent}%)
+                          {count}/{limit} <span className="hidden xs:inline">memories </span>({percent}%)
                         </span>
                       )
                     })()
@@ -630,7 +630,7 @@ export default function BranchPage() {
                   {!isPublicView && isAuthenticated && branch.owner.id === (session.user as any)?.id && (
                     <button
                       onClick={handleEditBranch}
-                      className="text-text-muted hover:text-firefly-dim transition-soft"
+                      className="text-text-muted hover:text-firefly-dim transition-soft min-w-[44px] min-h-[44px] flex items-center justify-center"
                       title="Edit branch name"
                     >
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -642,7 +642,7 @@ export default function BranchPage() {
                     <>
                       <button
                         onClick={handleEditPerson}
-                        className="text-text-muted hover:text-[var(--legacy-amber)] transition-soft"
+                        className="text-text-muted hover:text-[var(--legacy-amber)] transition-soft min-w-[44px] min-h-[44px] flex items-center justify-center"
                         title="Edit memorial information"
                       >
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -653,7 +653,7 @@ export default function BranchPage() {
                         <button
                           onClick={handleDeletePerson}
                           disabled={deletingPerson}
-                          className="text-text-muted hover:text-red-400 transition-soft disabled:opacity-50"
+                          className="text-text-muted hover:text-red-400 transition-soft disabled:opacity-50 min-w-[44px] min-h-[44px] flex items-center justify-center"
                           title="Delete memorial tree"
                         >
                           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -694,11 +694,11 @@ export default function BranchPage() {
                   <p className="text-text-muted">{branch.description}</p>
                 )}
               </div>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 sm:gap-3">
                 {/* Share Button */}
                 <button
                   onClick={() => setShowSharePanel(true)}
-                  className="text-text-muted hover:text-firefly-glow transition-soft"
+                  className="text-text-muted hover:text-firefly-glow transition-soft min-w-[44px] min-h-[44px] flex items-center justify-center"
                   title="Share this branch"
                 >
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -710,7 +710,7 @@ export default function BranchPage() {
                 {!isPublicView && isAuthenticated && branch.owner.id === (session.user as any)?.id && (
                   <button
                     onClick={() => setShowSettings(true)}
-                    className="text-text-muted hover:text-text-soft transition-soft"
+                    className="text-text-muted hover:text-text-soft transition-soft min-w-[44px] min-h-[44px] flex items-center justify-center"
                     title="Manage heirs and settings"
                   >
                     <svg
@@ -740,24 +740,24 @@ export default function BranchPage() {
 
           {/* Story Sparks Section - Only for authenticated users */}
           {isAuthenticated && (
-            <div className="mb-8">
-              <h3 className={`text-lg font-medium mb-4 ${
+            <div className="mb-6 sm:mb-8">
+              <h3 className={`text-base sm:text-lg font-medium mb-3 sm:mb-4 ${
                 isLegacy ? 'text-[var(--legacy-text)]' : 'text-text-soft'
               }`}>
                 Story Sparks
               </h3>
 
-            <div className="grid md:grid-cols-3 gap-4">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
               {/* Story Spark - Rotating helpful prompts */}
-              <div className={`rounded-lg p-4 ${
+              <div className={`rounded-lg p-3 sm:p-4 ${
                 isLegacy
                   ? 'bg-[var(--legacy-amber)]/5 border border-[var(--legacy-amber)]/30'
                   : 'bg-bg-dark border border-firefly-dim/30'
               }`}>
-                <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center justify-between mb-2 sm:mb-3">
                   <div className="flex items-center gap-2">
-                    <span className="text-xl">✨</span>
-                    <h4 className={`text-sm font-medium ${
+                    <span className="text-lg sm:text-xl">✨</span>
+                    <h4 className={`text-xs sm:text-sm font-medium ${
                       isLegacy ? 'text-[var(--legacy-text)]' : 'text-text-soft'
                     }`}>
                       Story Spark
@@ -765,7 +765,7 @@ export default function BranchPage() {
                   </div>
                   <button
                     onClick={refreshSpark}
-                    className={`p-1 rounded transition-soft ${
+                    className={`min-w-[44px] min-h-[44px] flex items-center justify-center rounded transition-soft ${
                       isLegacy
                         ? 'text-[var(--legacy-amber)] hover:bg-[var(--legacy-amber)]/10'
                         : 'text-firefly-dim hover:bg-firefly-dim/10'
@@ -777,14 +777,14 @@ export default function BranchPage() {
                     </svg>
                   </button>
                 </div>
-                <p className={`text-xs italic mb-4 line-clamp-3 ${
+                <p className={`text-xs italic mb-3 sm:mb-4 line-clamp-3 ${
                   isLegacy ? 'text-[var(--legacy-text)]/80' : 'text-text-muted'
                 }`}>
                   "{currentSpark}"
                 </p>
                 <button
                   onClick={() => setShowNewMemory(true)}
-                  className={`w-full py-2 text-sm rounded font-medium transition-soft ${
+                  className={`w-full min-h-[44px] py-2.5 text-xs sm:text-sm rounded font-medium transition-soft ${
                     isLegacy
                       ? 'bg-[var(--legacy-amber)]/20 hover:bg-[var(--legacy-amber)]/30 text-[var(--legacy-text)] border border-[var(--legacy-amber)]/40'
                       : 'bg-firefly-dim hover:bg-firefly-glow text-bg-dark'
@@ -829,14 +829,15 @@ export default function BranchPage() {
                     </div>
                     <button
                       onClick={refreshChallengeSpark}
-                      className={`p-1 rounded transition-soft ${
+                      className={`min-w-[44px] min-h-[44px] flex items-center justify-center rounded transition-soft ${
                         isLegacy
                           ? 'text-[var(--legacy-amber)] hover:bg-[var(--legacy-amber)]/10'
                           : 'text-firefly-dim hover:bg-firefly-dim/10'
                       }`}
                       title="Get a different challenge spark"
+                      aria-label="Get a different challenge spark"
                     >
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                       </svg>
                     </button>
@@ -851,7 +852,7 @@ export default function BranchPage() {
                       setCurrentSpark(currentChallengeSpark)
                       setShowNewMemory(true)
                     }}
-                    className={`w-full py-2 text-sm rounded font-medium transition-soft ${
+                    className={`w-full min-h-[44px] py-2.5 text-xs sm:text-sm rounded font-medium transition-soft ${
                       isLegacy
                         ? 'bg-[var(--legacy-amber)]/20 hover:bg-[var(--legacy-amber)]/30 text-[var(--legacy-text)] border border-[var(--legacy-amber)]/40'
                         : 'bg-firefly-dim hover:bg-firefly-glow text-bg-dark'
@@ -881,7 +882,7 @@ export default function BranchPage() {
                   </p>
                   <button
                     disabled
-                    className={`w-full py-2 text-sm rounded font-medium transition-soft opacity-50 cursor-not-allowed ${
+                    className={`w-full min-h-[44px] py-2.5 text-xs sm:text-sm rounded font-medium transition-soft opacity-50 cursor-not-allowed ${
                       isLegacy
                         ? 'bg-[var(--legacy-amber)]/20 text-[var(--legacy-text)] border border-[var(--legacy-amber)]/40'
                         : 'bg-firefly-dim text-bg-dark'
@@ -920,7 +921,7 @@ export default function BranchPage() {
                     <button
                       disabled
                       title="Custom spark upload coming soon!"
-                      className={`w-full py-2 text-sm rounded font-medium transition-soft opacity-50 cursor-not-allowed ${
+                      className={`w-full min-h-[44px] py-2.5 text-xs sm:text-sm rounded font-medium transition-soft opacity-50 cursor-not-allowed ${
                         isLegacy
                           ? 'bg-[var(--legacy-amber)]/20 text-[var(--legacy-text)] border border-[var(--legacy-amber)]/40'
                           : 'bg-firefly-dim text-bg-dark'
@@ -942,14 +943,15 @@ export default function BranchPage() {
                       </div>
                       <button
                         onClick={refreshCustomSpark}
-                        className={`p-1 rounded transition-soft ${
+                        className={`min-w-[44px] min-h-[44px] flex items-center justify-center rounded transition-soft ${
                           isLegacy
                             ? 'text-[var(--legacy-amber)] hover:bg-[var(--legacy-amber)]/10'
                             : 'text-firefly-dim hover:bg-firefly-dim/10'
                         }`}
                         title="Get a different spark"
+                        aria-label="Get a different spark"
                       >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                         </svg>
                       </button>
@@ -965,7 +967,7 @@ export default function BranchPage() {
                           setCurrentSpark(currentCustomSpark)
                           setShowNewMemory(true)
                         }}
-                        className={`w-full py-2 text-sm rounded font-medium transition-soft ${
+                        className={`w-full min-h-[44px] py-2.5 text-xs sm:text-sm rounded font-medium transition-soft ${
                           isLegacy
                             ? 'bg-[var(--legacy-amber)]/20 hover:bg-[var(--legacy-amber)]/30 text-[var(--legacy-text)] border border-[var(--legacy-amber)]/40'
                             : 'bg-firefly-dim hover:bg-firefly-glow text-bg-dark'
@@ -976,7 +978,7 @@ export default function BranchPage() {
                       <button
                         disabled
                         title="Custom spark management coming soon!"
-                        className={`w-full py-1 text-xs rounded transition-soft opacity-50 cursor-not-allowed ${
+                        className={`w-full min-h-[44px] py-2 text-xs rounded transition-soft opacity-50 cursor-not-allowed ${
                           isLegacy
                             ? 'text-[var(--legacy-text)]/60'
                             : 'text-text-muted'
@@ -994,24 +996,24 @@ export default function BranchPage() {
 
           {/* Public viewer CTA - Only show to non-authenticated users */}
           {isPublicView && !isAuthenticated && (
-            <div className="mb-8">
-              <div className="bg-[var(--legacy-amber)]/10 border border-[var(--legacy-amber)]/30 rounded-lg p-6 text-center">
-                <h3 className="text-[var(--legacy-text)] font-medium mb-2">
+            <div className="mb-6 sm:mb-8">
+              <div className="bg-[var(--legacy-amber)]/10 border border-[var(--legacy-amber)]/30 rounded-lg p-4 sm:p-6 text-center">
+                <h3 className="text-[var(--legacy-text)] font-medium mb-2 text-base sm:text-lg">
                   Preserve This Memory
                 </h3>
-                <p className="text-text-muted text-sm mb-4">
+                <p className="text-text-muted text-xs sm:text-sm mb-4">
                   Create a free account to adopt this memorial into your grove and add unlimited memories
                 </p>
-                <div className="flex gap-3 justify-center">
+                <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 justify-center">
                   <button
                     onClick={() => router.push('/login')}
-                    className="px-6 py-3 bg-bg-dark hover:bg-border-subtle text-text-soft rounded font-medium transition-soft border border-border-subtle"
+                    className="min-h-[44px] px-6 py-2.5 bg-bg-dark hover:bg-border-subtle text-text-soft rounded font-medium transition-soft border border-border-subtle text-sm"
                   >
                     Sign In
                   </button>
                   <button
                     onClick={() => router.push('/signup')}
-                    className="px-6 py-3 bg-[var(--legacy-amber)] hover:bg-[var(--legacy-glow)] text-bg-dark rounded font-medium transition-soft"
+                    className="min-h-[44px] px-6 py-2.5 bg-[var(--legacy-amber)] hover:bg-[var(--legacy-glow)] text-bg-dark rounded font-medium transition-soft text-sm"
                   >
                     Create Free Account
                   </button>
@@ -1029,19 +1031,19 @@ export default function BranchPage() {
 
             if (percent >= 90) {
               return (
-                <div className={`rounded-lg p-4 mb-6 ${
+                <div className={`rounded-lg p-3 sm:p-4 mb-4 sm:mb-6 ${
                   percent >= 100
                     ? 'bg-red-900/20 border-2 border-red-500/50'
                     : percent >= 95
                     ? 'bg-red-900/10 border border-red-500/40'
                     : 'bg-yellow-900/10 border border-yellow-500/40'
                 }`}>
-                  <div className="flex items-start gap-3">
-                    <span className="text-2xl">
+                  <div className="flex items-start gap-2 sm:gap-3">
+                    <span className="text-xl sm:text-2xl flex-shrink-0">
                       {percent >= 100 ? '🚫' : percent >= 95 ? '⚠️' : '💡'}
                     </span>
-                    <div className="flex-1">
-                      <h3 className={`font-medium mb-1 ${
+                    <div className="flex-1 min-w-0">
+                      <h3 className={`font-medium mb-1 text-sm sm:text-base ${
                         percent >= 100 ? 'text-red-400' : percent >= 95 ? 'text-red-300' : 'text-yellow-300'
                       }`}>
                         {percent >= 100
@@ -1049,7 +1051,7 @@ export default function BranchPage() {
                           : `Only ${remaining} ${remaining === 1 ? 'Memory' : 'Memories'} Remaining`
                         }
                       </h3>
-                      <p className="text-sm text-text-muted mb-3">
+                      <p className="text-xs sm:text-sm text-text-muted mb-3">
                         {percent >= 100
                           ? `This tree has reached its ${limit} memory limit. Adopt this tree into your private grove for unlimited storage.`
                           : `This tree is at ${percent}% capacity (${count}/${limit}). Consider adopting it into your private grove for unlimited memories.`
@@ -1057,13 +1059,14 @@ export default function BranchPage() {
                       </p>
                       <button
                         onClick={() => setShowSettings(true)}
-                        className={`text-sm px-4 py-2 rounded font-medium transition-soft ${
+                        className={`min-h-[44px] text-xs sm:text-sm px-4 py-2 rounded font-medium transition-soft ${
                           percent >= 100
                             ? 'bg-red-500 hover:bg-red-600 text-white'
                             : 'bg-yellow-500 hover:bg-yellow-600 text-bg-dark'
                         }`}
                       >
-                        Adopt Tree for Unlimited Memories
+                        <span className="hidden xs:inline">Adopt Tree for Unlimited Memories</span>
+                        <span className="xs:hidden">Adopt Tree</span>
                       </button>
                     </div>
                   </div>
@@ -1084,19 +1087,19 @@ export default function BranchPage() {
 
             if (isExpired || isUrgent || isWarning) {
               return (
-                <div className={`rounded-lg p-4 mb-6 ${
+                <div className={`rounded-lg p-3 sm:p-4 mb-4 sm:mb-6 ${
                   isExpired
                     ? 'bg-red-900/20 border-2 border-red-500/50'
                     : isUrgent
                     ? 'bg-orange-900/10 border border-orange-500/40'
                     : 'bg-blue-900/10 border border-blue-500/40'
                 }`}>
-                  <div className="flex items-start gap-3">
-                    <span className="text-2xl">
+                  <div className="flex items-start gap-2 sm:gap-3">
+                    <span className="text-xl sm:text-2xl flex-shrink-0">
                       {isExpired ? '⏰' : isUrgent ? '⚠️' : 'ℹ️'}
                     </span>
-                    <div className="flex-1">
-                      <h3 className={`font-medium mb-1 ${
+                    <div className="flex-1 min-w-0">
+                      <h3 className={`font-medium mb-1 text-sm sm:text-base ${
                         isExpired ? 'text-red-400' : isUrgent ? 'text-orange-300' : 'text-blue-300'
                       }`}>
                         {isExpired
@@ -1106,7 +1109,7 @@ export default function BranchPage() {
                           : `Trustee Period Expires in ${daysUntilExpiry} Days`
                         }
                       </h3>
-                      <p className="text-sm text-text-muted mb-3">
+                      <p className="text-xs sm:text-sm text-text-muted mb-3">
                         {isExpired
                           ? 'Your temporary trustee period has ended. Adopt this tree into your private grove to maintain permanent access and add unlimited memories.'
                           : 'Your trustee period for this Open Grove tree is expiring soon. Adopt it into your private grove for permanent ownership and unlimited memories.'
@@ -1114,13 +1117,14 @@ export default function BranchPage() {
                       </p>
                       <button
                         onClick={() => setShowSettings(true)}
-                        className={`text-sm px-4 py-2 rounded font-medium transition-soft ${
+                        className={`min-h-[44px] text-xs sm:text-sm px-4 py-2 rounded font-medium transition-soft ${
                           isExpired || isUrgent
                             ? 'bg-red-500 hover:bg-red-600 text-white'
                             : 'bg-blue-500 hover:bg-blue-600 text-white'
                         }`}
                       >
-                        Adopt Tree to Your Grove
+                        <span className="hidden xs:inline">Adopt Tree to Your Grove</span>
+                        <span className="xs:hidden">Adopt Tree</span>
                       </button>
                     </div>
                   </div>
@@ -1158,11 +1162,11 @@ export default function BranchPage() {
 
                 {/* Load More Button */}
                 {branch.pagination?.hasMore && (
-                  <div className="flex justify-center pt-6">
+                  <div className="flex justify-center pt-4 sm:pt-6">
                     <button
                       onClick={loadMore}
                       disabled={loadingMore}
-                      className="px-6 py-3 bg-firefly-dim hover:bg-firefly-glow disabled:bg-gray-600 disabled:cursor-not-allowed text-bg-dark rounded-lg font-medium transition-soft"
+                      className="min-h-[44px] px-6 py-3 bg-firefly-dim hover:bg-firefly-glow disabled:bg-gray-600 disabled:cursor-not-allowed text-bg-dark rounded-lg font-medium transition-soft text-sm sm:text-base"
                     >
                       {loadingMore ? (
                         <>
@@ -1171,7 +1175,7 @@ export default function BranchPage() {
                         </>
                       ) : (
                         <>
-                          Load More ({branch.pagination.total - branch.entries.length} remaining)
+                          <span className="hidden xs:inline">Load More </span>({branch.pagination.total - branch.entries.length} remaining)
                         </>
                       )}
                     </button>
@@ -1180,7 +1184,7 @@ export default function BranchPage() {
 
                 {/* Pagination Info */}
                 {branch.pagination && branch.entries.length > 0 && (
-                  <div className="text-center text-text-muted text-sm pt-4">
+                  <div className="text-center text-text-muted text-xs sm:text-sm pt-4">
                     Showing {branch.entries.length} of {branch.pagination.total} memories
                   </div>
                 )}
