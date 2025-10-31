@@ -27,7 +27,8 @@
       "Bash(vercel deploy:*)",
       "Bash(powershell -Command:*)",
       "Bash(node fix-colors.js:*)",
-      "Bash(node fix-remaining.js:*)"
+      "Bash(node fix-remaining.js:*)",
+      "Bash(npm test)"
     ],
     "deny": [],
     "ask": []
