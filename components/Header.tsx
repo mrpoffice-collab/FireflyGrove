@@ -81,6 +81,17 @@ export default function Header({ userName, isBetaTester, isAdmin, groveInfo }: H
           </div>
 
           <div className="flex items-center gap-3">
+            {/* Beta Invite Button - Visible to beta testers */}
+            {isBetaTester && (
+              <button
+                onClick={() => router.push('/admin/beta-invites')}
+                className="px-3 py-1.5 bg-firefly-dim/20 hover:bg-firefly-dim/30 text-firefly-glow border border-firefly-dim/40 rounded text-xs font-medium transition-soft flex items-center gap-1.5"
+              >
+                <span>📧</span>
+                <span className="hidden sm:inline">Invite Friends</span>
+              </button>
+            )}
+
             {/* Beta Feedback Button - Visible to all users */}
             <button
               onClick={() => setIsFeedbackOpen(true)}
