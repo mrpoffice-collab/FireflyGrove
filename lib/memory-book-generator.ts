@@ -177,10 +177,16 @@ async function addTitlePage(doc: any, branch: any) {
 
   y += 80
 
-  // Person's photo (if available)
-  if (branch.person?.photoUrl) {
+  // Person's photo (if available) - use first entry with photo since Person model doesn't have photoUrl
+  let photoUrl = null
+  if (branch.entries?.length > 0) {
+    const photoEntry = branch.entries.find((e: any) => e.mediaUrl)
+    if (photoEntry) photoUrl = photoEntry.mediaUrl
+  }
+
+  if (photoUrl) {
     try {
-      const photoBuffer = await downloadImage(branch.person.photoUrl)
+      const photoBuffer = await downloadImage(photoUrl)
       doc.image(photoBuffer, centerX - 72, y, {
         width: 144, // 2" @ 72 DPI
         height: 144,
@@ -196,7 +202,7 @@ async function addTitlePage(doc: any, branch: any) {
   }
 
   // "In Loving Memory of" or "Memories of"
-  const isLegacy = branch.person?.isLegacy
+  const isLegacy = branch.type === 'legacy' || branch.personStatus === 'legacy' || branch.person?.isLegacy
   doc
     .font(FONTS.italic)
     .fontSize(14)
@@ -206,7 +212,7 @@ async function addTitlePage(doc: any, branch: any) {
   y += 40
 
   // Person's full name
-  const personName = branch.person?.fullName || branch.title
+  const personName = branch.person?.name || branch.title
   doc
     .font(FONTS.title)
     .fontSize(28)
@@ -218,13 +224,17 @@ async function addTitlePage(doc: any, branch: any) {
 
   y += 60
 
-  // Dates (if legacy)
-  if (isLegacy && branch.person) {
-    const birthYear = branch.person.birthDate
+  // Dates (if legacy) - check branch fields first, then person
+  if (isLegacy) {
+    const birthYear = branch.birthDate
+      ? new Date(branch.birthDate).getFullYear()
+      : branch.person?.birthDate
       ? new Date(branch.person.birthDate).getFullYear()
       : null
-    const endYear = branch.person.endDate
-      ? new Date(branch.person.endDate).getFullYear()
+    const endYear = branch.deathDate
+      ? new Date(branch.deathDate).getFullYear()
+      : branch.person?.deathDate
+      ? new Date(branch.person.deathDate).getFullYear()
       : null
 
     if (birthYear || endYear) {
@@ -289,24 +299,27 @@ async function addObituaryPage(doc: any, branch: any) {
     .font(FONTS.heading)
     .fontSize(20)
     .fillColor('#000000')
-    .text(person.fullName || branch.title, MARGIN, y, {
+    .text(person.name || branch.title, MARGIN, y, {
       width: CONTENT_WIDTH,
       align: 'center',
     })
 
   y += 40
 
-  // Dates
-  const birthStr = person.birthDate
-    ? new Date(person.birthDate).toLocaleDateString('en-US', {
+  // Dates - check both Branch and Person
+  const birthDate = branch.birthDate || person.birthDate
+  const deathDate = branch.deathDate || person.deathDate
+
+  const birthStr = birthDate
+    ? new Date(birthDate).toLocaleDateString('en-US', {
         month: 'long',
         day: 'numeric',
         year: 'numeric',
       })
     : null
 
-  const endStr = person.endDate
-    ? new Date(person.endDate).toLocaleDateString('en-US', {
+  const endStr = deathDate
+    ? new Date(deathDate).toLocaleDateString('en-US', {
         month: 'long',
         day: 'numeric',
         year: 'numeric',
@@ -326,22 +339,8 @@ async function addObituaryPage(doc: any, branch: any) {
     y += 30
   }
 
-  // Birth/End locations
-  if (person.birthLocation || person.endLocation) {
-    const locationText = `${person.birthLocation || ''} ${
-      person.birthLocation && person.endLocation ? '→' : ''
-    } ${person.endLocation || ''}`
-
-    doc
-      .font(FONTS.italic)
-      .fontSize(10)
-      .fillColor('#888888')
-      .text(locationText.trim(), MARGIN, y, {
-        width: CONTENT_WIDTH,
-        align: 'center',
-      })
-    y += 30
-  }
+  // Note: Birth/End locations removed - these fields don't exist on Person model
+  // If needed in future, add to Branch model
 
   // Divider line
   doc
@@ -368,15 +367,14 @@ async function addObituaryPage(doc: any, branch: any) {
         align: 'left',
         lineGap: 4,
       })
-  } else if (person.relationshipToOwner) {
+  } else {
+    // Default text if no summary memory
     doc
       .font(FONTS.body)
       .fontSize(11)
       .fillColor('#333333')
       .text(
-        `Beloved ${person.relationshipToOwner.toLowerCase()}. Their memory lives on through ${
-          branch.entries.length
-        } cherished moments preserved in this book.`,
+        `Their memory lives on through ${branch.entries.length} cherished moments preserved in this book.`,
         MARGIN,
         y,
         { width: CONTENT_WIDTH, lineGap: 4 }
@@ -637,10 +635,16 @@ async function addFrontCover(
 
   currentY += 60
 
-  // Person's photo (if available)
-  if (branch.person?.photoUrl) {
+  // Person's photo (if available) - use first entry photo since Person doesn't have photoUrl
+  let photoUrl = null
+  if (branch.entries?.length > 0) {
+    const photoEntry = branch.entries.find((e: any) => e.mediaUrl)
+    if (photoEntry) photoUrl = photoEntry.mediaUrl
+  }
+
+  if (photoUrl) {
     try {
-      const photoBuffer = await downloadImage(branch.person.photoUrl)
+      const photoBuffer = await downloadImage(photoUrl)
       const photoSize = 120
       doc.image(photoBuffer, centerX - photoSize / 2, currentY, {
         width: photoSize,
@@ -657,7 +661,8 @@ async function addFrontCover(
   }
 
   // "In Loving Memory of"
-  if (branch.person?.isLegacy) {
+  const isLegacy = branch.type === 'legacy' || branch.personStatus === 'legacy' || branch.person?.isLegacy
+  if (isLegacy) {
     doc
       .font(FONTS.italic)
       .fontSize(12)
@@ -667,7 +672,7 @@ async function addFrontCover(
   }
 
   // Person's name
-  const personName = branch.person?.fullName || branch.title
+  const personName = branch.person?.name || branch.title
   doc
     .font(FONTS.title)
     .fontSize(24)
@@ -679,13 +684,17 @@ async function addFrontCover(
 
   currentY += 50
 
-  // Dates
-  if (branch.person?.isLegacy) {
-    const birthYear = branch.person.birthDate
+  // Dates - check both Branch and Person
+  if (isLegacy) {
+    const birthYear = branch.birthDate
+      ? new Date(branch.birthDate).getFullYear()
+      : branch.person?.birthDate
       ? new Date(branch.person.birthDate).getFullYear()
       : null
-    const endYear = branch.person.endDate
-      ? new Date(branch.person.endDate).getFullYear()
+    const endYear = branch.deathDate
+      ? new Date(branch.deathDate).getFullYear()
+      : branch.person?.deathDate
+      ? new Date(branch.person.deathDate).getFullYear()
       : null
 
     if (birthYear || endYear) {

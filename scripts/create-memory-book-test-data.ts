@@ -64,24 +64,20 @@ async function createMemoryBookTestData() {
   })
   console.log('✓ Created tree:', tree.name)
 
-  // Create person record (for obituary)
+  // Create person record (minimal - just for relation)
   const person = await prisma.person.create({
     data: {
-      treeId: tree.id,
-      fullName: 'Margaret Anne Wilson',
+      name: 'Margaret Anne Wilson',
       birthDate: new Date('1942-06-15'),
-      endDate: new Date('2024-11-20'),
-      birthLocation: 'Portland, Oregon',
-      endLocation: 'Seattle, Washington',
-      photoUrl: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=500&h=500&fit=crop', // Stock elderly woman photo
+      deathDate: new Date('2024-11-20'),
       isLegacy: true,
       discoveryEnabled: true,
-      relationshipToOwner: 'Grandmother',
+      ownerId: testUser.id,
     },
   })
-  console.log('✓ Created person:', person.fullName)
+  console.log('✓ Created person:', person.name)
 
-  // Create branch
+  // Create branch (legacy info goes here, not on Person)
   const branch = await prisma.branch.create({
     data: {
       title: 'Margaret Anne Wilson',
@@ -89,7 +85,10 @@ async function createMemoryBookTestData() {
       treeId: tree.id,
       personId: person.id,
       ownerId: testUser.id,
-      visibility: 'PRIVATE',
+      type: 'legacy',
+      personStatus: 'legacy',
+      birthDate: new Date('1942-06-15'),
+      deathDate: new Date('2024-11-20'),
     },
   })
   console.log('✓ Created branch:', branch.title)
