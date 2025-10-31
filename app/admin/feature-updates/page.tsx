@@ -112,8 +112,12 @@ export default function FeatureUpdatesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-bg-elevated">
-      <Header />
+    <div className="min-h-screen bg-bg-dark text-text-soft">
+      <Header
+        userName={session?.user?.name || ''}
+        isBetaTester={(session?.user as any)?.isBetaTester || false}
+        isAdmin={(session?.user as any)?.isAdmin || false}
+      />
 
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">

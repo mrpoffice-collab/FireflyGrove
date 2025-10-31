@@ -169,6 +169,15 @@ export default function Header({ userName, isBetaTester, isAdmin, groveInfo }: H
                       >
                         📌 Pinterest Integration
                       </button>
+                      <button
+                        onClick={() => {
+                          router.push('/admin/feature-updates')
+                          setIsDropdownOpen(false)
+                        }}
+                        className="w-full text-left px-3 py-1.5 text-sm text-text-muted hover:bg-border-subtle hover:text-text-soft transition-soft"
+                      >
+                        📧 Feature Updates
+                      </button>
                     </div>
                   </>
                 )}
@@ -342,6 +351,13 @@ export default function Header({ userName, isBetaTester, isAdmin, groveInfo }: H
                     className="block text-base font-light text-text-soft hover:text-firefly-glow transition-soft py-2 px-2 rounded hover:bg-border-subtle/30"
                   >
                     📌 Pinterest Integration
+                  </Link>
+                  <Link
+                    href="/admin/feature-updates"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="block text-base font-light text-text-soft hover:text-firefly-glow transition-soft py-2 px-2 rounded hover:bg-border-subtle/30"
+                  >
+                    📧 Feature Updates
                   </Link>
                 </div>
               </>
