@@ -68,10 +68,10 @@ export default function BetaInvitesPage() {
       <main className="container mx-auto px-4 py-12 max-w-2xl">
         <div className="mb-8">
           <h1 className="text-3xl font-light text-text-soft mb-2">
-            Send Beta Invite
+            Invite Friends to Beta Test Firefly Grove
           </h1>
           <p className="text-text-muted">
-            Invite beta testers to try Firefly Grove. They'll receive a welcome email with instructions.
+            Know someone who would love Firefly Grove? Invite them to join the beta! They'll receive a personalized welcome email with instructions to get started.
           </p>
         </div>
 

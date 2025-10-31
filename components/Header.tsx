@@ -183,6 +183,17 @@ export default function Header({ userName, isBetaTester, isAdmin, groveInfo }: H
                 )}
 
                 <div className="py-0.5">
+                  {isBetaTester && (
+                    <button
+                      onClick={() => {
+                        router.push('/admin/beta-invites')
+                        setIsDropdownOpen(false)
+                      }}
+                      className="w-full text-left px-3 py-1.5 text-sm text-blue-300 hover:bg-blue-500/20 hover:text-blue-200 transition-soft font-medium"
+                    >
+                      📧 Invite Friends to Beta
+                    </button>
+                  )}
                   <button
                     onClick={() => {
                       router.push('/settings/imports')
@@ -201,17 +212,6 @@ export default function Header({ userName, isBetaTester, isAdmin, groveInfo }: H
                   >
                     Manage Plan
                   </button>
-                  {isBetaTester && (
-                    <button
-                      onClick={() => {
-                        router.push('/admin/beta-invites')
-                        setIsDropdownOpen(false)
-                      }}
-                      className="w-full text-left px-3 py-1.5 text-sm text-text-muted hover:bg-border-subtle hover:text-text-soft transition-soft"
-                    >
-                      📧 Send Beta Invite
-                    </button>
-                  )}
                   <button
                     onClick={() => {
                       router.push('/spark-collections')
@@ -290,6 +290,17 @@ export default function Header({ userName, isBetaTester, isAdmin, groveInfo }: H
 
           {/* Menu Items - Features Only */}
           <nav className="flex flex-col gap-2">
+            {/* Beta Tester Invite - Prominent */}
+            {isBetaTester && (
+              <Link
+                href="/admin/beta-invites"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="text-base font-medium text-blue-300 hover:text-blue-200 bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/30 transition-soft py-3 px-3 rounded-lg mb-2"
+              >
+                📧 Invite Friends to Beta
+              </Link>
+            )}
+
             <Link
               href="/grove"
               onClick={() => setIsMobileMenuOpen(false)}
