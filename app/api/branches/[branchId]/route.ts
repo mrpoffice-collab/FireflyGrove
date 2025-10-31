@@ -190,6 +190,11 @@ export async function GET(
               userId: true,
             },
           },
+          _count: {
+            select: {
+              childMemories: true,
+            },
+          },
         },
         orderBy: {
           createdAt: 'desc',

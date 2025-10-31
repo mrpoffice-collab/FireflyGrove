@@ -23,6 +23,7 @@ interface MemoryModalProps {
     audioUrl?: string
     sharedBranchIds?: string[]
     memoryCard?: string | null
+    parentMemoryId?: string
   }) => void
   spark: string
   onRefreshSpark?: () => void
@@ -33,9 +34,11 @@ interface MemoryModalProps {
     nestItemId?: string
   }
   isAdmin?: boolean
+  parentMemoryId?: string
+  threadType?: 'thread' | 'inspired'
 }
 
-export default function MemoryModal({ onClose, onSave, spark, onRefreshSpark, currentBranchId, prePopulatedPhoto, isAdmin = false }: MemoryModalProps) {
+export default function MemoryModal({ onClose, onSave, spark, onRefreshSpark, currentBranchId, prePopulatedPhoto, isAdmin = false, parentMemoryId, threadType }: MemoryModalProps) {
   const [text, setText] = useState('')
   const [visibility, setVisibility] = useState('PRIVATE')
   const [legacyFlag, setLegacyFlag] = useState(false)
@@ -193,6 +196,7 @@ export default function MemoryModal({ onClose, onSave, spark, onRefreshSpark, cu
       legacyFlag: visibility === 'LEGACY' || legacyFlag,
       sharedBranchIds: selectedBranchIds,
       memoryCard: memoryCard.trim() || null,
+      parentMemoryId: parentMemoryId || undefined,
     }
 
     if (imagePreview) {
@@ -286,10 +290,16 @@ export default function MemoryModal({ onClose, onSave, spark, onRefreshSpark, cu
     }
   }
 
+  const modalTitle = threadType === 'thread'
+    ? '💬 Oh yeah, and...'
+    : threadType === 'inspired'
+    ? '💭 That reminds me of...'
+    : 'New Memory'
+
   return (
     <div className="fixed inset-0 bg-black/30 flex items-center justify-center p-4 z-50 overflow-y-auto backdrop-blur-sm">
       <div className="bg-bg-dark border border-border-subtle rounded-lg max-w-2xl w-full p-6 my-8">
-        <h2 className="text-2xl text-text-soft mb-4 text-center">New Memory</h2>
+        <h2 className="text-2xl text-text-soft mb-4 text-center">{modalTitle}</h2>
 
         {/* Spark Prompt with Actions */}
         <div className="mb-6 bg-bg-darker border border-firefly-dim/30 rounded-lg p-4">

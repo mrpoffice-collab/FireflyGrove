@@ -19,7 +19,7 @@ export async function POST(
     const branchId = params.branchId
     const body = await req.json()
 
-    const { text, visibility, legacyFlag, mediaUrl, videoUrl, audioUrl, memoryCard, forceDuplicate } = body
+    const { text, visibility, legacyFlag, mediaUrl, videoUrl, audioUrl, memoryCard, forceDuplicate, parentMemoryId } = body
 
     if (!text) {
       return NextResponse.json({ error: 'Text is required' }, { status: 400 })
@@ -131,6 +131,7 @@ export async function POST(
         approved,
         contentHash, // Store the hash
         status: 'ACTIVE', // Set initial status
+        parentMemoryId: parentMemoryId || null, // For threaded replies
       },
       include: {
         author: {

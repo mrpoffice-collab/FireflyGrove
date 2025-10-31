@@ -288,6 +288,9 @@ model Entry {
   // Firefly Glow
   glowCount   Int      @default(0)  // Number of glows (the power!)
 
+  // Memory Threading - "Oh yeah, and..." conversations
+  parentMemoryId  String?  // If this is a threaded reply
+
   // Relations
   branch          Branch              @relation(fields: [branchId], references: [id], onDelete: Cascade)
   author          User                @relation(fields: [authorId], references: [id], onDelete: Cascade)
@@ -295,6 +298,8 @@ model Entry {
   memoryLinks     MemoryBranchLink[]  @relation("MemoryLinks")
   localMetadata   MemoryLocalMeta[]   @relation("MemoryLocalMeta")
   glows           MemoryGlow[]
+  parentMemory    Entry?              @relation("ThreadedMemories", fields: [parentMemoryId], references: [id], onDelete: SetNull)
+  childMemories   Entry[]             @relation("ThreadedMemories")
 
   @@index([branchId])
   @@index([authorId])
@@ -303,6 +308,7 @@ model Entry {
   @@index([createdAt])
   @@index([contentHash])
   @@index([glowCount])
+  @@index([parentMemoryId])
 }
 
 model BranchMember {

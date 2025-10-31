@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
 import Tooltip from './Tooltip'
 import SharePanel from './SharePanel'
+import MemoryModal from './MemoryModal'
 
 interface MemoryCardProps {
   entry: {
@@ -17,6 +18,9 @@ interface MemoryCardProps {
     createdAt: string
     glowCount?: number
     glows?: Array<{ userId: string }>
+    _count?: {
+      childMemories: number
+    }
     author: {
       name: string
       id?: string
@@ -28,9 +32,10 @@ interface MemoryCardProps {
   onWithdraw?: (entryId: string) => void
   onHide?: (entryId: string) => void
   onRemoveFromBranch?: (entryId: string) => void
+  onMemoryAdded?: () => void
 }
 
-export default function MemoryCard({ entry, branchOwnerId, branchId, branchTitle, onWithdraw, onHide, onRemoveFromBranch }: MemoryCardProps) {
+export default function MemoryCard({ entry, branchOwnerId, branchId, branchTitle, onWithdraw, onHide, onRemoveFromBranch, onMemoryAdded }: MemoryCardProps) {
   const { data: session } = useSession()
   const [showMenu, setShowMenu] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
@@ -50,6 +55,15 @@ export default function MemoryCard({ entry, branchOwnerId, branchId, branchTitle
   const [glowCount, setGlowCount] = useState(entry.glowCount || 0)
   const [isGlowing, setIsGlowing] = useState(false)
   const [isGlowProcessing, setIsGlowProcessing] = useState(false)
+
+  // Memory threading state
+  const [showThreadModal, setShowThreadModal] = useState(false)
+  const [showInspiredModal, setShowInspiredModal] = useState(false)
+  const [childMemories, setChildMemories] = useState<any[]>([])
+  const [showThread, setShowThread] = useState(false)
+  const [loadingThread, setLoadingThread] = useState(false)
+  const [threadSpark, setThreadSpark] = useState('')
+  const [inspiredSpark, setInspiredSpark] = useState('')
 
   const userId = (session?.user as any)?.id
   const isAuthor = entry.author.id === userId
@@ -272,6 +286,102 @@ export default function MemoryCard({ entry, branchOwnerId, branchId, branchTitle
       console.error('Error toggling glow:', error)
     } finally {
       setIsGlowProcessing(false)
+    }
+  }
+
+  const loadThread = async () => {
+    if (showThread || loadingThread) return
+
+    setLoadingThread(true)
+    try {
+      const res = await fetch(`/api/memories/${entry.id}/thread`)
+      if (res.ok) {
+        const data = await res.json()
+        setChildMemories(data.childMemories)
+        setShowThread(true)
+      }
+    } catch (error) {
+      console.error('Error loading thread:', error)
+    } finally {
+      setLoadingThread(false)
+    }
+  }
+
+  const fetchSpark = async () => {
+    try {
+      const res = await fetch('/api/spark')
+      if (res.ok) {
+        const data = await res.json()
+        return data.spark
+      }
+    } catch (error) {
+      console.error('Error fetching spark:', error)
+    }
+    return 'What memory comes to mind?'
+  }
+
+  const handleOpenThreadModal = async () => {
+    const spark = await fetchSpark()
+    setThreadSpark(spark)
+    setShowThreadModal(true)
+  }
+
+  const handleOpenInspiredModal = async () => {
+    const spark = await fetchSpark()
+    setInspiredSpark(spark)
+    setShowInspiredModal(true)
+  }
+
+  const handleThreadMemorySave = async (data: any) => {
+    if (!branchId) return
+
+    try {
+      const res = await fetch(`/api/branches/${branchId}/entries`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      })
+
+      if (res.ok) {
+        setShowThreadModal(false)
+        // Reload thread to show new reply
+        const threadRes = await fetch(`/api/memories/${entry.id}/thread`)
+        if (threadRes.ok) {
+          const threadData = await threadRes.json()
+          setChildMemories(threadData.childMemories)
+          setShowThread(true)
+        }
+        onMemoryAdded?.()
+      } else {
+        const error = await res.json()
+        alert(error.error || 'Failed to create threaded memory')
+      }
+    } catch (error) {
+      console.error('Error creating threaded memory:', error)
+      alert('Failed to create threaded memory')
+    }
+  }
+
+  const handleInspiredMemorySave = async (data: any) => {
+    if (!branchId) return
+
+    try {
+      const res = await fetch(`/api/branches/${branchId}/entries`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      })
+
+      if (res.ok) {
+        setShowInspiredModal(false)
+        onMemoryAdded?.()
+      } else {
+        const error = await res.json()
+        alert(error.error || 'Failed to create inspired memory')
+      }
+    } catch (error) {
+      console.error('Error creating inspired memory:', error)
+      alert('Failed to create inspired memory')
     }
   }
 
@@ -540,28 +650,63 @@ export default function MemoryCard({ entry, branchOwnerId, branchId, branchTitle
         </div>
       )}
 
-      {/* Firefly Glow */}
-      <div className="mt-4 pt-3 border-t border-border-subtle/50 flex items-center gap-3">
-        <button
-          onClick={handleToggleGlow}
-          disabled={isGlowProcessing || !userId}
-          className={`flex items-center gap-2 px-3 py-1.5 rounded-full transition-all ${
-            isGlowing
-              ? 'bg-firefly-glow/20 text-firefly-glow border border-firefly-glow/40'
-              : 'bg-bg-darker text-text-muted hover:text-firefly-dim hover:border-firefly-dim/30 border border-border-subtle'
-          } disabled:opacity-50 disabled:cursor-not-allowed`}
-          title={isGlowing ? 'Remove your glow' : 'Add your glow'}
-        >
-          <span className="text-lg">{isGlowing ? '✨' : '✨'}</span>
-          <span className="text-sm font-medium">
-            {isGlowProcessing ? '...' : isGlowing ? 'Glowing' : 'Glow this'}
-          </span>
-        </button>
-        {glowCount > 0 && (
-          <span className="text-text-muted text-sm">
-            ✨<sup>{glowCount}</sup> {glowCount === 1 ? 'glow' : 'glows'}
-          </span>
-        )}
+      {/* Firefly Glow & Conversation Buttons */}
+      <div className="mt-4 pt-3 border-t border-border-subtle/50 space-y-3">
+        {/* Glow */}
+        <div className="flex items-center gap-3">
+          <button
+            onClick={handleToggleGlow}
+            disabled={isGlowProcessing || !userId}
+            className={`flex items-center gap-2 px-3 py-1.5 rounded-full transition-all ${
+              isGlowing
+                ? 'bg-firefly-glow/20 text-firefly-glow border border-firefly-glow/40'
+                : 'bg-bg-darker text-text-muted hover:text-firefly-dim hover:border-firefly-dim/30 border border-border-subtle'
+            } disabled:opacity-50 disabled:cursor-not-allowed`}
+            title={isGlowing ? 'Remove your glow' : 'Add your glow'}
+          >
+            <span className="text-lg">{isGlowing ? '✨' : '✨'}</span>
+            <span className="text-sm font-medium">
+              {isGlowProcessing ? '...' : isGlowing ? 'Glowing' : 'Glow this'}
+            </span>
+          </button>
+          {glowCount > 0 && (
+            <span className="text-text-muted text-sm">
+              ✨<sup>{glowCount}</sup> {glowCount === 1 ? 'glow' : 'glows'}
+            </span>
+          )}
+        </div>
+
+        {/* Conversation Buttons */}
+        <div className="flex items-center gap-2 flex-wrap">
+          <button
+            onClick={handleOpenThreadModal}
+            disabled={!userId}
+            className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-bg-darker border border-border-subtle text-text-muted hover:text-white hover:border-firefly-dim/40 transition-all text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+            title="Add a related memory about the same person/topic"
+          >
+            <span>💬</span>
+            <span>Oh yeah, and...</span>
+          </button>
+          <button
+            onClick={handleOpenInspiredModal}
+            disabled={!userId}
+            className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-bg-darker border border-border-subtle text-text-muted hover:text-white hover:border-firefly-dim/40 transition-all text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+            title="This reminds you of a different memory"
+          >
+            <span>💭</span>
+            <span>That reminds me of...</span>
+          </button>
+          {entry._count && entry._count.childMemories > 0 && (
+            <button
+              onClick={loadThread}
+              disabled={loadingThread}
+              className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-firefly-dim/10 border border-firefly-dim/30 text-firefly-glow hover:bg-firefly-dim/20 transition-all text-sm"
+            >
+              <span>💬</span>
+              <span>{entry._count.childMemories} {entry._count.childMemories === 1 ? 'reply' : 'replies'}</span>
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Pinterest Board Selector Modal */}
@@ -603,6 +748,78 @@ export default function MemoryCard({ entry, branchOwnerId, branchId, branchTitle
             </div>
           </div>
         </>
+      )}
+
+      {/* Thread Modal - "Oh yeah, and..." */}
+      {showThreadModal && threadSpark && (
+        <MemoryModal
+          onClose={() => setShowThreadModal(false)}
+          onSave={handleThreadMemorySave}
+          spark={threadSpark}
+          onRefreshSpark={async () => {
+            const spark = await fetchSpark()
+            setThreadSpark(spark)
+          }}
+          currentBranchId={branchId}
+          isAdmin={isAdmin}
+          parentMemoryId={entry.id}
+          threadType="thread"
+        />
+      )}
+
+      {/* Inspired Modal - "That reminds me of..." */}
+      {showInspiredModal && inspiredSpark && (
+        <MemoryModal
+          onClose={() => setShowInspiredModal(false)}
+          onSave={handleInspiredMemorySave}
+          spark={inspiredSpark}
+          onRefreshSpark={async () => {
+            const spark = await fetchSpark()
+            setInspiredSpark(spark)
+          }}
+          currentBranchId={branchId}
+          isAdmin={isAdmin}
+          threadType="inspired"
+        />
+      )}
+
+      {/* Threaded Replies Display */}
+      {showThread && childMemories.length > 0 && (
+        <div className="mt-4 pl-6 border-l-2 border-firefly-dim/30 space-y-3">
+          <div className="text-sm text-text-muted mb-2">
+            💬 Thread ({childMemories.length} {childMemories.length === 1 ? 'reply' : 'replies'})
+          </div>
+          {childMemories.map((child) => (
+            <div
+              key={child.id}
+              className="bg-bg-elevated border border-border-subtle rounded-lg p-4"
+            >
+              <div className="flex items-start justify-between mb-2">
+                <div className="text-sm text-text-muted">
+                  {child.author.name} • {formatDistanceToNow(new Date(child.createdAt), { addSuffix: true })}
+                </div>
+              </div>
+              <p className="text-text-soft whitespace-pre-wrap">{child.text}</p>
+              {child.mediaUrl && (
+                <img
+                  src={child.mediaUrl}
+                  alt="Memory"
+                  className="mt-3 rounded max-w-full h-auto"
+                />
+              )}
+              {child.audioUrl && (
+                <audio controls className="mt-3 w-full">
+                  <source src={child.audioUrl} type="audio/webm" />
+                </audio>
+              )}
+              {child.glowCount > 0 && (
+                <div className="mt-2 text-sm text-text-muted">
+                  ✨<sup>{child.glowCount}</sup> {child.glowCount === 1 ? 'glow' : 'glows'}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
       )}
 
       {/* Share Panel */}
