@@ -4,6 +4,7 @@ import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { stripe } from '@/lib/stripe'
 import { TREE_PLAN } from '@/lib/plans'
+import { resend, isResendConfigured, SENDER_EMAIL } from '@/lib/resend'
 
 export const dynamic = 'force-dynamic'
 
@@ -47,6 +48,7 @@ export async function POST(
         sender: {
           select: {
             name: true,
+            email: true,
           },
         },
       },
@@ -315,6 +317,66 @@ export async function POST(
     console.log(
       `[Tree Transfer] Transfer accepted by ${user?.email} - Tree: ${transfer.person.name}, Option: ${option}`
     )
+
+    // Send email notification to sender
+    if (isResendConfigured()) {
+      try {
+        const optionText = option === 'grove'
+          ? 'added to their existing grove'
+          : option === 'single'
+          ? 'subscribed as a single tree'
+          : 'created a new grove'
+
+        await resend.emails.send({
+          from: SENDER_EMAIL,
+          to: transfer.sender.email,
+          subject: `${user?.name || user?.email} accepted your tree transfer 🌳`,
+          html: `
+            <!DOCTYPE html>
+            <html>
+              <head>
+                <meta charset="utf-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Tree Transfer Accepted</title>
+              </head>
+              <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+                <div style="background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); padding: 30px; border-radius: 10px; margin-bottom: 30px;">
+                  <h1 style="color: #ffd700; margin: 0; font-size: 28px; font-weight: 300;">Firefly Grove</h1>
+                  <p style="color: #cccccc; margin: 10px 0 0 0; font-size: 14px;">Tree Transfer Confirmation</p>
+                </div>
+
+                <div style="background: #f9f9f9; padding: 30px; border-radius: 10px; border: 1px solid #e0e0e0;">
+                  <h2 style="color: #333; margin-top: 0;">Transfer Accepted! 🎉</h2>
+
+                  <p><strong>${user?.name || user?.email}</strong> has accepted your tree transfer for <strong>${transfer.person.name}</strong>.</p>
+
+                  <div style="background: white; padding: 15px; border-left: 3px solid #ffd700; margin: 20px 0;">
+                    <p style="margin: 0; color: #666; font-size: 14px;">
+                      <strong>Tree:</strong> ${transfer.person.name}<br>
+                      <strong>New Owner:</strong> ${user?.email}<br>
+                      <strong>Option Selected:</strong> ${optionText}
+                    </p>
+                  </div>
+
+                  <p style="color: #666; font-size: 14px;">The tree has been successfully transferred and ${user?.name || user?.email} is now responsible for preserving these memories.</p>
+                </div>
+
+                <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e0e0e0;">
+                  <p style="color: #999; font-size: 12px; margin: 5px 0;">
+                    <a href="https://fireflygrove.app" style="color: #ffd700; text-decoration: none;">fireflygrove.app</a>
+                  </p>
+                </div>
+              </body>
+            </html>
+          `,
+        })
+
+        console.log(`[Tree Transfer] Acceptance notification sent to sender`)
+      } catch (emailError) {
+        console.error('[Tree Transfer] Failed to send acceptance notification:', emailError)
+        // Don't fail the transfer if email fails
+      }
+    }
 
     return NextResponse.json({
       success: true,
