@@ -84,9 +84,21 @@ export async function POST(
         continue
       }
 
-      // Get target branch with preferences
-      const targetBranch = await prisma.branch.findUnique({
-        where: { id: targetBranchId },
+      // Get target branch with preferences and verify user has access
+      const targetBranch = await prisma.branch.findFirst({
+        where: {
+          id: targetBranchId,
+          OR: [
+            { ownerId: userId }, // User owns the branch
+            { members: { some: { userId, approved: true } } }, // User is an approved member
+            {
+              person: {
+                isLegacy: true,
+                discoveryEnabled: true, // Public legacy tree in Open Grove
+              },
+            },
+          ],
+        },
         include: {
           preferences: true,
         },
@@ -96,7 +108,7 @@ export async function POST(
         results.push({
           branchId: targetBranchId,
           success: false,
-          error: 'Branch not found',
+          error: 'Branch not found or access denied',
         })
         continue
       }

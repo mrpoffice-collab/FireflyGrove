@@ -21,15 +21,15 @@ export async function POST(req: NextRequest) {
 
     const userId = (session.user as any).id
 
-    // Only allow beta testers to send invites
+    // Only allow admins to send invites
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      select: { isBetaTester: true },
+      select: { isAdmin: true, name: true },
     })
 
-    if (!user?.isBetaTester) {
+    if (!user?.isAdmin) {
       return NextResponse.json(
-        { error: 'Only beta testers can send beta invitations' },
+        { error: 'Admin access required' },
         { status: 403 }
       )
     }

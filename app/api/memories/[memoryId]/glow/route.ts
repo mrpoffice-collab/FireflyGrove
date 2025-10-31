@@ -27,14 +27,47 @@ export async function POST(
 
     const { memoryId } = params
 
-    // Check if memory exists
+    // Check if memory exists and user has access to it
     const memory = await prisma.entry.findUnique({
       where: { id: memoryId },
-      select: { id: true, status: true },
+      select: {
+        id: true,
+        status: true,
+        branchId: true,
+        branch: {
+          select: {
+            id: true,
+            ownerId: true,
+            members: {
+              where: { userId: user.id, approved: true },
+              select: { id: true },
+            },
+            person: {
+              select: {
+                isLegacy: true,
+                discoveryEnabled: true,
+              },
+            },
+          },
+        },
+      },
     })
 
     if (!memory || memory.status !== 'ACTIVE') {
       return NextResponse.json({ error: 'Memory not found' }, { status: 404 })
+    }
+
+    // Verify user has access to this memory's branch
+    const hasAccess =
+      memory.branch.ownerId === user.id || // User owns the branch
+      memory.branch.members.length > 0 || // User is an approved member
+      (memory.branch.person?.isLegacy && memory.branch.person?.discoveryEnabled) // Public legacy tree
+
+    if (!hasAccess) {
+      return NextResponse.json(
+        { error: 'You do not have access to this memory' },
+        { status: 403 }
+      )
     }
 
     // Check if user already glowed this memory
