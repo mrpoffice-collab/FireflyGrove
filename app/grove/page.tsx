@@ -46,6 +46,32 @@ interface Branch {
   }
 }
 
+interface SharedBranch {
+  id: string
+  title: string
+  description: string | null
+  personStatus: string
+  owner: {
+    id: string
+    name: string
+    grove: {
+      id: string
+      name: string
+    } | null
+  }
+  person: {
+    id: string
+    name: string
+    isLegacy: boolean
+  } | null
+  entries: Array<{
+    createdAt: string
+  }>
+  _count: {
+    entries: number
+  }
+}
+
 interface Grove {
   id: string
   name: string
@@ -85,6 +111,8 @@ export default function GrovePage() {
   const [transplantable, setTransplantable] = useState<TransplantablePerson[]>([])
   const [transplanting, setTransplanting] = useState<string | null>(null)
   const [pendingNestPhoto, setPendingNestPhoto] = useState<string | null>(null)
+  const [sharedBranches, setSharedBranches] = useState<SharedBranch[]>([])
+  const [loadingShared, setLoadingShared] = useState(false)
 
   // Firefly Burst state
   const [showBurst, setShowBurst] = useState(false)
@@ -116,6 +144,7 @@ export default function GrovePage() {
     if (status === 'authenticated') {
       fetchGrove()
       fetchTransplantable()
+      fetchSharedBranches()
       // Trigger burst on first load
       generateBurst()
     }
@@ -167,6 +196,21 @@ export default function GrovePage() {
       }
     } catch (error) {
       console.error('Failed to fetch transplantable trees:', error)
+    }
+  }
+
+  const fetchSharedBranches = async () => {
+    setLoadingShared(true)
+    try {
+      const res = await fetch('/api/branches/shared')
+      if (res.ok) {
+        const data = await res.json()
+        setSharedBranches(data.sharedBranches || [])
+      }
+    } catch (error) {
+      console.error('Failed to fetch shared branches:', error)
+    } finally {
+      setLoadingShared(false)
     }
   }
 
@@ -622,6 +666,75 @@ export default function GrovePage() {
                       <span>💫 {person.memoryCount} memories</span>
                       <span>🌿 {person._count.branches} branches</span>
                     </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Shared Branches from Other Groves */}
+          {sharedBranches.length > 0 && (
+            <div className="mt-12">
+              <div className="mb-6">
+                <h2 className="text-2xl text-text-soft mb-2">
+                  Shared with You
+                </h2>
+                <p className="text-text-muted text-sm">
+                  Branches you've been invited to from other groves
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {sharedBranches.map((branch) => (
+                  <div
+                    key={branch.id}
+                    onClick={() => router.push(`/branch/${branch.id}`)}
+                    className="bg-bg-dark border border-blue-500/30 rounded-lg p-4 hover:border-blue-400/50 transition-soft cursor-pointer"
+                  >
+                    <div className="flex items-start justify-between mb-2">
+                      <h3 className="text-lg text-text-soft font-medium flex-1">
+                        {branch.title}
+                      </h3>
+                      <span className="text-xs text-blue-300 bg-blue-500/20 px-2 py-1 rounded ml-2 whitespace-nowrap">
+                        Shared
+                      </span>
+                    </div>
+
+                    {branch.description && (
+                      <p className="text-sm text-text-muted mb-2 line-clamp-2">
+                        {branch.description}
+                      </p>
+                    )}
+
+                    <div className="mb-3 text-xs text-text-muted">
+                      <div className="flex items-center gap-1">
+                        <span>🏡</span>
+                        <span>
+                          {branch.owner.grove?.name || `${branch.owner.name}'s Grove`}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-1 mt-1">
+                        <span>👤</span>
+                        <span>Owner: {branch.owner.name}</span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-3 text-xs text-text-muted">
+                      <span className="flex items-center gap-1">
+                        💫 {branch._count.entries} {branch._count.entries === 1 ? 'memory' : 'memories'}
+                      </span>
+                      {branch.person?.isLegacy && (
+                        <span className="text-purple-300 bg-purple-500/20 px-2 py-0.5 rounded">
+                          Legacy
+                        </span>
+                      )}
+                    </div>
+
+                    {branch.entries.length > 0 && (
+                      <div className="mt-2 text-xs text-text-muted/70">
+                        Last update: {new Date(branch.entries[0].createdAt).toLocaleDateString()}
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
