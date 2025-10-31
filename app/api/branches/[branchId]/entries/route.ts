@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { generateContentHash, checkRecentDuplicate } from '@/lib/content-hash'
+import { trackEventServer, AnalyticsEvents, AnalyticsCategories, AnalyticsActions } from '@/lib/analytics'
 
 export async function POST(
   req: NextRequest,
@@ -180,6 +181,25 @@ export async function POST(
           visibility: entry.visibility,
           legacyFlag: entry.legacyFlag,
         }),
+      },
+    })
+
+    // Track memory creation with detailed metadata
+    const memoryType = audioUrl ? 'audio' : mediaUrl ? 'photo' : videoUrl ? 'video' : 'text'
+    await trackEventServer(prisma, userId, {
+      eventType: AnalyticsEvents.MEMORY_CREATED,
+      category: AnalyticsCategories.MEMORIES,
+      action: AnalyticsActions.CREATED,
+      metadata: {
+        memoryId: entry.id,
+        branchId,
+        memoryType,
+        hasMedia: !!(mediaUrl || audioUrl || videoUrl),
+        hasCard: !!memoryCard,
+        isLegacyTree: branch.person?.isLegacy || false,
+        visibility: entry.visibility,
+        isOwner,
+        needsApproval: !approved,
       },
     })
 

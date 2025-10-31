@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import bcrypt from 'bcryptjs'
 import { isDemoMode } from '@/lib/demo'
+import { trackEventServer, AnalyticsEvents, AnalyticsCategories, AnalyticsActions } from '@/lib/analytics'
 
 export const dynamic = 'force-dynamic'
 
@@ -69,13 +70,24 @@ export async function POST(req: NextRequest) {
     })
 
     // Auto-create Grove for new user
-    await prisma.grove.create({
+    const grove = await prisma.grove.create({
       data: {
         userId: user.id,
         name: `${name}'s Grove`,
         planType: betaInvite ? 'family' : 'trial', // Beta testers get family plan
         treeLimit: betaInvite ? 10 : 1,
         status: 'active',
+      },
+    })
+
+    // Track grove creation
+    await trackEventServer(prisma, user.id, {
+      eventType: AnalyticsEvents.GROVE_CREATED,
+      category: AnalyticsCategories.GROVE,
+      action: AnalyticsActions.CREATED,
+      metadata: {
+        planType: betaInvite ? 'family' : 'trial',
+        treeLimit: betaInvite ? 10 : 1,
       },
     })
 
@@ -90,6 +102,17 @@ export async function POST(req: NextRequest) {
       })
       console.log(`[Beta Signup] ${email} signed up as beta tester`)
     }
+
+    // Track signup event
+    await trackEventServer(prisma, user.id, {
+      eventType: AnalyticsEvents.USER_SIGNUP,
+      category: AnalyticsCategories.AUTH,
+      action: AnalyticsActions.COMPLETED,
+      metadata: {
+        isBetaTester: !!betaInvite,
+        planType: betaInvite ? 'family' : 'trial',
+      },
+    })
 
     return NextResponse.json({
       success: true,

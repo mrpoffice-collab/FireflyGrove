@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import { trackEventServer, AnalyticsEvents, AnalyticsCategories, AnalyticsActions } from '@/lib/analytics'
 
 export const dynamic = 'force-dynamic'
 
@@ -203,6 +204,21 @@ export async function POST(
         success: true,
         status: visibilityStatus,
         action: 'created',
+      })
+    }
+
+    // Track memory sharing
+    const successfulShares = results.filter((r) => r.success).length
+    if (successfulShares > 0) {
+      await trackEventServer(prisma, userId, {
+        eventType: AnalyticsEvents.MEMORY_SHARED,
+        category: AnalyticsCategories.MEMORIES,
+        action: AnalyticsActions.SHARED,
+        metadata: {
+          memoryId,
+          branchesSharedTo: successfulShares,
+          totalAttempts: branchIds.length,
+        },
       })
     }
 

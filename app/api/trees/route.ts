@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import { trackEventServer, AnalyticsEvents, AnalyticsCategories, AnalyticsActions } from '@/lib/analytics'
 
 export const dynamic = 'force-dynamic'
 
@@ -94,6 +95,19 @@ export async function POST(req: NextRequest) {
           name: tree.name,
           description: tree.description,
         }),
+      },
+    })
+
+    // Track tree creation
+    await trackEventServer(prisma, userId, {
+      eventType: AnalyticsEvents.TREE_CREATED,
+      category: AnalyticsCategories.TREES,
+      action: AnalyticsActions.CREATED,
+      metadata: {
+        treeId: tree.id,
+        currentTreeCount: currentTreeCount + 1,
+        treeLimit: grove.treeLimit,
+        planType: grove.planType,
       },
     })
 
