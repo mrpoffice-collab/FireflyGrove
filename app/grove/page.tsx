@@ -349,12 +349,12 @@ export default function GrovePage() {
         />
       )}
 
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-3 sm:px-4 py-6 sm:py-8">
         <div className="max-w-5xl mx-auto">
           {/* Transplantable Trees Section */}
           {transplantable.length > 0 && (
-            <div className="mb-8 bg-firefly-dim/10 border border-firefly-dim/30 rounded-lg p-6">
-              <h2 className="text-xl text-firefly-glow font-medium mb-2 flex items-center gap-2">
+            <div className="mb-6 sm:mb-8 bg-firefly-dim/10 border border-firefly-dim/30 rounded-lg p-4 sm:p-6">
+              <h2 className="text-lg sm:text-xl text-firefly-glow font-medium mb-2 flex items-center gap-2">
                 <span>🌱</span>
                 <span>Trees You Can Transplant</span>
               </h2>
@@ -365,11 +365,11 @@ export default function GrovePage() {
                 {transplantable.map((person) => (
                   <div
                     key={person.id}
-                    className="bg-bg-dark border border-border-subtle rounded-lg p-4 flex items-center justify-between"
+                    className="bg-bg-dark border border-border-subtle rounded-lg p-3 sm:p-4 flex flex-col sm:flex-row sm:items-center gap-3 sm:justify-between"
                   >
-                    <div className="flex-1">
-                      <h3 className="text-lg text-text-soft font-medium">{person.name}</h3>
-                      <p className="text-sm text-text-muted">
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-base sm:text-lg text-text-soft font-medium truncate">{person.name}</h3>
+                      <p className="text-xs sm:text-sm text-text-muted line-clamp-2">
                         Currently in {person.currentGrove.name} (owned by {person.currentGrove.owner.name})
                       </p>
                       <p className="text-xs text-text-muted mt-1">
@@ -384,7 +384,7 @@ export default function GrovePage() {
                       <button
                         onClick={() => handleTransplant(person.id, person.name)}
                         disabled={transplanting === person.id || isAtCapacity}
-                        className="px-4 py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded font-medium transition-soft disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="w-full sm:w-auto min-h-[44px] px-4 py-2.5 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded font-medium transition-soft disabled:opacity-50 disabled:cursor-not-allowed text-sm whitespace-nowrap"
                       >
                         {transplanting === person.id ? 'Transplanting...' : 'Transplant to My Grove'}
                       </button>
@@ -401,9 +401,9 @@ export default function GrovePage() {
           )}
 
           {/* Grove Header */}
-          <div className="mb-8 text-center">
+          <div className="mb-6 sm:mb-8 text-center">
             {isEditingName ? (
-              <div className="flex items-center justify-center gap-3 mb-4">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-2 sm:gap-3 mb-4">
                 <input
                   type="text"
                   value={groveName}
@@ -415,35 +415,37 @@ export default function GrovePage() {
                       setIsEditingName(false)
                     }
                   }}
-                  className="text-4xl font-light bg-bg-dark border border-firefly-dim/50 rounded px-3 py-1 text-text-soft focus:outline-none focus:border-firefly-glow text-center"
+                  className="text-2xl sm:text-4xl font-light bg-bg-dark border border-firefly-dim/50 rounded px-3 py-2 text-text-soft focus:outline-none focus:border-firefly-glow text-center min-h-[44px]"
                   autoFocus
                   maxLength={100}
                 />
-                <button
-                  onClick={handleRenameGrove}
-                  className="px-4 py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded text-sm font-medium transition-soft"
-                >
-                  Save
-                </button>
-                <button
-                  onClick={() => {
-                    setGroveName(grove.name)
-                    setIsEditingName(false)
-                  }}
-                  className="px-4 py-2 bg-bg-dark hover:bg-border-subtle text-text-muted rounded text-sm transition-soft"
-                >
-                  Cancel
-                </button>
+                <div className="flex gap-2">
+                  <button
+                    onClick={handleRenameGrove}
+                    className="flex-1 sm:flex-none min-h-[44px] px-4 py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded text-sm font-medium transition-soft"
+                  >
+                    Save
+                  </button>
+                  <button
+                    onClick={() => {
+                      setGroveName(grove.name)
+                      setIsEditingName(false)
+                    }}
+                    className="flex-1 sm:flex-none min-h-[44px] px-4 py-2 bg-bg-dark hover:bg-border-subtle text-text-muted rounded text-sm transition-soft"
+                  >
+                    Cancel
+                  </button>
+                </div>
               </div>
             ) : (
-              <div className="flex items-center justify-center gap-3 mb-4">
-                <h1 className="text-4xl font-light text-text-soft">
+              <div className="flex items-center justify-center gap-2 sm:gap-3 mb-4">
+                <h1 className="text-2xl sm:text-4xl font-light text-text-soft">
                   {grove.name}
                 </h1>
                 <Tooltip content="Rename your grove">
                   <button
                     onClick={() => setIsEditingName(true)}
-                    className="text-text-muted hover:text-firefly-glow transition-soft"
+                    className="text-text-muted hover:text-firefly-glow transition-soft min-w-[44px] min-h-[44px] flex items-center justify-center"
                   >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
@@ -458,19 +460,20 @@ export default function GrovePage() {
             </p>
 
             {/* Quick Actions */}
-            <div className="mb-4 flex flex-wrap items-center justify-center gap-3">
+            <div className="mb-4 flex flex-wrap items-center justify-center gap-2 sm:gap-3">
               {burstMemories.length > 0 && (
                 <button
                   onClick={generateBurst}
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-firefly-dim/20 hover:bg-firefly-dim/30 border border-firefly-dim/40 text-firefly-glow rounded-lg text-sm font-medium transition-soft"
+                  className="inline-flex items-center gap-2 min-h-[44px] px-4 py-2.5 bg-firefly-dim/20 hover:bg-firefly-dim/30 border border-firefly-dim/40 text-firefly-glow rounded-lg text-sm font-medium transition-soft"
                 >
                   <span>✨</span>
-                  <span>Get Another Burst</span>
+                  <span className="hidden xs:inline">Get Another Burst</span>
+                  <span className="xs:hidden">Burst</span>
                 </button>
               )}
               <button
                 onClick={() => setShowAudioSparks(true)}
-                className="inline-flex items-center gap-2 px-4 py-2 bg-firefly-glow hover:bg-firefly-bright text-bg-darker rounded-lg text-sm font-medium transition-soft"
+                className="inline-flex items-center gap-2 min-h-[44px] px-4 py-2.5 bg-firefly-glow hover:bg-firefly-bright text-bg-darker rounded-lg text-sm font-medium transition-soft"
               >
                 <span>🎙️</span>
                 <span>Audio Sparks</span>
@@ -502,16 +505,16 @@ export default function GrovePage() {
           </div>
 
           {/* Status Alerts */}
-          <div className="mb-8">
+          <div className="mb-6 sm:mb-8">
             {grove.status === 'past_due' && (
-              <div className="bg-orange-500/10 border border-orange-500/30 rounded-lg p-4 mb-4">
-                <div className="flex items-start gap-3">
-                  <svg className="w-5 h-5 text-orange-400 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+              <div className="bg-orange-500/10 border border-orange-500/30 rounded-lg p-3 sm:p-4 mb-4">
+                <div className="flex items-start gap-2 sm:gap-3">
+                  <svg className="w-5 h-5 text-orange-400 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
                   </svg>
-                  <div>
-                    <div className="text-orange-400 font-medium mb-1">Payment Issue</div>
-                    <div className="text-text-muted text-sm">
+                  <div className="flex-1 min-w-0">
+                    <div className="text-orange-400 font-medium mb-1 text-sm sm:text-base">Payment Issue</div>
+                    <div className="text-text-muted text-xs sm:text-sm">
                       Your payment method needs attention. Please update your billing information to continue using all features.
                     </div>
                   </div>
@@ -520,19 +523,19 @@ export default function GrovePage() {
             )}
 
             {grove.status === 'canceled' && (
-              <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4 mb-4">
-                <div className="flex items-start gap-3">
-                  <svg className="w-5 h-5 text-red-400 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+              <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-3 sm:p-4 mb-4">
+                <div className="flex items-start gap-2 sm:gap-3">
+                  <svg className="w-5 h-5 text-red-400 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
                   </svg>
-                  <div>
-                    <div className="text-red-400 font-medium mb-1">Subscription Canceled</div>
-                    <div className="text-text-muted text-sm mb-2">
+                  <div className="flex-1 min-w-0">
+                    <div className="text-red-400 font-medium mb-1 text-sm sm:text-base">Subscription Canceled</div>
+                    <div className="text-text-muted text-xs sm:text-sm mb-3">
                       Your grove is view-only. Reactivate your subscription to create new trees and memories.
                     </div>
                     <button
                       onClick={() => router.push('/billing')}
-                      className="px-4 py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded text-sm font-medium transition-soft"
+                      className="min-h-[44px] px-4 py-2.5 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded text-sm font-medium transition-soft"
                     >
                       Reactivate Grove
                     </button>
@@ -552,7 +555,7 @@ export default function GrovePage() {
             )}
 
             {/* Trees Grid */}
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 relative z-10">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4 md:gap-6 relative z-10">
             {/* Existing Trees */}
             {grove.trees?.map((tree) => (
               <div
@@ -563,14 +566,14 @@ export default function GrovePage() {
                     : `/tree/${tree.id}`
                   router.push(url)
                 }}
-                className="flex flex-col items-center gap-3 p-4 rounded-lg hover:bg-bg-dark transition-soft cursor-pointer group"
+                className="flex flex-col items-center gap-2 sm:gap-3 p-3 sm:p-4 rounded-lg hover:bg-bg-dark transition-soft cursor-pointer group min-h-[120px] sm:min-h-[140px]"
               >
                 {/* Simple Olive Tree SVG */}
                 <svg
-                  width="80"
-                  height="80"
+                  width="60"
+                  height="60"
                   viewBox="0 0 80 80"
-                  className="group-hover:scale-110 transition-transform"
+                  className="sm:w-[80px] sm:h-[80px] group-hover:scale-110 transition-transform"
                 >
                   {/* Trunk */}
                   <rect x="36" y="50" width="8" height="25" fill="#8B7355" />
@@ -609,7 +612,7 @@ export default function GrovePage() {
                       router.push(url)
                     }
                   }}
-                  className={`flex flex-col items-center gap-3 p-4 rounded-lg border-2 border-dashed transition-soft ${
+                  className={`flex flex-col items-center gap-2 sm:gap-3 p-3 sm:p-4 rounded-lg border-2 border-dashed transition-soft min-h-[120px] sm:min-h-[140px] ${
                     grove.status === 'canceled'
                       ? 'border-border-subtle cursor-not-allowed opacity-50'
                       : 'border-border-subtle hover:border-firefly-dim/50 cursor-pointer group'
@@ -617,10 +620,10 @@ export default function GrovePage() {
                 >
                   {/* Empty Tree Outline */}
                   <svg
-                    width="80"
-                    height="80"
+                    width="60"
+                    height="60"
                     viewBox="0 0 80 80"
-                    className="group-hover:scale-110 transition-transform opacity-30"
+                    className="sm:w-[80px] sm:h-[80px] group-hover:scale-110 transition-transform opacity-30"
                   >
                     <rect x="36" y="50" width="8" height="25" fill="currentColor" className="text-text-muted" />
                     <ellipse cx="40" cy="40" rx="20" ry="20" fill="none" stroke="currentColor" strokeWidth="2" strokeDasharray="4 4" className="text-text-muted" />
@@ -647,20 +650,20 @@ export default function GrovePage() {
 
           {/* Rooted Legacy Trees Section */}
           {grove.rootedPersons && grove.rootedPersons.length > 0 && (
-            <div className="mt-12">
-              <div className="flex items-center gap-3 mb-6">
-                <h2 className="text-2xl text-text-soft">
+            <div className="mt-8 sm:mt-12">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
+                <h2 className="text-xl sm:text-2xl text-text-soft">
                   Rooted Legacy Trees
                 </h2>
-                <span className="px-3 py-1 bg-purple-500/20 text-purple-300 text-xs rounded-full">
+                <span className="px-3 py-1 bg-purple-500/20 text-purple-300 text-xs rounded-full self-start sm:self-auto">
                   Don't use tree slots
                 </span>
               </div>
-              <p className="text-text-muted text-sm mb-6">
+              <p className="text-text-muted text-sm mb-4 sm:mb-6">
                 Legacy trees from the Open Grove that you care for and manage. These don't count against your tree limit.
               </p>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
                 {grove.rootedPersons.map((person) => (
                   <div
                     key={person.id}
@@ -670,7 +673,7 @@ export default function GrovePage() {
                         : `/tree/${person.id}`
                       router.push(url)
                     }}
-                    className="bg-bg-dark border border-purple-500/30 rounded-lg p-4 hover:border-purple-400/50 transition-soft cursor-pointer"
+                    className="bg-bg-dark border border-purple-500/30 rounded-lg p-3 sm:p-4 hover:border-purple-400/50 transition-soft cursor-pointer min-h-[100px]"
                   >
                     <div className="flex items-start justify-between mb-2">
                       <h3 className="text-lg text-text-soft font-medium">{person.name}</h3>
