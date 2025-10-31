@@ -116,6 +116,7 @@ export default function SharePanel({ isOpen, onClose, shareData }: SharePanelPro
                 <button
                   onClick={handleNativeShare}
                   className="w-full flex items-center gap-4 p-4 bg-bg-dark hover:bg-bg-elevated border border-border-subtle rounded-lg transition-soft text-left"
+                  aria-label="Share via device share menu"
                 >
                   <div className="w-10 h-10 bg-gradient-to-br from-firefly-glow to-firefly-dim rounded-lg flex items-center justify-center text-lg">
                     📱
@@ -131,6 +132,7 @@ export default function SharePanel({ isOpen, onClose, shareData }: SharePanelPro
               <button
                 onClick={handleFacebookShare}
                 className="w-full flex items-center gap-4 p-4 bg-bg-dark hover:bg-bg-elevated border border-border-subtle rounded-lg transition-soft text-left"
+                aria-label="Share on Facebook"
               >
                 <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center text-white text-xl">
                   f
@@ -145,6 +147,7 @@ export default function SharePanel({ isOpen, onClose, shareData }: SharePanelPro
               <button
                 onClick={handleTwitterShare}
                 className="w-full flex items-center gap-4 p-4 bg-bg-dark hover:bg-bg-elevated border border-border-subtle rounded-lg transition-soft text-left"
+                aria-label="Share on X (Twitter)"
               >
                 <div className="w-10 h-10 bg-black rounded-lg flex items-center justify-center text-white text-xl">
                   𝕏
@@ -159,6 +162,7 @@ export default function SharePanel({ isOpen, onClose, shareData }: SharePanelPro
               <button
                 onClick={handleWhatsAppShare}
                 className="w-full flex items-center gap-4 p-4 bg-bg-dark hover:bg-bg-elevated border border-border-subtle rounded-lg transition-soft text-left"
+                aria-label="Share via WhatsApp"
               >
                 <div className="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center text-white text-xl">
                   💬
@@ -173,6 +177,7 @@ export default function SharePanel({ isOpen, onClose, shareData }: SharePanelPro
               <button
                 onClick={handleEmailShare}
                 className="w-full flex items-center gap-4 p-4 bg-bg-dark hover:bg-bg-elevated border border-border-subtle rounded-lg transition-soft text-left"
+                aria-label="Share via email"
               >
                 <div className="w-10 h-10 bg-gray-600 rounded-lg flex items-center justify-center text-white text-xl">
                   📧
@@ -187,6 +192,7 @@ export default function SharePanel({ isOpen, onClose, shareData }: SharePanelPro
               <button
                 onClick={handleCopyLink}
                 className="w-full flex items-center gap-4 p-4 bg-bg-dark hover:bg-bg-elevated border border-border-subtle rounded-lg transition-soft text-left"
+                aria-label={copied ? 'Link copied to clipboard' : 'Copy link to clipboard'}
               >
                 <div className="w-10 h-10 bg-firefly-dim/30 rounded-lg flex items-center justify-center text-firefly-glow text-xl">
                   {copied ? '✓' : '🔗'}

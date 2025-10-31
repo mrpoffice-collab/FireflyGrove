@@ -479,6 +479,7 @@ export default function MemoryCard({ entry, branchOwnerId, branchId, branchTitle
             <button
               onClick={() => setShowSharePanel(true)}
               className="text-text-muted hover:text-firefly-glow transition-soft"
+              aria-label="Share this memory"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
@@ -493,6 +494,7 @@ export default function MemoryCard({ entry, branchOwnerId, branchId, branchTitle
                 onClick={handlePinToPinterest}
                 disabled={pinningToPinterest}
                 className="text-text-muted hover:text-red-500 transition-soft disabled:opacity-50"
+                aria-label={pinningToPinterest ? "Sharing to Pinterest" : "Share to Pinterest"}
               >
                 {pinningToPinterest ? (
                   <svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
@@ -516,6 +518,9 @@ export default function MemoryCard({ entry, branchOwnerId, branchId, branchTitle
                   onClick={() => setShowMenu(!showMenu)}
                   disabled={isProcessing}
                   className="text-text-muted hover:text-text-soft transition-soft disabled:opacity-50"
+                  aria-label="Memory actions"
+                  aria-expanded={showMenu}
+                  aria-haspopup="true"
                 >
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
@@ -649,7 +654,8 @@ export default function MemoryCard({ entry, branchOwnerId, branchId, branchTitle
                 ? 'bg-firefly-glow/20 text-firefly-glow border border-firefly-glow/40'
                 : 'bg-bg-darker text-text-muted hover:text-firefly-dim hover:border-firefly-dim/30 border border-border-subtle'
             } disabled:opacity-50 disabled:cursor-not-allowed`}
-            title={isGlowing ? 'Remove your glow' : 'Add your glow'}
+            aria-label={isGlowing ? 'Remove your glow from this memory' : 'Add your glow to this memory'}
+            aria-pressed={isGlowing}
           >
             <span className="text-lg">{isGlowing ? '✨' : '✨'}</span>
             <span className="text-sm font-medium">
@@ -669,7 +675,7 @@ export default function MemoryCard({ entry, branchOwnerId, branchId, branchTitle
             onClick={handleOpenThreadModal}
             disabled={!userId}
             className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-bg-darker border border-border-subtle text-text-muted hover:text-white hover:border-firefly-dim/40 transition-all text-sm disabled:opacity-50 disabled:cursor-not-allowed"
-            title="Add a related memory about the same person/topic"
+            aria-label="Add a related memory about the same person or topic"
           >
             <span>💬</span>
             <span>Oh yeah, and...</span>
@@ -678,7 +684,7 @@ export default function MemoryCard({ entry, branchOwnerId, branchId, branchTitle
             onClick={handleOpenInspiredModal}
             disabled={!userId}
             className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-bg-darker border border-border-subtle text-text-muted hover:text-white hover:border-firefly-dim/40 transition-all text-sm disabled:opacity-50 disabled:cursor-not-allowed"
-            title="This reminds you of a different memory"
+            aria-label="Add a memory this reminds you of"
           >
             <span>💭</span>
             <span>That reminds me of...</span>
@@ -688,6 +694,7 @@ export default function MemoryCard({ entry, branchOwnerId, branchId, branchTitle
               onClick={loadThread}
               disabled={loadingThread}
               className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-firefly-dim/10 border border-firefly-dim/30 text-firefly-glow hover:bg-firefly-dim/20 transition-all text-sm"
+              aria-label={`View ${entry._count.childMemories} ${entry._count.childMemories === 1 ? 'reply' : 'replies'}`}
             >
               <span>💬</span>
               <span>{entry._count.childMemories} {entry._count.childMemories === 1 ? 'reply' : 'replies'}</span>

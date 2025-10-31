@@ -321,6 +321,7 @@ export default function MemoryModal({ onClose, onSave, spark, onRefreshSpark, cu
                   onClick={onRefreshSpark}
                   className="px-2 py-1 bg-bg-dark border border-border-subtle text-text-muted rounded text-xs hover:border-firefly-dim hover:text-firefly-glow transition-soft"
                   title="Get a different spark"
+                  aria-label="Get a different spark"
                 >
                   🔄
                 </button>
@@ -377,6 +378,7 @@ export default function MemoryModal({ onClose, onSave, spark, onRefreshSpark, cu
                 onClick={() => fileInputRef.current?.click()}
                 disabled={!!videoPreview}
                 className="flex-1 px-3 py-1.5 bg-bg-darker border border-firefly-dim text-firefly-glow rounded hover:bg-firefly-dim hover:text-bg-dark transition-soft text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                aria-label="Choose photo file"
               >
                 📁 Choose Photo
               </button>
@@ -384,6 +386,7 @@ export default function MemoryModal({ onClose, onSave, spark, onRefreshSpark, cu
                 type="button"
                 onClick={openNestSelector}
                 className="flex-1 px-3 py-1.5 bg-bg-darker border border-firefly-dim text-firefly-glow rounded hover:bg-firefly-dim hover:text-bg-dark transition-soft text-sm"
+                aria-label="Choose media from your nest"
               >
                 🪺 Choose from Nest
               </button>
@@ -402,6 +405,7 @@ export default function MemoryModal({ onClose, onSave, spark, onRefreshSpark, cu
                   onClick={() => videoInputRef.current?.click()}
                   disabled={!!imagePreview}
                   className="w-full px-3 py-1.5 bg-purple-900/20 border border-purple-500/50 text-purple-300 rounded hover:bg-purple-900/30 transition-soft text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                  aria-label="Choose video file (Admin beta feature)"
                 >
                   🎥 Choose Video (Admin Beta)
                 </button>
@@ -441,6 +445,7 @@ export default function MemoryModal({ onClose, onSave, spark, onRefreshSpark, cu
                   onClick={startRecording}
                   disabled={!!audioUrl}
                   className="px-3 py-1.5 bg-bg-darker border border-firefly-dim text-firefly-glow rounded hover:bg-firefly-dim hover:text-bg-dark transition-soft disabled:opacity-50 text-sm"
+                  aria-label={audioUrl ? 'Audio recording saved' : 'Start audio recording'}
                 >
                   {audioUrl ? 'Recording Saved' : 'Start Recording'}
                 </button>
@@ -449,6 +454,7 @@ export default function MemoryModal({ onClose, onSave, spark, onRefreshSpark, cu
                   type="button"
                   onClick={stopRecording}
                   className="px-3 py-1.5 bg-red-600 text-white rounded hover:bg-red-700 transition-soft animate-pulse text-sm"
+                  aria-label="Stop audio recording"
                 >
                   Stop Recording
                 </button>
@@ -581,6 +587,7 @@ export default function MemoryModal({ onClose, onSave, spark, onRefreshSpark, cu
               <button
                 onClick={() => setShowNestSelector(false)}
                 className="text-text-muted hover:text-text-soft transition-soft"
+                aria-label="Close nest selector"
               >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -606,6 +613,7 @@ export default function MemoryModal({ onClose, onSave, spark, onRefreshSpark, cu
                       key={item.id}
                       onClick={() => selectNestPhoto(item)}
                       className="relative aspect-square rounded-lg overflow-hidden border-2 border-transparent hover:border-firefly-glow transition-all group cursor-pointer"
+                      aria-label={`Select ${item.mediaType === 'video' ? 'video' : 'photo'} ${item.filename}`}
                     >
                       {item.mediaType === 'video' ? (
                         <>

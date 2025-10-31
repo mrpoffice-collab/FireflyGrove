@@ -893,6 +893,7 @@ export default function BranchSettingsModal({
                           <button
                             onClick={() => handleResendInvite(invite.id)}
                             className="px-3 py-1 text-xs bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded transition-soft"
+                            aria-label={`Resend invitation to ${invite.email}`}
                           >
                             Resend
                           </button>
@@ -901,6 +902,7 @@ export default function BranchSettingsModal({
                           <button
                             onClick={() => handleCancelInvite(invite.id)}
                             className="px-3 py-1 text-xs bg-red-600 hover:bg-red-700 text-white rounded transition-soft"
+                            aria-label={`Cancel invitation to ${invite.email}`}
                           >
                             Cancel
                           </button>
@@ -940,6 +942,9 @@ export default function BranchSettingsModal({
                         type="button"
                         onClick={() => updateSharingPreference('canBeTagged', !sharingPrefs.canBeTagged)}
                         disabled={savingPrefs}
+                        role="switch"
+                        aria-checked={sharingPrefs.canBeTagged}
+                        aria-label="Allow shared memories that include me"
                         className={`relative inline-flex h-6 w-11 flex-shrink-0 rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-firefly-dim focus:ring-offset-2 disabled:opacity-50 ${
                           sharingPrefs.canBeTagged ? 'bg-firefly-dim' : 'bg-border-subtle'
                         }`}
@@ -969,6 +974,9 @@ export default function BranchSettingsModal({
                       type="button"
                       onClick={() => updateSharingPreference('requiresTagApproval', !sharingPrefs.requiresTagApproval)}
                       disabled={savingPrefs || !sharingPrefs.canBeTagged}
+                      role="switch"
+                      aria-checked={sharingPrefs.requiresTagApproval}
+                      aria-label="Require approval before shared memories appear"
                       className={`relative inline-flex h-6 w-11 flex-shrink-0 rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-firefly-dim focus:ring-offset-2 disabled:opacity-50 ${
                         sharingPrefs.requiresTagApproval ? 'bg-firefly-dim' : 'bg-border-subtle'
                       }`}
@@ -997,6 +1005,9 @@ export default function BranchSettingsModal({
                       type="button"
                       onClick={() => updateSharingPreference('visibleInCrossShares', !sharingPrefs.visibleInCrossShares)}
                       disabled={savingPrefs || !sharingPrefs.canBeTagged}
+                      role="switch"
+                      aria-checked={sharingPrefs.visibleInCrossShares}
+                      aria-label="Visible in cross-branch contexts"
                       className={`relative inline-flex h-6 w-11 flex-shrink-0 rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-firefly-dim focus:ring-offset-2 disabled:opacity-50 ${
                         sharingPrefs.visibleInCrossShares ? 'bg-firefly-dim' : 'bg-border-subtle'
                       }`}
@@ -1138,6 +1149,7 @@ export default function BranchSettingsModal({
                           <button
                             onClick={() => setEditingDates(true)}
                             className="text-text-muted hover:text-[var(--legacy-amber)] transition-soft text-sm"
+                            aria-label="Edit birth and death dates"
                           >
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
@@ -1307,6 +1319,9 @@ export default function BranchSettingsModal({
                       type="button"
                       onClick={handleToggleDiscovery}
                       disabled={togglingDiscovery}
+                      role="switch"
+                      aria-checked={discoveryEnabled}
+                      aria-label={discoveryEnabled ? 'Memorial is discoverable in public search' : 'Memorial is hidden from public search'}
                       className={`relative inline-flex h-6 w-11 flex-shrink-0 rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-firefly-dim focus:ring-offset-2 disabled:opacity-50 ${
                         discoveryEnabled ? 'bg-firefly-dim' : 'bg-border-subtle'
                       }`}

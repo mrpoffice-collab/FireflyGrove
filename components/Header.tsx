@@ -86,6 +86,7 @@ export default function Header({ userName, isBetaTester, isAdmin, groveInfo }: H
               <button
                 onClick={() => router.push('/admin/beta-invites')}
                 className="min-h-[44px] px-3 py-2 bg-firefly-dim/20 hover:bg-firefly-dim/30 text-firefly-glow border border-firefly-dim/40 rounded text-xs font-medium transition-soft flex items-center gap-1.5"
+                aria-label="Invite friends to beta"
               >
                 <span>📧</span>
                 <span className="hidden sm:inline">Invite Friends</span>
@@ -96,6 +97,7 @@ export default function Header({ userName, isBetaTester, isAdmin, groveInfo }: H
             <button
               onClick={() => setIsFeedbackOpen(true)}
               className="min-h-[44px] px-3 py-2 bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 border border-blue-500/30 rounded text-xs font-medium transition-soft flex items-center gap-1"
+              aria-label="Send beta feedback"
             >
               <span>💬</span>
               <span className="hidden sm:inline">Beta Feedback</span>
@@ -309,6 +311,7 @@ export default function Header({ userName, isBetaTester, isAdmin, groveInfo }: H
                 href="/admin/beta-invites"
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="text-base font-medium text-blue-300 hover:text-blue-200 bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/30 transition-soft py-3 px-3 rounded-lg mb-2"
+                aria-label="Invite friends to beta"
               >
                 📧 Invite Friends to Beta
               </Link>

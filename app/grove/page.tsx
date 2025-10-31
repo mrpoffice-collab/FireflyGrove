@@ -446,6 +446,7 @@ export default function GrovePage() {
                   <button
                     onClick={() => setIsEditingName(true)}
                     className="text-text-muted hover:text-firefly-glow transition-soft min-w-[44px] min-h-[44px] flex items-center justify-center"
+                    aria-label="Rename your grove"
                   >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
@@ -465,6 +466,7 @@ export default function GrovePage() {
                 <button
                   onClick={generateBurst}
                   className="inline-flex items-center gap-2 min-h-[44px] px-4 py-2.5 bg-firefly-dim/20 hover:bg-firefly-dim/30 border border-firefly-dim/40 text-firefly-glow rounded-lg text-sm font-medium transition-soft"
+                  aria-label="Generate another firefly burst of random memories"
                 >
                   <span>✨</span>
                   <span className="hidden xs:inline">Get Another Burst</span>
@@ -474,6 +476,7 @@ export default function GrovePage() {
               <button
                 onClick={() => setShowAudioSparks(true)}
                 className="inline-flex items-center gap-2 min-h-[44px] px-4 py-2.5 bg-firefly-glow hover:bg-firefly-bright text-bg-darker rounded-lg text-sm font-medium transition-soft"
+                aria-label="Record audio sparks for your branches"
               >
                 <span>🎙️</span>
                 <span>Audio Sparks</span>
@@ -558,7 +561,7 @@ export default function GrovePage() {
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4 md:gap-6 relative z-10">
             {/* Existing Trees */}
             {grove.trees?.map((tree) => (
-              <div
+              <button
                 key={tree.id}
                 onClick={() => {
                   const url = pendingNestPhoto
@@ -567,6 +570,7 @@ export default function GrovePage() {
                   router.push(url)
                 }}
                 className="flex flex-col items-center gap-2 sm:gap-3 p-3 sm:p-4 rounded-lg hover:bg-bg-dark transition-soft cursor-pointer group min-h-[120px] sm:min-h-[140px]"
+                aria-label={`View ${tree.name} tree with ${tree._count.branches} ${tree._count.branches === 1 ? 'branch' : 'branches'}`}
               >
                 {/* Simple Olive Tree SVG */}
                 <svg
@@ -594,7 +598,7 @@ export default function GrovePage() {
                     {tree._count.branches} {tree._count.branches === 1 ? 'branch' : 'branches'}
                   </div>
                 </div>
-              </div>
+              </button>
             ))}
 
             {/* Empty Slots */}

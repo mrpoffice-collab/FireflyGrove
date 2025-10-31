@@ -390,6 +390,7 @@ export default function NestPage() {
                 onChange={handleFileInput}
                 className="hidden"
                 disabled={uploading}
+                aria-label="Choose photos to upload to nest"
               />
               <span className="px-6 py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg font-medium transition-soft cursor-pointer inline-block">
                 {uploading ? 'Uploading...' : 'Choose Photos'}
@@ -416,6 +417,7 @@ export default function NestPage() {
                       }}
                       className="text-text-muted hover:text-text-soft transition-soft"
                       title="Dismiss errors"
+                      aria-label="Dismiss upload errors"
                     >
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -598,6 +600,7 @@ export default function NestPage() {
                           handleHatch(item)
                         }}
                         className="px-4 py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded text-sm font-medium transition-colors pointer-events-auto"
+                        aria-label={`Hatch ${item.mediaType === 'video' ? 'video' : 'photo'} ${item.filename} to create memory`}
                       >
                         🐣 Hatch from Nest
                       </button>
@@ -607,6 +610,7 @@ export default function NestPage() {
                           handleDelete(item.id)
                         }}
                         className="px-3 py-1.5 bg-red-500/90 hover:bg-red-500 text-white rounded text-xs transition-colors pointer-events-auto"
+                        aria-label={`Remove ${item.filename} from nest`}
                       >
                         Remove
                       </button>
