@@ -1056,10 +1056,7 @@ export default function BranchPage() {
                         }
                       </p>
                       <button
-                        onClick={() => {
-                          // For now, just show info. In production, this would trigger adoption flow
-                          alert('Adoption feature: This would open the adoption dialog to move this tree into your private grove, removing the memory limit.')
-                        }}
+                        onClick={() => setShowSettings(true)}
                         className={`text-sm px-4 py-2 rounded font-medium transition-soft ${
                           percent >= 100
                             ? 'bg-red-500 hover:bg-red-600 text-white'
@@ -1116,9 +1113,7 @@ export default function BranchPage() {
                         }
                       </p>
                       <button
-                        onClick={() => {
-                          alert('Adoption feature: This would open the adoption dialog.')
-                        }}
+                        onClick={() => setShowSettings(true)}
                         className={`text-sm px-4 py-2 rounded font-medium transition-soft ${
                           isExpired || isUrgent
                             ? 'bg-red-500 hover:bg-red-600 text-white'

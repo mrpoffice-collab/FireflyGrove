@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Tooltip from './Tooltip'
+import { useToast } from '@/lib/toast'
 
 interface Heir {
   id: string
@@ -43,6 +44,7 @@ export default function BranchSettingsModal({
   onClose,
   onBranchUpdate,
 }: BranchSettingsModalProps) {
+  const toast = useToast()
   const [heirs, setHeirs] = useState<Heir[]>([])
   const [members, setMembers] = useState<Member[]>([])
   const [pendingInvites, setPendingInvites] = useState<PendingInvite[]>([])
@@ -620,7 +622,7 @@ export default function BranchSettingsModal({
       const data = await res.json()
 
       if (res.ok) {
-        alert(data.message || 'Tree adopted successfully! You now have unlimited memories.')
+        toast.success(data.message || 'Tree adopted successfully! You now have unlimited memories.')
         await fetchBranchInfo()
         onBranchUpdate?.()
         onClose()
@@ -668,7 +670,7 @@ export default function BranchSettingsModal({
       const data = await res.json()
 
       if (res.ok) {
-        alert(data.message || 'Tree rooted successfully!')
+        toast.success(data.message || 'Tree rooted successfully!')
         await fetchBranchInfo()
         onBranchUpdate?.()
         onClose()

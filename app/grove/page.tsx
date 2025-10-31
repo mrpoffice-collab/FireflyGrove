@@ -11,6 +11,7 @@ import FireflyBurst from '@/components/FireflyBurst'
 import AudioSparks from '@/components/AudioSparks'
 import { getPlanById } from '@/lib/plans'
 import { SkeletonTreeCard, SkeletonPersonCard, SkeletonGrid, SkeletonTitle, SkeletonText } from '@/components/SkeletonLoader'
+import { useToast } from '@/lib/toast'
 
 interface Tree {
   id: string
@@ -105,6 +106,7 @@ interface TransplantablePerson {
 export default function GrovePage() {
   const { data: session, status } = useSession()
   const router = useRouter()
+  const toast = useToast()
   const [grove, setGrove] = useState<Grove | null>(null)
   const [loading, setLoading] = useState(true)
   const [isEditingName, setIsEditingName] = useState(false)
@@ -237,14 +239,14 @@ export default function GrovePage() {
         // Refresh both lists
         await fetchGrove()
         await fetchTransplantable()
-        alert(`"${personName}" has been transplanted to your grove!`)
+        toast.success(`"${personName}" has been transplanted to your grove!`)
       } else {
         const error = await res.json()
-        alert(error.error || 'Failed to transplant tree')
+        toast.error(error.error || 'Failed to transplant tree')
       }
     } catch (error) {
       console.error('Failed to transplant tree:', error)
-      alert('Failed to transplant tree')
+      toast.error('Failed to transplant tree')
     } finally {
       setTransplanting(null)
     }
