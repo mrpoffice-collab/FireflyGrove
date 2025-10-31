@@ -10,6 +10,7 @@ import BranchSettingsModal from '@/components/BranchSettingsModal'
 import UndoBanner from '@/components/UndoBanner'
 import SharePanel from '@/components/SharePanel'
 import { getActiveChallenge, getRandomSpark, getRandomSparkExcluding, SparkCollection } from '@/lib/sparks'
+import { SkeletonMemoryCard, SkeletonList, SkeletonTitle, SkeletonText } from '@/components/SkeletonLoader'
 
 interface Entry {
   id: string
@@ -545,8 +546,25 @@ export default function BranchPage() {
 
   if (status === 'loading' || loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-text-muted">Loading branch...</div>
+      <div className="min-h-screen">
+        <Header userName={session?.user?.name || 'User'} />
+        <div className="container mx-auto px-4 py-8">
+          {/* Branch Header Skeleton */}
+          <div className="mb-8">
+            <SkeletonTitle className="w-64 mb-3" />
+            <SkeletonText className="w-96 mb-2" />
+            <SkeletonText className="w-48" />
+          </div>
+
+          {/* Action Buttons Skeleton */}
+          <div className="flex gap-3 mb-8">
+            <div className="h-10 w-40 animate-pulse bg-gradient-to-r from-bg-darker via-border-subtle to-bg-darker rounded" />
+            <div className="h-10 w-32 animate-pulse bg-gradient-to-r from-bg-darker via-border-subtle to-bg-darker rounded" />
+          </div>
+
+          {/* Memory Cards Skeleton */}
+          <SkeletonList count={3} ItemComponent={SkeletonMemoryCard} />
+        </div>
       </div>
     )
   }
