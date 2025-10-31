@@ -31,7 +31,15 @@
       "Bash(npm test)",
       "Bash(npm test:*)",
       "Bash(vercel --version:*)",
-      "Bash(npx tsx:*)"
+      "Bash(npx tsx:*)",
+      "Bash(if [ -f .env.local ])",
+      "Bash(then grep -i \"VERCEL\" .env.local)",
+      "Bash(else echo \"No .env.local file found\")",
+      "Bash(fi)",
+      "Bash(vercel:*)",
+      "Bash(cat:*)",
+      "Bash(env)",
+      "WebFetch(domain:api.lulu.com)"
     ],
     "deny": [],
     "ask": []
