@@ -15,10 +15,29 @@ interface Grove {
   stripeSubscriptionId: string | null
 }
 
+interface TreeSubscription {
+  id: string
+  status: string
+  renewalDate: string | null
+  createdAt: string
+  stripeSubscriptionId: string | null
+  person: {
+    id: string
+    name: string
+    isLegacy: boolean
+  }
+  grove: {
+    id: string
+    name: string
+  }
+  membershipId: string
+}
+
 export default function BillingPage() {
   const { data: session, status } = useSession()
   const router = useRouter()
   const [grove, setGrove] = useState<Grove | null>(null)
+  const [treeSubscriptions, setTreeSubscriptions] = useState<TreeSubscription[]>([])
   const [loading, setLoading] = useState(true)
   const [loadingPortal, setLoadingPortal] = useState(false)
   const [changingPlan, setChangingPlan] = useState<string | null>(null)
@@ -32,6 +51,7 @@ export default function BillingPage() {
   useEffect(() => {
     if (status === 'authenticated') {
       fetchGrove()
+      fetchTreeSubscriptions()
     }
   }, [status])
 
@@ -46,6 +66,18 @@ export default function BillingPage() {
       console.error('Failed to fetch grove:', error)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const fetchTreeSubscriptions = async () => {
+    try {
+      const res = await fetch('/api/tree-subscription/list')
+      if (res.ok) {
+        const data = await res.json()
+        setTreeSubscriptions(data.subscriptions || [])
+      }
+    } catch (error) {
+      console.error('Failed to fetch tree subscriptions:', error)
     }
   }
 
@@ -273,6 +305,86 @@ export default function BillingPage() {
               )
             })}
           </div>
+
+          {/* Individual Tree Subscriptions */}
+          {treeSubscriptions.length > 0 && (
+            <div className="mt-12">
+              <h2 className="text-2xl font-light text-text-soft mb-6">
+                Individual Tree Subscriptions
+              </h2>
+              <p className="text-text-muted text-sm mb-6">
+                These trees have individual subscriptions ($4.99/year each) and remain active even if your Grove subscription expires.
+              </p>
+
+              <div className="space-y-4">
+                {treeSubscriptions.map((sub) => (
+                  <div
+                    key={sub.id}
+                    className="bg-bg-dark border border-border-subtle rounded-lg p-6"
+                  >
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-3 mb-2">
+                          <h3 className="text-lg text-text-soft font-medium">
+                            {sub.person.name}
+                          </h3>
+                          {sub.status === 'active' && (
+                            <span className="px-2 py-1 text-xs rounded-full bg-green-500/20 text-green-400 border border-green-500/30">
+                              Active
+                            </span>
+                          )}
+                          {sub.status === 'past_due' && (
+                            <span className="px-2 py-1 text-xs rounded-full bg-orange-500/20 text-orange-400 border border-orange-500/30">
+                              Past Due
+                            </span>
+                          )}
+                          {sub.status === 'canceled' && (
+                            <span className="px-2 py-1 text-xs rounded-full bg-red-500/20 text-red-400 border border-red-500/30">
+                              Canceled
+                            </span>
+                          )}
+                          {sub.status === 'frozen' && (
+                            <span className="px-2 py-1 text-xs rounded-full bg-blue-500/20 text-blue-400 border border-blue-500/30">
+                              Frozen
+                            </span>
+                          )}
+                          {sub.person.isLegacy && (
+                            <span className="px-2 py-1 text-xs rounded-full bg-text-muted/20 text-text-muted">
+                              Legacy
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-text-muted text-sm mb-1">
+                          In Grove: {sub.grove.name}
+                        </p>
+                        {sub.renewalDate && (
+                          <p className="text-text-muted text-xs">
+                            Next renewal: {new Date(sub.renewalDate).toLocaleDateString()}
+                          </p>
+                        )}
+                      </div>
+                      <div className="text-right">
+                        <div className="text-2xl font-light text-text-soft mb-1">
+                          $4.99
+                        </div>
+                        <div className="text-text-muted text-xs">per year</div>
+                      </div>
+                    </div>
+
+                    {sub.stripeSubscriptionId && (
+                      <button
+                        onClick={handleManageSubscription}
+                        disabled={loadingPortal}
+                        className="mt-4 px-4 py-2 bg-bg-darker hover:bg-border-subtle text-text-soft rounded text-sm transition-soft disabled:opacity-50"
+                      >
+                        {loadingPortal ? 'Loading...' : 'Manage Subscription'}
+                      </button>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           <div className="mt-12 bg-bg-dark border border-border-subtle rounded-lg p-6">
             <h3 className="text-lg text-text-soft mb-3">Need Help?</h3>
