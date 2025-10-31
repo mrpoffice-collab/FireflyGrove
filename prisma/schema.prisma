@@ -53,6 +53,7 @@ model User {
   fireflyBursts FireflyBurst[]
   burstSettings UserBurstSettings?
   audioSparks AudioSpark[] @relation("UserAudioSparks")
+  memoryGlows MemoryGlow[] @relation("UserMemoryGlows")
 
   @@index([email])
   @@index([status])
@@ -284,12 +285,16 @@ model Entry {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
+  // Firefly Glow
+  glowCount   Int      @default(0)  // Number of glows (the power!)
+
   // Relations
   branch          Branch              @relation(fields: [branchId], references: [id], onDelete: Cascade)
   author          User                @relation(fields: [authorId], references: [id], onDelete: Cascade)
   reports         Report[]
   memoryLinks     MemoryBranchLink[]  @relation("MemoryLinks")
   localMetadata   MemoryLocalMeta[]   @relation("MemoryLocalMeta")
+  glows           MemoryGlow[]
 
   @@index([branchId])
   @@index([authorId])
@@ -297,6 +302,7 @@ model Entry {
   @@index([status])
   @@index([createdAt])
   @@index([contentHash])
+  @@index([glowCount])
 }
 
 model BranchMember {
@@ -1424,6 +1430,27 @@ model UserBurstSettings {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
+}
+
+// ============================================
+// FIREFLY GLOW - Memory acknowledgment system
+// ============================================
+
+// Firefly Glow - Gentle acknowledgment that makes memories shine brighter
+model MemoryGlow {
+  id        String   @id @default(cuid())
+  entryId   String
+  userId    String
+  createdAt DateTime @default(now())
+
+  // Relations
+  entry     Entry    @relation(fields: [entryId], references: [id], onDelete: Cascade)
+  user      User     @relation("UserMemoryGlows", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([entryId, userId]) // One glow per user per memory
+  @@index([entryId])
+  @@index([userId])
+  @@index([createdAt])
 }
 
 // ============================================

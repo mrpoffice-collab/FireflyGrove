@@ -184,6 +184,12 @@ export async function GET(
               name: true,
             },
           },
+          glows: {
+            where: userId ? { userId } : undefined,
+            select: {
+              userId: true,
+            },
+          },
         },
         orderBy: {
           createdAt: 'desc',

@@ -15,6 +15,8 @@ interface MemoryCardProps {
     videoUrl: string | null
     audioUrl: string | null
     createdAt: string
+    glowCount?: number
+    glows?: Array<{ userId: string }>
     author: {
       name: string
       id?: string
@@ -44,10 +46,22 @@ export default function MemoryCard({ entry, branchOwnerId, branchId, branchTitle
   const [isEditing, setIsEditing] = useState(false)
   const [editedText, setEditedText] = useState(entry.text)
 
+  // Firefly Glow state
+  const [glowCount, setGlowCount] = useState(entry.glowCount || 0)
+  const [isGlowing, setIsGlowing] = useState(false)
+  const [isGlowProcessing, setIsGlowProcessing] = useState(false)
+
   const userId = (session?.user as any)?.id
   const isAuthor = entry.author.id === userId
   const isBranchOwner = branchOwnerId === userId
   const isAdmin = (session?.user as any)?.isAdmin
+
+  // Check if user has already glowed this memory
+  useEffect(() => {
+    if (userId && entry.glows) {
+      setIsGlowing(entry.glows.some(g => g.userId === userId))
+    }
+  }, [userId, entry.glows])
 
   // Fetch sharing information
   useEffect(() => {
@@ -232,6 +246,35 @@ export default function MemoryCard({ entry, branchOwnerId, branchId, branchTitle
     setIsEditing(false)
   }
 
+  const handleToggleGlow = async () => {
+    if (!userId) {
+      alert('Please sign in to glow this memory')
+      return
+    }
+
+    setIsGlowProcessing(true)
+
+    try {
+      const method = isGlowing ? 'DELETE' : 'POST'
+      const res = await fetch(`/api/memories/${entry.id}/glow`, {
+        method,
+      })
+
+      if (res.ok) {
+        const data = await res.json()
+        setGlowCount(data.glowCount)
+        setIsGlowing(data.isGlowing)
+      } else {
+        const data = await res.json()
+        console.error('Failed to toggle glow:', data.error)
+      }
+    } catch (error) {
+      console.error('Error toggling glow:', error)
+    } finally {
+      setIsGlowProcessing(false)
+    }
+  }
+
   const handleRemoveFromBranch = async () => {
     if (!confirm('Remove this memory from this branch? It will remain visible in other branches where it\'s shared.')) {
       return
@@ -262,7 +305,18 @@ export default function MemoryCard({ entry, branchOwnerId, branchId, branchTitle
   }
 
   return (
-    <div className="bg-bg-dark border border-border-subtle rounded-lg p-6 hover:border-firefly-dim/50 transition-soft">
+    <div
+      className="bg-bg-dark border border-border-subtle rounded-lg p-6 hover:border-firefly-dim/50 transition-soft memory-card-glow"
+      data-glow-count={glowCount}
+      style={{
+        boxShadow: glowCount > 0
+          ? `0 0 ${Math.min(10 + glowCount * 4, 50)}px rgba(255, 217, 102, ${Math.min(0.1 + glowCount * 0.05, 0.6)})`
+          : undefined,
+        borderColor: glowCount > 0
+          ? `rgba(255, 217, 102, ${Math.min(0.2 + glowCount * 0.05, 0.5)})`
+          : undefined,
+      }}
+    >
       <div className="flex items-start justify-between mb-4">
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-2">
@@ -485,6 +539,30 @@ export default function MemoryCard({ entry, branchOwnerId, branchId, branchTitle
           </audio>
         </div>
       )}
+
+      {/* Firefly Glow */}
+      <div className="mt-4 pt-3 border-t border-border-subtle/50 flex items-center gap-3">
+        <button
+          onClick={handleToggleGlow}
+          disabled={isGlowProcessing || !userId}
+          className={`flex items-center gap-2 px-3 py-1.5 rounded-full transition-all ${
+            isGlowing
+              ? 'bg-firefly-glow/20 text-firefly-glow border border-firefly-glow/40'
+              : 'bg-bg-darker text-text-muted hover:text-firefly-dim hover:border-firefly-dim/30 border border-border-subtle'
+          } disabled:opacity-50 disabled:cursor-not-allowed`}
+          title={isGlowing ? 'Remove your glow' : 'Add your glow'}
+        >
+          <span className="text-lg">{isGlowing ? '✨' : '✨'}</span>
+          <span className="text-sm font-medium">
+            {isGlowProcessing ? '...' : isGlowing ? 'Glowing' : 'Glow this'}
+          </span>
+        </button>
+        {glowCount > 0 && (
+          <span className="text-text-muted text-sm">
+            ✨<sup>{glowCount}</sup> {glowCount === 1 ? 'glow' : 'glows'}
+          </span>
+        )}
+      </div>
 
       {/* Pinterest Board Selector Modal */}
       {showBoardSelector && (
