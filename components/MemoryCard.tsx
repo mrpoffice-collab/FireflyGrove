@@ -49,7 +49,6 @@ export default function MemoryCard({ entry, branchOwnerId, branchId, branchTitle
   } | null>(null)
   const [showSharePanel, setShowSharePanel] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
-  const [editedText, setEditedText] = useState(entry.text)
 
   // Firefly Glow state
   const [glowCount, setGlowCount] = useState(entry.glowCount || 0)
@@ -225,27 +224,44 @@ export default function MemoryCard({ entry, branchOwnerId, branchId, branchTitle
     setShowMenu(false)
   }
 
-  const handleSaveEdit = async () => {
-    if (editedText.trim() === '') {
-      alert('Memory text cannot be empty')
-      return
-    }
-
+  const handleSaveEdit = async (data: {
+    text: string
+    visibility: string
+    legacyFlag: boolean
+    mediaUrl?: string
+    videoUrl?: string
+    audioUrl?: string
+    sharedBranchIds?: string[]
+    memoryCard?: string | null
+    parentMemoryId?: string
+  }) => {
     setIsProcessing(true)
 
     try {
       const res = await fetch(`/api/entries/${entry.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: editedText }),
+        body: JSON.stringify({
+          text: data.text,
+          mediaUrl: data.mediaUrl,
+          videoUrl: data.videoUrl,
+          audioUrl: data.audioUrl,
+        }),
       })
 
       if (res.ok) {
-        entry.text = editedText
+        // Update entry with new data
+        entry.text = data.text
+        if (data.mediaUrl !== undefined) entry.mediaUrl = data.mediaUrl
+        if (data.videoUrl !== undefined) entry.videoUrl = data.videoUrl
+        if (data.audioUrl !== undefined) entry.audioUrl = data.audioUrl
         setIsEditing(false)
+
+        // Trigger refresh if callback provided
+        onMemoryAdded?.()
       } else {
-        const data = await res.json()
-        alert(data.error || 'Failed to update memory')
+        const error = await res.json()
+        alert(error.error || 'Failed to update memory')
       }
     } catch (error) {
       console.error('Error updating memory:', error)
@@ -256,7 +272,6 @@ export default function MemoryCard({ entry, branchOwnerId, branchId, branchTitle
   }
 
   const handleCancelEdit = () => {
-    setEditedText(entry.text)
     setIsEditing(false)
   }
 
@@ -572,37 +587,9 @@ export default function MemoryCard({ entry, branchOwnerId, branchId, branchTitle
         </div>
       </div>
 
-      {isEditing ? (
-        <div className="space-y-3">
-          <textarea
-            value={editedText}
-            onChange={(e) => setEditedText(e.target.value)}
-            className="w-full px-4 py-3 bg-bg-darker border border-firefly-dim/50 rounded-lg text-text-soft placeholder-text-muted focus:outline-none focus:border-firefly-glow transition-soft resize-y min-h-[120px]"
-            placeholder="Share your memory..."
-            disabled={isProcessing}
-          />
-          <div className="flex gap-2">
-            <button
-              onClick={handleSaveEdit}
-              disabled={isProcessing || editedText.trim() === ''}
-              className="px-4 py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg font-medium transition-soft disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {isProcessing ? 'Saving...' : 'Save Changes'}
-            </button>
-            <button
-              onClick={handleCancelEdit}
-              disabled={isProcessing}
-              className="px-4 py-2 bg-bg-darker hover:bg-border-subtle text-text-muted rounded-lg font-medium transition-soft disabled:opacity-50"
-            >
-              Cancel
-            </button>
-          </div>
-        </div>
-      ) : (
-        <p className="text-text-soft leading-relaxed whitespace-pre-wrap">
-          {entry.text}
-        </p>
-      )}
+      <p className="text-text-soft leading-relaxed whitespace-pre-wrap">
+        {entry.text}
+      </p>
 
       {entry.mediaUrl && (
         <div className="mt-4">
@@ -780,6 +767,22 @@ export default function MemoryCard({ entry, branchOwnerId, branchId, branchTitle
           currentBranchId={branchId}
           isAdmin={isAdmin}
           threadType="inspired"
+        />
+      )}
+
+      {/* Edit Modal - Full memory editing */}
+      {isEditing && (
+        <MemoryModal
+          onClose={handleCancelEdit}
+          onSave={handleSaveEdit}
+          spark={entry.text}
+          currentBranchId={branchId}
+          isAdmin={isAdmin}
+          prePopulatedPhoto={
+            entry.mediaUrl
+              ? { url: entry.mediaUrl, mediaType: 'photo' }
+              : undefined
+          }
         />
       )}
 
