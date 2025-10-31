@@ -10,6 +10,7 @@ import FireflyCanvas from '@/components/FireflyCanvas'
 import FireflyBurst from '@/components/FireflyBurst'
 import AudioSparks from '@/components/AudioSparks'
 import { getPlanById } from '@/lib/plans'
+import { SkeletonTreeCard, SkeletonPersonCard, SkeletonGrid, SkeletonTitle, SkeletonText } from '@/components/SkeletonLoader'
 
 interface Tree {
   id: string
@@ -276,8 +277,26 @@ export default function GrovePage() {
 
   if (status === 'loading' || loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-text-muted">Loading grove...</div>
+      <div className="min-h-screen">
+        <Header userName={session?.user?.name || 'User'} />
+        <div className="container mx-auto px-4 py-8">
+          <div className="mb-8">
+            <SkeletonTitle className="w-64 mb-2" />
+            <SkeletonText className="w-96" />
+          </div>
+
+          {/* Trees Section */}
+          <div className="mb-12">
+            <SkeletonTitle className="w-48 mb-6" />
+            <SkeletonGrid count={3} ItemComponent={SkeletonTreeCard} columns={3} />
+          </div>
+
+          {/* Persons Section */}
+          <div className="mb-12">
+            <SkeletonTitle className="w-48 mb-6" />
+            <SkeletonGrid count={4} ItemComponent={SkeletonPersonCard} columns={2} />
+          </div>
+        </div>
       </div>
     )
   }
