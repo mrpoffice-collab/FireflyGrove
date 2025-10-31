@@ -2,6 +2,7 @@
 
 import { useSession } from 'next-auth/react'
 import { useState, useEffect } from 'react'
+import FocusTrap from 'focus-trap-react'
 
 interface FeedbackModalProps {
   isOpen: boolean
@@ -16,6 +17,32 @@ export default function FeedbackModal({ isOpen, onClose }: FeedbackModalProps) {
     description: '',
     severity: 'suggestion',
   })
+  const [triggerElement, setTriggerElement] = useState<HTMLElement | null>(null)
+
+  // Store trigger element and restore focus on close
+  useEffect(() => {
+    if (isOpen) {
+      setTriggerElement(document.activeElement as HTMLElement)
+    }
+    return () => {
+      if (!isOpen && triggerElement) {
+        setTimeout(() => triggerElement.focus(), 0)
+      }
+    }
+  }, [isOpen])
+
+  // Escape key handler
+  useEffect(() => {
+    if (!isOpen) return
+
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        handleClose()
+      }
+    }
+    window.addEventListener('keydown', handleEscape)
+    return () => window.removeEventListener('keydown', handleEscape)
+  }, [isOpen])
 
   // Capture the current page when modal opens
   useEffect(() => {
@@ -70,11 +97,15 @@ export default function FeedbackModal({ isOpen, onClose }: FeedbackModalProps) {
       />
 
       {/* Compact panel - bottom right */}
-      <div className="fixed bottom-6 right-6 z-[9999] w-full max-w-sm pointer-events-none">
-        <div
-          className="bg-bg-dark/95 backdrop-blur-md border border-border-subtle rounded-lg shadow-2xl pointer-events-auto"
-          onClick={(e) => e.stopPropagation()}
-        >
+      <FocusTrap active={isOpen}>
+        <div className="fixed bottom-6 right-6 z-[9999] w-full max-w-sm pointer-events-none">
+          <div
+            className="bg-bg-dark/95 backdrop-blur-md border border-border-subtle rounded-lg shadow-2xl pointer-events-auto"
+            onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="feedback-modal-title"
+          >
           {submitted ? (
             <div className="p-6 text-center">
               <div className="text-firefly-glow text-4xl mb-3">✓</div>
@@ -87,11 +118,12 @@ export default function FeedbackModal({ isOpen, onClose }: FeedbackModalProps) {
               <div className="flex items-center justify-between px-4 py-3 border-b border-border-subtle">
                 <div className="flex items-center gap-2">
                   <span className="text-blue-400">💬</span>
-                  <h3 className="text-sm font-medium text-text-soft">Beta Feedback</h3>
+                  <h3 id="feedback-modal-title" className="text-sm font-medium text-text-soft">Beta Feedback</h3>
                 </div>
                 <button
                   onClick={handleClose}
                   className="text-text-muted hover:text-text-soft transition-soft"
+                  aria-label="Close feedback modal"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -154,8 +186,9 @@ export default function FeedbackModal({ isOpen, onClose }: FeedbackModalProps) {
               </form>
             </>
           )}
+          </div>
         </div>
-      </div>
+      </FocusTrap>
     </>
   )
 }

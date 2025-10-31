@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import FocusTrap from 'focus-trap-react'
 
 interface TransplantTreeModalProps {
   treeId: string
@@ -25,6 +26,29 @@ export default function TransplantTreeModal({
   const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [triggerElement, setTriggerElement] = useState<HTMLElement | null>(null)
+
+  // Store trigger element and restore focus on close
+  useEffect(() => {
+    setTriggerElement(document.activeElement as HTMLElement)
+
+    return () => {
+      if (triggerElement) {
+        setTimeout(() => triggerElement.focus(), 0)
+      }
+    }
+  }, [])
+
+  // Escape key handler
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose()
+      }
+    }
+    window.addEventListener('keydown', handleEscape)
+    return () => window.removeEventListener('keydown', handleEscape)
+  }, [onClose])
 
   const handleSendInvitation = async () => {
     if (!recipientEmail.trim()) {
@@ -69,18 +93,25 @@ export default function TransplantTreeModal({
 
   return (
     <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
-      <div className="bg-bg-dark border border-border-subtle rounded-lg max-w-lg w-full p-6">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-light text-text-soft">Transfer Tree 🌿</h2>
-          <button
-            onClick={onClose}
-            className="text-text-muted hover:text-text-soft transition-soft"
-          >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
+      <FocusTrap>
+        <div
+          className="bg-bg-dark border border-border-subtle rounded-lg max-w-lg w-full p-6"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="transplant-modal-title"
+        >
+          <div className="flex items-center justify-between mb-6">
+            <h2 id="transplant-modal-title" className="text-2xl font-light text-text-soft">Transfer Tree 🌿</h2>
+            <button
+              onClick={onClose}
+              className="text-text-muted hover:text-text-soft transition-soft"
+              aria-label="Close transfer tree modal"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
 
         <div className="space-y-6">
           {/* Explanation */}
@@ -166,7 +197,8 @@ export default function TransplantTreeModal({
             {loading ? 'Sending...' : 'Send Invitation'}
           </button>
         </div>
-      </div>
+        </div>
+      </FocusTrap>
     </div>
   )
 }

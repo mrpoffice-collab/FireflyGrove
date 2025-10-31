@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import FocusTrap from 'focus-trap-react'
 
 interface PersonSearchResult {
   id: string
@@ -29,6 +30,29 @@ export default function BranchModal({ onClose, onSave }: BranchModalProps) {
   const [searchResults, setSearchResults] = useState<{ registeredUsers: PersonSearchResult[]; persons: PersonSearchResult[] } | null>(null)
   const [searching, setSearching] = useState(false)
   const [selectedPerson, setSelectedPerson] = useState<PersonSearchResult | null>(null)
+  const [triggerElement, setTriggerElement] = useState<HTMLElement | null>(null)
+
+  // Store trigger element and restore focus on close
+  useEffect(() => {
+    setTriggerElement(document.activeElement as HTMLElement)
+
+    return () => {
+      if (triggerElement) {
+        setTimeout(() => triggerElement.focus(), 0)
+      }
+    }
+  }, [])
+
+  // Escape key handler
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose()
+      }
+    }
+    window.addEventListener('keydown', handleEscape)
+    return () => window.removeEventListener('keydown', handleEscape)
+  }, [onClose])
 
   // Debounced search for existing persons
   useEffect(() => {
@@ -78,8 +102,14 @@ export default function BranchModal({ onClose, onSave }: BranchModalProps) {
 
   return (
     <div className="fixed inset-0 bg-black/30 flex items-center justify-center p-4 z-50 backdrop-blur-sm">
-      <div className="bg-bg-dark border border-border-subtle rounded-lg max-w-md w-full p-6 max-h-[90vh] overflow-y-auto">
-        <h2 className="text-2xl text-text-soft mb-6">Create New Branch</h2>
+      <FocusTrap>
+        <div
+          className="bg-bg-dark border border-border-subtle rounded-lg max-w-md w-full p-6 max-h-[90vh] overflow-y-auto"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="branch-modal-title"
+        >
+          <h2 id="branch-modal-title" className="text-2xl text-text-soft mb-6">Create New Branch</h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="relative">
@@ -233,7 +263,8 @@ export default function BranchModal({ onClose, onSave }: BranchModalProps) {
             </button>
           </div>
         </form>
-      </div>
+        </div>
+      </FocusTrap>
     </div>
   )
 }

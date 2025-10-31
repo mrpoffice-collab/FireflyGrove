@@ -1,6 +1,8 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
+import FocusTrap from 'focus-trap-react'
 
 interface Match {
   id: string
@@ -27,6 +29,29 @@ export default function DuplicateMemorialModal({
   onCancel,
 }: DuplicateMemorialModalProps) {
   const router = useRouter()
+  const [triggerElement, setTriggerElement] = useState<HTMLElement | null>(null)
+
+  // Store trigger element and restore focus on close
+  useEffect(() => {
+    setTriggerElement(document.activeElement as HTMLElement)
+
+    return () => {
+      if (triggerElement) {
+        setTimeout(() => triggerElement.focus(), 0)
+      }
+    }
+  }, [])
+
+  // Escape key handler
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onCancel()
+      }
+    }
+    window.addEventListener('keydown', handleEscape)
+    return () => window.removeEventListener('keydown', handleEscape)
+  }, [onCancel])
 
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr)
@@ -35,18 +60,24 @@ export default function DuplicateMemorialModal({
 
   return (
     <div className="fixed inset-0 bg-black/30 flex items-center justify-center p-4 z-50 backdrop-blur-sm">
-      <div className="bg-bg-dark border border-[var(--legacy-amber)]/30 rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-        <div className="p-6">
-          {/* Header */}
-          <div className="text-center mb-6">
-            <div className="text-5xl mb-3">🕯️</div>
-            <h2 className="text-2xl font-light text-[var(--legacy-text)] mb-2">
-              Every story deserves a light — even if it shines twice.
-            </h2>
-            <p className="text-text-muted text-sm">
-              We found {matches.length} existing memorial{matches.length > 1 ? 's' : ''} that might match
-            </p>
-          </div>
+      <FocusTrap>
+        <div
+          className="bg-bg-dark border border-[var(--legacy-amber)]/30 rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="duplicate-memorial-title"
+        >
+          <div className="p-6">
+            {/* Header */}
+            <div className="text-center mb-6">
+              <div className="text-5xl mb-3">🕯️</div>
+              <h2 id="duplicate-memorial-title" className="text-2xl font-light text-[var(--legacy-text)] mb-2">
+                Every story deserves a light — even if it shines twice.
+              </h2>
+              <p className="text-text-muted text-sm">
+                We found {matches.length} existing memorial{matches.length > 1 ? 's' : ''} that might match
+              </p>
+            </div>
 
           {/* Existing Memorials */}
           <div className="space-y-4 mb-6">
@@ -128,7 +159,8 @@ export default function DuplicateMemorialModal({
             </div>
           </div>
         </div>
-      </div>
+        </div>
+      </FocusTrap>
     </div>
   )
 }

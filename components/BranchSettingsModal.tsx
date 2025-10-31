@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import FocusTrap from 'focus-trap-react'
 import Tooltip from './Tooltip'
 import { useToast } from '@/lib/toast'
 
@@ -93,6 +94,9 @@ export default function BranchSettingsModal({
   const [generatingLink, setGeneratingLink] = useState(false)
   const [linkCopied, setLinkCopied] = useState(false)
 
+  // Focus management
+  const [triggerElement, setTriggerElement] = useState<HTMLElement | null>(null)
+
   // Sharing preferences
   const [sharingPrefs, setSharingPrefs] = useState({
     canBeTagged: true,
@@ -101,6 +105,28 @@ export default function BranchSettingsModal({
   })
   const [loadingPrefs, setLoadingPrefs] = useState(false)
   const [savingPrefs, setSavingPrefs] = useState(false)
+
+  // Store trigger element and restore focus on close
+  useEffect(() => {
+    setTriggerElement(document.activeElement as HTMLElement)
+
+    return () => {
+      if (triggerElement) {
+        setTimeout(() => triggerElement.focus(), 0)
+      }
+    }
+  }, [])
+
+  // Escape key handler
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose()
+      }
+    }
+    window.addEventListener('keydown', handleEscape)
+    return () => window.removeEventListener('keydown', handleEscape)
+  }, [onClose])
 
   useEffect(() => {
     fetchBranchInfo()
@@ -686,18 +712,25 @@ export default function BranchSettingsModal({
 
   return (
     <div className="fixed inset-0 bg-black/30 flex items-center justify-center p-4 z-50 backdrop-blur-sm">
-      <div className="bg-bg-dark border border-border-subtle rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-        <div className="p-6 border-b border-border-subtle flex justify-between items-center">
-          <h2 className="text-2xl font-light text-text-soft">
-            Branch Settings
-          </h2>
-          <button
-            onClick={onClose}
-            className="text-text-muted hover:text-text-soft text-2xl"
-          >
-            ×
-          </button>
-        </div>
+      <FocusTrap>
+        <div
+          className="bg-bg-dark border border-border-subtle rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="branch-settings-title"
+        >
+          <div className="p-6 border-b border-border-subtle flex justify-between items-center">
+            <h2 id="branch-settings-title" className="text-2xl font-light text-text-soft">
+              Branch Settings
+            </h2>
+            <button
+              onClick={onClose}
+              className="text-text-muted hover:text-text-soft text-2xl"
+              aria-label="Close branch settings"
+            >
+              ×
+            </button>
+          </div>
 
         <div className="p-6">
           {/* Members Section */}
@@ -1566,7 +1599,8 @@ export default function BranchSettingsModal({
             </button>
           </div>
         </div>
-      </div>
+        </div>
+      </FocusTrap>
     </div>
   )
 }

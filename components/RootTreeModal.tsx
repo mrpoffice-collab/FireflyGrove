@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import FocusTrap from 'focus-trap-react'
 
 interface SearchResult {
   personId: string
@@ -31,6 +32,29 @@ export default function RootTreeModal({
   const [searching, setSearching] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [triggerElement, setTriggerElement] = useState<HTMLElement | null>(null)
+
+  // Store trigger element and restore focus on close
+  useEffect(() => {
+    setTriggerElement(document.activeElement as HTMLElement)
+
+    return () => {
+      if (triggerElement) {
+        setTimeout(() => triggerElement.focus(), 0)
+      }
+    }
+  }, [])
+
+  // Escape key handler
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose()
+      }
+    }
+    window.addEventListener('keydown', handleEscape)
+    return () => window.removeEventListener('keydown', handleEscape)
+  }, [onClose])
 
   const handleSearch = async () => {
     if (!searchQuery.trim()) {
@@ -99,19 +123,26 @@ export default function RootTreeModal({
 
   return (
     <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
-      <div className="bg-bg-dark border border-border-subtle rounded-lg max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col">
-        {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-border-subtle">
-          <h2 className="text-2xl font-light text-text-soft">Root with Another Tree 🌱</h2>
-          <button
-            onClick={onClose}
-            className="text-text-muted hover:text-text-soft transition-soft"
-          >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
+      <FocusTrap>
+        <div
+          className="bg-bg-dark border border-border-subtle rounded-lg max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="root-tree-modal-title"
+        >
+          {/* Header */}
+          <div className="flex items-center justify-between p-6 border-b border-border-subtle">
+            <h2 id="root-tree-modal-title" className="text-2xl font-light text-text-soft">Root with Another Tree 🌱</h2>
+            <button
+              onClick={onClose}
+              className="text-text-muted hover:text-text-soft transition-soft"
+              aria-label="Close root tree modal"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
 
         {/* Content */}
         <div className="flex-1 overflow-y-auto p-6 space-y-6">
@@ -256,7 +287,8 @@ export default function RootTreeModal({
             {loading ? 'Creating Root...' : 'Root Trees'}
           </button>
         </div>
-      </div>
+        </div>
+      </FocusTrap>
     </div>
   )
 }

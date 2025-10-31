@@ -329,11 +329,12 @@ export default function TreePage() {
               {tree.branches.map((branch) => (
                 <div
                   key={branch.id}
-                  className="bg-bg-dark border border-border-subtle rounded-lg p-6 hover:border-firefly-dim/50 transition-soft group relative"
+                  className="bg-bg-dark border border-border-subtle rounded-lg hover:border-firefly-dim/50 transition-soft group relative"
                 >
-                  <div
+                  <button
                     onClick={() => router.push(`/branch/${branch.id}`)}
-                    className="cursor-pointer"
+                    className="w-full text-left p-6 cursor-pointer"
+                    aria-label={`View ${branch.title} branch with ${branch._count.entries} ${branch._count.entries === 1 ? 'memory' : 'memories'}`}
                   >
                     <div className="flex items-start justify-between mb-4">
                       <div className="text-3xl">
@@ -373,7 +374,7 @@ export default function TreePage() {
                         Created {new Date(branch.createdAt).toLocaleDateString()}
                       </span>
                     </div>
-                  </div>
+                  </button>
                   {/* Delete button - only show for branches with 0 memories */}
                   {branch._count.entries === 0 && branch.owner.id === (session.user as any)?.id && (
                     <button

@@ -607,7 +607,7 @@ export default function GrovePage() {
                 key={`empty-${index}`}
                 content={grove.status === 'canceled' ? 'Reactivate your subscription to plant new trees' : 'Click to plant a new tree'}
               >
-                <div
+                <button
                   onClick={() => {
                     if (grove.status !== 'canceled') {
                       const url = pendingNestPhoto
@@ -616,11 +616,13 @@ export default function GrovePage() {
                       router.push(url)
                     }
                   }}
-                  className={`flex flex-col items-center gap-2 sm:gap-3 p-3 sm:p-4 rounded-lg border-2 border-dashed transition-soft min-h-[120px] sm:min-h-[140px] ${
+                  disabled={grove.status === 'canceled'}
+                  className={`flex flex-col items-center gap-2 sm:gap-3 p-3 sm:p-4 rounded-lg border-2 border-dashed transition-soft min-h-[120px] sm:min-h-[140px] w-full ${
                     grove.status === 'canceled'
                       ? 'border-border-subtle cursor-not-allowed opacity-50'
                       : 'border-border-subtle hover:border-firefly-dim/50 cursor-pointer group'
                   }`}
+                  aria-label="Plant a new tree"
                 >
                   {/* Empty Tree Outline */}
                   <svg
@@ -638,7 +640,7 @@ export default function GrovePage() {
                       Available
                     </div>
                   </div>
-                </div>
+                </button>
               </Tooltip>
             ))}
             </div>
@@ -669,7 +671,7 @@ export default function GrovePage() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
                 {grove.rootedPersons.map((person) => (
-                  <div
+                  <button
                     key={person.id}
                     onClick={() => {
                       const url = pendingNestPhoto
@@ -677,7 +679,8 @@ export default function GrovePage() {
                         : `/tree/${person.id}`
                       router.push(url)
                     }}
-                    className="bg-bg-dark border border-purple-500/30 rounded-lg p-3 sm:p-4 hover:border-purple-400/50 transition-soft cursor-pointer min-h-[100px]"
+                    className="bg-bg-dark border border-purple-500/30 rounded-lg p-3 sm:p-4 hover:border-purple-400/50 transition-soft cursor-pointer min-h-[100px] w-full text-left"
+                    aria-label={`View ${person.name} rooted legacy tree with ${person.memoryCount} ${person.memoryCount === 1 ? 'memory' : 'memories'}`}
                   >
                     <div className="flex items-start justify-between mb-2">
                       <h3 className="text-lg text-text-soft font-medium">{person.name}</h3>
@@ -694,7 +697,7 @@ export default function GrovePage() {
                       <span>💫 {person.memoryCount} memories</span>
                       <span>🌿 {person._count.branches} branches</span>
                     </div>
-                  </div>
+                  </button>
                 ))}
               </div>
             </div>
@@ -714,10 +717,11 @@ export default function GrovePage() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {sharedBranches.map((branch) => (
-                  <div
+                  <button
                     key={branch.id}
                     onClick={() => router.push(`/branch/${branch.id}`)}
-                    className="bg-bg-dark border border-blue-500/30 rounded-lg p-4 hover:border-blue-400/50 transition-soft cursor-pointer"
+                    className="bg-bg-dark border border-blue-500/30 rounded-lg p-4 hover:border-blue-400/50 transition-soft cursor-pointer w-full text-left"
+                    aria-label={`View shared branch ${branch.title} from ${branch.owner.name} with ${branch._count.entries} ${branch._count.entries === 1 ? 'memory' : 'memories'}`}
                   >
                     <div className="flex items-start justify-between mb-2">
                       <h3 className="text-lg text-text-soft font-medium flex-1">
@@ -763,7 +767,7 @@ export default function GrovePage() {
                         Last update: {new Date(branch.entries[0].createdAt).toLocaleDateString()}
                       </div>
                     )}
-                  </div>
+                  </button>
                 ))}
               </div>
             </div>

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
+import FocusTrap from 'focus-trap-react'
 
 // Feature flag - disable video uploads
 const ENABLE_VIDEO_UPLOADS = false
@@ -58,6 +59,7 @@ export default function MemoryModal({ onClose, onSave, spark, onRefreshSpark, cu
   const [memoryCard, setMemoryCard] = useState('')
   const fileInputRef = useRef<HTMLInputElement>(null)
   const videoInputRef = useRef<HTMLInputElement>(null)
+  const [triggerElement, setTriggerElement] = useState<HTMLElement | null>(null)
 
   // Cross-branch sharing state
   const [availableBranches, setAvailableBranches] = useState<Branch[]>([])
@@ -71,6 +73,28 @@ export default function MemoryModal({ onClose, onSave, spark, onRefreshSpark, cu
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null)
   const chunksRef = useRef<Blob[]>([])
+
+  // Store trigger element and restore focus on close
+  useEffect(() => {
+    setTriggerElement(document.activeElement as HTMLElement)
+
+    return () => {
+      if (triggerElement) {
+        setTimeout(() => triggerElement.focus(), 0)
+      }
+    }
+  }, [])
+
+  // Escape key handler
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && !showNestSelector) {
+        onClose()
+      }
+    }
+    window.addEventListener('keydown', handleEscape)
+    return () => window.removeEventListener('keydown', handleEscape)
+  }, [onClose, showNestSelector])
 
   // Fetch available branches for sharing
   useEffect(() => {
@@ -298,8 +322,14 @@ export default function MemoryModal({ onClose, onSave, spark, onRefreshSpark, cu
 
   return (
     <div className="fixed inset-0 bg-black/30 flex items-center justify-center p-4 z-50 overflow-y-auto backdrop-blur-sm">
-      <div className="bg-bg-dark border border-border-subtle rounded-lg max-w-2xl w-full p-6 my-8">
-        <h2 className="text-2xl text-text-soft mb-4 text-center">{modalTitle}</h2>
+      <FocusTrap>
+        <div
+          className="bg-bg-dark border border-border-subtle rounded-lg max-w-2xl w-full p-6 my-8"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="memory-modal-title"
+        >
+          <h2 id="memory-modal-title" className="text-2xl text-text-soft mb-4 text-center">{modalTitle}</h2>
 
         {/* Spark Prompt with Actions */}
         <div className="mb-6 bg-bg-darker border border-firefly-dim/30 rounded-lg p-4">
@@ -573,15 +603,22 @@ export default function MemoryModal({ onClose, onSave, spark, onRefreshSpark, cu
             </button>
           </div>
         </form>
-      </div>
+        </div>
+      </FocusTrap>
 
       {/* Nest Photo Selector Modal */}
       {showNestSelector && (
+        <FocusTrap>
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-[60] backdrop-blur-sm">
-          <div className="bg-bg-dark border border-border-subtle rounded-lg max-w-4xl w-full max-h-[80vh] overflow-hidden">
+          <div
+            className="bg-bg-dark border border-border-subtle rounded-lg max-w-4xl w-full max-h-[80vh] overflow-hidden"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="nest-selector-title"
+          >
             <div className="p-6 border-b border-border-subtle flex items-center justify-between">
               <div>
-                <h3 className="text-xl text-text-soft">Choose from Nest</h3>
+                <h3 id="nest-selector-title" className="text-xl text-text-soft">Choose from Nest</h3>
                 <p className="text-text-muted text-sm mt-1">Select media from your nest</p>
               </div>
               <button
@@ -643,6 +680,7 @@ export default function MemoryModal({ onClose, onSave, spark, onRefreshSpark, cu
             </div>
           </div>
         </div>
+        </FocusTrap>
       )}
     </div>
   )
