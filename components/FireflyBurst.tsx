@@ -460,7 +460,13 @@ export default function FireflyBurst({ memories, burstId, onClose, onViewNext }:
           <button
             onClick={() => {
               markAsViewed()
-              fadeOutAudio(() => onClose())
+              // Close immediately - no audio fade delay for better mobile UX
+              if (audio) {
+                audio.pause()
+                audio.currentTime = 0
+                audio.volume = 0.3 // Reset for next time
+              }
+              onClose()
             }}
             className="min-h-[44px] min-w-[44px] px-4 py-2 bg-firefly-dim hover:bg-firefly-glow active:bg-firefly-glow text-bg-dark rounded-lg font-medium transition-soft touch-manipulation"
             aria-label="Close Firefly Burst"
