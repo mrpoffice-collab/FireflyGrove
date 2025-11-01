@@ -267,6 +267,46 @@ ${tutorial.steps.map((step, i) => `
     alert(`Opening ${uniquePages.length} pages for tutorial recording`)
   }
 
+  const generateVideo = async (tutorial: Tutorial) => {
+    const confirmed = confirm(
+      `🎬 Generate automated video for:\n"${tutorial.title}"\n\n` +
+      `This will:\n` +
+      `✅ Auto-navigate through ${tutorial.steps.length} steps\n` +
+      `✅ Record screen automatically\n` +
+      `🔄 Generate Nora's voiceover (coming soon)\n` +
+      `📹 Output MP4 video file\n\n` +
+      `Continue?`
+    )
+
+    if (!confirmed) return
+
+    try {
+      const response = await fetch('/api/admin/generate-tutorial', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tutorialId: tutorial.id })
+      })
+
+      const result = await response.json()
+
+      if (response.ok) {
+        alert(
+          `🎬 Video Generation Started!\n\n` +
+          `Tutorial: ${tutorial.title}\n` +
+          `Status: ${result.status}\n\n` +
+          `Next Steps:\n` +
+          result.nextSteps.join('\n') +
+          `\n\n💡 Instructions:\n` +
+          Object.values(result.instructions).join('\n')
+        )
+      } else {
+        alert(`❌ Error: ${result.error}`)
+      }
+    } catch (error) {
+      alert(`❌ Failed to start video generation: ${error}`)
+    }
+  }
+
   return (
     <div className="min-h-screen bg-bg-dark">
       <Header
@@ -415,18 +455,24 @@ ${tutorial.steps.map((step, i) => `
                 {isExpanded && (
                   <div className="border-t border-border-subtle p-4 bg-bg-dark">
                     {/* Action Buttons */}
-                    <div className="flex gap-2 mb-4">
+                    <div className="flex gap-2 mb-4 flex-wrap">
+                      <button
+                        onClick={() => generateVideo(tutorial)}
+                        className="px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded font-medium text-sm transition-soft shadow-lg"
+                      >
+                        🎬 Generate Video Automatically
+                      </button>
                       <button
                         onClick={() => openPages(tutorial)}
                         className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded text-sm transition-soft"
                       >
-                        📱 Open Pages for Recording
+                        📱 Open Pages
                       </button>
                       <button
                         onClick={() => copyScript(tutorial)}
                         className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded text-sm transition-soft"
                       >
-                        📋 Copy Full Script
+                        📋 Copy Script
                       </button>
                     </div>
 
