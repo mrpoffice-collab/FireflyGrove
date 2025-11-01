@@ -27,9 +27,10 @@ interface FireflyBurstProps {
   burstId: string
   onClose: () => void
   onViewNext?: () => void
+  onSnooze?: () => void
 }
 
-export default function FireflyBurst({ memories, burstId, onClose, onViewNext }: FireflyBurstProps) {
+export default function FireflyBurst({ memories, burstId, onClose, onViewNext, onSnooze }: FireflyBurstProps) {
   const router = useRouter()
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isAnimating, setIsAnimating] = useState(true)
@@ -269,6 +270,26 @@ export default function FireflyBurst({ memories, burstId, onClose, onViewNext }:
 
       {/* Top Controls */}
       <div className="absolute top-4 right-4 flex items-center gap-3 z-10">
+        {/* Snooze Button */}
+        {onSnooze && (
+          <button
+            onClick={() => {
+              if (audio) {
+                audio.pause()
+                audio.currentTime = 0
+                audio.volume = 0.3
+              }
+              onSnooze()
+            }}
+            className="text-text-muted hover:text-amber-400 transition-soft"
+            title="Snooze bursts for 3 hours"
+          >
+            <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </button>
+        )}
+
         {/* Pause/Play Toggle */}
         <button
           onClick={togglePause}

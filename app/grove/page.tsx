@@ -122,6 +122,7 @@ export default function GrovePage() {
   const [burstMemories, setBurstMemories] = useState<any[]>([])
   const [burstId, setBurstId] = useState<string | null>(null)
   const [sessionId] = useState(() => Math.random().toString(36).substring(7))
+  const [burstSnoozed, setBurstSnoozed] = useState(false)
 
   // Audio Sparks state
   const [showAudioSparks, setShowAudioSparks] = useState(false)
@@ -148,11 +149,57 @@ export default function GrovePage() {
       fetchGrove()
       fetchTransplantable()
       fetchSharedBranches()
-      // Trigger burst on first load
-      generateBurst()
+      // Check if bursts are snoozed before triggering
+      checkBurstSnooze()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status])
+
+  // Check if bursts are currently snoozed
+  const checkBurstSnooze = () => {
+    if (typeof window === 'undefined') return
+
+    const snoozeUntil = localStorage.getItem('fireflyBurstSnoozeUntil')
+    if (snoozeUntil) {
+      const snoozeTime = parseInt(snoozeUntil)
+      const now = Date.now()
+
+      if (now < snoozeTime) {
+        // Still snoozed
+        setBurstSnoozed(true)
+        return
+      } else {
+        // Snooze expired, clear it
+        localStorage.removeItem('fireflyBurstSnoozeUntil')
+      }
+    }
+
+    // Not snoozed, trigger burst
+    setBurstSnoozed(false)
+    generateBurst()
+  }
+
+  // Snooze bursts for 3 hours
+  const snoozeBursts = () => {
+    if (typeof window === 'undefined') return
+
+    const threeHours = 3 * 60 * 60 * 1000 // 3 hours in milliseconds
+    const snoozeUntil = Date.now() + threeHours
+    localStorage.setItem('fireflyBurstSnoozeUntil', snoozeUntil.toString())
+    setBurstSnoozed(true)
+    setShowBurst(false)
+    toast.success('Firefly Bursts snoozed for 3 hours')
+  }
+
+  // Unsnooze bursts manually
+  const unsnoozeBursts = () => {
+    if (typeof window === 'undefined') return
+
+    localStorage.removeItem('fireflyBurstSnoozeUntil')
+    setBurstSnoozed(false)
+    toast.success('Firefly Bursts re-enabled!')
+    generateBurst()
+  }
 
   const generateBurst = async () => {
     try {
@@ -338,6 +385,7 @@ export default function GrovePage() {
             // Small delay before generating new burst
             setTimeout(() => generateBurst(), 500)
           }}
+          onSnooze={snoozeBursts}
         />
       )}
 
@@ -462,16 +510,30 @@ export default function GrovePage() {
 
             {/* Quick Actions */}
             <div className="mb-4 flex flex-wrap items-center justify-center gap-2 sm:gap-3">
-              {burstMemories.length > 0 && (
+              {burstSnoozed ? (
                 <button
-                  onClick={generateBurst}
-                  className="inline-flex items-center gap-2 min-h-[44px] px-4 py-2.5 bg-firefly-dim/20 hover:bg-firefly-dim/30 border border-firefly-dim/40 text-firefly-glow rounded-lg text-sm font-medium transition-soft"
-                  aria-label="Generate another firefly burst of random memories"
+                  onClick={unsnoozeBursts}
+                  className="inline-flex items-center gap-2 min-h-[44px] px-4 py-2.5 bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 text-amber-400 rounded-lg text-sm font-medium transition-soft"
+                  aria-label="Bursts snoozed for 3 hours - click to wake them"
                 >
-                  <span>✨</span>
-                  <span className="hidden xs:inline">Get Another Burst</span>
-                  <span className="xs:hidden">Burst</span>
+                  <span>😴</span>
+                  <span className="hidden xs:inline">Bursts Snoozed</span>
+                  <span className="xs:hidden">Snoozed</span>
                 </button>
+              ) : (
+                <>
+                  {burstMemories.length > 0 && (
+                    <button
+                      onClick={generateBurst}
+                      className="inline-flex items-center gap-2 min-h-[44px] px-4 py-2.5 bg-firefly-dim/20 hover:bg-firefly-dim/30 border border-firefly-dim/40 text-firefly-glow rounded-lg text-sm font-medium transition-soft"
+                      aria-label="Generate another firefly burst of random memories"
+                    >
+                      <span>✨</span>
+                      <span className="hidden xs:inline">Get Another Burst</span>
+                      <span className="xs:hidden">Burst</span>
+                    </button>
+                  )}
+                </>
               )}
               <button
                 onClick={() => setShowAudioSparks(true)}
