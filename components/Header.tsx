@@ -25,6 +25,27 @@ export default function Header({ userName, isBetaTester, isAdmin, groveInfo }: H
   const [isSettingsSubmenuOpen, setIsSettingsSubmenuOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
 
+  // Admin mode toggle - stored in localStorage
+  const [adminModeActive, setAdminModeActive] = useState(() => {
+    if (typeof window !== 'undefined' && isAdmin) {
+      const stored = localStorage.getItem('adminModeActive')
+      return stored === null ? true : stored === 'true' // Default to true
+    }
+    return false
+  })
+
+  // Toggle admin mode and save to localStorage
+  const toggleAdminMode = () => {
+    const newMode = !adminModeActive
+    setAdminModeActive(newMode)
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('adminModeActive', newMode.toString())
+    }
+  }
+
+  // Use adminModeActive instead of isAdmin for UI rendering
+  const showAdminFeatures = isAdmin && adminModeActive
+
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -132,8 +153,32 @@ export default function Header({ userName, isBetaTester, isAdmin, groveInfo }: H
                   )}
                 </div>
 
-                {/* Admin Section */}
+                {/* Admin Mode Toggle - Only for admins */}
                 {isAdmin && (
+                  <div className="px-3 py-2 border-b border-border-subtle">
+                    <button
+                      onClick={toggleAdminMode}
+                      className={`w-full flex items-center justify-between px-3 py-2 rounded transition-soft ${
+                        adminModeActive
+                          ? 'bg-firefly-dim/20 text-firefly-glow border border-firefly-dim/40'
+                          : 'bg-bg-elevated text-text-muted border border-border-subtle hover:border-firefly-dim/40'
+                      }`}
+                    >
+                      <span className="flex items-center gap-2">
+                        <span>{adminModeActive ? '👑' : '👤'}</span>
+                        <span className="text-sm font-medium">
+                          {adminModeActive ? 'Admin Mode' : 'User Mode'}
+                        </span>
+                      </span>
+                      <span className="text-xs">
+                        {adminModeActive ? 'ON' : 'OFF'}
+                      </span>
+                    </button>
+                  </div>
+                )}
+
+                {/* Admin Section */}
+                {showAdminFeatures && (
                   <>
                     <div className="px-3 py-1.5 border-b border-border-subtle">
                       <div className="text-xs text-firefly-glow font-medium uppercase tracking-wide">Admin</div>
@@ -363,8 +408,32 @@ export default function Header({ userName, isBetaTester, isAdmin, groveInfo }: H
               📥 Import Memories
             </Link>
 
-            {/* Admin Section - Mobile */}
+            {/* Admin Mode Toggle - Mobile */}
             {isAdmin && (
+              <div className="border-b border-border-subtle pb-3 mb-2">
+                <button
+                  onClick={toggleAdminMode}
+                  className={`w-full flex items-center justify-between px-3 py-3 rounded-lg transition-soft ${
+                    adminModeActive
+                      ? 'bg-firefly-dim/20 text-firefly-glow border-2 border-firefly-dim/40'
+                      : 'bg-bg-elevated text-text-muted border-2 border-border-subtle'
+                  }`}
+                >
+                  <span className="flex items-center gap-2">
+                    <span className="text-xl">{adminModeActive ? '👑' : '👤'}</span>
+                    <span className="text-base font-medium">
+                      {adminModeActive ? 'Admin Mode' : 'User Mode'}
+                    </span>
+                  </span>
+                  <span className="text-sm font-bold">
+                    {adminModeActive ? 'ON' : 'OFF'}
+                  </span>
+                </button>
+              </div>
+            )}
+
+            {/* Admin Section - Mobile */}
+            {showAdminFeatures && (
               <>
                 <div className="border-b border-border-subtle pb-2">
                   <div className="text-xs text-firefly-glow mb-2 px-2 uppercase tracking-wide font-medium">Admin</div>
