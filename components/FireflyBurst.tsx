@@ -418,21 +418,21 @@ export default function FireflyBurst({ memories, burstId, onClose, onViewNext }:
         </div>
 
         {/* Navigation - Sticky at bottom */}
-        <div className="sticky bottom-0 bg-bg-darker/95 backdrop-blur-sm py-4 flex items-center justify-between">
+        <div className="sticky bottom-0 bg-bg-darker/95 backdrop-blur-sm py-4 px-4 flex items-center justify-between z-10 border-t border-border-subtle">
           {/* Previous button */}
           <button
             onClick={handlePrevious}
             disabled={currentIndex === 0}
-            className="px-4 py-2 text-text-soft hover:text-firefly-glow transition-soft disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-2"
+            className="min-h-[44px] min-w-[44px] px-4 py-2 text-text-soft hover:text-firefly-glow transition-soft disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-2"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
-            <span>Previous</span>
+            <span className="hidden sm:inline">Previous</span>
           </button>
 
           {/* Progress indicator - clickable dots */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-shrink-0">
             {memories.map((_, index) => (
               <button
                 key={index}
@@ -443,7 +443,7 @@ export default function FireflyBurst({ memories, burstId, onClose, onViewNext }:
                     setTimeout(() => setCurrentIndex(index), 500)
                   }
                 }}
-                className={`rounded-full transition-all duration-300 cursor-pointer hover:scale-110 ${
+                className={`rounded-full transition-all duration-300 cursor-pointer hover:scale-110 min-h-[44px] min-w-[44px] flex items-center justify-center ${
                   index === currentIndex
                     ? 'bg-firefly-glow w-8 h-2'
                     : index < currentIndex
@@ -451,17 +451,19 @@ export default function FireflyBurst({ memories, burstId, onClose, onViewNext }:
                     : 'bg-border-subtle w-2 h-2'
                 }`}
                 title={`Go to memory ${index + 1}`}
+                aria-label={`Go to memory ${index + 1}`}
               />
             ))}
           </div>
 
-          {/* Done button */}
+          {/* Done button - Mobile optimized */}
           <button
             onClick={() => {
               markAsViewed()
               fadeOutAudio(() => onClose())
             }}
-            className="px-4 py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg font-medium transition-soft"
+            className="min-h-[44px] min-w-[44px] px-4 py-2 bg-firefly-dim hover:bg-firefly-glow active:bg-firefly-glow text-bg-dark rounded-lg font-medium transition-soft touch-manipulation"
+            aria-label="Close Firefly Burst"
           >
             Done
           </button>
