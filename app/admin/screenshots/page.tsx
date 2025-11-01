@@ -142,7 +142,7 @@ npx tsx scripts/screenshot-pages.ts
 \`\`\`
 
 Selected Pages (${selectedPages.length}):
-${selectedPages.map(p => `- ${window.location.origin}${p}`).join('\n')}
+${selectedPages.map(p => `- ${typeof window !== 'undefined' ? window.location.origin : 'https://fireflygrove.app'}${p}`).join('\n')}
     `.trim()
   }
 

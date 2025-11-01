@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import Header from '@/components/Header'
@@ -168,8 +168,13 @@ export default function TutorialsPage() {
 
   const isAdmin = (session?.user as any)?.isAdmin
 
+  useEffect(() => {
+    if (!isAdmin && session) {
+      router.push('/grove')
+    }
+  }, [isAdmin, session, router])
+
   if (!isAdmin) {
-    router.push('/grove')
     return null
   }
 
@@ -253,7 +258,9 @@ ${tutorial.steps.map((step, i) => `
         const url = page.includes('[id]')
           ? page.replace('[id]', 'example-id')
           : page
-        window.open(`${window.location.origin}${url}`, `_blank_${index}`)
+        if (typeof window !== 'undefined') {
+          window.open(`${window.location.origin}${url}`, `_blank_${index}`)
+        }
       }, index * 200)
     })
 

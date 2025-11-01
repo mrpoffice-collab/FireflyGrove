@@ -17,13 +17,23 @@ interface HeaderProps {
   }
 }
 
-export default function Header({ userName, isBetaTester, isAdmin, groveInfo }: HeaderProps) {
+export default function Header({ userName, isBetaTester: propBetaTester, isAdmin: propAdmin, groveInfo }: HeaderProps) {
   const router = useRouter()
+  const { data: session } = useSession()
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const [isFeedbackOpen, setIsFeedbackOpen] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isSettingsSubmenuOpen, setIsSettingsSubmenuOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
+
+  // Get admin/beta status from session if not provided as props
+  const isBetaTester = propBetaTester !== undefined
+    ? propBetaTester
+    : (session?.user as any)?.isBetaTester || false
+
+  const isAdmin = propAdmin !== undefined
+    ? propAdmin
+    : (session?.user as any)?.isAdmin || false
 
   // Admin mode toggle - stored in localStorage
   const [adminModeActive, setAdminModeActive] = useState(() => {
