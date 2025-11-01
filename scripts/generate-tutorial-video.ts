@@ -1,5 +1,20 @@
-import puppeteer from 'puppeteer'
-import { PuppeteerScreenRecorder } from 'puppeteer-screen-recorder'
+/**
+ * Automated Tutorial Video Generator
+ *
+ * IMPORTANT: This script runs as a SEPARATE SERVICE, not as part of the Next.js app.
+ *
+ * To use:
+ * 1. Install dependencies in a separate project: npm install puppeteer puppeteer-screen-recorder
+ * 2. Run this script: npx tsx generate-tutorial-video.ts
+ * 3. Videos will be saved to ./tutorial-videos/
+ *
+ * Why separate? Puppeteer requires a full browser runtime which conflicts with
+ * Vercel's serverless environment. This needs to run on a dedicated server or locally.
+ */
+
+// These imports are only available when running this script standalone
+// DO NOT import this file in the Next.js app
+import type { Browser, Page } from 'puppeteer'
 import fs from 'fs'
 import path from 'path'
 
@@ -47,13 +62,17 @@ export async function generateTutorialVideo(
   console.log(`\n🎬 Starting video generation for: ${tutorial.title}`)
   console.log(`📁 Output directory: ${outputDir}\n`)
 
+  // Dynamically import puppeteer (only works when running standalone)
+  const puppeteer = await import('puppeteer')
+  const { PuppeteerScreenRecorder } = await import('puppeteer-screen-recorder')
+
   // Ensure output directory exists
   if (!fs.existsSync(outputDir)) {
     fs.mkdirSync(outputDir, { recursive: true })
   }
 
   const videoPath = path.join(outputDir, `${tutorial.id}.mp4`)
-  const browser = await puppeteer.launch({
+  const browser = await puppeteer.default.launch({
     headless: false, // Show browser so we can see what's happening
     slowMo, // Slow down for recording
     defaultViewport: {

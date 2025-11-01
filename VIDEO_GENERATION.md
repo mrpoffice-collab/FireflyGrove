@@ -11,10 +11,12 @@ Firefly Grove now has an **automated video generation system** that creates tuto
 ## Current Status
 
 ### ✅ Phase 1: Complete (Browser Automation & Recording)
-- Puppeteer installed for browser automation
-- Screen recording configured
-- Basic tutorial script execution working
+- Video generation code written and ready
+- Tutorial scripts defined for all 8 tutorials
 - UI integration in admin tutorials page
+- **Note**: Video generation runs as a **separate service**, not within the Next.js app
+  - Why? Puppeteer requires a full browser runtime incompatible with Vercel's serverless functions
+  - Solution: Run locally or deploy to a dedicated server (AWS EC2, DigitalOcean, etc.)
 
 ### 🔄 Phase 2: In Progress (AI Narration)
 - Text-to-speech integration for Nora's voice
@@ -41,14 +43,36 @@ Firefly Grove now has an **automated video generation system** that creates tuto
    - Generate voiceover narration
    - Output MP4 video file
 
-### From Command Line (For Testing)
+### From Command Line (Separate Service)
 
+**Important**: Video generation runs outside the Next.js app due to Puppeteer's browser requirements.
+
+**Setup (one-time)**:
 ```bash
-# Run the video generator directly
-npx tsx scripts/generate-tutorial-video.ts
+# Create a separate folder for the video service
+mkdir firefly-video-service
+cd firefly-video-service
+
+# Install dependencies
+npm init -y
+npm install puppeteer puppeteer-screen-recorder @ffmpeg-installer/ffmpeg tsx
+
+# Copy the script from your main repo
+cp ../Firefly-Grove/scripts/generate-tutorial-video.ts .
+```
+
+**Run it**:
+```bash
+# Generate a tutorial video
+npx tsx generate-tutorial-video.ts
 
 # Videos will be saved to ./tutorial-videos/
 ```
+
+**Production deployment**:
+- Deploy to AWS EC2, DigitalOcean Droplet, or similar
+- Set up as a worker service that polls a job queue
+- Or trigger via webhook/API call
 
 ## Architecture
 

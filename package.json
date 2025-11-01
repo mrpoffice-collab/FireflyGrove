@@ -19,7 +19,6 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.67.0",
-    "@ffmpeg-installer/ffmpeg": "^1.1.0",
     "@prisma/client": "^5.20.0",
     "@stripe/stripe-js": "^4.8.0",
     "@tailwindcss/typography": "^0.5.19",
@@ -36,8 +35,6 @@
     "next-auth": "^4.24.10",
     "openai": "^4.77.0",
     "pdfkit": "^0.15.2",
-    "puppeteer": "^24.27.0",
-    "puppeteer-screen-recorder": "^3.0.6",
     "qrcode": "^1.5.4",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",

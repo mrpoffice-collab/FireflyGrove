@@ -33,25 +33,39 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // TODO: Spawn video generation process in background
-    // For now, return instructions for manual generation
+    // Video generation runs as a separate service (not in Vercel serverless)
+    // Return instructions for running the video generator
     return NextResponse.json({
-      status: 'queued',
+      status: 'ready',
       tutorialId,
-      message: 'Video generation system is being built!',
-      instructions: {
-        step1: 'Run: npx tsx scripts/generate-tutorial-video.ts',
-        step2: 'Tutorial videos will be saved to ./tutorial-videos/',
-        step3: 'Next phase: Integrate ElevenLabs for Nora\'s voice',
-        step4: 'Final phase: Auto-upload to YouTube/Vimeo'
+      message: 'Video generation system ready to use!',
+      setup: {
+        step1: 'Video generation runs locally or on a dedicated server (not in Vercel)',
+        step2: 'Requires: Node.js with Puppeteer and browser automation tools',
+        step3: 'Can be triggered manually or integrated with a job queue service'
+      },
+      howToRun: {
+        locally: {
+          step1: 'Create a separate project folder',
+          step2: 'npm install puppeteer puppeteer-screen-recorder @ffmpeg-installer/ffmpeg tsx',
+          step3: 'Copy scripts/generate-tutorial-video.ts to your project',
+          step4: 'npx tsx generate-tutorial-video.ts',
+          step5: 'Videos save to ./tutorial-videos/'
+        },
+        production: {
+          option1: 'Deploy to a dedicated server (AWS EC2, DigitalOcean, etc.)',
+          option2: 'Use a worker service (AWS Lambda with longer timeout, GCP Cloud Run)',
+          option3: 'Set up a job queue (BullMQ + Redis) to process requests'
+        }
       },
       nextSteps: [
-        '✅ Puppeteer automation - INSTALLED',
-        '✅ Screen recording - INSTALLED',
-        '🔄 Text-to-speech integration - IN PROGRESS',
-        '⏳ Background job queue - PLANNED',
-        '⏳ Auto-upload to video platforms - PLANNED'
-      ]
+        '✅ Tutorial scripts defined - DONE',
+        '✅ Video generation code written - DONE',
+        '🔄 Set up separate video generation service - YOUR CHOICE',
+        '⏳ Integrate text-to-speech (Nora) - PLANNED',
+        '⏳ Auto-upload to YouTube - PLANNED'
+      ],
+      note: 'Click "Copy Script" to get the full tutorial script, or "Open Pages" to record manually'
     })
   } catch (error) {
     console.error('Error in generate-tutorial endpoint:', error)

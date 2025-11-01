@@ -42,7 +42,8 @@
       "WebFetch(domain:api.lulu.com)",
       "Bash(then grep -i \"PINTEREST\" .env.local)",
       "Bash(mkdir:*)",
-      "Bash(.env.local)"
+      "Bash(.env.local)",
+      "Bash(npm uninstall:*)"
     ],
     "deny": [],
     "ask": []
