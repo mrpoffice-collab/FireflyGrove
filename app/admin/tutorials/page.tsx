@@ -68,8 +68,48 @@ export default function TutorialsPage() {
   const { data: session } = useSession()
   const router = useRouter()
   const [activeTab, setActiveTab] = useState<'ideas' | 'create' | 'guide'>('ideas')
+  const [creatingDraft, setCreatingDraft] = useState<string | null>(null)
 
   const isAdmin = (session?.user as any)?.isAdmin
+
+  const createDraft = async (idea: typeof TUTORIAL_IDEAS[0]) => {
+    setCreatingDraft(idea.id)
+
+    try {
+      const response = await fetch('/api/admin/create-draft', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          tutorialId: idea.id,
+          title: idea.title,
+          description: idea.description
+        })
+      })
+
+      const result = await response.json()
+
+      if (response.ok) {
+        alert(
+          `✅ Draft created successfully!\n\n` +
+          `File: ${result.path}\n\n` +
+          `Next steps:\n` +
+          result.nextSteps.join('\n')
+        )
+      } else if (response.status === 409) {
+        alert(
+          `⚠️ ${result.message}\n\n` +
+          `Path: ${result.path}\n\n` +
+          `Edit it in Notepad++ or delete it to create a new one.`
+        )
+      } else {
+        alert(`❌ Error: ${result.error}\n${result.details || ''}`)
+      }
+    } catch (error) {
+      alert(`❌ Failed to create draft: ${error}`)
+    } finally {
+      setCreatingDraft(null)
+    }
+  }
 
   useEffect(() => {
     if (!isAdmin && session) {
@@ -166,9 +206,18 @@ export default function TutorialsPage() {
                     </span>
                   </div>
                   <p className="text-text-muted text-sm mb-3">{idea.description}</p>
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between gap-2">
                     <span className="text-xs text-text-muted">⏱️ {idea.estimatedTime}</span>
-                    <code className="text-xs bg-bg-dark px-2 py-1 rounded text-firefly-glow">{idea.id}.json</code>
+                    <div className="flex items-center gap-2">
+                      <code className="text-xs bg-bg-dark px-2 py-1 rounded text-firefly-glow">{idea.id}.json</code>
+                      <button
+                        onClick={() => createDraft(idea)}
+                        disabled={creatingDraft === idea.id}
+                        className="px-3 py-1.5 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded text-xs font-medium transition-soft disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {creatingDraft === idea.id ? '...' : '📝 Create Draft'}
+                      </button>
+                    </div>
                   </div>
                 </div>
               ))}
