@@ -20,6 +20,19 @@ export async function POST(request: Request) {
 
     // Path to the drafts folder
     const draftsDir = path.join('C:', 'Users', 'mrpof', 'APPS Homemade', 'firefly videos', 'tutorial-videos', 'drafts')
+
+    // Ensure drafts directory exists FIRST
+    try {
+      if (!fs.existsSync(draftsDir)) {
+        fs.mkdirSync(draftsDir, { recursive: true })
+      }
+    } catch (dirError: any) {
+      return NextResponse.json({
+        error: 'Failed to create drafts directory',
+        details: dirError.message
+      }, { status: 500 })
+    }
+
     const draftPath = path.join(draftsDir, `${tutorialId}.json`)
 
     // Check if file already exists
@@ -57,11 +70,6 @@ export async function POST(request: Request) {
         }
       ],
       outroNarration: `And that's how you ${title.toLowerCase()}. Visit fireflygrove.app to try it yourself!`
-    }
-
-    // Ensure drafts directory exists
-    if (!fs.existsSync(draftsDir)) {
-      fs.mkdirSync(draftsDir, { recursive: true })
     }
 
     // Write the file
