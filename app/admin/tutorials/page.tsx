@@ -5,10 +5,69 @@ import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import Header from '@/components/Header'
 
+const TUTORIAL_IDEAS = [
+  {
+    id: 'signup',
+    title: 'How to Sign Up & Create Your First Tree',
+    description: 'Complete walkthrough from landing page to first memory',
+    priority: 'Critical',
+    estimatedTime: '3 min'
+  },
+  {
+    id: 'add-memory',
+    title: 'How to Add a Memory (Text, Photo, Audio)',
+    description: 'Show all 3 memory types with examples',
+    priority: 'Critical',
+    estimatedTime: '4 min'
+  },
+  {
+    id: 'invite-beta',
+    title: 'How to Invite Friends (Email & SMS)',
+    description: 'Send beta invitations via email or text message',
+    priority: 'High',
+    estimatedTime: '2 min'
+  },
+  {
+    id: 'spark-collections',
+    title: 'How to Upload & Use Custom Prompts',
+    description: 'Upload prompt collections and use them when creating memories',
+    priority: 'High',
+    estimatedTime: '3 min'
+  },
+  {
+    id: 'nest-photos',
+    title: 'How to Use the Nest (Photo Storage)',
+    description: 'Upload photos to nest and organize them into memories',
+    priority: 'Medium',
+    estimatedTime: '3 min'
+  },
+  {
+    id: 'firefly-burst',
+    title: 'What is Firefly Burst & How to Use It',
+    description: 'Understand the memory slideshow feature and controls',
+    priority: 'Medium',
+    estimatedTime: '2 min'
+  },
+  {
+    id: 'manage-plan',
+    title: 'How to View & Upgrade Your Plan',
+    description: 'Check plan limits and upgrade options',
+    priority: 'Low',
+    estimatedTime: '2 min'
+  },
+  {
+    id: 'open-grove',
+    title: 'How to Create a Public Memorial',
+    description: 'Make a tree public in Open Grove for sharing',
+    priority: 'Medium',
+    estimatedTime: '2 min'
+  },
+]
+
 export default function TutorialsPage() {
   const { data: session } = useSession()
   const router = useRouter()
-  const [activeTab, setActiveTab] = useState<'create' | 'guide'>('create')
+  const [activeTab, setActiveTab] = useState<'ideas' | 'create' | 'guide'>('ideas')
 
   const isAdmin = (session?.user as any)?.isAdmin
 
@@ -44,6 +103,16 @@ export default function TutorialsPage() {
         {/* Tabs */}
         <div className="flex gap-2 mb-6 border-b border-border-subtle">
           <button
+            onClick={() => setActiveTab('ideas')}
+            className={`px-6 py-3 font-medium transition-soft ${
+              activeTab === 'ideas'
+                ? 'text-firefly-glow border-b-2 border-firefly-glow'
+                : 'text-text-muted hover:text-text-soft'
+            }`}
+          >
+            💡 Video Ideas
+          </button>
+          <button
             onClick={() => setActiveTab('create')}
             className={`px-6 py-3 font-medium transition-soft ${
               activeTab === 'create'
@@ -64,6 +133,63 @@ export default function TutorialsPage() {
             📖 Complete Guide
           </button>
         </div>
+
+        {/* Video Ideas Tab */}
+        {activeTab === 'ideas' && (
+          <div className="space-y-4">
+            <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-blue-500/30 rounded-lg p-6 mb-6">
+              <h2 className="text-xl text-text-soft mb-3">💡 Suggested Tutorial Videos</h2>
+              <p className="text-text-muted text-sm mb-4">
+                These are the most important tutorials to create. Pick any one to start with - you can work in any order!
+              </p>
+              <p className="text-text-muted text-sm">
+                To create a video: Copy <code className="bg-bg-dark px-2 py-1 rounded text-xs">signup-complete-v2.json</code> as a template,
+                edit it with your steps, then follow the 3-phase workflow in the "Create Videos" tab.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {TUTORIAL_IDEAS.map((idea) => (
+                <div
+                  key={idea.id}
+                  className="bg-bg-elevated border border-border-subtle rounded-lg p-5 hover:border-firefly-dim/40 transition-soft"
+                >
+                  <div className="flex items-start justify-between gap-3 mb-3">
+                    <h3 className="text-lg text-text-soft font-medium">{idea.title}</h3>
+                    <span className={`px-2 py-1 rounded text-xs whitespace-nowrap ${
+                      idea.priority === 'Critical' ? 'bg-red-500/20 text-red-300' :
+                      idea.priority === 'High' ? 'bg-orange-500/20 text-orange-300' :
+                      idea.priority === 'Medium' ? 'bg-yellow-500/20 text-yellow-300' :
+                      'bg-gray-500/20 text-gray-300'
+                    }`}>
+                      {idea.priority}
+                    </span>
+                  </div>
+                  <p className="text-text-muted text-sm mb-3">{idea.description}</p>
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-text-muted">⏱️ {idea.estimatedTime}</span>
+                    <code className="text-xs bg-bg-dark px-2 py-1 rounded text-firefly-glow">{idea.id}.json</code>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="bg-bg-elevated border border-border-subtle rounded-lg p-6 mt-6">
+              <h3 className="text-lg text-text-soft font-medium mb-3">📝 How to Create Your Draft</h3>
+              <ol className="list-decimal list-inside space-y-2 text-text-muted text-sm ml-2">
+                <li>Copy the example draft file as a template:
+                  <code className="block bg-bg-dark text-text-soft p-2 rounded text-xs mt-1">
+                    cp tutorial-videos/drafts/signup-complete-v2.json tutorial-videos/drafts/{idea.id}.json
+                  </code>
+                </li>
+                <li className="mt-3">Open your new file in Notepad++</li>
+                <li>Edit the <code className="bg-bg-dark px-1 rounded text-xs">id</code>, <code className="bg-bg-dark px-1 rounded text-xs">title</code>, and steps to match your tutorial idea</li>
+                <li>Save and preview using: <code className="bg-bg-dark px-1 rounded text-xs">npx tsx preview-split-screen.ts {'{idea.id}'}</code></li>
+                <li>Once perfect, head to the "Create Videos" tab to generate voices and record!</li>
+              </ol>
+            </div>
+          </div>
+        )}
 
         {/* Create Tab */}
         {activeTab === 'create' && (
