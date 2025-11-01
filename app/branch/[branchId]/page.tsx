@@ -9,6 +9,7 @@ import MemoryModal from '@/components/MemoryModal'
 import BranchSettingsModal from '@/components/BranchSettingsModal'
 import UndoBanner from '@/components/UndoBanner'
 import SharePanel from '@/components/SharePanel'
+import SparkPicker from '@/components/SparkPicker'
 import { getActiveChallenge, getRandomSpark, getRandomSparkExcluding, SparkCollection } from '@/lib/sparks'
 import { SkeletonMemoryCard, SkeletonList, SkeletonTitle, SkeletonText } from '@/components/SkeletonLoader'
 
@@ -89,6 +90,7 @@ export default function BranchPage() {
   const [adoptionPrompt, setAdoptionPrompt] = useState<string | null>(null)
   const [showAdoptionPrompt, setShowAdoptionPrompt] = useState(false)
   const [currentSpark, setCurrentSpark] = useState('')
+  const [showSparkPicker, setShowSparkPicker] = useState(false)
 
   // Challenge Sparks
   const [challengeCollection, setChallengeCollection] = useState<SparkCollection | null>(null)
@@ -769,20 +771,37 @@ export default function BranchPage() {
                       Story Spark
                     </h4>
                   </div>
-                  <button
-                    onClick={refreshSpark}
-                    className={`min-w-[44px] min-h-[44px] flex items-center justify-center rounded transition-soft ${
-                      isLegacy
-                        ? 'text-[var(--legacy-amber)] hover:bg-[var(--legacy-amber)]/10'
-                        : 'text-firefly-dim hover:bg-firefly-dim/10'
-                    }`}
-                    title="Get a different spark"
-                    aria-label="Get a different story spark"
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                    </svg>
-                  </button>
+                  <div className="flex items-center gap-1">
+                    <button
+                      onClick={() => setShowSparkPicker(true)}
+                      className={`min-w-[44px] min-h-[44px] px-2 flex items-center justify-center gap-1 rounded transition-soft text-xs ${
+                        isLegacy
+                          ? 'text-[var(--legacy-amber)] hover:bg-[var(--legacy-amber)]/10'
+                          : 'text-firefly-dim hover:bg-firefly-dim/10'
+                      }`}
+                      title="Choose from your spark collections"
+                      aria-label="Choose from your spark collections"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                      </svg>
+                      <span className="hidden sm:inline">My Sparks</span>
+                    </button>
+                    <button
+                      onClick={refreshSpark}
+                      className={`min-w-[44px] min-h-[44px] flex items-center justify-center rounded transition-soft ${
+                        isLegacy
+                          ? 'text-[var(--legacy-amber)] hover:bg-[var(--legacy-amber)]/10'
+                          : 'text-firefly-dim hover:bg-firefly-dim/10'
+                      }`}
+                      title="Get a different random spark"
+                      aria-label="Get a different story spark"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                      </svg>
+                    </button>
+                  </div>
                 </div>
                 <p className={`text-xs italic mb-3 sm:mb-4 line-clamp-3 ${
                   isLegacy ? 'text-[var(--legacy-text)]/80' : 'text-text-muted'
@@ -1223,6 +1242,16 @@ export default function BranchPage() {
           branchId={branchId}
           onClose={() => setShowSettings(false)}
           onBranchUpdate={fetchBranch}
+        />
+      )}
+
+      {showSparkPicker && (
+        <SparkPicker
+          onSelect={(sparkText) => {
+            setCurrentSpark(sparkText)
+            setShowSparkPicker(false)
+          }}
+          onClose={() => setShowSparkPicker(false)}
         />
       )}
 
