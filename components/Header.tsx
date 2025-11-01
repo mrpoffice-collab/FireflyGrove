@@ -94,16 +94,6 @@ export default function Header({ userName, isBetaTester, isAdmin, groveInfo }: H
               </button>
             )}
 
-            {/* Beta Feedback Button - Visible to all users */}
-            <button
-              onClick={() => setIsFeedbackOpen(true)}
-              className="min-h-[44px] px-3 py-2 bg-blue-500/10 hover:bg-blue-500/20 text-info-text border border-blue-500/30 rounded text-xs font-medium transition-soft flex items-center gap-1"
-              aria-label="Send beta feedback"
-            >
-              <span>💬</span>
-              <span className="hidden sm:inline">Beta Feedback</span>
-            </button>
-
             <div className="relative" ref={dropdownRef}>
               {userName ? (
                 <>
@@ -219,15 +209,6 @@ export default function Header({ userName, isBetaTester, isAdmin, groveInfo }: H
                   >
                     📥 Import Memories
                   </button>
-                  <button
-                    onClick={() => {
-                      router.push('/billing')
-                      setIsDropdownOpen(false)
-                    }}
-                    className="w-full text-left px-3 py-2.5 text-sm text-text-muted hover:bg-border-subtle hover:text-text-soft transition-soft"
-                  >
-                    Manage Plan
-                  </button>
                   {/* Settings Menu with Submenu */}
                   <div className="relative">
                     <button
@@ -257,6 +238,16 @@ export default function Header({ userName, isBetaTester, isAdmin, groveInfo }: H
                           className="w-full text-left px-3 py-2.5 text-sm text-text-muted hover:bg-border-subtle hover:text-text-soft transition-soft"
                         >
                           ✨ Upload Prompts
+                        </button>
+                        <button
+                          onClick={() => {
+                            router.push('/billing')
+                            setIsDropdownOpen(false)
+                            setIsSettingsSubmenuOpen(false)
+                          }}
+                          className="w-full text-left px-3 py-2.5 text-sm text-text-muted hover:bg-border-subtle hover:text-text-soft transition-soft"
+                        >
+                          💳 Manage Plan
                         </button>
                       </div>
                     )}
