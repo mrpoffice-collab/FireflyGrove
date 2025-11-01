@@ -55,6 +55,7 @@ export async function GET(request: NextRequest) {
       userActivity,
       errorEvents,
       abandonedActions,
+      betaInviteStats,
     ] = await Promise.all([
       // Total events count
       prisma.analyticsEvent.count({
@@ -121,7 +122,27 @@ export async function GET(request: NextRequest) {
           isAbandoned: true,
         },
       }),
+
+      // Beta invite statistics
+      prisma.betaInvite.findMany({
+        where: { createdAt: { gte: startDate } },
+        select: {
+          id: true,
+          email: true,
+          name: true,
+          sentBy: true,
+          signedUp: true,
+          signedUpAt: true,
+          createdAt: true,
+        },
+        orderBy: { createdAt: 'desc' },
+      }),
     ])
+
+    // Calculate beta invite metrics
+    const totalInvitesSent = betaInviteStats.length
+    const totalSignups = betaInviteStats.filter(i => i.signedUp).length
+    const conversionRate = totalInvitesSent > 0 ? (totalSignups / totalInvitesSent * 100).toFixed(1) : '0.0'
 
     return NextResponse.json({
       timeframe,
@@ -142,6 +163,12 @@ export async function GET(request: NextRequest) {
         count: item._count.id,
       })),
       recentEvents,
+      betaInvites: {
+        totalSent: totalInvitesSent,
+        totalSignups: totalSignups,
+        conversionRate: conversionRate,
+        invites: betaInviteStats,
+      },
     })
   } catch (error) {
     console.error('Error fetching analytics:', error)

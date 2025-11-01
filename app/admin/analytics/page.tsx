@@ -28,6 +28,20 @@ interface AnalyticsData {
     isAbandoned: boolean
     createdAt: string
   }>
+  betaInvites: {
+    totalSent: number
+    totalSignups: number
+    conversionRate: string
+    invites: Array<{
+      id: string
+      email: string
+      name: string | null
+      sentBy: string | null
+      signedUp: boolean
+      signedUpAt: string | null
+      createdAt: string
+    }>
+  }
 }
 
 export default function AnalyticsPage() {
@@ -159,6 +173,79 @@ export default function AnalyticsPage() {
           <div className="bg-bg-elevated border border-border-subtle rounded-lg p-6">
             <p className="text-text-muted text-sm mb-1">Abandoned</p>
             <p className="text-3xl text-yellow-400">{data.summary.abandonedActions.toLocaleString()}</p>
+          </div>
+        </div>
+
+        {/* Beta Invites Section */}
+        <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-blue-500/30 rounded-lg p-6 mb-8">
+          <h2 className="text-2xl text-text-soft mb-4 flex items-center gap-2">
+            <span>📧</span>
+            <span>Beta Invites & Signups</span>
+          </h2>
+
+          {/* Invite Stats Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div className="bg-bg-elevated/50 border border-border-subtle rounded-lg p-4">
+              <p className="text-text-muted text-sm mb-1">Invites Sent</p>
+              <p className="text-3xl text-blue-400">{data.betaInvites.totalSent}</p>
+            </div>
+            <div className="bg-bg-elevated/50 border border-border-subtle rounded-lg p-4">
+              <p className="text-text-muted text-sm mb-1">Signups</p>
+              <p className="text-3xl text-green-400">{data.betaInvites.totalSignups}</p>
+            </div>
+            <div className="bg-bg-elevated/50 border border-border-subtle rounded-lg p-4">
+              <p className="text-text-muted text-sm mb-1">Conversion Rate</p>
+              <p className="text-3xl text-firefly-glow">{data.betaInvites.conversionRate}%</p>
+            </div>
+          </div>
+
+          {/* Recent Invites Table */}
+          <div className="bg-bg-dark rounded-lg p-4">
+            <h3 className="text-lg text-text-soft mb-3">Recent Invites</h3>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead className="border-b border-border-subtle">
+                  <tr className="text-left text-text-muted">
+                    <th className="pb-2 pr-4">Email</th>
+                    <th className="pb-2 pr-4">Name</th>
+                    <th className="pb-2 pr-4">Sent Date</th>
+                    <th className="pb-2 pr-4">Status</th>
+                    <th className="pb-2">Signup Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {data.betaInvites.invites.map((invite) => (
+                    <tr key={invite.id} className="border-b border-border-subtle/50">
+                      <td className="py-2 pr-4 text-text-soft">{invite.email}</td>
+                      <td className="py-2 pr-4 text-text-muted">{invite.name || '-'}</td>
+                      <td className="py-2 pr-4 text-text-muted text-xs">
+                        {new Date(invite.createdAt).toLocaleDateString()}
+                      </td>
+                      <td className="py-2 pr-4">
+                        {invite.signedUp ? (
+                          <span className="px-2 py-1 bg-green-500/20 text-success-text rounded text-xs">
+                            ✓ Signed Up
+                          </span>
+                        ) : (
+                          <span className="px-2 py-1 bg-yellow-500/20 text-yellow-400 rounded text-xs">
+                            Pending
+                          </span>
+                        )}
+                      </td>
+                      <td className="py-2 text-text-muted text-xs">
+                        {invite.signedUpAt
+                          ? new Date(invite.signedUpAt).toLocaleDateString()
+                          : '-'
+                        }
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              {data.betaInvites.invites.length === 0 && (
+                <p className="text-center text-text-muted py-4">No invites sent in this timeframe</p>
+              )}
+            </div>
           </div>
         </div>
 
