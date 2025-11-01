@@ -290,14 +290,22 @@ ${tutorial.steps.map((step, i) => `
       const result = await response.json()
 
       if (response.ok) {
+        // Format the setup instructions
+        const setupSteps = result.setup ?
+          Object.values(result.setup).join('\n   ') : ''
+
+        const localSteps = result.howToRun?.locally ?
+          Object.values(result.howToRun.locally).join('\n   ') : ''
+
         alert(
-          `🎬 Video Generation Started!\n\n` +
+          `🎬 Video Generation System Ready!\n\n` +
           `Tutorial: ${tutorial.title}\n` +
           `Status: ${result.status}\n\n` +
-          `Next Steps:\n` +
-          result.nextSteps.join('\n') +
-          `\n\n💡 Instructions:\n` +
-          Object.values(result.instructions).join('\n')
+          `📋 Setup:\n   ${setupSteps}\n\n` +
+          `💻 How to Run Locally:\n   ${localSteps}\n\n` +
+          `🚀 Next Steps:\n` +
+          (result.nextSteps ? result.nextSteps.join('\n') : '') +
+          `\n\n${result.note || ''}`
         )
       } else {
         alert(`❌ Error: ${result.error}`)
