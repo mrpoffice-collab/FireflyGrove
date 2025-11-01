@@ -16,6 +16,14 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url)
     const category = searchParams.get('category')
 
+    // Get user's grove to find grove-shared collections
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      include: {
+        grove: true
+      }
+    })
+
     // Get user's active collection IDs
     const activeCollections = await prisma.userSparkCollection.findMany({
       where: {
@@ -27,14 +35,45 @@ export async function GET(request: NextRequest) {
 
     const activeCollectionIds = activeCollections.map((ac) => ac.collectionId)
 
-    if (activeCollectionIds.length === 0) {
+    // Get grove-shared collections from other users in the same grove
+    let groveSharedCollectionIds: string[] = []
+    if (user?.grove) {
+      const groveUsers = await prisma.user.findMany({
+        where: {
+          grove: {
+            id: user.grove.id
+          },
+          id: { not: userId } // Exclude current user
+        },
+        select: { id: true }
+      })
+
+      const groveUserIds = groveUsers.map(u => u.id)
+
+      if (groveUserIds.length > 0) {
+        const sharedCollections = await prisma.sparkCollection.findMany({
+          where: {
+            userId: { in: groveUserIds },
+            isSharedWithGrove: true
+          },
+          select: { id: true }
+        })
+
+        groveSharedCollectionIds = sharedCollections.map(c => c.id)
+      }
+    }
+
+    // Combine user's active collections with grove-shared collections
+    const allCollectionIds = [...activeCollectionIds, ...groveSharedCollectionIds]
+
+    if (allCollectionIds.length === 0) {
       return NextResponse.json([])
     }
 
     // Build where clause
     const where: any = {
       isActive: true,
-      collectionId: { in: activeCollectionIds },
+      collectionId: { in: allCollectionIds },
     }
 
     if (category) {
@@ -54,6 +93,8 @@ export async function GET(request: NextRequest) {
             id: true,
             name: true,
             icon: true,
+            userId: true,
+            isSharedWithGrove: true,
           },
         },
         user: {

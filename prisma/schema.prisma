@@ -739,6 +739,7 @@ model SparkCollection {
   userId      String?  // Null for admin-created featured collections
   isFeatured  Boolean  @default(false) // Admin-highlighted collections
   isGlobal    Boolean  @default(false) // Admin-created, available to all users
+  isSharedWithGrove Boolean @default(false) // User-created collection shared with all users in their Grove
   icon        String?  // Optional emoji/icon
   promptCount Int      @default(0) // Number of prompts in this collection
 
@@ -753,6 +754,7 @@ model SparkCollection {
   @@index([userId])
   @@index([isFeatured])
   @@index([isGlobal])
+  @@index([isSharedWithGrove])
   @@index([createdAt])
 }
 

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import MemoryText from './MemoryText'
 
 interface Memory {
   id: string
@@ -318,10 +319,10 @@ export default function FireflyBurst({ memories, burstId, onClose, onViewNext }:
         </button>
       </div>
 
-      {/* Main content */}
-      <div className="max-w-2xl w-full relative">
+      {/* Main content - Allow scrolling for long content */}
+      <div className="max-w-4xl w-full relative max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="text-center mb-6">
+        <div className="text-center mb-6 sticky top-0 bg-bg-darker/95 backdrop-blur-sm z-10 py-4">
           <h2 className="text-3xl font-light text-firefly-glow mb-2 animate-glow">
             ✨ Firefly Burst
           </h2>
@@ -330,20 +331,20 @@ export default function FireflyBurst({ memories, burstId, onClose, onViewNext }:
           </p>
         </div>
 
-        {/* Memory card */}
+        {/* Memory card - Dynamic sizing */}
         <div
-          className={`bg-bg-elevated border border-firefly-dim/30 rounded-lg overflow-hidden transition-all duration-700 ${
+          className={`bg-bg-elevated border border-firefly-dim/30 rounded-lg overflow-hidden transition-all duration-700 mb-6 ${
             isAnimating ? 'opacity-0 scale-95' : 'opacity-100 scale-100'
           }`}
         >
-          {/* Media */}
+          {/* Media - Dynamic height based on image aspect ratio */}
           {currentMemory.mediaUrl && (
-            <div className="relative w-full h-80 bg-bg-darker overflow-hidden">
+            <div className="relative w-full bg-bg-darker overflow-hidden">
               <img
                 key={currentMemory.id}
                 src={currentMemory.mediaUrl}
                 alt="Memory"
-                className={`w-full h-full object-cover transition-opacity duration-700 ${
+                className={`w-full h-auto max-h-[70vh] object-contain transition-opacity duration-700 ${
                   isAnimating ? 'opacity-0' : 'opacity-100'
                 }`}
               />
@@ -353,7 +354,7 @@ export default function FireflyBurst({ memories, burstId, onClose, onViewNext }:
           )}
 
           {currentMemory.audioUrl && !currentMemory.mediaUrl && (
-            <div className="p-8 bg-bg-darker flex items-center justify-center">
+            <div className="p-8 bg-bg-darker flex items-center justify-center min-h-[8rem]">
               <audio controls className="w-full max-w-md">
                 <source src={currentMemory.audioUrl} type="audio/mpeg" />
                 Your browser does not support the audio element.
@@ -361,9 +362,9 @@ export default function FireflyBurst({ memories, burstId, onClose, onViewNext }:
             </div>
           )}
 
-          {/* Text-only memory - show decorative background */}
+          {/* Text-only memory - show decorative background with dynamic height */}
           {!currentMemory.mediaUrl && !currentMemory.audioUrl && (
-            <div className="relative w-full h-64 bg-gradient-to-br from-firefly-dim/20 via-bg-darker to-bg-darker flex items-center justify-center overflow-hidden">
+            <div className="relative w-full min-h-[12rem] bg-gradient-to-br from-firefly-dim/20 via-bg-darker to-bg-darker flex items-center justify-center overflow-hidden">
               {/* Floating firefly decoration */}
               <div className="absolute inset-0">
                 {[...Array(8)].map((_, i) => (
@@ -384,12 +385,12 @@ export default function FireflyBurst({ memories, burstId, onClose, onViewNext }:
             </div>
           )}
 
-          {/* Content */}
-          <div className="p-6">
+          {/* Content - Dynamic padding and spacing */}
+          <div className="p-6 space-y-4">
             {/* Branch title */}
             <button
               onClick={handleViewBranch}
-              className="text-firefly-glow hover:text-firefly-bright text-sm mb-3 transition-soft inline-flex items-center gap-1"
+              className="text-firefly-glow hover:text-firefly-bright text-sm transition-soft inline-flex items-center gap-1"
             >
               <span>From {currentMemory.branch.title}</span>
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -397,26 +398,27 @@ export default function FireflyBurst({ memories, burstId, onClose, onViewNext }:
               </svg>
             </button>
 
-            {/* Memory text - clickable to go to branch */}
+            {/* Memory text - clickable to go to branch, with auto-sizing */}
             <div
               onClick={handleViewBranch}
               className="cursor-pointer group"
             >
-              <p className="text-text-soft text-lg leading-relaxed mb-4 group-hover:text-firefly-glow transition-soft">
-                {currentMemory.text}
-              </p>
+              <MemoryText
+                text={currentMemory.text}
+                className="text-lg break-words group-hover:text-firefly-glow transition-soft"
+              />
             </div>
 
             {/* Author and date */}
-            <div className="flex items-center justify-between text-sm text-text-muted">
+            <div className="flex items-center justify-between text-sm text-text-muted pt-2 border-t border-border-subtle">
               <span>By {currentMemory.author.name}</span>
               <span>{formatDate(currentMemory.createdAt)}</span>
             </div>
           </div>
         </div>
 
-        {/* Navigation */}
-        <div className="mt-6 flex items-center justify-between">
+        {/* Navigation - Sticky at bottom */}
+        <div className="sticky bottom-0 bg-bg-darker/95 backdrop-blur-sm py-4 flex items-center justify-between">
           {/* Previous button */}
           <button
             onClick={handlePrevious}
@@ -496,6 +498,25 @@ export default function FireflyBurst({ memories, burstId, onClose, onViewNext }:
 
         .animate-glow {
           animation: glow 2s ease-in-out infinite;
+        }
+
+        /* Custom scrollbar styling */
+        .max-h-\[90vh\]::-webkit-scrollbar {
+          width: 8px;
+        }
+
+        .max-h-\[90vh\]::-webkit-scrollbar-track {
+          background: rgba(0, 0, 0, 0.2);
+          border-radius: 4px;
+        }
+
+        .max-h-\[90vh\]::-webkit-scrollbar-thumb {
+          background: rgba(255, 217, 102, 0.3);
+          border-radius: 4px;
+        }
+
+        .max-h-\[90vh\]::-webkit-scrollbar-thumb:hover {
+          background: rgba(255, 217, 102, 0.5);
         }
       `}</style>
     </div>

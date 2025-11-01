@@ -61,6 +61,7 @@ export async function GET(request: NextRequest) {
         promptCount: col._count.sparks,
         isFeatured: col.isFeatured,
         isGlobal: col.isGlobal,
+        isSharedWithGrove: col.isSharedWithGrove || false,
         createdAt: col.createdAt,
         isActive: col.userActivations.length > 0 ? col.userActivations[0].isActive : false,
       }))

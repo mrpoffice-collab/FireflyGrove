@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pinterest Board ID Helper - Firefly Grove</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: #e0e0e0;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #2a2a2a;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            color: #FFD966;
+            margin-bottom: 0.5rem;
+            font-size: 2rem;
+        }
+
+        .subtitle {
+            color: #999;
+            margin-bottom: 2rem;
+            font-size: 0.9rem;
+        }
+
+        .step {
+            background: #1a1a1a;
+            border-left: 4px solid #FFD966;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-radius: 8px;
+        }
+
+        .step h2 {
+            color: #FFD966;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            color: #ccc;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 0.75rem;
+            background: #1a1a1a;
+            border: 2px solid #444;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 1rem;
+            font-family: monospace;
+            margin-bottom: 1rem;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #FFD966;
+        }
+
+        button {
+            background: #FFD966;
+            color: #1a1a1a;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        button:hover {
+            background: #ffed4e;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 217, 102, 0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button:disabled {
+            background: #555;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .results {
+            margin-top: 2rem;
+        }
+
+        .board-card {
+            background: #1a1a1a;
+            border: 2px solid #444;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.2s;
+        }
+
+        .board-card:hover {
+            border-color: #FFD966;
+            transform: translateX(4px);
+        }
+
+        .board-name {
+            color: #FFD966;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .board-id {
+            color: #fff;
+            font-family: monospace;
+            font-size: 1rem;
+            background: #2a2a2a;
+            padding: 0.5rem;
+            border-radius: 4px;
+            margin: 0.5rem 0;
+            cursor: pointer;
+            user-select: all;
+        }
+
+        .board-id:hover {
+            background: #333;
+        }
+
+        .board-meta {
+            color: #999;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .error {
+            background: #4a1a1a;
+            border: 2px solid #ff4444;
+            border-radius: 8px;
+            padding: 1rem;
+            color: #ff8888;
+            margin-top: 1rem;
+        }
+
+        .success {
+            background: #1a4a1a;
+            border: 2px solid #44ff44;
+            border-radius: 8px;
+            padding: 1rem;
+            color: #88ff88;
+            margin-top: 1rem;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #444;
+            border-top-color: #FFD966;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-left: 0.5rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .copy-btn {
+            background: #444;
+            color: #fff;
+            padding: 0.4rem 1rem;
+            font-size: 0.9rem;
+            margin-left: 0.5rem;
+        }
+
+        .copy-btn:hover {
+            background: #555;
+        }
+
+        code {
+            background: #1a1a1a;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            color: #FFD966;
+            font-family: monospace;
+        }
+
+        .link {
+            color: #FFD966;
+            text-decoration: none;
+        }
+
+        .link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>✨ Pinterest Board ID Helper</h1>
+        <p class="subtitle">Get your Pinterest board ID for Firefly Grove marketing</p>
+
+        <div class="step">
+            <h2>Step 1: Get Your Access Token</h2>
+            <p style="color: #ccc; margin-bottom: 1rem;">
+                Go to <a href="https://developers.pinterest.com/" target="_blank" class="link">Pinterest Developers</a>,
+                select your app, and generate a new access token. Make sure to enable these scopes:
+                <code>boards:read</code>, <code>boards:write</code>, <code>pins:read</code>, <code>pins:write</code>
+            </p>
+            <label for="token">Paste Your Access Token:</label>
+            <input
+                type="text"
+                id="token"
+                placeholder="pina_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+                autocomplete="off"
+            />
+        </div>
+
+        <div class="step">
+            <h2>Step 2: Fetch Your Boards</h2>
+            <button id="fetchBtn" onclick="fetchBoards()">
+                Get My Boards
+            </button>
+        </div>
+
+        <div id="results" class="results"></div>
+    </div>
+
+    <script>
+        async function fetchBoards() {
+            const token = document.getElementById('token').value.trim();
+            const resultsDiv = document.getElementById('results');
+            const fetchBtn = document.getElementById('fetchBtn');
+
+            // Clear previous results
+            resultsDiv.innerHTML = '';
+
+            // Validate token
+            if (!token) {
+                resultsDiv.innerHTML = '<div class="error">❌ Please enter your access token</div>';
+                return;
+            }
+
+            if (!token.startsWith('pina_')) {
+                resultsDiv.innerHTML = '<div class="error">⚠️ Access token should start with "pina_"</div>';
+                return;
+            }
+
+            // Show loading
+            fetchBtn.disabled = true;
+            fetchBtn.innerHTML = 'Fetching...<span class="loading"></span>';
+
+            try {
+                const response = await fetch('https://api.pinterest.com/v5/boards', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    const error = await response.json().catch(() => ({ message: 'Unknown error' }));
+                    throw new Error(error.message || `HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                const boards = data.items || [];
+
+                if (boards.length === 0) {
+                    resultsDiv.innerHTML = `
+                        <div class="error">
+                            ⚠️ No boards found.
+                            <a href="https://pinterest.com" target="_blank" class="link">Create a board on Pinterest</a> first.
+                        </div>
+                    `;
+                    return;
+                }
+
+                // Display boards
+                let html = `<div class="success">✅ Found ${boards.length} board(s)! Click any board ID to copy it.</div>`;
+
+                boards.forEach((board, index) => {
+                    const createdDate = new Date(board.created_at).toLocaleDateString();
+                    html += `
+                        <div class="board-card">
+                            <div class="board-name">${index + 1}. ${board.name}</div>
+                            <div class="board-id" onclick="copyToClipboard('${board.id}', this)" title="Click to copy">
+                                ID: ${board.id}
+                            </div>
+                            <div class="board-meta">
+                                ${board.pin_count || 0} pins ·
+                                ${board.privacy || 'PUBLIC'} ·
+                                Created ${createdDate}
+                            </div>
+                        </div>
+                    `;
+                });
+
+                html += `
+                    <div class="step" style="margin-top: 2rem;">
+                        <h2>Step 3: Update Your .env.local</h2>
+                        <p style="color: #ccc; margin-bottom: 1rem;">
+                            Copy the board ID above and add it to your <code>.env.local</code> file:
+                        </p>
+                        <code style="display: block; padding: 1rem; font-size: 0.95rem;">
+                            PINTEREST_BOARD_ID=paste_board_id_here
+                        </code>
+                    </div>
+                `;
+
+                resultsDiv.innerHTML = html;
+
+            } catch (error) {
+                resultsDiv.innerHTML = `
+                    <div class="error">
+                        <strong>❌ Error:</strong> ${error.message}
+                        <br><br>
+                        <strong>Troubleshooting:</strong>
+                        <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                            <li>Make sure your access token is valid and not expired</li>
+                            <li>Check that you copied the entire token</li>
+                            <li>Verify your Pinterest app has the correct permissions</li>
+                            <li>Try generating a new token from Pinterest Developers</li>
+                        </ul>
+                    </div>
+                `;
+            } finally {
+                fetchBtn.disabled = false;
+                fetchBtn.innerHTML = 'Get My Boards';
+            }
+        }
+
+        function copyToClipboard(text, element) {
+            navigator.clipboard.writeText(text).then(() => {
+                const originalBg = element.style.background;
+                element.style.background = '#1a4a1a';
+                element.innerHTML = `ID: ${text} ✅ Copied!`;
+
+                setTimeout(() => {
+                    element.style.background = originalBg;
+                    element.innerHTML = `ID: ${text}`;
+                }, 2000);
+            }).catch(err => {
+                alert('Failed to copy. Please select and copy manually.');
+            });
+        }
+
+        // Allow Enter key to trigger fetch
+        document.getElementById('token').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                fetchBoards();
+            }
+        });
+    </script>
+</body>
+</html>

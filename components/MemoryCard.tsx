@@ -6,6 +6,7 @@ import { useSession } from 'next-auth/react'
 import Tooltip from './Tooltip'
 import SharePanel from './SharePanel'
 import MemoryModal from './MemoryModal'
+import MemoryText from './MemoryText'
 
 interface MemoryCardProps {
   entry: {
@@ -592,9 +593,7 @@ export default function MemoryCard({ entry, branchOwnerId, branchId, branchTitle
         </div>
       </div>
 
-      <p className="text-text-soft leading-relaxed whitespace-pre-wrap">
-        {entry.text}
-      </p>
+      <MemoryText text={entry.text} />
 
       {entry.mediaUrl && (
         <div className="mt-4">

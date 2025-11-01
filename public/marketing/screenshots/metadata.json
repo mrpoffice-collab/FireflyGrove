@@ -1,0 +1,105 @@
+{
+  "images": [
+    {
+      "filename": "features/grove-overview.png",
+      "url": "https://fireflygrove.app/marketing/screenshots/features/grove-overview.png",
+      "title": "Family Grove Organization Dashboard",
+      "description": "Visual family tree with memory branches for organizing digital legacies",
+      "tags": ["dashboard", "overview", "family-tree", "branches", "organization"],
+      "platform": ["pinterest", "facebook"],
+      "topics": ["digital legacy", "family memories", "photo organization", "family tree"],
+      "aspectRatio": "1:1",
+      "pinterestOptimized": false,
+      "uploadedAt": "2025-01-15"
+    },
+    {
+      "filename": "features/memory-upload.png",
+      "url": "https://fireflygrove.app/marketing/screenshots/features/memory-upload.png",
+      "title": "Easy Memory Upload Interface",
+      "description": "Upload photos, videos, and stories to preserve family memories",
+      "tags": ["upload", "memories", "photos", "stories", "interface"],
+      "platform": ["pinterest", "facebook"],
+      "topics": ["photo preservation", "memory keeping", "family stories", "digital memories"],
+      "aspectRatio": "1:1",
+      "pinterestOptimized": false,
+      "uploadedAt": "2025-01-15"
+    },
+    {
+      "filename": "features/branch-organization.png",
+      "url": "https://fireflygrove.app/marketing/screenshots/features/branch-organization.png",
+      "title": "Branch-Based Memory Organization",
+      "description": "Organize memories by family branches and relationships",
+      "tags": ["branches", "organization", "family", "structure", "tree"],
+      "platform": ["pinterest", "facebook"],
+      "topics": ["family organization", "memory organization", "family tree", "genealogy"],
+      "aspectRatio": "1:1",
+      "pinterestOptimized": false,
+      "uploadedAt": "2025-01-15"
+    },
+    {
+      "filename": "features/heir-management.png",
+      "url": "https://fireflygrove.app/marketing/screenshots/features/heir-management.png",
+      "title": "Heir Management and Legacy Transfer",
+      "description": "Manage heirs and transfer your digital legacy securely",
+      "tags": ["heirs", "legacy", "transfer", "management", "security"],
+      "platform": ["pinterest", "facebook"],
+      "topics": ["digital legacy", "estate planning", "family legacy", "heir management"],
+      "aspectRatio": "1:1",
+      "pinterestOptimized": false,
+      "uploadedAt": "2025-01-15"
+    },
+    {
+      "filename": "use-cases/family-memories.png",
+      "url": "https://fireflygrove.app/marketing/screenshots/use-cases/family-memories.png",
+      "title": "Preserving Family Memories Together",
+      "description": "Families using Firefly Grove to preserve and share their stories",
+      "tags": ["family", "memories", "preservation", "sharing", "stories"],
+      "platform": ["pinterest", "facebook"],
+      "topics": ["family memories", "memory preservation", "family stories", "photo sharing"],
+      "aspectRatio": "16:9",
+      "pinterestOptimized": false,
+      "uploadedAt": "2025-01-15"
+    },
+    {
+      "filename": "use-cases/digital-legacy.png",
+      "url": "https://fireflygrove.app/marketing/screenshots/use-cases/digital-legacy.png",
+      "title": "Planning Your Digital Legacy",
+      "description": "Take control of your digital legacy and ensure memories last forever",
+      "tags": ["digital", "legacy", "planning", "estate", "future"],
+      "platform": ["pinterest", "facebook"],
+      "topics": ["digital legacy", "estate planning", "legacy planning", "digital estate"],
+      "aspectRatio": "16:9",
+      "pinterestOptimized": false,
+      "uploadedAt": "2025-01-15"
+    },
+    {
+      "filename": "use-cases/photo-preservation.png",
+      "url": "https://fireflygrove.app/marketing/screenshots/use-cases/photo-preservation.png",
+      "title": "Professional Photo Preservation",
+      "description": "Preserve precious family photos with professional-grade backup and organization",
+      "tags": ["photos", "preservation", "backup", "organization", "professional"],
+      "platform": ["pinterest", "facebook"],
+      "topics": ["photo preservation", "photo backup", "photo organization", "family photos"],
+      "aspectRatio": "16:9",
+      "pinterestOptimized": false,
+      "uploadedAt": "2025-01-15"
+    }
+  ],
+  "metadata": {
+    "version": "1.0",
+    "lastUpdated": "2025-01-15",
+    "totalImages": 7,
+    "platforms": ["pinterest", "facebook"],
+    "aspectRatios": {
+      "1:1": "Square - Good for Facebook and Instagram",
+      "16:9": "Landscape - Good for Facebook posts",
+      "2:3": "Vertical - Optimal for Pinterest (1000x1500px)"
+    },
+    "notes": [
+      "Pinterest performs best with vertical images (2:3 aspect ratio)",
+      "Consider creating Pinterest-specific versions of key screenshots",
+      "Add new images to this file with proper tags and topics for auto-matching",
+      "Use descriptive tags that match your content brief keywords"
+    ]
+  }
+}

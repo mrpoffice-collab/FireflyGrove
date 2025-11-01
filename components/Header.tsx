@@ -22,6 +22,7 @@ export default function Header({ userName, isBetaTester, isAdmin, groveInfo }: H
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const [isFeedbackOpen, setIsFeedbackOpen] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [isSettingsSubmenuOpen, setIsSettingsSubmenuOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
 
   // Close dropdown when clicking outside
@@ -227,15 +228,40 @@ export default function Header({ userName, isBetaTester, isAdmin, groveInfo }: H
                   >
                     Manage Plan
                   </button>
-                  <button
-                    onClick={() => {
-                      router.push('/spark-collections')
-                      setIsDropdownOpen(false)
-                    }}
-                    className="w-full text-left px-3 py-2.5 text-sm text-text-muted hover:bg-border-subtle hover:text-text-soft transition-soft"
-                  >
-                    ✨ Manage Spark Collections
-                  </button>
+                  {/* Settings Menu with Submenu */}
+                  <div className="relative">
+                    <button
+                      onClick={() => setIsSettingsSubmenuOpen(!isSettingsSubmenuOpen)}
+                      className="w-full text-left px-3 py-2.5 text-sm text-text-muted hover:bg-border-subtle hover:text-text-soft transition-soft flex items-center justify-between"
+                    >
+                      <span>⚙️ Settings</span>
+                      <svg
+                        className={`w-4 h-4 transition-transform ${isSettingsSubmenuOpen ? 'rotate-90' : ''}`}
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </button>
+
+                    {/* Settings Submenu */}
+                    {isSettingsSubmenuOpen && (
+                      <div className="pl-4 bg-bg-darker/50">
+                        <button
+                          onClick={() => {
+                            router.push('/spark-collections')
+                            setIsDropdownOpen(false)
+                            setIsSettingsSubmenuOpen(false)
+                          }}
+                          className="w-full text-left px-3 py-2.5 text-sm text-text-muted hover:bg-border-subtle hover:text-text-soft transition-soft"
+                        >
+                          ✨ Upload Prompts
+                        </button>
+                      </div>
+                    )}
+                  </div>
+
                   <button
                     onClick={() => {
                       setIsFeedbackOpen(true)
@@ -437,6 +463,27 @@ export default function Header({ userName, isBetaTester, isAdmin, groveInfo }: H
             >
               📖 Blog
             </Link>
+
+            {/* Settings Section - Mobile */}
+            {userName && (
+              <div className="border-b border-border-subtle pb-2">
+                <div className="text-xs text-text-muted mb-2 px-2 uppercase tracking-wide">Settings</div>
+                <Link
+                  href="/spark-collections"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="block text-base font-light text-text-soft hover:text-firefly-glow transition-soft py-2 px-2 rounded hover:bg-border-subtle/30"
+                >
+                  ✨ Upload Prompts
+                </Link>
+                <Link
+                  href="/billing"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="block text-base font-light text-text-soft hover:text-firefly-glow transition-soft py-2 px-2 rounded hover:bg-border-subtle/30"
+                >
+                  💳 Manage Plan
+                </Link>
+              </div>
+            )}
 
             {!userName && (
               <Link

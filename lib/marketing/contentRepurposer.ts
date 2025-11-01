@@ -4,6 +4,7 @@
  */
 
 import Anthropic from '@anthropic-ai/sdk'
+import { getBestImageForPost } from './imageSelector'
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY!,
@@ -19,7 +20,7 @@ interface BlogPost {
 interface RepurposedContent {
   newsletter?: string
   facebook?: string[]
-  pinterest?: Array<{ title: string; description: string }>
+  pinterest?: Array<{ title: string; description: string; imageUrl?: string }>
 }
 
 /**
@@ -122,12 +123,12 @@ Return as JSON array:
 }
 
 /**
- * Generate Pinterest pins
+ * Generate Pinterest pins with automatic image selection
  */
 async function generatePinterestPins(
   blog: BlogPost,
   count: number
-): Promise<Array<{ title: string; description: string }>> {
+): Promise<Array<{ title: string; description: string; imageUrl?: string }>> {
   const prompt = `Create ${count} Pinterest pin ideas based on this blog post.
 
 Blog Title: ${blog.title}
@@ -159,6 +160,22 @@ Return as JSON array:
 
   const text = message.content[0].type === 'text' ? message.content[0].text : ''
   const jsonMatch = text.match(/\[[\s\S]*\]/)
-  return jsonMatch ? JSON.parse(jsonMatch[0]) : []
+  const pins = jsonMatch ? JSON.parse(jsonMatch[0]) : []
+
+  // Auto-assign images to each pin based on content and keywords
+  return pins.map((pin: { title: string; description: string }) => {
+    const imageUrl = getBestImageForPost({
+      keywords: blog.keywords,
+      topic: blog.title,
+      platform: 'pinterest',
+      title: pin.title,
+      content: pin.description,
+    })
+
+    return {
+      ...pin,
+      imageUrl,
+    }
+  })
 }
 

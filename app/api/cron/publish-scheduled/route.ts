@@ -109,11 +109,12 @@ export async function POST(req: NextRequest) {
             break
 
           case 'pinterest':
-            // Create Pinterest pin
+            // Create Pinterest pin with image
             const pinterestResult = await publishToPinterest({
               title: post.title,
               description: post.pinDescription || post.content,
               link: post.slug ? `https://fireflygrove.app/blog/${post.slug}` : 'https://fireflygrove.app',
+              imageUrl: post.image || undefined, // Use assigned image if available
             })
             platformSuccess = pinterestResult.success
             if (pinterestResult.success) {

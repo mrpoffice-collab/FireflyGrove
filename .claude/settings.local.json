@@ -39,7 +39,10 @@
       "Bash(vercel:*)",
       "Bash(cat:*)",
       "Bash(env)",
-      "WebFetch(domain:api.lulu.com)"
+      "WebFetch(domain:api.lulu.com)",
+      "Bash(then grep -i \"PINTEREST\" .env.local)",
+      "Bash(mkdir:*)",
+      "Bash(.env.local)"
     ],
     "deny": [],
     "ask": []

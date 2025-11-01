@@ -305,12 +305,12 @@ export default function MemoryModal({ onClose, onSave, spark, onRefreshSpark, cu
   }
 
   const handleUseSpark = () => {
-    // Append spark to current text with proper spacing
-    const sparkText = spark
+    // Append spark as a centered, bold prompt with colon
+    const formattedSpark = `**${spark}:**`
     if (text.trim()) {
-      setText(text + '\n\n' + sparkText)
+      setText(text + '\n\n' + formattedSpark + '\n\n')
     } else {
-      setText(sparkText)
+      setText(formattedSpark + '\n\n')
     }
   }
 

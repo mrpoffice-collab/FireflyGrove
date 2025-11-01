@@ -13,6 +13,7 @@ interface Collection {
   promptCount: number
   isFeatured: boolean
   isGlobal: boolean
+  isSharedWithGrove: boolean
   createdAt: string
   isActive: boolean
 }
@@ -107,6 +108,22 @@ export default function SparkCollectionsPage() {
       }
     } catch (error) {
       console.error('Error toggling collection:', error)
+    }
+  }
+
+  const handleToggleSharing = async (collectionId: string, currentState: boolean) => {
+    try {
+      const res = await fetch(`/api/spark-collections/${collectionId}/share`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ isSharedWithGrove: !currentState }),
+      })
+
+      if (res.ok) {
+        fetchCollections()
+      }
+    } catch (error) {
+      console.error('Error toggling sharing:', error)
     }
   }
 
@@ -211,19 +228,41 @@ export default function SparkCollectionsPage() {
                     </div>
 
                     <div className="flex items-center gap-2">
-                      {/* Toggle Switch */}
-                      <button
-                        onClick={() => handleToggle(collection.id)}
-                        className={`relative inline-flex h-8 w-14 items-center rounded-full transition-colors ${
-                          collection.isActive ? 'bg-firefly-glow' : 'bg-bg-dark'
-                        }`}
-                      >
-                        <span
-                          className={`inline-block h-6 w-6 transform rounded-full bg-white transition-transform ${
-                            collection.isActive ? 'translate-x-7' : 'translate-x-1'
+                      {/* Active Toggle Switch */}
+                      <div className="flex flex-col items-center gap-1">
+                        <button
+                          onClick={() => handleToggle(collection.id)}
+                          className={`relative inline-flex h-8 w-14 items-center rounded-full transition-colors ${
+                            collection.isActive ? 'bg-firefly-glow' : 'bg-bg-dark'
                           }`}
-                        />
-                      </button>
+                          title={collection.isActive ? 'Active' : 'Inactive'}
+                        >
+                          <span
+                            className={`inline-block h-6 w-6 transform rounded-full bg-white transition-transform ${
+                              collection.isActive ? 'translate-x-7' : 'translate-x-1'
+                            }`}
+                          />
+                        </button>
+                        <span className="text-xs text-text-muted">Active</span>
+                      </div>
+
+                      {/* Share with Grove Toggle */}
+                      <div className="flex flex-col items-center gap-1">
+                        <button
+                          onClick={() => handleToggleSharing(collection.id, collection.isSharedWithGrove)}
+                          className={`relative inline-flex h-8 w-14 items-center rounded-full transition-colors ${
+                            collection.isSharedWithGrove ? 'bg-blue-500' : 'bg-bg-dark'
+                          }`}
+                          title={collection.isSharedWithGrove ? 'Shared with Grove' : 'Not shared'}
+                        >
+                          <span
+                            className={`inline-block h-6 w-6 transform rounded-full bg-white transition-transform ${
+                              collection.isSharedWithGrove ? 'translate-x-7' : 'translate-x-1'
+                            }`}
+                          />
+                        </button>
+                        <span className="text-xs text-text-muted">Share</span>
+                      </div>
 
                       {/* Delete Button */}
                       <button
