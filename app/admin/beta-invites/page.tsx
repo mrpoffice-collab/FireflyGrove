@@ -32,9 +32,9 @@ export default function BetaInvitesPage() {
       return
     }
 
-    // Create SMS message text
+    // Create SMS message text with beta landing page link
     const inviterName = session?.user?.name || 'A friend'
-    const smsText = `${inviterName} invited you to try Firefly Grove - preserve your family memories forever! Join the beta: https://fireflygrove.app${message.trim() ? `\n\n${message.trim()}` : ''}`
+    const smsText = `${inviterName} invited you to try Firefly Grove - preserve your family memories forever! Join the beta: https://fireflygrove.app/fb-post${message.trim() ? `\n\n${message.trim()}` : ''}`
 
     // Use SMS protocol to open messaging app
     const smsLink = `sms:${phone.trim()}${isMobile ? (phone.includes('@') ? '' : '?') : '&'}body=${encodeURIComponent(smsText)}`
@@ -247,7 +247,8 @@ export default function BetaInvitesPage() {
             <ul className="text-sm text-text-muted space-y-1 list-disc list-inside">
               <li>Quick and easy for mobile users</li>
               <li>Opens your phone's messaging app with pre-filled text</li>
-              <li>Includes link to https://fireflygrove.app</li>
+              <li>Links to beautiful beta landing page with instant signup</li>
+              <li>Includes background music, firefly animations, and full story</li>
               <li>Your personal message is included</li>
               <li>Perfect for sharing with family and friends on-the-go</li>
             </ul>
