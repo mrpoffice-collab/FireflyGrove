@@ -179,12 +179,12 @@ export default function TutorialsPage() {
               <ol className="list-decimal list-inside space-y-2 text-text-muted text-sm ml-2">
                 <li>Copy the example draft file as a template:
                   <code className="block bg-bg-dark text-text-soft p-2 rounded text-xs mt-1">
-                    cp tutorial-videos/drafts/signup-complete-v2.json tutorial-videos/drafts/{idea.id}.json
+                    cp tutorial-videos/drafts/signup-complete-v2.json tutorial-videos/drafts/YOUR-VIDEO-NAME.json
                   </code>
                 </li>
                 <li className="mt-3">Open your new file in Notepad++</li>
                 <li>Edit the <code className="bg-bg-dark px-1 rounded text-xs">id</code>, <code className="bg-bg-dark px-1 rounded text-xs">title</code>, and steps to match your tutorial idea</li>
-                <li>Save and preview using: <code className="bg-bg-dark px-1 rounded text-xs">npx tsx preview-split-screen.ts {'{idea.id}'}</code></li>
+                <li>Save and preview using: <code className="bg-bg-dark px-1 rounded text-xs">npx tsx preview-split-screen.ts YOUR-VIDEO-NAME</code></li>
                 <li>Once perfect, head to the "Create Videos" tab to generate voices and record!</li>
               </ol>
             </div>
