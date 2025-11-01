@@ -9,17 +9,44 @@ export default function BetaInvitesPage() {
   const router = useRouter()
   const { data: session } = useSession()
   const [email, setEmail] = useState('')
+  const [phone, setPhone] = useState('')
   const [name, setName] = useState('')
   const [message, setMessage] = useState('')
   const [sending, setSending] = useState(false)
   const [result, setResult] = useState<{ type: 'success' | 'error'; message: string } | null>(null)
   const [isAdmin, setIsAdmin] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
     if (session?.user) {
       setIsAdmin((session.user as any).isAdmin || false)
     }
+
+    // Detect if user is on mobile
+    setIsMobile(/iPhone|iPad|iPod|Android/i.test(navigator.userAgent))
   }, [session])
+
+  const handleSendSMS = () => {
+    if (!phone.trim()) {
+      setResult({ type: 'error', message: 'Phone number is required for SMS invite' })
+      return
+    }
+
+    // Create SMS message text
+    const inviterName = session?.user?.name || 'A friend'
+    const smsText = `${inviterName} invited you to try Firefly Grove - preserve your family memories forever! Join the beta: https://fireflygrove.app${message.trim() ? `\n\n${message.trim()}` : ''}`
+
+    // Use SMS protocol to open messaging app
+    const smsLink = `sms:${phone.trim()}${isMobile ? (phone.includes('@') ? '' : '?') : '&'}body=${encodeURIComponent(smsText)}`
+
+    // Open the SMS app with pre-filled message
+    window.location.href = smsLink
+
+    setResult({
+      type: 'success',
+      message: 'SMS app opened with invite message. Send the text to complete the invitation!'
+    })
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -71,7 +98,7 @@ export default function BetaInvitesPage() {
             Invite Friends to Beta Test Firefly Grove
           </h1>
           <p className="text-text-muted">
-            Know someone who would love Firefly Grove? Invite them to join the beta! They'll receive a personalized welcome email with instructions to get started.
+            Send invites via email or text message. Perfect for sharing on mobile!
           </p>
         </div>
 
@@ -79,7 +106,7 @@ export default function BetaInvitesPage() {
           {/* Email Field */}
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-text-soft mb-2">
-              Email Address <span className="text-firefly-glow">*</span>
+              Email Address <span className="text-text-muted text-xs">(for email invite)</span>
             </label>
             <input
               type="email"
@@ -88,9 +115,30 @@ export default function BetaInvitesPage() {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="beta-tester@example.com"
               className="w-full px-4 py-2 bg-bg-dark border border-border-subtle rounded-lg text-text-soft placeholder:text-placeholder focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50 transition-soft"
-              required
               disabled={sending}
             />
+            <p className="mt-1 text-xs text-text-muted">
+              Leave blank if you only want to send a text message
+            </p>
+          </div>
+
+          {/* Phone Field */}
+          <div>
+            <label htmlFor="phone" className="block text-sm font-medium text-text-soft mb-2">
+              Phone Number <span className="text-text-muted text-xs">(for text/SMS invite)</span>
+            </label>
+            <input
+              type="tel"
+              id="phone"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="+1 (555) 123-4567"
+              className="w-full px-4 py-2 bg-bg-dark border border-border-subtle rounded-lg text-text-soft placeholder:text-placeholder focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50 transition-soft"
+              disabled={sending}
+            />
+            <p className="mt-1 text-xs text-text-muted">
+              {isMobile ? '📱 Send a text invite from your phone' : 'Enter phone number to create SMS invite link'}
+            </p>
           </div>
 
           {/* Name Field */}
@@ -144,35 +192,75 @@ export default function BetaInvitesPage() {
             </div>
           )}
 
-          {/* Submit Button */}
-          <div className="flex gap-3">
-            <button
-              type="submit"
-              disabled={sending || !email.trim()}
-              className="flex-1 py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg font-medium transition-soft disabled:bg-gray-700 disabled:text-gray-500 disabled:cursor-not-allowed"
-            >
-              {sending ? 'Sending...' : 'Send Beta Invite'}
-            </button>
-            <button
-              type="button"
-              onClick={() => router.push('/grove')}
-              className="px-6 py-3 bg-border-subtle hover:bg-text-muted/20 text-text-soft border border-border-subtle rounded-lg font-medium transition-soft"
-            >
-              Cancel
-            </button>
+          {/* Submit Buttons */}
+          <div className="space-y-3">
+            {/* SMS Button - Show prominently on mobile or if phone is entered */}
+            {phone.trim() && (
+              <button
+                type="button"
+                onClick={handleSendSMS}
+                disabled={sending}
+                className="w-full py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-medium transition-soft disabled:bg-gray-700 disabled:text-gray-500 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                </svg>
+                {isMobile ? 'Send Text Message' : 'Open SMS App'}
+              </button>
+            )}
+
+            {/* Email Button */}
+            <div className="flex gap-3">
+              <button
+                type="submit"
+                disabled={sending || !email.trim()}
+                className="flex-1 py-3 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg font-medium transition-soft disabled:bg-gray-700 disabled:text-gray-500 disabled:cursor-not-allowed"
+              >
+                {sending ? 'Sending...' : 'Send Email Invite'}
+              </button>
+              <button
+                type="button"
+                onClick={() => router.push('/grove')}
+                className="px-6 py-3 bg-border-subtle hover:bg-text-muted/20 text-text-soft border border-border-subtle rounded-lg font-medium transition-soft"
+              >
+                Cancel
+              </button>
+            </div>
           </div>
         </form>
 
         {/* Info Section */}
-        <div className="mt-8 p-4 bg-bg-elevated rounded-lg border border-border-subtle">
-          <h3 className="text-sm font-medium text-text-soft mb-2">What the invitee receives:</h3>
-          <ul className="text-sm text-text-muted space-y-1 list-disc list-inside">
-            <li>Welcome email with subject "You're invited to beta test Firefly Grove 🌟"</li>
-            <li>Link to https://fireflygrove.app</li>
-            <li>Instructions on what to test</li>
-            <li>How to report issues using "🐛 Report an Issue" link</li>
-            <li>Beta perks and benefits</li>
-          </ul>
+        <div className="mt-8 space-y-4">
+          <div className="p-4 bg-bg-elevated rounded-lg border border-border-subtle">
+            <h3 className="text-sm font-medium text-text-soft mb-2">📧 Email Invite includes:</h3>
+            <ul className="text-sm text-text-muted space-y-1 list-disc list-inside">
+              <li>Welcome email with subject "You're invited to beta test Firefly Grove 🌟"</li>
+              <li>Link to https://fireflygrove.app</li>
+              <li>Instructions on what to test</li>
+              <li>How to report issues using "🐛 Report an Issue" link</li>
+              <li>Beta perks and benefits</li>
+            </ul>
+          </div>
+
+          <div className="p-4 bg-blue-500/10 rounded-lg border border-blue-500/30">
+            <h3 className="text-sm font-medium text-blue-300 mb-2">📱 Text Message Invite:</h3>
+            <ul className="text-sm text-text-muted space-y-1 list-disc list-inside">
+              <li>Quick and easy for mobile users</li>
+              <li>Opens your phone's messaging app with pre-filled text</li>
+              <li>Includes link to https://fireflygrove.app</li>
+              <li>Your personal message is included</li>
+              <li>Perfect for sharing with family and friends on-the-go</li>
+            </ul>
+          </div>
+
+          {isMobile && (
+            <div className="p-4 bg-green-500/10 rounded-lg border border-green-500/30">
+              <h3 className="text-sm font-medium text-green-300 mb-2">💡 Mobile Tip:</h3>
+              <p className="text-sm text-text-muted">
+                You're on mobile! Simply enter a phone number above and tap "Send Text Message" to instantly invite someone via SMS.
+              </p>
+            </div>
+          )}
         </div>
       </main>
     </div>
