@@ -229,6 +229,15 @@ export default function Header({ userName, isBetaTester, isAdmin, groveInfo }: H
                       >
                         📧 Feature Updates
                       </button>
+                      <button
+                        onClick={() => {
+                          router.push('/admin/screenshots')
+                          setIsDropdownOpen(false)
+                        }}
+                        className="w-full text-left px-3 py-2.5 text-sm text-text-muted hover:bg-border-subtle hover:text-text-soft transition-soft"
+                      >
+                        📸 Screenshots
+                      </button>
                     </div>
                   </>
                 )}
@@ -471,6 +480,13 @@ export default function Header({ userName, isBetaTester, isAdmin, groveInfo }: H
                     className="block text-base font-light text-text-soft hover:text-firefly-glow transition-soft py-2 px-2 rounded hover:bg-border-subtle/30"
                   >
                     📧 Feature Updates
+                  </Link>
+                  <Link
+                    href="/admin/screenshots"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="block text-base font-light text-text-soft hover:text-firefly-glow transition-soft py-2 px-2 rounded hover:bg-border-subtle/30"
+                  >
+                    📸 Screenshots
                   </Link>
                 </div>
               </>
