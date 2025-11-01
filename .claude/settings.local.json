@@ -43,7 +43,8 @@
       "Bash(then grep -i \"PINTEREST\" .env.local)",
       "Bash(mkdir:*)",
       "Bash(.env.local)",
-      "Bash(npm uninstall:*)"
+      "Bash(npm uninstall:*)",
+      "Bash(dir:*)"
     ],
     "deny": [],
     "ask": []

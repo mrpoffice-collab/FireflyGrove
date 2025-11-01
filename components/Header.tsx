@@ -39,7 +39,8 @@ export default function Header({ userName, isBetaTester: propBetaTester, isAdmin
   const [adminModeActive, setAdminModeActive] = useState(() => {
     if (typeof window !== 'undefined' && isAdmin) {
       const stored = localStorage.getItem('adminModeActive')
-      return stored === null ? true : stored === 'true' // Default to true
+      // ALWAYS default to true for admins (only turn off if explicitly set to false)
+      return stored === 'false' ? false : true
     }
     return false
   })
