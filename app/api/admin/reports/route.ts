@@ -41,7 +41,7 @@ export async function GET(request: Request) {
         memory: {
           select: {
             id: true,
-            content: true,
+            text: true,
             branch: {
               select: {
                 title: true,
@@ -76,7 +76,8 @@ export async function GET(request: Request) {
       status: report.status === 'OPEN' ? 'pending' : report.status === 'ACTION_TAKEN' ? 'reviewed' : 'dismissed',
       createdAt: report.createdAt,
       entry: {
-        ...report.memory,
+        id: report.memory.id,
+        content: report.memory.text, // Map text to content for frontend
         branch: {
           title: report.memory.branch.title,
           // A branch is "public" if its person is a legacy memorial with discovery enabled
