@@ -86,8 +86,9 @@ export async function GET() {
       prisma.entry.count({
         where: {
           OR: [
-            { photoUrl: { not: null } },
-            { audioUrl: { not: null } }
+            { mediaUrl: { not: null } },
+            { audioUrl: { not: null } },
+            { videoUrl: { not: null } }
           ]
         }
       })
