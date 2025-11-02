@@ -8,19 +8,21 @@ import Link from 'next/link'
 
 interface PublicMemorial {
   id: string
-  title: string
-  type: string
-  isPublic: boolean
-  isFeatured: boolean
+  name: string
+  birthDate: string | null
+  deathDate: string | null
+  memoryCount: number
+  memoryLimit: number | null
+  discoveryEnabled: boolean
   createdAt: string
-  _count: {
-    entries: number
-    members: number
-  }
   owner: {
     name: string
     email: string
   }
+  branches: Array<{
+    id: string
+    title: string
+  }>
 }
 
 export default function OpenGroveOversightPage() {
@@ -28,7 +30,7 @@ export default function OpenGroveOversightPage() {
   const router = useRouter()
   const [memorials, setMemorials] = useState<PublicMemorial[]>([])
   const [loading, setLoading] = useState(true)
-  const [filterStatus, setFilterStatus] = useState<'all' | 'public' | 'featured'>('all')
+  const [filterStatus, setFilterStatus] = useState<'all' | 'public'>('all')
   const [selectedMemorial, setSelectedMemorial] = useState<PublicMemorial | null>(null)
   const [actionLoading, setActionLoading] = useState(false)
 
@@ -57,7 +59,7 @@ export default function OpenGroveOversightPage() {
     }
   }
 
-  const handleMemorialAction = async (memorialId: string, action: 'feature' | 'unfeature' | 'hide') => {
+  const handleMemorialAction = async (memorialId: string, action: 'hide') => {
     setActionLoading(true)
     try {
       const response = await fetch(`/api/admin/open-grove/${memorialId}`, {
@@ -125,7 +127,7 @@ export default function OpenGroveOversightPage() {
 
         {/* Filters */}
         <div className="mb-6 flex gap-2">
-          {(['all', 'public', 'featured'] as const).map((filter) => (
+          {(['all', 'public'] as const).map((filter) => (
             <button
               key={filter}
               onClick={() => setFilterStatus(filter)}
@@ -137,7 +139,6 @@ export default function OpenGroveOversightPage() {
             >
               {filter === 'all' && 'All Memorials'}
               {filter === 'public' && 'Public'}
-              {filter === 'featured' && 'Featured'}
             </button>
           ))}
         </div>
@@ -156,36 +157,37 @@ export default function OpenGroveOversightPage() {
             >
               <div className="flex items-start justify-between gap-3 mb-3">
                 <div className="flex-1">
-                  <h3 className="text-lg font-medium text-text-soft mb-1">{memorial.title}</h3>
+                  <h3 className="text-lg font-medium text-text-soft mb-1">{memorial.name}</h3>
                   <div className="text-xs text-text-muted">
                     Created by {memorial.owner.name}
                   </div>
+                  {memorial.deathDate && (
+                    <div className="text-xs text-text-muted mt-1">
+                      {memorial.birthDate && `${new Date(memorial.birthDate).getFullYear()} - `}
+                      {new Date(memorial.deathDate).getFullYear()}
+                    </div>
+                  )}
                 </div>
-                {memorial.isFeatured && (
-                  <span className="px-2 py-1 bg-yellow-500/20 text-yellow-300 rounded text-xs flex items-center gap-1">
-                    ⭐ Featured
-                  </span>
-                )}
               </div>
 
               <div className="space-y-2 mb-4">
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-text-muted">Status:</span>
                   <span className={`px-2 py-1 rounded text-xs ${
-                    memorial.isPublic
+                    memorial.discoveryEnabled
                       ? 'bg-green-500/20 text-green-300'
                       : 'bg-gray-500/20 text-gray-300'
                   }`}>
-                    {memorial.isPublic ? 'Public' : 'Private'}
+                    {memorial.discoveryEnabled ? 'Public' : 'Private'}
                   </span>
                 </div>
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-text-muted">Memories:</span>
-                  <span className="text-firefly-glow">{memorial._count.entries}</span>
+                  <span className="text-firefly-glow">{memorial.memoryCount}{memorial.memoryLimit && ` / ${memorial.memoryLimit}`}</span>
                 </div>
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-text-muted">Contributors:</span>
-                  <span className="text-text-soft">{memorial._count.members}</span>
+                  <span className="text-text-muted">Branch:</span>
+                  <span className="text-text-soft">{memorial.branches[0]?.title || 'No branch'}</span>
                 </div>
                 <div className="text-xs text-text-muted">
                   Created {new Date(memorial.createdAt).toLocaleDateString()}
@@ -225,7 +227,7 @@ export default function OpenGroveOversightPage() {
               {/* Header */}
               <div className="flex items-start justify-between mb-6">
                 <div>
-                  <h3 className="text-2xl font-light text-text-soft mb-1">{selectedMemorial.title}</h3>
+                  <h3 className="text-2xl font-light text-text-soft mb-1">{selectedMemorial.name}</h3>
                   <p className="text-text-muted text-sm">Manage this public memorial</p>
                 </div>
                 <button
@@ -253,24 +255,27 @@ export default function OpenGroveOversightPage() {
                   <div className="bg-bg-elevated rounded-lg p-4 space-y-2 text-sm">
                     <div className="flex justify-between">
                       <span className="text-text-muted">Total Memories:</span>
-                      <span className="text-firefly-glow font-medium">{selectedMemorial._count.entries}</span>
+                      <span className="text-firefly-glow font-medium">{selectedMemorial.memoryCount}{selectedMemorial.memoryLimit && ` / ${selectedMemorial.memoryLimit}`}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-text-muted">Contributors:</span>
-                      <span className="text-text-soft">{selectedMemorial._count.members}</span>
+                      <span className="text-text-muted">Branch:</span>
+                      <span className="text-text-soft">{selectedMemorial.branches[0]?.title || 'No branch'}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-text-muted">Status:</span>
-                      <span className={selectedMemorial.isPublic ? 'text-green-400' : 'text-gray-400'}>
-                        {selectedMemorial.isPublic ? 'Public' : 'Private'}
+                      <span className={selectedMemorial.discoveryEnabled ? 'text-green-400' : 'text-gray-400'}>
+                        {selectedMemorial.discoveryEnabled ? 'Public' : 'Private'}
                       </span>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-text-muted">Featured:</span>
-                      <span className={selectedMemorial.isFeatured ? 'text-yellow-400' : 'text-gray-400'}>
-                        {selectedMemorial.isFeatured ? 'Yes ⭐' : 'No'}
-                      </span>
-                    </div>
+                    {selectedMemorial.deathDate && (
+                      <div className="flex justify-between">
+                        <span className="text-text-muted">Dates:</span>
+                        <span className="text-text-soft">
+                          {selectedMemorial.birthDate && `${new Date(selectedMemorial.birthDate).getFullYear()} - `}
+                          {new Date(selectedMemorial.deathDate).getFullYear()}
+                        </span>
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -278,26 +283,6 @@ export default function OpenGroveOversightPage() {
                 <div>
                   <h4 className="text-sm font-medium text-text-soft mb-3">Management Actions</h4>
                   <div className="grid grid-cols-1 gap-3">
-                    {selectedMemorial.isFeatured ? (
-                      <button
-                        onClick={() => handleMemorialAction(selectedMemorial.id, 'unfeature')}
-                        disabled={actionLoading}
-                        className="px-4 py-3 bg-gray-500/20 hover:bg-gray-500/30 text-gray-300 border border-gray-500/30 rounded transition-soft disabled:opacity-50 text-left"
-                      >
-                        <div className="text-sm font-medium mb-1">⭐ Remove from Featured</div>
-                        <div className="text-xs opacity-70">Remove from featured memorials section</div>
-                      </button>
-                    ) : (
-                      <button
-                        onClick={() => handleMemorialAction(selectedMemorial.id, 'feature')}
-                        disabled={actionLoading}
-                        className="px-4 py-3 bg-yellow-500/20 hover:bg-yellow-500/30 text-yellow-300 border border-yellow-500/30 rounded transition-soft disabled:opacity-50 text-left"
-                      >
-                        <div className="text-sm font-medium mb-1">⭐ Feature This Memorial</div>
-                        <div className="text-xs opacity-70">Highlight in featured memorials section</div>
-                      </button>
-                    )}
-
                     <button
                       onClick={() => handleMemorialAction(selectedMemorial.id, 'hide')}
                       disabled={actionLoading}
@@ -307,14 +292,16 @@ export default function OpenGroveOversightPage() {
                       <div className="text-xs opacity-70">Make this memorial private (owner can still access)</div>
                     </button>
 
-                    <Link
-                      href={`/branch/${selectedMemorial.id}`}
-                      target="_blank"
-                      className="px-4 py-3 bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 border border-blue-500/30 rounded transition-soft text-left block"
-                    >
-                      <div className="text-sm font-medium mb-1">👁️ View Memorial</div>
-                      <div className="text-xs opacity-70">Open memorial in new tab</div>
-                    </Link>
+                    {selectedMemorial.branches[0] && (
+                      <Link
+                        href={`/branch/${selectedMemorial.branches[0].id}`}
+                        target="_blank"
+                        className="px-4 py-3 bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 border border-blue-500/30 rounded transition-soft text-left block"
+                      >
+                        <div className="text-sm font-medium mb-1">👁️ View Memorial</div>
+                        <div className="text-xs opacity-70">Open memorial in new tab</div>
+                      </Link>
+                    )}
                   </div>
                 </div>
               </div>

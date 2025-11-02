@@ -26,7 +26,7 @@ export async function PATCH(
     const body = await request.json()
     const { action } = body
 
-    const memorial = await prisma.branch.findUnique({
+    const memorial = await prisma.person.findUnique({
       where: { id: params.id }
     })
 
@@ -36,23 +36,18 @@ export async function PATCH(
 
     switch (action) {
       case 'feature':
-        await prisma.branch.update({
-          where: { id: params.id },
-          data: { isFeatured: true }
-        })
-        break
+        // Person model doesn't have isFeatured field
+        // This action is not applicable for memorials
+        return NextResponse.json({ error: 'Feature action not supported for memorials' }, { status: 400 })
 
       case 'unfeature':
-        await prisma.branch.update({
-          where: { id: params.id },
-          data: { isFeatured: false }
-        })
-        break
+        // Person model doesn't have isFeatured field
+        return NextResponse.json({ error: 'Unfeature action not supported for memorials' }, { status: 400 })
 
       case 'hide':
-        await prisma.branch.update({
+        await prisma.person.update({
           where: { id: params.id },
-          data: { isPublic: false }
+          data: { discoveryEnabled: false }
         })
         break
 
@@ -65,11 +60,11 @@ export async function PATCH(
       data: {
         actorId: user.id,
         action: `memorial_${action}`,
-        targetType: 'branch',
+        targetType: 'person',
         targetId: memorial.id,
         metadata: JSON.stringify({
           memorialId: memorial.id,
-          memorialTitle: memorial.title,
+          memorialName: memorial.name,
           action
         })
       }

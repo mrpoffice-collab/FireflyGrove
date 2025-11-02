@@ -56,10 +56,10 @@ export async function GET() {
     ] = await Promise.all([
       prisma.entry.count(),
       prisma.branch.count(),
-      prisma.branch.count({
+      prisma.person.count({
         where: {
-          isPublic: true,
-          type: 'memorial'
+          isLegacy: true,
+          discoveryEnabled: true
         }
       }),
       prisma.report.count({

@@ -24,43 +24,51 @@ export async function GET(request: Request) {
     const filter = searchParams.get('filter') || 'all'
 
     let where: any = {
-      type: 'memorial'
+      isLegacy: true,
+      discoveryEnabled: true
     }
 
     switch (filter) {
       case 'public':
-        where.isPublic = true
+        where.discoveryEnabled = true
         break
       case 'featured':
-        where.isFeatured = true
+        // Note: Person model doesn't have isFeatured, only SparkCollection does
+        // For now, just show all public memorials
+        where.discoveryEnabled = true
         break
-      // 'all' returns all memorials regardless of status
+      // 'all' returns all public memorials
     }
 
-    const memorials = await prisma.branch.findMany({
+    const memorials = await prisma.person.findMany({
       where,
       select: {
         id: true,
-        title: true,
-        type: true,
-        isPublic: true,
-        isFeatured: true,
+        name: true,
+        birthDate: true,
+        deathDate: true,
+        memoryCount: true,
+        memoryLimit: true,
+        discoveryEnabled: true,
         createdAt: true,
-        _count: {
-          select: {
-            entries: true,
-            members: true
-          }
-        },
         owner: {
           select: {
             name: true,
             email: true
           }
+        },
+        branches: {
+          where: {
+            status: 'ACTIVE'
+          },
+          select: {
+            id: true,
+            title: true
+          },
+          take: 1
         }
       },
       orderBy: [
-        { isFeatured: 'desc' },
         { createdAt: 'desc' }
       ],
       take: 100
