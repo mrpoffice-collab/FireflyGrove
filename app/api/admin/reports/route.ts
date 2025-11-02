@@ -45,7 +45,12 @@ export async function GET(request: Request) {
             branch: {
               select: {
                 title: true,
-                isPublic: true
+                person: {
+                  select: {
+                    discoveryEnabled: true,
+                    isLegacy: true
+                  }
+                }
               }
             }
           }
@@ -70,7 +75,14 @@ export async function GET(request: Request) {
       description: report.notes,
       status: report.status === 'OPEN' ? 'pending' : report.status === 'ACTION_TAKEN' ? 'reviewed' : 'dismissed',
       createdAt: report.createdAt,
-      entry: report.memory,
+      entry: {
+        ...report.memory,
+        branch: {
+          title: report.memory.branch.title,
+          // A branch is "public" if its person is a legacy memorial with discovery enabled
+          isPublic: report.memory.branch.person?.isLegacy && report.memory.branch.person?.discoveryEnabled || false
+        }
+      },
       reportedBy: report.reporter
     }))
 
