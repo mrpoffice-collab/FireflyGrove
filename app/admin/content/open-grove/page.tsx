@@ -71,8 +71,7 @@ export default function OpenGroveOversightPage() {
       if (response.ok) {
         fetchMemorials()
         setSelectedMemorial(null)
-        const actionText = action === 'feature' ? 'featured' : action === 'unfeature' ? 'unfeatured' : 'hidden'
-        alert(`Memorial ${actionText} successfully`)
+        alert('Memorial hidden successfully')
       } else {
         const error = await response.json()
         alert(`Failed to ${action} memorial: ${error.error}`)
