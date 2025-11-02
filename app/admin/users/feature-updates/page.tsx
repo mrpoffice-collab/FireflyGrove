@@ -121,6 +121,15 @@ export default function FeatureUpdatesPage() {
 
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
+          {/* Breadcrumb */}
+          <div className="mb-4 text-sm text-text-muted">
+            <a href="/admin" className="hover:text-firefly-glow transition-soft">Admin</a>
+            <span className="mx-2">/</span>
+            <span>Users & Community</span>
+            <span className="mx-2">/</span>
+            <span className="text-text-soft">Feature Updates</span>
+          </div>
+
           <div className="mb-8">
             <h1 className="text-3xl text-text-soft mb-2">📧 Feature Update Emails</h1>
             <p className="text-text-muted">

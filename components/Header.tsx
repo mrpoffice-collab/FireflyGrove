@@ -195,6 +195,60 @@ export default function Header({ userName, isBetaTester: propBetaTester, isAdmin
                       <div className="text-xs text-firefly-glow font-medium uppercase tracking-wide">Admin</div>
                     </div>
                     <div className="py-0.5 border-b border-border-subtle">
+                      {/* Admin Dashboard - Primary Link */}
+                      <button
+                        onClick={() => {
+                          router.push('/admin')
+                          setIsDropdownOpen(false)
+                        }}
+                        className="w-full text-left px-3 py-2.5 text-sm text-firefly-glow hover:bg-firefly-dim/10 hover:text-firefly-dim transition-soft font-medium"
+                      >
+                        🏠 Admin Dashboard
+                      </button>
+
+                      {/* Users & Community */}
+                      <button
+                        onClick={() => {
+                          router.push('/admin/users')
+                          setIsDropdownOpen(false)
+                        }}
+                        className="w-full text-left px-3 py-2.5 text-sm text-text-muted hover:bg-border-subtle hover:text-text-soft transition-soft"
+                      >
+                        👥 User Management
+                      </button>
+
+                      {/* Content & Moderation */}
+                      <button
+                        onClick={() => {
+                          router.push('/admin/content/reports')
+                          setIsDropdownOpen(false)
+                        }}
+                        className="w-full text-left px-3 py-2.5 text-sm text-text-muted hover:bg-border-subtle hover:text-text-soft transition-soft"
+                      >
+                        🛡️ Content Reports
+                      </button>
+
+                      {/* System & Analytics */}
+                      <button
+                        onClick={() => {
+                          router.push('/admin/system/health')
+                          setIsDropdownOpen(false)
+                        }}
+                        className="w-full text-left px-3 py-2.5 text-sm text-text-muted hover:bg-border-subtle hover:text-text-soft transition-soft"
+                      >
+                        💚 System Health
+                      </button>
+                      <button
+                        onClick={() => {
+                          router.push('/admin/analytics')
+                          setIsDropdownOpen(false)
+                        }}
+                        className="w-full text-left px-3 py-2.5 text-sm text-text-muted hover:bg-border-subtle hover:text-text-soft transition-soft"
+                      >
+                        📊 Analytics
+                      </button>
+
+                      {/* Marketing Tools */}
                       <button
                         onClick={() => {
                           router.push('/marketing-genius')
@@ -211,52 +265,7 @@ export default function Header({ userName, isBetaTester: propBetaTester, isAdmin
                         }}
                         className="w-full text-left px-3 py-2.5 text-sm text-text-muted hover:bg-border-subtle hover:text-text-soft transition-soft"
                       >
-                        🎥 Amazing Video Builder
-                      </button>
-                      <button
-                        onClick={() => {
-                          router.push('/admin/analytics')
-                          setIsDropdownOpen(false)
-                        }}
-                        className="w-full text-left px-3 py-2.5 text-sm text-text-muted hover:bg-border-subtle hover:text-text-soft transition-soft"
-                      >
-                        📊 Analytics Dashboard
-                      </button>
-                      <button
-                        onClick={() => {
-                          router.push('/admin/pinterest')
-                          setIsDropdownOpen(false)
-                        }}
-                        className="w-full text-left px-3 py-2.5 text-sm text-text-muted hover:bg-border-subtle hover:text-text-soft transition-soft"
-                      >
-                        📌 Pinterest Integration
-                      </button>
-                      <button
-                        onClick={() => {
-                          router.push('/admin/feature-updates')
-                          setIsDropdownOpen(false)
-                        }}
-                        className="w-full text-left px-3 py-2.5 text-sm text-text-muted hover:bg-border-subtle hover:text-text-soft transition-soft"
-                      >
-                        📧 Feature Updates
-                      </button>
-                      <button
-                        onClick={() => {
-                          router.push('/admin/screenshots')
-                          setIsDropdownOpen(false)
-                        }}
-                        className="w-full text-left px-3 py-2.5 text-sm text-text-muted hover:bg-border-subtle hover:text-text-soft transition-soft"
-                      >
-                        📸 Screenshots
-                      </button>
-                      <button
-                        onClick={() => {
-                          router.push('/admin/tutorials')
-                          setIsDropdownOpen(false)
-                        }}
-                        className="w-full text-left px-3 py-2.5 text-sm text-text-muted hover:bg-border-subtle hover:text-text-soft transition-soft"
-                      >
-                        🎥 Tutorial Videos
+                        🎥 Video Builder
                       </button>
                     </div>
                   </>
@@ -266,7 +275,7 @@ export default function Header({ userName, isBetaTester: propBetaTester, isAdmin
                   {isBetaTester && (
                     <button
                       onClick={() => {
-                        router.push('/admin/beta-invites')
+                        router.push('/admin/users/beta-invites')
                         setIsDropdownOpen(false)
                       }}
                       className="w-full text-left px-3 py-2.5 text-sm text-blue-300 hover:bg-blue-500/20 hover:text-blue-200 transition-soft font-medium"
@@ -399,7 +408,7 @@ export default function Header({ userName, isBetaTester: propBetaTester, isAdmin
             {/* Beta Tester Invite - Prominent */}
             {isBetaTester && (
               <Link
-                href="/admin/beta-invites"
+                href="/admin/users/beta-invites"
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="text-base font-medium text-blue-300 hover:text-blue-200 bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/30 transition-soft py-3 px-3 rounded-lg mb-2"
                 aria-label="Invite friends to beta"
@@ -466,6 +475,46 @@ export default function Header({ userName, isBetaTester: propBetaTester, isAdmin
               <>
                 <div className="border-b border-border-subtle pb-2">
                   <div className="text-xs text-firefly-glow mb-2 px-2 uppercase tracking-wide font-medium">Admin</div>
+                  {/* Admin Dashboard - Primary Link */}
+                  <Link
+                    href="/admin"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="block text-base font-medium text-firefly-glow hover:text-firefly-dim transition-soft py-2 px-2 rounded hover:bg-firefly-dim/10"
+                  >
+                    🏠 Admin Dashboard
+                  </Link>
+                  {/* Users & Community */}
+                  <Link
+                    href="/admin/users"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="block text-base font-light text-text-soft hover:text-firefly-glow transition-soft py-2 px-2 rounded hover:bg-border-subtle/30"
+                  >
+                    👥 User Management
+                  </Link>
+                  {/* Content & Moderation */}
+                  <Link
+                    href="/admin/content/reports"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="block text-base font-light text-text-soft hover:text-firefly-glow transition-soft py-2 px-2 rounded hover:bg-border-subtle/30"
+                  >
+                    🛡️ Content Reports
+                  </Link>
+                  {/* System & Analytics */}
+                  <Link
+                    href="/admin/system/health"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="block text-base font-light text-text-soft hover:text-firefly-glow transition-soft py-2 px-2 rounded hover:bg-border-subtle/30"
+                  >
+                    💚 System Health
+                  </Link>
+                  <Link
+                    href="/admin/analytics"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="block text-base font-light text-text-soft hover:text-firefly-glow transition-soft py-2 px-2 rounded hover:bg-border-subtle/30"
+                  >
+                    📊 Analytics
+                  </Link>
+                  {/* Marketing Tools */}
                   <Link
                     href="/marketing-genius"
                     onClick={() => setIsMobileMenuOpen(false)}
@@ -478,35 +527,7 @@ export default function Header({ userName, isBetaTester: propBetaTester, isAdmin
                     onClick={() => setIsMobileMenuOpen(false)}
                     className="block text-base font-light text-text-soft hover:text-firefly-glow transition-soft py-2 px-2 rounded hover:bg-border-subtle/30"
                   >
-                    🎥 Amazing Video Builder
-                  </Link>
-                  <Link
-                    href="/admin/analytics"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="block text-base font-light text-text-soft hover:text-firefly-glow transition-soft py-2 px-2 rounded hover:bg-border-subtle/30"
-                  >
-                    📊 Analytics Dashboard
-                  </Link>
-                  <Link
-                    href="/admin/pinterest"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="block text-base font-light text-text-soft hover:text-firefly-glow transition-soft py-2 px-2 rounded hover:bg-border-subtle/30"
-                  >
-                    📌 Pinterest Integration
-                  </Link>
-                  <Link
-                    href="/admin/feature-updates"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="block text-base font-light text-text-soft hover:text-firefly-glow transition-soft py-2 px-2 rounded hover:bg-border-subtle/30"
-                  >
-                    📧 Feature Updates
-                  </Link>
-                  <Link
-                    href="/admin/screenshots"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="block text-base font-light text-text-soft hover:text-firefly-glow transition-soft py-2 px-2 rounded hover:bg-border-subtle/30"
-                  >
-                    📸 Screenshots
+                    🎥 Video Builder
                   </Link>
                   <Link
                     href="/admin/tutorials"

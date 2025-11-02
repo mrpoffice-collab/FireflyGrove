@@ -140,6 +140,15 @@ export default function PinterestAdminPage() {
 
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-6xl mx-auto">
+          {/* Breadcrumb */}
+          <div className="mb-4 text-sm text-text-muted">
+            <a href="/admin" className="hover:text-firefly-glow transition-soft">Admin</a>
+            <span className="mx-2">/</span>
+            <span>Marketing & Growth</span>
+            <span className="mx-2">/</span>
+            <span className="text-text-soft">Pinterest</span>
+          </div>
+
           {/* Header */}
           <div className="mb-8">
             <h1 className="text-4xl font-light text-text-soft mb-2">

@@ -36,9 +36,9 @@ const PAGES: PageConfig[] = [
 
   // Admin Pages
   { name: 'Analytics', path: '/admin/analytics', description: 'Admin analytics', requiresAuth: true, category: 'Admin' },
-  { name: 'Beta Invites', path: '/admin/beta-invites', description: 'Invite management', requiresAuth: true, category: 'Admin' },
+  { name: 'Beta Invites', path: '/admin/users/beta-invites', description: 'Invite management', requiresAuth: true, category: 'Admin' },
   { name: 'Marketing Intelligence', path: '/marketing-genius', description: 'Marketing tools', requiresAuth: true, category: 'Admin' },
-  { name: 'Pinterest Integration', path: '/admin/pinterest', description: 'Pinterest tools', requiresAuth: true, category: 'Admin' },
+  { name: 'Pinterest Integration', path: '/admin/marketing/pinterest', description: 'Pinterest tools', requiresAuth: true, category: 'Admin' },
 ]
 
 export default function ScreenshotsPage() {
@@ -160,6 +160,15 @@ ${selectedPages.map(p => `- ${typeof window !== 'undefined' ? window.location.or
       />
 
       <div className="container mx-auto px-4 py-8 max-w-6xl">
+        {/* Breadcrumb */}
+        <div className="mb-4 text-sm text-text-muted">
+          <Link href="/admin" className="hover:text-firefly-glow transition-soft">Admin</Link>
+          <span className="mx-2">/</span>
+          <span>Marketing & Growth</span>
+          <span className="mx-2">/</span>
+          <span className="text-text-soft">Screenshots</span>
+        </div>
+
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-light text-firefly-glow mb-2">

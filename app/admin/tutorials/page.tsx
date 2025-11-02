@@ -65,12 +65,37 @@ const TUTORIAL_IDEAS = [
 ]
 
 export default function TutorialsPage() {
-  const { data: session } = useSession()
+  const { data: session, status } = useSession()
   const router = useRouter()
   const [activeTab, setActiveTab] = useState<'ideas' | 'create' | 'guide'>('ideas')
   const [creatingDraft, setCreatingDraft] = useState<string | null>(null)
+  const [previewingTutorial, setPreviewingTutorial] = useState<string | null>(null)
 
   const isAdmin = (session?.user as any)?.isAdmin
+
+  const previewTutorial = async (tutorialId: string) => {
+    setPreviewingTutorial(tutorialId)
+
+    try {
+      const response = await fetch('/api/admin/preview-tutorial', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tutorialId })
+      })
+
+      const result = await response.json()
+
+      if (response.ok) {
+        alert(`✅ ${result.message}`)
+      } else {
+        alert(`❌ Error: ${result.error}\n${result.details || ''}`)
+      }
+    } catch (error) {
+      alert(`❌ Failed to start preview: ${error}`)
+    } finally {
+      setPreviewingTutorial(null)
+    }
+  }
 
   const createDraft = async (idea: typeof TUTORIAL_IDEAS[0]) => {
     setCreatingDraft(idea.id)
@@ -112,11 +137,21 @@ export default function TutorialsPage() {
   }
 
   useEffect(() => {
-    if (!isAdmin && session) {
+    if (status === 'authenticated' && !isAdmin) {
       router.push('/grove')
     }
-  }, [isAdmin, session, router])
+  }, [isAdmin, status, router])
 
+  // Show loading while checking authentication
+  if (status === 'loading') {
+    return (
+      <div className="min-h-screen bg-bg-dark flex items-center justify-center">
+        <div className="text-text-muted">Loading...</div>
+      </div>
+    )
+  }
+
+  // Redirect if not admin (the redirect happens in useEffect)
   if (!isAdmin) {
     return null
   }
@@ -210,6 +245,13 @@ export default function TutorialsPage() {
                     <span className="text-xs text-text-muted">⏱️ {idea.estimatedTime}</span>
                     <div className="flex items-center gap-2">
                       <code className="text-xs bg-bg-dark px-2 py-1 rounded text-firefly-glow">{idea.id}.json</code>
+                      <button
+                        onClick={() => previewTutorial(idea.id)}
+                        disabled={previewingTutorial === idea.id}
+                        className="px-3 py-1.5 bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 border border-blue-500/30 rounded text-xs font-medium transition-soft disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {previewingTutorial === idea.id ? '...' : '👁️ Preview'}
+                      </button>
                       <button
                         onClick={() => createDraft(idea)}
                         disabled={creatingDraft === idea.id}

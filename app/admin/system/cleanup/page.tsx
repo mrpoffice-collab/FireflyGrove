@@ -66,6 +66,15 @@ export default function AdminCleanupPage() {
 
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-2xl mx-auto">
+          {/* Breadcrumb */}
+          <div className="mb-4 text-sm text-text-muted">
+            <a href="/admin" className="hover:text-firefly-glow transition-soft">Admin</a>
+            <span className="mx-2">/</span>
+            <span>System & Health</span>
+            <span className="mx-2">/</span>
+            <span className="text-text-soft">Cleanup</span>
+          </div>
+
           <h1 className="text-3xl font-light text-text-soft mb-8">
             Admin <span className="text-firefly-glow">Cleanup</span>
           </h1>

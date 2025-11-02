@@ -93,6 +93,15 @@ export default function BetaInvitesPage() {
       <Header userName={session?.user?.name || ''} isAdmin={isAdmin} />
 
       <main className="container mx-auto px-4 py-12 max-w-2xl">
+        {/* Breadcrumb */}
+        <div className="mb-4 text-sm text-text-muted">
+          <a href="/admin" className="hover:text-firefly-glow transition-soft">Admin</a>
+          <span className="mx-2">/</span>
+          <span>Users & Community</span>
+          <span className="mx-2">/</span>
+          <span className="text-text-soft">Beta Invites</span>
+        </div>
+
         <div className="mb-8">
           <h1 className="text-3xl font-light text-text-soft mb-2">
             Invite Friends to Beta Test Firefly Grove
