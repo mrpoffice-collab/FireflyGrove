@@ -122,25 +122,25 @@ async function createKeepsakePage(
     font: fontBold,
     color: COLORS.primary,
   })
-  yPosition -= 8
+  yPosition -= 35
 
-  // Subtitle: "Treasures"
-  const subtitle = 'treasures'
-  const subtitleSize = 12
-  const subtitleWidth = font.widthOfTextAtSize(subtitle, subtitleSize)
+  // Subtitle: "Treasures" - bigger and capitalized
+  const subtitle = 'Treasures'
+  const subtitleSize = 18
+  const subtitleWidth = fontBold.widthOfTextAtSize(subtitle, subtitleSize)
   page.drawText(subtitle, {
     x: centerX - subtitleWidth / 2,
     y: yPosition,
     size: subtitleSize,
-    font: font,
-    color: COLORS.muted,
+    font: fontBold,
+    color: COLORS.primary,
   })
-  yPosition -= 5
+  yPosition -= 8
 
   // Decorative line under title (not overlapping)
   page.drawLine({
-    start: { x: centerX - 80, y: yPosition },
-    end: { x: centerX + 80, y: yPosition },
+    start: { x: centerX - 100, y: yPosition },
+    end: { x: centerX + 100, y: yPosition },
     color: COLORS.primary,
     thickness: 2,
   })
@@ -173,7 +173,7 @@ async function createKeepsakePage(
   yPosition -= 35
 
   // Calculate dynamic layout based on number of entries
-  const availableHeight = yPosition - (MARGIN + 120) // Space for entries
+  const availableHeight = yPosition - (MARGIN + 100) // Space for entries
   const numEntries = entries.length
 
   if (numEntries === 0) {
@@ -189,32 +189,35 @@ async function createKeepsakePage(
       color: COLORS.muted,
     })
   } else {
-    // Determine layout: 1 column for 1-7 entries, 2 columns for 8+
-    const useTwoColumns = numEntries > 7
+    // Determine layout: 1 column centered for 1-4, 2 columns for 5+
+    const useTwoColumns = numEntries > 4
     const entriesPerColumn = useTwoColumns ? Math.ceil(numEntries / 2) : numEntries
 
-    // Calculate dynamic spacing to fit all entries
-    const entrySpacing = Math.min(
-      120, // Max spacing for few entries (spacious)
-      Math.floor(availableHeight / entriesPerColumn) // Fit to page
-    )
+    // Calculate dynamic spacing to USE ALL available space
+    const entrySpacing = Math.floor(availableHeight / entriesPerColumn)
 
-    const columnWidth = useTwoColumns ? (CONTENT_WIDTH / 2) - 15 : CONTENT_WIDTH
+    // Column setup
+    const columnWidth = useTwoColumns ? (CONTENT_WIDTH / 2) - 20 : Math.min(CONTENT_WIDTH * 0.8, 400)
+    const singleColumnXOffset = useTwoColumns ? 0 : (CONTENT_WIDTH - columnWidth) / 2
+
+    // Calculate total content height for vertical centering
+    const totalContentHeight = entriesPerColumn * entrySpacing
+    const verticalOffset = (availableHeight - totalContentHeight) / 2
+    const startY = yPosition - verticalOffset
 
     for (let i = 0; i < numEntries; i++) {
       const entry = entries[i]
       const column = useTwoColumns ? Math.floor(i / entriesPerColumn) : 0
       const row = useTwoColumns ? i % entriesPerColumn : i
 
-      const xPos = column === 0 ? MARGIN : MARGIN + (CONTENT_WIDTH / 2) + 30
-      const yPos = yPosition - (row * entrySpacing)
-
-      // Check if we have space
-      if (yPos < MARGIN + 120) break
+      const xPos = useTwoColumns
+        ? (column === 0 ? MARGIN : MARGIN + (CONTENT_WIDTH / 2) + 20)
+        : MARGIN + singleColumnXOffset
+      const yPos = startY - (row * entrySpacing)
 
       // Day label (e.g., "Monday, Nov 4")
       const dayLabel = format(new Date(entry.entryUTC), 'EEEE, MMM d')
-      const daySize = numEntries <= 3 ? 11 : 9
+      const daySize = numEntries <= 2 ? 12 : (numEntries <= 4 ? 10 : 9)
       page.drawText(dayLabel, {
         x: xPos,
         y: yPos,
@@ -223,13 +226,14 @@ async function createKeepsakePage(
         color: COLORS.primary,
       })
 
-      let contentY = yPos - (numEntries <= 3 ? 14 : 12)
+      let contentY = yPos - (daySize + 4)
 
       // Prompt - show complete text, no truncation
-      const promptSize = numEntries <= 3 ? 9 : 8
-      const promptLines = wrapText(`"${entry.promptText}"`, font, promptSize, columnWidth - 10)
-      // Show all lines needed for complete prompt
-      const maxPromptLines = numEntries <= 3 ? 4 : (numEntries <= 7 ? 3 : 2)
+      const promptSize = numEntries <= 2 ? 9 : (numEntries <= 4 ? 8.5 : 8)
+      const promptLines = wrapText(`"${entry.promptText}"`, font, promptSize, columnWidth)
+      // Calculate max lines based on available space per entry
+      const linesAvailableForPrompt = Math.floor((entrySpacing * 0.3) / (promptSize + 2))
+      const maxPromptLines = Math.max(2, Math.min(linesAvailableForPrompt, promptLines.length))
 
       for (let j = 0; j < Math.min(promptLines.length, maxPromptLines); j++) {
         page.drawText(promptLines[j], {
@@ -242,21 +246,22 @@ async function createKeepsakePage(
         contentY -= (promptSize + 2)
       }
 
-      contentY -= 3
+      contentY -= 4
 
-      // Response preview
+      // Response - show as much as space allows
       if (entry.text) {
-        const responseMaxChars = numEntries <= 3 ? 150 : (numEntries <= 7 ? 100 : 70)
-        const responsePreview = entry.text.length > responseMaxChars
-          ? entry.text.substring(0, responseMaxChars) + '...'
-          : entry.text
-        const responseSize = numEntries <= 3 ? 10 : 9
-        const responseLines = wrapText(responsePreview, font, responseSize, columnWidth - 10)
-        const maxResponseLines = numEntries <= 3 ? 4 : (numEntries <= 7 ? 3 : 2)
+        const responseSize = numEntries <= 2 ? 10 : (numEntries <= 4 ? 9.5 : 9)
+        const responseLines = wrapText(entry.text, font, responseSize, columnWidth)
+        // Use remaining space for response
+        const linesAvailableForResponse = Math.floor((yPos - contentY - 15) / (responseSize + 2))
+        const maxResponseLines = Math.max(2, Math.min(linesAvailableForResponse, responseLines.length))
 
         for (let j = 0; j < Math.min(responseLines.length, maxResponseLines); j++) {
-          if (contentY < MARGIN + 120) break
-          page.drawText(responseLines[j], {
+          if (contentY < MARGIN + 100) break
+          const line = j === maxResponseLines - 1 && responseLines.length > maxResponseLines
+            ? responseLines[j].substring(0, Math.max(0, responseLines[j].length - 3)) + '...'
+            : responseLines[j]
+          page.drawText(line, {
             x: xPos,
             y: contentY,
             size: responseSize,
@@ -268,9 +273,9 @@ async function createKeepsakePage(
       }
 
       // Audio indicator
-      if (entry.audioUrl && contentY > MARGIN + 120) {
+      if (entry.audioUrl && contentY > MARGIN + 100) {
         contentY -= 5
-        page.drawText('♪ Voice recording', {
+        page.drawText('♪ Voice', {
           x: xPos,
           y: contentY,
           size: 7,
