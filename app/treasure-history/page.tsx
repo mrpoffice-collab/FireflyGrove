@@ -22,8 +22,8 @@ interface TreasureEntry {
 }
 
 interface Stats {
-  currentStreak: number
-  longestStreak: number
+  currentGlowTrail: number
+  longestGlowTrail: number
   totalCount: number
 }
 
@@ -31,7 +31,7 @@ export default function TreasureHistoryPage() {
   const { data: session, status } = useSession()
   const router = useRouter()
   const [entries, setEntries] = useState<TreasureEntry[]>([])
-  const [stats, setStats] = useState<Stats>({ currentStreak: 0, longestStreak: 0, totalCount: 0 })
+  const [stats, setStats] = useState<Stats>({ currentGlowTrail: 0, longestGlowTrail: 0, totalCount: 0 })
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState<string>('all') // all, wisdom, spiritual, gratitude, etc.
 
@@ -138,12 +138,12 @@ export default function TreasureHistoryPage() {
         {/* Stats */}
         <div className="grid grid-cols-3 gap-4 mb-8">
           <div className="bg-bg-dark border border-border-subtle rounded-lg p-4 text-center">
-            <div className="text-2xl font-medium text-firefly-glow mb-1">✨ {stats.currentStreak}</div>
-            <div className="text-xs text-text-muted">Current Streak</div>
+            <div className="text-2xl font-medium text-firefly-glow mb-1">✨ {stats.currentGlowTrail}</div>
+            <div className="text-xs text-text-muted">Current Glow Trail</div>
           </div>
           <div className="bg-bg-dark border border-border-subtle rounded-lg p-4 text-center">
-            <div className="text-2xl font-medium text-text-soft mb-1">⭐ {stats.longestStreak}</div>
-            <div className="text-xs text-text-muted">Longest Streak</div>
+            <div className="text-2xl font-medium text-text-soft mb-1">⭐ {stats.longestGlowTrail}</div>
+            <div className="text-xs text-text-muted">Longest Glow Trail</div>
           </div>
           <div className="bg-bg-dark border border-border-subtle rounded-lg p-4 text-center">
             <div className="text-2xl font-medium text-text-soft mb-1">📜 {stats.totalCount}</div>

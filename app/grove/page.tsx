@@ -130,7 +130,7 @@ export default function GrovePage() {
 
   // Treasure Chest state
   const [showTreasure, setShowTreasure] = useState(false)
-  const [treasureStreak, setTreasureStreak] = useState(0)
+  const [treasureGlowTrail, setTreasureGlowTrail] = useState(0)
 
   // Check for pending nest photo from URL
   useEffect(() => {
@@ -168,7 +168,7 @@ export default function GrovePage() {
       const res = await fetch('/api/treasure/status')
       if (res.ok) {
         const data = await res.json()
-        setTreasureStreak(data.currentStreak || 0)
+        setTreasureGlowTrail(data.currentStreak || 0)
 
         // Show modal if should show and not already completed today
         if (data.shouldShowModal && !data.todayCompleted) {
@@ -400,7 +400,7 @@ export default function GrovePage() {
           treeLimit: grove.treeLimit,
         }}
         onTreasureClick={() => setShowTreasure(true)}
-        treasureStreak={treasureStreak}
+        treasureGlowTrail={treasureGlowTrail}
       />
 
       {/* Nest Nudge - Shows when user has old photos in nest */}

@@ -18,7 +18,7 @@ export default function TreasureChestModal({ onClose, onSave }: TreasureChestMod
   const router = useRouter()
   const [text, setText] = useState('')
   const [prompt, setPrompt] = useState<Prompt | null>(null)
-  const [streak, setStreak] = useState({ current: 0, longest: 0 })
+  const [glowTrail, setGlowTrail] = useState({ current: 0, longest: 0 })
   const [graceTokens, setGraceTokens] = useState(2)
   const [branches, setBranches] = useState<any[]>([])
   const [selectedBranch, setSelectedBranch] = useState<string>('')
@@ -55,7 +55,7 @@ export default function TreasureChestModal({ onClose, onSave }: TreasureChestMod
         if (res.ok) {
           const data = await res.json()
           setPrompt(data.prompt)
-          setStreak({ current: data.currentStreak, longest: data.longestStreak })
+          setGlowTrail({ current: data.currentStreak, longest: data.longestStreak })
           setGraceTokens(data.graceTokensAvailable)
           setCanApplyGrace(data.canApplyGrace || false)
           setYesterdayLocal(data.yesterdayLocal || null)
@@ -224,10 +224,10 @@ export default function TreasureChestModal({ onClose, onSave }: TreasureChestMod
 
       if (res.ok) {
         const data = await res.json()
-        setStreak({ current: data.newStreak, longest: streak.longest })
+        setGlowTrail({ current: data.newStreak, longest: glowTrail.longest })
         setGraceTokens(data.graceTokensRemaining)
         setCanApplyGrace(false)
-        alert('✨ Grace token applied! Your streak is safe.')
+        alert('✨ Grace token applied! Your glow trail is safe.')
       } else {
         const error = await res.json()
         alert(error.error || 'Failed to apply grace token')
@@ -288,7 +288,7 @@ export default function TreasureChestModal({ onClose, onSave }: TreasureChestMod
 
       if (res.ok) {
         const data = await res.json()
-        setStreak({ current: data.streak.current, longest: data.streak.longest })
+        setGlowTrail({ current: data.streak.current, longest: data.streak.longest })
         setSuccess(true)
         onSave?.()
 
@@ -345,8 +345,8 @@ export default function TreasureChestModal({ onClose, onSave }: TreasureChestMod
             Tucked away safely in your Treasure Chest
           </p>
           <div className="flex items-center justify-center gap-4 text-sm text-text-muted">
-            <span>✨ {streak.current} day{streak.current !== 1 ? 's' : ''}</span>
-            {streak.current === streak.longest && streak.current > 1 && (
+            <span>✨ {glowTrail.current} night{glowTrail.current !== 1 ? 's' : ''}</span>
+            {glowTrail.current === glowTrail.longest && glowTrail.current > 1 && (
               <span className="text-firefly-glow">⭐ New record!</span>
             )}
           </div>
@@ -380,13 +380,13 @@ export default function TreasureChestModal({ onClose, onSave }: TreasureChestMod
             </button>
           </div>
 
-          {/* Streak Display */}
+          {/* Glow Trail Display */}
           <div className="flex items-center gap-4 text-sm">
             <span className="text-text-muted">
-              ✨ <span className="text-text-soft font-medium">{streak.current}</span> day streak
+              ✨ <span className="text-text-soft font-medium">{glowTrail.current}</span> night glow trail
             </span>
             <span className="text-text-muted">
-              ⭐ <span className="text-text-soft font-medium">{streak.longest}</span> longest
+              ⭐ <span className="text-text-soft font-medium">{glowTrail.longest}</span> longest
             </span>
             {graceTokens > 0 && (
               <span className="text-text-muted">
@@ -402,9 +402,9 @@ export default function TreasureChestModal({ onClose, onSave }: TreasureChestMod
             <div className="flex items-start gap-3">
               <div className="text-2xl">⚠️</div>
               <div className="flex-1">
-                <h4 className="text-amber-400 font-medium mb-1">Streak at Risk!</h4>
+                <h4 className="text-amber-400 font-medium mb-1">Glow Trail at Risk!</h4>
                 <p className="text-text-muted text-sm mb-3">
-                  You missed yesterday. Use a grace token to protect your {streak.current}-day streak?
+                  You missed yesterday. Use a grace token to protect your {glowTrail.current}-night glow trail?
                 </p>
                 <div className="flex gap-2">
                   <button
