@@ -196,9 +196,10 @@ async function createKeepsakePage(
     // Calculate dynamic spacing to USE ALL available space
     const entrySpacing = Math.floor(availableHeight / entriesPerColumn)
 
-    // Column setup
-    const columnWidth = useTwoColumns ? (CONTENT_WIDTH / 2) - 20 : Math.min(CONTENT_WIDTH * 0.8, 400)
-    const singleColumnXOffset = useTwoColumns ? 0 : (CONTENT_WIDTH - columnWidth) / 2
+    // Column setup - for two column layout, define column centers
+    const columnWidth = useTwoColumns ? (CONTENT_WIDTH / 2) - 20 : CONTENT_WIDTH
+    const leftColumnCenter = useTwoColumns ? MARGIN + (CONTENT_WIDTH / 4) : centerX
+    const rightColumnCenter = useTwoColumns ? MARGIN + (CONTENT_WIDTH * 3 / 4) : centerX
 
     // Calculate total content height for vertical centering
     const totalContentHeight = entriesPerColumn * entrySpacing
@@ -210,16 +211,16 @@ async function createKeepsakePage(
       const column = useTwoColumns ? Math.floor(i / entriesPerColumn) : 0
       const row = useTwoColumns ? i % entriesPerColumn : i
 
-      const xPos = useTwoColumns
-        ? (column === 0 ? MARGIN : MARGIN + (CONTENT_WIDTH / 2) + 20)
-        : MARGIN + singleColumnXOffset
+      // Center point for this entry's column
+      const columnCenterX = column === 0 ? leftColumnCenter : rightColumnCenter
       const yPos = startY - (row * entrySpacing)
 
-      // Day label (e.g., "Monday, Nov 4")
+      // Day label (e.g., "Monday, Nov 4") - CENTERED
       const dayLabel = format(new Date(entry.entryUTC), 'EEEE, MMM d')
       const daySize = numEntries <= 2 ? 12 : (numEntries <= 4 ? 10 : 9)
+      const dayWidth = fontBold.widthOfTextAtSize(dayLabel, daySize)
       page.drawText(dayLabel, {
-        x: xPos,
+        x: columnCenterX - (dayWidth / 2),
         y: yPos,
         size: daySize,
         font: fontBold,
@@ -228,7 +229,7 @@ async function createKeepsakePage(
 
       let contentY = yPos - (daySize + 4)
 
-      // Prompt - show complete text, no truncation
+      // Prompt - show complete text, no truncation - CENTERED
       const promptSize = numEntries <= 2 ? 9 : (numEntries <= 4 ? 8.5 : 8)
       const promptLines = wrapText(`"${entry.promptText}"`, font, promptSize, columnWidth)
       // Calculate max lines based on available space per entry
@@ -236,8 +237,9 @@ async function createKeepsakePage(
       const maxPromptLines = Math.max(2, Math.min(linesAvailableForPrompt, promptLines.length))
 
       for (let j = 0; j < Math.min(promptLines.length, maxPromptLines); j++) {
+        const lineWidth = font.widthOfTextAtSize(promptLines[j], promptSize)
         page.drawText(promptLines[j], {
-          x: xPos,
+          x: columnCenterX - (lineWidth / 2),
           y: contentY,
           size: promptSize,
           font: font,
@@ -248,7 +250,7 @@ async function createKeepsakePage(
 
       contentY -= 4
 
-      // Response - show as much as space allows
+      // Response - show as much as space allows - CENTERED
       if (entry.text) {
         const responseSize = numEntries <= 2 ? 10 : (numEntries <= 4 ? 9.5 : 9)
         const responseLines = wrapText(entry.text, font, responseSize, columnWidth)
@@ -261,8 +263,9 @@ async function createKeepsakePage(
           const line = j === maxResponseLines - 1 && responseLines.length > maxResponseLines
             ? responseLines[j].substring(0, Math.max(0, responseLines[j].length - 3)) + '...'
             : responseLines[j]
+          const lineWidth = font.widthOfTextAtSize(line, responseSize)
           page.drawText(line, {
-            x: xPos,
+            x: columnCenterX - (lineWidth / 2),
             y: contentY,
             size: responseSize,
             font: font,
@@ -272,11 +275,13 @@ async function createKeepsakePage(
         }
       }
 
-      // Audio indicator
+      // Audio indicator - CENTERED
       if (entry.audioUrl && contentY > MARGIN + 100) {
         contentY -= 5
-        page.drawText('♪ Voice', {
-          x: xPos,
+        const voiceText = '♪ Voice'
+        const voiceWidth = font.widthOfTextAtSize(voiceText, 7)
+        page.drawText(voiceText, {
+          x: columnCenterX - (voiceWidth / 2),
           y: contentY,
           size: 7,
           font: font,
