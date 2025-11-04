@@ -377,7 +377,7 @@ export default function TreasureChestModal({ onClose, onSave }: TreasureChestMod
           {/* Voice Recording */}
           <div>
             <label className="block text-sm font-medium text-text-soft mb-2">
-              Or record a voice message (15-30s)
+              Record a voice message (15-30s)
             </label>
 
             {!audioUrl ? (
@@ -452,7 +452,7 @@ export default function TreasureChestModal({ onClose, onSave }: TreasureChestMod
           {/* Text Input */}
           <div>
             <label className="block text-sm font-medium text-text-soft mb-2">
-              Or write your own
+              Or write it down
             </label>
             <textarea
               value={text}
@@ -462,6 +462,9 @@ export default function TreasureChestModal({ onClose, onSave }: TreasureChestMod
               disabled={saving}
               className="w-full px-4 py-3 bg-bg-dark border border-border-subtle rounded-lg text-text-soft placeholder:text-placeholder focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50 transition-soft resize-y disabled:opacity-50"
             />
+            <p className="text-xs text-text-muted mt-2">
+              💡 Tip: You can save voice only, text only, or both together
+            </p>
           </div>
 
           {/* Branch Assignment */}
