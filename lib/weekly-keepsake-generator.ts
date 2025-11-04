@@ -122,7 +122,20 @@ async function createKeepsakePage(
     font: fontBold,
     color: COLORS.primary,
   })
-  yPosition -= 10
+  yPosition -= 8
+
+  // Subtitle: "Treasures"
+  const subtitle = 'treasures'
+  const subtitleSize = 12
+  const subtitleWidth = font.widthOfTextAtSize(subtitle, subtitleSize)
+  page.drawText(subtitle, {
+    x: centerX - subtitleWidth / 2,
+    y: yPosition,
+    size: subtitleSize,
+    font: font,
+    color: COLORS.muted,
+  })
+  yPosition -= 5
 
   // Decorative line under title (not overlapping)
   page.drawLine({
@@ -212,14 +225,11 @@ async function createKeepsakePage(
 
       let contentY = yPos - (numEntries <= 3 ? 14 : 12)
 
-      // Prompt
-      const promptMaxChars = numEntries <= 3 ? 80 : (numEntries <= 7 ? 60 : 50)
-      const promptText = entry.promptText.length > promptMaxChars
-        ? entry.promptText.substring(0, promptMaxChars) + '...'
-        : entry.promptText
+      // Prompt - show complete text, no truncation
       const promptSize = numEntries <= 3 ? 9 : 8
-      const promptLines = wrapText(`"${promptText}"`, font, promptSize, columnWidth - 10)
-      const maxPromptLines = numEntries <= 3 ? 2 : (numEntries <= 7 ? 2 : 1)
+      const promptLines = wrapText(`"${entry.promptText}"`, font, promptSize, columnWidth - 10)
+      // Show all lines needed for complete prompt
+      const maxPromptLines = numEntries <= 3 ? 4 : (numEntries <= 7 ? 3 : 2)
 
       for (let j = 0; j < Math.min(promptLines.length, maxPromptLines); j++) {
         page.drawText(promptLines[j], {
