@@ -21,7 +21,6 @@ export default function HomePage() {
   const [showStory, setShowStory] = useState(false)
   const [email, setEmail] = useState('')
   const [subscribed, setSubscribed] = useState(false)
-  const [isAdmin, setIsAdmin] = useState(false)
 
   useEffect(() => {
     fetch('/api/stats')
@@ -29,18 +28,6 @@ export default function HomePage() {
       .then((data) => setStats(data))
       .catch((err) => console.error('Failed to fetch stats:', err))
   }, [])
-
-  // Fetch admin status if logged in
-  useEffect(() => {
-    if (session?.user) {
-      fetch('/api/user/profile')
-        .then((res) => res.json())
-        .then((data) => {
-          setIsAdmin(data.isAdmin || false)
-        })
-        .catch((err) => console.error('Failed to fetch user profile:', err))
-    }
-  }, [session])
 
   const formatNumber = (num: number | undefined) => {
     if (num === undefined || num === null) return '0'
@@ -60,7 +47,7 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen">
-      {session && <Header userName={session.user?.name || ''} isAdmin={isAdmin} />}
+      <Header userName={session?.user?.name || ''} />
 
       <div className="flex items-center justify-center px-4" style={{ minHeight: session ? 'calc(100vh - 73px)' : '100vh' }}>
         <div className="max-w-2xl text-center">
@@ -183,7 +170,7 @@ export default function HomePage() {
                   <p className="text-success-text text-sm mt-2 text-center">✓ Thanks! We'll be in touch soon.</p>
                 )}
                 <p className="text-text-muted text-xs mt-2 text-center">
-                  Complimentary forever • No credit card required
+                  Free during beta • No credit card required
                 </p>
               </form>
 

@@ -37,13 +37,28 @@ export default function Header({ userName, isBetaTester: propBetaTester, isAdmin
 
   // Admin mode toggle - stored in localStorage
   const [adminModeActive, setAdminModeActive] = useState(() => {
-    if (typeof window !== 'undefined' && isAdmin) {
+    if (typeof window !== 'undefined') {
       const stored = localStorage.getItem('adminModeActive')
       // ALWAYS default to true for admins (only turn off if explicitly set to false)
       return stored === 'false' ? false : true
     }
-    return false
+    return true // Default to true
   })
+
+  // Update admin mode when isAdmin changes (handles session loading)
+  useEffect(() => {
+    if (isAdmin && typeof window !== 'undefined') {
+      const stored = localStorage.getItem('adminModeActive')
+      // If admin status just loaded and no explicit preference is stored, enable admin mode
+      if (stored === null) {
+        setAdminModeActive(true)
+        localStorage.setItem('adminModeActive', 'true')
+      } else {
+        // Respect stored preference
+        setAdminModeActive(stored !== 'false')
+      }
+    }
+  }, [isAdmin])
 
   // Toggle admin mode and save to localStorage
   const toggleAdminMode = () => {
@@ -117,7 +132,7 @@ export default function Header({ userName, isBetaTester: propBetaTester, isAdmin
             {/* Beta Invite Button - Visible to beta testers */}
             {isBetaTester && (
               <button
-                onClick={() => router.push('/admin/beta-invites')}
+                onClick={() => router.push('/beta-invites')}
                 className="min-h-[44px] px-3 py-2 bg-firefly-dim/20 hover:bg-firefly-dim/30 text-firefly-glow border border-firefly-dim/40 rounded text-xs font-medium transition-soft flex items-center gap-1.5"
                 aria-label="Invite friends to beta"
               >
@@ -275,7 +290,7 @@ export default function Header({ userName, isBetaTester: propBetaTester, isAdmin
                   {isBetaTester && (
                     <button
                       onClick={() => {
-                        router.push('/admin/users/beta-invites')
+                        router.push('/beta-invites')
                         setIsDropdownOpen(false)
                       }}
                       className="w-full text-left px-3 py-2.5 text-sm text-blue-300 hover:bg-blue-500/20 hover:text-blue-200 transition-soft font-medium"

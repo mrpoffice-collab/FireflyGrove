@@ -21,15 +21,15 @@ export async function POST(req: NextRequest) {
 
     const userId = (session.user as any).id
 
-    // Only allow admins to send invites
+    // Allow admins and beta testers to send invites
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      select: { isAdmin: true, name: true },
+      select: { isAdmin: true, isBetaTester: true, name: true },
     })
 
-    if (!user?.isAdmin) {
+    if (!user?.isAdmin && !user?.isBetaTester) {
       return NextResponse.json(
-        { error: 'Admin access required' },
+        { error: 'Beta tester or admin access required' },
         { status: 403 }
       )
     }
@@ -141,7 +141,7 @@ export async function POST(req: NextRequest) {
 
                 <div style="background: #fffbea; border: 1px solid #ffd700; border-radius: 5px; padding: 15px; margin-top: 25px;">
                   <p style="margin: 0; color: #666; font-size: 14px;">
-                    <strong>Beta Perks:</strong> Family Grove plan (10 trees) for free during beta, priority support, direct input on features, and founding member recognition!
+                    <strong>Beta Perks:</strong> Family Grove plan (10 trees) free during beta, direct input on features, early access to new capabilities, and our deep gratitude for helping build something meaningful.
                   </p>
                 </div>
               </div>

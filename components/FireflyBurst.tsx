@@ -36,6 +36,8 @@ export default function FireflyBurst({ memories, burstId, onClose, onViewNext, o
   const [isAnimating, setIsAnimating] = useState(true)
   const [audioEnabled, setAudioEnabled] = useState(true) // Default to ON
   const [isPaused, setIsPaused] = useState(false)
+  const [imageLoaded, setImageLoaded] = useState(false)
+  const [imageError, setImageError] = useState(false)
   const [audio] = useState(() => {
     if (typeof window !== 'undefined') {
       const bgAudio = new Audio('/sounds/firefly-ambient.mp3')
@@ -47,6 +49,12 @@ export default function FireflyBurst({ memories, burstId, onClose, onViewNext, o
   })
 
   const currentMemory = memories[currentIndex]
+
+  // Reset image loading state when memory changes
+  useEffect(() => {
+    setImageLoaded(false)
+    setImageError(false)
+  }, [currentIndex])
 
   // Calculate duration based on text length and media presence
   const calculateDuration = (memory: Memory) => {
@@ -360,17 +368,56 @@ export default function FireflyBurst({ memories, burstId, onClose, onViewNext, o
         >
           {/* Media - Dynamic height based on image aspect ratio */}
           {currentMemory.mediaUrl && (
-            <div className="relative w-full bg-bg-darker overflow-hidden">
+            <div className="relative w-full bg-bg-darker overflow-hidden min-h-[200px]">
+              {/* Loading state */}
+              {!imageLoaded && !imageError && (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="text-text-muted">
+                    <svg className="animate-spin h-8 w-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                  </div>
+                </div>
+              )}
+
+              {/* Error state */}
+              {imageError && (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="text-center p-6">
+                    <div className="text-4xl mb-2">📷</div>
+                    <p className="text-text-muted text-sm">Image unavailable</p>
+                  </div>
+                </div>
+              )}
+
+              {/* Image */}
               <img
                 key={currentMemory.id}
                 src={currentMemory.mediaUrl}
                 alt="Memory"
+                loading="eager"
+                decoding="async"
+                onLoad={() => setImageLoaded(true)}
+                onError={(e) => {
+                  console.error('Failed to load image:', currentMemory.mediaUrl)
+                  console.error('Image error event:', e)
+                  setImageError(true)
+                }}
                 className={`w-full h-auto max-h-[70vh] object-contain transition-opacity duration-700 ${
-                  isAnimating ? 'opacity-0' : 'opacity-100'
+                  imageLoaded && !isAnimating ? 'opacity-100' : 'opacity-0'
                 }`}
+                style={{
+                  WebkitTransform: 'translateZ(0)', // Force hardware acceleration on Safari
+                  WebkitBackfaceVisibility: 'hidden', // Prevent flicker on Safari
+                  backfaceVisibility: 'hidden',
+                }}
               />
+
               {/* Glowing overlay effect */}
-              <div className="absolute inset-0 bg-gradient-to-t from-bg-elevated/80 to-transparent pointer-events-none" />
+              {imageLoaded && !imageError && (
+                <div className="absolute inset-0 bg-gradient-to-t from-bg-elevated/80 to-transparent pointer-events-none" />
+              )}
             </div>
           )}
 
