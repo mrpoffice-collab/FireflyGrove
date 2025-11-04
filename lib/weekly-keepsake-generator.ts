@@ -215,25 +215,25 @@ async function createKeepsakePage(
       const columnCenterX = column === 0 ? leftColumnCenter : rightColumnCenter
       const yPos = startY - (row * entrySpacing)
 
-      // Day label (e.g., "Monday, Nov 4") - CENTERED
+      // Day label (e.g., "Monday, Nov 4") - CENTERED - smaller, subtle
       const dayLabel = format(new Date(entry.entryUTC), 'EEEE, MMM d')
-      const daySize = numEntries <= 2 ? 12 : (numEntries <= 4 ? 10 : 9)
-      const dayWidth = fontBold.widthOfTextAtSize(dayLabel, daySize)
+      const daySize = numEntries <= 2 ? 8 : (numEntries <= 4 ? 7.5 : 7)
+      const dayWidth = font.widthOfTextAtSize(dayLabel, daySize)
       page.drawText(dayLabel, {
         x: columnCenterX - (dayWidth / 2),
         y: yPos,
         size: daySize,
-        font: fontBold,
-        color: COLORS.primary,
+        font: font, // Regular font, not bold
+        color: COLORS.muted,
       })
 
-      let contentY = yPos - (daySize + 4)
+      let contentY = yPos - (daySize + 3)
 
-      // Prompt - show complete text, no truncation - CENTERED
-      const promptSize = numEntries <= 2 ? 9 : (numEntries <= 4 ? 8.5 : 8)
+      // Prompt - show complete text, no truncation - CENTERED - smaller, subtle
+      const promptSize = numEntries <= 2 ? 7.5 : (numEntries <= 4 ? 7 : 6.5)
       const promptLines = wrapText(`"${entry.promptText}"`, font, promptSize, columnWidth)
       // Calculate max lines based on available space per entry
-      const linesAvailableForPrompt = Math.floor((entrySpacing * 0.3) / (promptSize + 2))
+      const linesAvailableForPrompt = Math.floor((entrySpacing * 0.25) / (promptSize + 2))
       const maxPromptLines = Math.max(2, Math.min(linesAvailableForPrompt, promptLines.length))
 
       for (let j = 0; j < Math.min(promptLines.length, maxPromptLines); j++) {
@@ -248,14 +248,14 @@ async function createKeepsakePage(
         contentY -= (promptSize + 2)
       }
 
-      contentY -= 4
+      contentY -= 6
 
-      // Response - show as much as space allows - CENTERED
+      // TREASURE (Response) - THE STAR! - CENTERED - LARGE
       if (entry.text) {
-        const responseSize = numEntries <= 2 ? 10 : (numEntries <= 4 ? 9.5 : 9)
+        const responseSize = numEntries <= 2 ? 13 : (numEntries <= 4 ? 11.5 : 10.5)
         const responseLines = wrapText(entry.text, font, responseSize, columnWidth)
-        // Use remaining space for response
-        const linesAvailableForResponse = Math.floor((yPos - contentY - 15) / (responseSize + 2))
+        // Use remaining space for response - give it most of the space!
+        const linesAvailableForResponse = Math.floor((yPos - contentY - 15) / (responseSize + 3))
         const maxResponseLines = Math.max(2, Math.min(linesAvailableForResponse, responseLines.length))
 
         for (let j = 0; j < Math.min(responseLines.length, maxResponseLines); j++) {
@@ -269,9 +269,9 @@ async function createKeepsakePage(
             y: contentY,
             size: responseSize,
             font: font,
-            color: COLORS.text,
+            color: COLORS.text, // Darkest color for maximum visibility
           })
-          contentY -= (responseSize + 2)
+          contentY -= (responseSize + 3)
         }
       }
 
