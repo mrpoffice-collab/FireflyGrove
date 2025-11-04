@@ -108,6 +108,7 @@ async function createKeepsakePage(
 ) {
   const page = pdfDoc.addPage([PAGE_WIDTH, PAGE_HEIGHT])
   const centerX = PAGE_WIDTH / 2
+  const centerY = PAGE_HEIGHT / 2
   let yPosition = PAGE_HEIGHT - MARGIN
 
   // Decorative top border
