@@ -101,6 +101,18 @@ export async function GET(req: NextRequest) {
     // Calculate grace tokens available
     const graceTokensAvailable = user.graceTokensMonth - graceTokensUsed
 
+    // Check if user missed yesterday and can apply grace token
+    const yesterdayLocal = format(new Date(zonedNow.getTime() - 24 * 60 * 60 * 1000), 'yyyy-MM-dd')
+    const yesterdayEntry = await prisma.treasureEntry.findFirst({
+      where: {
+        userId,
+        entryLocal: yesterdayLocal,
+      },
+    })
+
+    const missedYesterday = !yesterdayEntry && user.lastTreasureLocal !== yesterdayLocal
+    const canApplyGrace = missedYesterday && graceTokensAvailable > 0 && user.currentStreak > 0
+
     return NextResponse.json({
       shouldShowModal,
       todayCompleted,
@@ -111,6 +123,9 @@ export async function GET(req: NextRequest) {
       graceTokensMonth: user.graceTokensMonth,
       prompt: selectedPrompt,
       todayLocal,
+      missedYesterday,
+      canApplyGrace,
+      yesterdayLocal: missedYesterday ? yesterdayLocal : null,
     })
   } catch (error) {
     console.error('Treasure status error:', error)

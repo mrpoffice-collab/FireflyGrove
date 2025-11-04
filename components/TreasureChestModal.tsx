@@ -34,6 +34,11 @@ export default function TreasureChestModal({ onClose, onSave }: TreasureChestMod
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null)
   const [transcribing, setTranscribing] = useState(false)
 
+  // Grace token state
+  const [canApplyGrace, setCanApplyGrace] = useState(false)
+  const [yesterdayLocal, setYesterdayLocal] = useState<string | null>(null)
+  const [applyingGrace, setApplyingGrace] = useState(false)
+
   // Quick action chips - template starters
   const quickChips = [
     { label: 'My Advice', value: 'my_advice', template: 'My advice about this is ' },
@@ -52,6 +57,8 @@ export default function TreasureChestModal({ onClose, onSave }: TreasureChestMod
           setPrompt(data.prompt)
           setStreak({ current: data.currentStreak, longest: data.longestStreak })
           setGraceTokens(data.graceTokensAvailable)
+          setCanApplyGrace(data.canApplyGrace || false)
+          setYesterdayLocal(data.yesterdayLocal || null)
         }
       } catch (error) {
         console.error('Failed to load treasure status:', error)
@@ -201,6 +208,36 @@ export default function TreasureChestModal({ onClose, onSave }: TreasureChestMod
         textarea.selectionEnd = textarea.value.length
       }
     }, 50)
+  }
+
+  const handleApplyGrace = async () => {
+    if (!yesterdayLocal) return
+
+    setApplyingGrace(true)
+
+    try {
+      const res = await fetch('/api/treasure/apply-grace', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ missedDate: yesterdayLocal }),
+      })
+
+      if (res.ok) {
+        const data = await res.json()
+        setStreak({ current: data.newStreak, longest: streak.longest })
+        setGraceTokens(data.graceTokensRemaining)
+        setCanApplyGrace(false)
+        alert('✨ Grace token applied! Your streak is safe.')
+      } else {
+        const error = await res.json()
+        alert(error.error || 'Failed to apply grace token')
+      }
+    } catch (error) {
+      console.error('Grace token error:', error)
+      alert('Network error. Please try again.')
+    } finally {
+      setApplyingGrace(false)
+    }
   }
 
   const handleSave = async (textOverride?: string, chipUsed?: string) => {
@@ -358,6 +395,36 @@ export default function TreasureChestModal({ onClose, onSave }: TreasureChestMod
             )}
           </div>
         </div>
+
+        {/* Grace Token Warning */}
+        {canApplyGrace && yesterdayLocal && (
+          <div className="mx-6 mt-6 bg-amber-500/10 border border-amber-500/30 rounded-lg p-4">
+            <div className="flex items-start gap-3">
+              <div className="text-2xl">⚠️</div>
+              <div className="flex-1">
+                <h4 className="text-amber-400 font-medium mb-1">Streak at Risk!</h4>
+                <p className="text-text-muted text-sm mb-3">
+                  You missed yesterday. Use a grace token to protect your {streak.current}-day streak?
+                </p>
+                <div className="flex gap-2">
+                  <button
+                    onClick={handleApplyGrace}
+                    disabled={applyingGrace}
+                    className="px-4 py-2 bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 border border-amber-500/40 rounded-lg text-sm font-medium transition-soft disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {applyingGrace ? 'Applying...' : `Use Grace Token (${graceTokens} left)`}
+                  </button>
+                  <button
+                    onClick={() => setCanApplyGrace(false)}
+                    className="px-4 py-2 bg-bg-dark hover:bg-border-subtle text-text-muted rounded-lg text-sm transition-soft"
+                  >
+                    Dismiss
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Content */}
         <div className="p-6 space-y-6">
