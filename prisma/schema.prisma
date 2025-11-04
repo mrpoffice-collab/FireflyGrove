@@ -27,6 +27,18 @@ model User {
   subscriptionEndsAt     DateTime?
   graceEndsAt            DateTime?
 
+  // Treasure Chest - Daily Engagement
+  currentStreak          Int       @default(0)
+  longestStreak          Int       @default(0)
+  lastTreasureUTC        DateTime?
+  lastTreasureLocal      String?   // "YYYY-MM-DD" in user's timezone
+  timeZone               String    @default("America/Chicago")
+  graceTokensMonth       Int       @default(2)
+  graceTokensUsed        Int       @default(0)
+  graceMonthKey          String?   // "YYYY-MM" for reset logic
+  treasureCount          Int       @default(0)
+  lastPromptId           String?
+
   // Relations
   grove            Grove?         @relation("UserGrove")
   persons          Person[]       @relation("PersonUser")
@@ -54,6 +66,7 @@ model User {
   burstSettings UserBurstSettings?
   audioSparks AudioSpark[] @relation("UserAudioSparks")
   memoryGlows MemoryGlow[] @relation("UserMemoryGlows")
+  treasureEntries TreasureEntry[] @relation("UserTreasures")
 
   @@index([email])
   @@index([status])
@@ -245,6 +258,7 @@ model Branch {
   preferences       BranchPreferences?
   memoryLinks       MemoryBranchLink[]
   localMetadata     MemoryLocalMeta[]
+  treasureEntries   TreasureEntry[]
 
   @@index([personId])
   @@index([treeId])
@@ -1537,4 +1551,88 @@ model AudioSpark {
   @@index([branchId])
   @@index([status])
   @@index([recordedAt])
+}
+
+// ═══════════════════════════════════════════════════════════
+// 🎁 TREASURE CHEST - Daily Engagement Feature
+// ═══════════════════════════════════════════════════════════
+
+enum TreasureCategory {
+  WISDOM
+  SPIRITUAL
+  GRATITUDE
+  LIFE_LESSON
+  FAMILY_STORY
+  PARENTING
+  NOTE_TO_SELF
+  BLESSING
+  OTHER
+}
+
+// Treasure Entry - Daily wisdom/advice/spiritual thoughts
+model TreasureEntry {
+  id          String            @id @default(cuid())
+  userId      String
+  branchId    String?           // Optional: assign to branch
+
+  // Content
+  text        String            @db.Text
+  audioUrl    String?           // Optional: voice recording
+
+  // Prompt info
+  promptId    String?
+  promptText  String            @db.Text
+  category    TreasureCategory  @default(OTHER)
+
+  // Timing (dual timezone tracking)
+  entryUTC    DateTime          @default(now())
+  entryLocal  String            // "YYYY-MM-DD" in user's timezone
+
+  // Metadata
+  isBackfilled Boolean          @default(false) // If added to past date
+  chipUsed     String?          // Quick chip used: "amen", "note_to_self", etc.
+
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  // Relations
+  user        User              @relation("UserTreasures", fields: [userId], references: [id], onDelete: Cascade)
+  branch      Branch?           @relation(fields: [branchId], references: [id], onDelete: SetNull)
+  prompt      TreasurePrompt?   @relation(fields: [promptId], references: [id], onDelete: SetNull)
+
+  @@index([userId, entryLocal])
+  @@index([userId, entryUTC])
+  @@index([branchId])
+  @@index([category])
+}
+
+// Treasure Prompt - Rotating daily prompts
+model TreasurePrompt {
+  id          String            @id @default(cuid())
+  text        String            @db.Text
+  category    TreasureCategory
+  weight      Int               @default(1)  // For weighted random selection
+  isActive    Boolean           @default(true)
+
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  // Relations
+  entries     TreasureEntry[]
+
+  @@index([category])
+  @@index([isActive])
+  @@index([weight])
+}
+
+// Treasure Event - Analytics (privacy-friendly)
+model TreasureEvent {
+  id        String   @id @default(cuid())
+  userId    String
+  eventType String   // OPEN_MODAL, SAVE, SKIP, APPLY_GRACE, VIEW_HISTORY, GENERATE_KEEPSAKE
+  metadata  Json?    // Additional context
+  createdAt DateTime @default(now())
+
+  @@index([userId, eventType])
+  @@index([createdAt])
 }
