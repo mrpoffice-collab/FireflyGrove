@@ -109,6 +109,29 @@ async function createKeepsakePage(
   const page = pdfDoc.addPage([PAGE_WIDTH, PAGE_HEIGHT])
   const centerX = PAGE_WIDTH / 2
   const centerY = PAGE_HEIGHT / 2
+
+  // Decorative border - inset from page edges for printer margins
+  const borderInset = 36 // 0.5 inch from edge
+  page.drawRectangle({
+    x: borderInset,
+    y: borderInset,
+    width: PAGE_WIDTH - (borderInset * 2),
+    height: PAGE_HEIGHT - (borderInset * 2),
+    borderColor: COLORS.primary,
+    borderWidth: 1.5,
+  })
+
+  // Inner decorative border for elegance
+  const innerBorderInset = borderInset + 6
+  page.drawRectangle({
+    x: innerBorderInset,
+    y: innerBorderInset,
+    width: PAGE_WIDTH - (innerBorderInset * 2),
+    height: PAGE_HEIGHT - (innerBorderInset * 2),
+    borderColor: COLORS.primary,
+    borderWidth: 0.5,
+  })
+
   let yPosition = PAGE_HEIGHT - MARGIN - 10 // Start a bit lower
 
   // Title
