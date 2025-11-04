@@ -34,12 +34,12 @@ export default function TreasureChestModal({ onClose, onSave }: TreasureChestMod
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null)
   const [transcribing, setTranscribing] = useState(false)
 
-  // Quick action chips
+  // Quick action chips - template starters
   const quickChips = [
-    { label: 'Amen', value: 'amen', template: 'Amen. ' },
-    { label: 'Note to Self', value: 'note_to_self', template: '' },
+    { label: 'My Advice', value: 'my_advice', template: 'My advice about this is ' },
     { label: 'For My Kids', value: 'for_my_kids', template: 'For my kids: ' },
-    { label: 'Gratitude', value: 'gratitude', template: "I'm grateful for " },
+    { label: 'I\'m Grateful', value: 'gratitude', template: "I'm grateful for " },
+    { label: 'I Learned', value: 'i_learned', template: 'I learned that ' },
   ]
 
   // Load status and prompt
@@ -185,16 +185,22 @@ export default function TreasureChestModal({ onClose, onSave }: TreasureChestMod
     }
   }
 
-  const handleQuickChip = async (chip: typeof quickChips[0]) => {
+  const handleQuickChip = (chip: typeof quickChips[0]) => {
     if (!prompt) return
 
-    // For chips with templates, auto-save immediately
-    if (chip.template) {
-      await handleSave(chip.template, chip.value)
-    } else {
-      // For "Note to Self", just pre-fill
-      setText(chip.template)
-    }
+    // Pre-fill the text area with the template
+    setText(chip.template)
+
+    // Focus the textarea so user can continue typing
+    setTimeout(() => {
+      const textarea = document.querySelector('textarea')
+      if (textarea) {
+        textarea.focus()
+        // Move cursor to end
+        textarea.selectionStart = textarea.value.length
+        textarea.selectionEnd = textarea.value.length
+      }
+    }, 50)
   }
 
   const handleSave = async (textOverride?: string, chipUsed?: string) => {
@@ -355,10 +361,10 @@ export default function TreasureChestModal({ onClose, onSave }: TreasureChestMod
 
         {/* Content */}
         <div className="p-6 space-y-6">
-          {/* Quick Action Chips */}
+          {/* Quick Starters */}
           <div>
             <label className="block text-sm font-medium text-text-soft mb-2">
-              Quick Save
+              Quick Starters
             </label>
             <div className="flex flex-wrap gap-2">
               {quickChips.map((chip) => (
@@ -372,6 +378,9 @@ export default function TreasureChestModal({ onClose, onSave }: TreasureChestMod
                 </button>
               ))}
             </div>
+            <p className="text-xs text-text-muted mt-2">
+              💡 Tap a starter to pre-fill the text, then finish your thought
+            </p>
           </div>
 
           {/* Voice Recording */}
