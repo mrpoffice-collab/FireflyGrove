@@ -89,216 +89,223 @@ async function generateKeepsakePDF(
   const font = await pdfDoc.embedFont(StandardFonts.Helvetica)
   const fontBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold)
 
-  // Cover page
-  await addCoverPage(pdfDoc, font, fontBold, weekStart, weekEnd, entries.length)
-
-  // Entry pages
-  for (let i = 0; i < entries.length; i++) {
-    await addEntryPage(pdfDoc, font, fontBold, entries[i], i + 1, entries.length)
-  }
-
-  // Closing page
-  if (entries.length > 0) {
-    await addClosingPage(pdfDoc, font, fontBold, entries.length)
-  }
+  // Single beautiful keepsake page
+  await createKeepsakePage(pdfDoc, font, fontBold, entries, weekStart, weekEnd)
 
   return await pdfDoc.save()
 }
 
 /**
- * Cover page
+ * Create a single beautiful keepsake page
  */
-async function addCoverPage(
+async function createKeepsakePage(
   pdfDoc: PDFDocument,
   font: any,
   fontBold: any,
+  entries: any[],
   weekStart: Date,
-  weekEnd: Date,
-  entryCount: number
+  weekEnd: Date
 ) {
   const page = pdfDoc.addPage([PAGE_WIDTH, PAGE_HEIGHT])
   const centerX = PAGE_WIDTH / 2
-  const centerY = PAGE_HEIGHT / 2
+  let yPosition = PAGE_HEIGHT - MARGIN
+
+  // Decorative top border
+  page.drawLine({
+    start: { x: MARGIN, y: yPosition },
+    end: { x: PAGE_WIDTH - MARGIN, y: yPosition },
+    color: COLORS.primary,
+    thickness: 2,
+  })
+  yPosition -= 20
 
   // Title
-  const title = 'Weekly Keepsake'
-  const titleSize = 36
+  const title = 'My Glow Trail'
+  const titleSize = 28
   const titleWidth = fontBold.widthOfTextAtSize(title, titleSize)
   page.drawText(title, {
     x: centerX - titleWidth / 2,
-    y: centerY + 100,
+    y: yPosition,
     size: titleSize,
     font: fontBold,
     color: COLORS.primary,
   })
+  yPosition -= 30
 
-  // Note: Emojis don't render in pdf-lib, so we'll use text decoration instead
-  const scrollText = '~~ Scroll ~~'
-  const scrollSize = 20
-  const scrollWidth = font.widthOfTextAtSize(scrollText, scrollSize)
-  page.drawText(scrollText, {
-    x: centerX - scrollWidth / 2,
-    y: centerY + 40,
-    size: scrollSize,
+  // Week dates
+  const dateText = `${format(weekStart, 'MMMM d')} - ${format(weekEnd, 'MMMM d, yyyy')}`
+  const dateSize = 14
+  const dateWidth = font.widthOfTextAtSize(dateText, dateSize)
+  page.drawText(dateText, {
+    x: centerX - dateWidth / 2,
+    y: yPosition,
+    size: dateSize,
+    font: font,
+    color: COLORS.muted,
+  })
+  yPosition -= 15
+
+  // Decorative stars
+  const starsText = '* * *'
+  const starsSize = 12
+  const starsWidth = font.widthOfTextAtSize(starsText, starsSize)
+  page.drawText(starsText, {
+    x: centerX - starsWidth / 2,
+    y: yPosition,
+    size: starsSize,
+    font: font,
+    color: COLORS.primary,
+  })
+  yPosition -= 30
+
+  // If no entries, show encouraging message
+  if (entries.length === 0) {
+    const emptyMsg = 'No treasures captured this week'
+    const emptySize = 12
+    const emptyWidth = font.widthOfTextAtSize(emptyMsg, emptySize)
+    page.drawText(emptyMsg, {
+      x: centerX - emptyWidth / 2,
+      y: centerY,
+      size: emptySize,
+      font: font,
+      color: COLORS.muted,
+    })
+  } else {
+    // Display entries in a grid/list format
+    const entrySpacing = 95 // Space between entries
+    const maxEntriesPerColumn = 5
+    const columnWidth = CONTENT_WIDTH / 2
+
+    for (let i = 0; i < Math.min(entries.length, 10); i++) {
+      const entry = entries[i]
+      const column = Math.floor(i / maxEntriesPerColumn)
+      const row = i % maxEntriesPerColumn
+
+      const xPos = column === 0 ? MARGIN : MARGIN + columnWidth + 30
+      const yPos = yPosition - (row * entrySpacing)
+
+      // Check if we have space
+      if (yPos < MARGIN + 80) break
+
+      // Day label (e.g., "Monday, Nov 4")
+      const dayLabel = format(new Date(entry.entryUTC), 'EEEE, MMM d')
+      page.drawText(dayLabel, {
+        x: xPos,
+        y: yPos,
+        size: 9,
+        font: fontBold,
+        color: COLORS.primary,
+      })
+
+      // Prompt (truncated)
+      const promptText = entry.promptText.length > 50
+        ? entry.promptText.substring(0, 50) + '...'
+        : entry.promptText
+      const promptLines = wrapText(`"${promptText}"`, font, 8, columnWidth - 20)
+      let promptY = yPos - 12
+      for (let j = 0; j < Math.min(promptLines.length, 2); j++) {
+        page.drawText(promptLines[j], {
+          x: xPos,
+          y: promptY,
+          size: 8,
+          font: font,
+          color: COLORS.muted,
+        })
+        promptY -= 10
+      }
+
+      // Response preview (first 80 chars)
+      if (entry.text) {
+        const responsePreview = entry.text.length > 80
+          ? entry.text.substring(0, 80) + '...'
+          : entry.text
+        const responseLines = wrapText(responsePreview, font, 9, columnWidth - 20)
+        let responseY = promptY - 5
+        for (let j = 0; j < Math.min(responseLines.length, 3); j++) {
+          if (responseY < MARGIN + 80) break
+          page.drawText(responseLines[j], {
+            x: xPos,
+            y: responseY,
+            size: 9,
+            font: font,
+            color: COLORS.text,
+          })
+          responseY -= 11
+        }
+      }
+
+      // Audio indicator
+      if (entry.audioUrl) {
+        page.drawText('♪ Voice', {
+          x: xPos,
+          y: yPos - 80,
+          size: 7,
+          font: font,
+          color: COLORS.primary,
+        })
+      }
+    }
+
+    // If more than 10 entries, add note
+    if (entries.length > 10) {
+      const moreText = `+ ${entries.length - 10} more treasures this week`
+      const moreSize = 9
+      const moreWidth = font.widthOfTextAtSize(moreText, moreSize)
+      page.drawText(moreText, {
+        x: centerX - moreWidth / 2,
+        y: MARGIN + 90,
+        size: moreSize,
+        font: font,
+        color: COLORS.muted,
+      })
+    }
+  }
+
+  // Bottom decorative element
+  page.drawLine({
+    start: { x: MARGIN, y: MARGIN + 70 },
+    end: { x: PAGE_WIDTH - MARGIN, y: MARGIN + 70 },
+    color: COLORS.primary,
+    thickness: 1,
+  })
+
+  // Count and footer
+  const countText = `${entries.length} ${entries.length === 1 ? 'night' : 'nights'} of wisdom & gratitude`
+  const countSize = 11
+  const countWidth = font.widthOfTextAtSize(countText, countSize)
+  page.drawText(countText, {
+    x: centerX - countWidth / 2,
+    y: MARGIN + 45,
+    size: countSize,
+    font: fontBold,
+    color: COLORS.text,
+  })
+
+  // "Keep glowing" message
+  const keepText = 'Keep glowing'
+  const keepSize = 9
+  const keepWidth = font.widthOfTextAtSize(keepText, keepSize)
+  page.drawText(keepText, {
+    x: centerX - keepWidth / 2,
+    y: MARGIN + 25,
+    size: keepSize,
     font: font,
     color: COLORS.primary,
   })
 
-  // Week dates
-  const dateText = `${format(weekStart, 'MMMM d')} - ${format(weekEnd, 'MMMM d, yyyy')}`
-  const dateSize = 18
-  const dateWidth = font.widthOfTextAtSize(dateText, dateSize)
-  page.drawText(dateText, {
-    x: centerX - dateWidth / 2,
-    y: centerY - 30,
-    size: dateSize,
-    font: font,
-    color: COLORS.text,
-  })
-
-  // Entry count
-  const countText = `${entryCount} ${entryCount === 1 ? 'treasure' : 'treasures'} this week`
-  const countSize = 14
-  const countWidth = font.widthOfTextAtSize(countText, countSize)
-  page.drawText(countText, {
-    x: centerX - countWidth / 2,
-    y: centerY - 60,
-    size: countSize,
-    font: font,
-    color: COLORS.muted,
-  })
-
-  // Footer
-  const footerText = 'From your Firefly Grove Treasure Chest'
-  const footerSize = 10
-  const footerWidth = font.widthOfTextAtSize(footerText, footerSize)
-  page.drawText(footerText, {
-    x: centerX - footerWidth / 2,
-    y: MARGIN + 30,
-    size: footerSize,
+  // Firefly Grove branding (small)
+  const brandText = 'FireflyGrove.app'
+  const brandSize = 8
+  const brandWidth = font.widthOfTextAtSize(brandText, brandSize)
+  page.drawText(brandText, {
+    x: centerX - brandWidth / 2,
+    y: MARGIN + 10,
+    size: brandSize,
     font: font,
     color: COLORS.muted,
   })
 }
 
-/**
- * Entry page
- */
-async function addEntryPage(
-  pdfDoc: PDFDocument,
-  font: any,
-  fontBold: any,
-  entry: any,
-  index: number,
-  total: number
-) {
-  const page = pdfDoc.addPage([PAGE_WIDTH, PAGE_HEIGHT])
-  let yPosition = PAGE_HEIGHT - MARGIN
-
-  // Date header
-  const dateText = format(new Date(entry.entryUTC), 'EEEE, MMMM d, yyyy')
-  page.drawText(dateText, {
-    x: MARGIN,
-    y: yPosition,
-    size: 10,
-    font: font,
-    color: COLORS.muted,
-  })
-
-  // Entry number (right-aligned)
-  const entryNumText = `Entry ${index} of ${total}`
-  const entryNumWidth = font.widthOfTextAtSize(entryNumText, 8)
-  page.drawText(entryNumText, {
-    x: PAGE_WIDTH - MARGIN - entryNumWidth,
-    y: yPosition,
-    size: 8,
-    font: font,
-    color: COLORS.muted,
-  })
-
-  yPosition -= 25
-
-  // Divider line
-  page.drawLine({
-    start: { x: MARGIN, y: yPosition },
-    end: { x: PAGE_WIDTH - MARGIN, y: yPosition },
-    color: COLORS.secondary,
-    thickness: 1,
-  })
-
-  yPosition -= 30
-
-  // Prompt (we'll use regular font since pdf-lib doesn't have italic built-in)
-  const promptText = `"${entry.promptText}"`
-  const promptLines = wrapText(promptText, font, 12, CONTENT_WIDTH)
-  for (const line of promptLines) {
-    page.drawText(line, {
-      x: MARGIN,
-      y: yPosition,
-      size: 12,
-      font: font,
-      color: COLORS.muted,
-    })
-    yPosition -= 16
-  }
-
-  yPosition -= 10
-
-  // Response text
-  if (entry.text) {
-    const responseLines = wrapText(entry.text, font, 13, CONTENT_WIDTH)
-    for (const line of responseLines) {
-      if (yPosition < MARGIN + 50) break // Avoid overflow
-      page.drawText(line, {
-        x: MARGIN,
-        y: yPosition,
-        size: 13,
-        font: font,
-        color: COLORS.text,
-      })
-      yPosition -= 18
-    }
-    yPosition -= 10
-  }
-
-  // Audio indicator
-  if (entry.audioUrl) {
-    if (yPosition > MARGIN + 50) {
-      page.drawText('Voice recording included', {
-        x: MARGIN,
-        y: yPosition,
-        size: 10,
-        font: font,
-        color: COLORS.primary,
-      })
-      yPosition -= 25
-    }
-  }
-
-  // Branch assignment
-  if (entry.branch) {
-    if (yPosition > MARGIN + 50) {
-      page.drawText(`Branch: ${entry.branch.title}`, {
-        x: MARGIN,
-        y: yPosition,
-        size: 9,
-        font: font,
-        color: COLORS.muted,
-      })
-      yPosition -= 20
-    }
-  }
-
-  // Category badge (at bottom)
-  const categoryLabel = entry.category.replace('_', ' ')
-  page.drawText(categoryLabel, {
-    x: MARGIN,
-    y: MARGIN + 20,
-    size: 8,
-    font: font,
-    color: COLORS.muted,
-  })
-}
 
 /**
  * Helper: Wrap text to fit within width
@@ -324,64 +331,3 @@ function wrapText(text: string, font: any, size: number, maxWidth: number): stri
   return lines
 }
 
-/**
- * Closing page
- */
-async function addClosingPage(
-  pdfDoc: PDFDocument,
-  font: any,
-  fontBold: any,
-  entryCount: number
-) {
-  const page = pdfDoc.addPage([PAGE_WIDTH, PAGE_HEIGHT])
-  const centerX = PAGE_WIDTH / 2
-  const centerY = PAGE_HEIGHT / 2
-
-  // Sparkle decoration (since emojis don't work, use text)
-  const sparkleText = '* * *'
-  const sparkleSize = 24
-  const sparkleWidth = font.widthOfTextAtSize(sparkleText, sparkleSize)
-  page.drawText(sparkleText, {
-    x: centerX - sparkleWidth / 2,
-    y: centerY + 60,
-    size: sparkleSize,
-    font: font,
-    color: COLORS.primary,
-  })
-
-  // Message
-  const mainText = 'Your Glow Trail This Week'
-  const mainSize = 16
-  const mainWidth = font.widthOfTextAtSize(mainText, mainSize)
-  page.drawText(mainText, {
-    x: centerX - mainWidth / 2,
-    y: centerY,
-    size: mainSize,
-    font: font,
-    color: COLORS.text,
-  })
-
-  // Count message
-  const countMsg = `${entryCount} ${entryCount === 1 ? 'night' : 'nights'} of wisdom, gratitude, and treasured thoughts`
-  const countSize = 12
-  const countWidth = font.widthOfTextAtSize(countMsg, countSize)
-  page.drawText(countMsg, {
-    x: centerX - countWidth / 2,
-    y: centerY - 40,
-    size: countSize,
-    font: font,
-    color: COLORS.muted,
-  })
-
-  // Footer message
-  const footerMsg = 'Keep glowing'
-  const footerSize = 10
-  const footerWidth = font.widthOfTextAtSize(footerMsg, footerSize)
-  page.drawText(footerMsg, {
-    x: centerX - footerWidth / 2,
-    y: MARGIN + 30,
-    size: footerSize,
-    font: font,
-    color: COLORS.muted,
-  })
-}
