@@ -196,7 +196,7 @@ const TREASURE_PROMPTS = [
 ]
 
 async function main() {
-  console.log('🎁 Seeding Treasure Chest prompts...')
+  console.log('📜 Seeding Treasure Chest prompts...')
 
   // Check if prompts already exist
   const existingCount = await prisma.treasurePrompt.count()
