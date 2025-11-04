@@ -10,6 +10,7 @@ import FireflyCanvas from '@/components/FireflyCanvas'
 import FireflyBurst from '@/components/FireflyBurst'
 import AudioSparks from '@/components/AudioSparks'
 import TreasureChestModal from '@/components/TreasureChestModal'
+import TreasureWelcomeModal from '@/components/TreasureWelcomeModal'
 import { getPlanById } from '@/lib/plans'
 import { SkeletonTreeCard, SkeletonPersonCard, SkeletonGrid, SkeletonTitle, SkeletonText } from '@/components/SkeletonLoader'
 import { useToast } from '@/lib/toast'
@@ -131,14 +132,28 @@ export default function GrovePage() {
   // Treasure Chest state
   const [showTreasure, setShowTreasure] = useState(false)
   const [treasureGlowTrail, setTreasureGlowTrail] = useState(0)
+  const [showTreasureWelcome, setShowTreasureWelcome] = useState(false)
+  const [hasSeenTreasureWelcome, setHasSeenTreasureWelcome] = useState(false)
 
-  // Check for pending nest photo from URL
+  // Check for pending nest photo from URL and preview parameters
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const urlParams = new URLSearchParams(window.location.search)
+
+      // Nest photo handling
       const nestPhotoParam = urlParams.get('pendingNestPhoto')
       if (nestPhotoParam) {
         setPendingNestPhoto(nestPhotoParam)
+      }
+
+      // Preview parameter for testing popups/announcements (admin/testing)
+      // Usage: /grove?preview=treasureWelcome
+      const preview = urlParams.get('preview')
+      if (preview === 'treasureWelcome') {
+        setShowTreasureWelcome(true)
+        setHasSeenTreasureWelcome(true)
+        // Clean up URL
+        window.history.replaceState({}, '', '/grove')
       }
     }
   }, [])
@@ -170,6 +185,19 @@ export default function GrovePage() {
         const data = await res.json()
         setTreasureGlowTrail(data.currentStreak || 0)
 
+        // Check if this is their first time (no treasures yet)
+        const isFirstTime = data.treasureCount === 0 && !hasSeenTreasureWelcome
+
+        // Check localStorage to see if they've dismissed welcome before
+        if (isFirstTime && typeof window !== 'undefined') {
+          const dismissed = localStorage.getItem('treasureWelcomeDismissed')
+          if (!dismissed) {
+            setShowTreasureWelcome(true)
+            setHasSeenTreasureWelcome(true)
+            return // Don't show regular treasure modal yet
+          }
+        }
+
         // Show modal if should show and not already completed today
         if (data.shouldShowModal && !data.todayCompleted) {
           setShowTreasure(true)
@@ -183,6 +211,16 @@ export default function GrovePage() {
   // Handle treasure save - refresh streak
   const handleTreasureSave = () => {
     checkTreasureStatus()
+  }
+
+  // Handle treasure welcome close
+  const handleTreasureWelcomeClose = () => {
+    setShowTreasureWelcome(false)
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('treasureWelcomeDismissed', 'true')
+    }
+    // Now show the regular treasure modal
+    setShowTreasure(true)
   }
 
   // Check if bursts are currently snoozed
@@ -426,6 +464,13 @@ export default function GrovePage() {
         <AudioSparks
           onClose={() => setShowAudioSparks(false)}
           branches={grove.allBranches || []}
+        />
+      )}
+
+      {/* Treasure Welcome Modal - for first-time users */}
+      {showTreasureWelcome && (
+        <TreasureWelcomeModal
+          onClose={handleTreasureWelcomeClose}
         />
       )}
 
