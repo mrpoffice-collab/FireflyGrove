@@ -4,6 +4,9 @@ import { authOptions } from '@/lib/auth'
 import { generateWeeklyKeepsake } from '@/lib/weekly-keepsake-generator'
 import { startOfWeek } from 'date-fns'
 
+// Force Node.js runtime for PDFKit
+export const runtime = 'nodejs'
+
 export async function GET(req: NextRequest) {
   try {
     const session = await getServerSession(authOptions)
@@ -43,7 +46,10 @@ export async function GET(req: NextRequest) {
   } catch (error) {
     console.error('Weekly keepsake error:', error)
     return NextResponse.json(
-      { error: 'Failed to generate weekly keepsake' },
+      {
+        error: 'Failed to generate weekly keepsake',
+        details: error instanceof Error ? error.message : String(error)
+      },
       { status: 500 }
     )
   }
