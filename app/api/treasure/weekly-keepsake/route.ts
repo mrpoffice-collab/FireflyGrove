@@ -32,7 +32,7 @@ export async function GET(req: NextRequest) {
     })
 
     // Return PDF as download
-    return new NextResponse(keepsake.pdf, {
+    return new NextResponse(keepsake.pdf as any, {
       status: 200,
       headers: {
         'Content-Type': 'application/pdf',

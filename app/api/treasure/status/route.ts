@@ -111,7 +111,8 @@ export async function GET(req: NextRequest) {
     })
 
     const missedYesterday = !yesterdayEntry && user.lastTreasureLocal !== yesterdayLocal
-    const canApplyGrace = missedYesterday && graceTokensAvailable > 0 && user.currentStreak > 0
+    // Only show grace warning if: missed yesterday, has tokens, has active trail (> 1), and has done at least one entry before
+    const canApplyGrace = missedYesterday && graceTokensAvailable > 0 && user.currentStreak > 1 && user.lastTreasureLocal !== null
 
     return NextResponse.json({
       shouldShowModal,
