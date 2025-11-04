@@ -302,9 +302,9 @@ export default function TreasureChestModal({ onClose, onSave }: TreasureChestMod
             Tucked away safely in your Treasure Chest
           </p>
           <div className="flex items-center justify-center gap-4 text-sm text-text-muted">
-            <span>🔥 {streak.current} day{streak.current !== 1 ? 's' : ''}</span>
+            <span>✨ {streak.current} day{streak.current !== 1 ? 's' : ''}</span>
             {streak.current === streak.longest && streak.current > 1 && (
-              <span className="text-firefly-glow">✨ New record!</span>
+              <span className="text-firefly-glow">⭐ New record!</span>
             )}
           </div>
         </div>
@@ -340,7 +340,7 @@ export default function TreasureChestModal({ onClose, onSave }: TreasureChestMod
           {/* Streak Display */}
           <div className="flex items-center gap-4 text-sm">
             <span className="text-text-muted">
-              🔥 <span className="text-text-soft font-medium">{streak.current}</span> day streak
+              ✨ <span className="text-text-soft font-medium">{streak.current}</span> day streak
             </span>
             <span className="text-text-muted">
               ⭐ <span className="text-text-soft font-medium">{streak.longest}</span> longest

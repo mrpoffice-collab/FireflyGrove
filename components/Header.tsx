@@ -140,7 +140,7 @@ export default function Header({ userName, isBetaTester: propBetaTester, isAdmin
               >
                 <span>📜</span>
                 {treasureStreak !== undefined && treasureStreak > 0 && (
-                  <span className="hidden sm:inline">{treasureStreak}🔥</span>
+                  <span className="hidden sm:inline">{treasureStreak}✨</span>
                 )}
               </button>
             )}
