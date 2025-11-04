@@ -15,9 +15,11 @@ interface HeaderProps {
     treeCount: number
     treeLimit: number
   }
+  onTreasureClick?: () => void
+  treasureStreak?: number
 }
 
-export default function Header({ userName, isBetaTester: propBetaTester, isAdmin: propAdmin, groveInfo }: HeaderProps) {
+export default function Header({ userName, isBetaTester: propBetaTester, isAdmin: propAdmin, groveInfo, onTreasureClick, treasureStreak }: HeaderProps) {
   const router = useRouter()
   const { data: session } = useSession()
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
@@ -129,6 +131,20 @@ export default function Header({ userName, isBetaTester: propBetaTester, isAdmin
           </div>
 
           <div className="flex items-center gap-3">
+            {/* Treasure Chest Badge - Show if user is logged in */}
+            {userName && onTreasureClick && (
+              <button
+                onClick={onTreasureClick}
+                className="min-h-[44px] px-3 py-2 bg-firefly-dim/20 hover:bg-firefly-dim/30 text-firefly-glow border border-firefly-dim/40 rounded text-xs font-medium transition-soft flex items-center gap-1.5"
+                aria-label={treasureStreak ? `Treasure Chest - ${treasureStreak} day streak` : 'Open Treasure Chest'}
+              >
+                <span>📜</span>
+                {treasureStreak !== undefined && treasureStreak > 0 && (
+                  <span className="hidden sm:inline">{treasureStreak}🔥</span>
+                )}
+              </button>
+            )}
+
             {/* Beta Invite Button - Visible to beta testers */}
             {isBetaTester && (
               <button

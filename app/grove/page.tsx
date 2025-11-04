@@ -9,6 +9,7 @@ import NestNudge from '@/components/NestNudge'
 import FireflyCanvas from '@/components/FireflyCanvas'
 import FireflyBurst from '@/components/FireflyBurst'
 import AudioSparks from '@/components/AudioSparks'
+import TreasureChestModal from '@/components/TreasureChestModal'
 import { getPlanById } from '@/lib/plans'
 import { SkeletonTreeCard, SkeletonPersonCard, SkeletonGrid, SkeletonTitle, SkeletonText } from '@/components/SkeletonLoader'
 import { useToast } from '@/lib/toast'
@@ -127,6 +128,10 @@ export default function GrovePage() {
   // Audio Sparks state
   const [showAudioSparks, setShowAudioSparks] = useState(false)
 
+  // Treasure Chest state
+  const [showTreasure, setShowTreasure] = useState(false)
+  const [treasureStreak, setTreasureStreak] = useState(0)
+
   // Check for pending nest photo from URL
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -151,9 +156,34 @@ export default function GrovePage() {
       fetchSharedBranches()
       // Check if bursts are snoozed before triggering
       checkBurstSnooze()
+      // Check treasure status
+      checkTreasureStatus()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status])
+
+  // Check treasure status and show modal if needed
+  const checkTreasureStatus = async () => {
+    try {
+      const res = await fetch('/api/treasure/status')
+      if (res.ok) {
+        const data = await res.json()
+        setTreasureStreak(data.currentStreak || 0)
+
+        // Show modal if should show and not already completed today
+        if (data.shouldShowModal && !data.todayCompleted) {
+          setShowTreasure(true)
+        }
+      }
+    } catch (error) {
+      console.error('Failed to check treasure status:', error)
+    }
+  }
+
+  // Handle treasure save - refresh streak
+  const handleTreasureSave = () => {
+    checkTreasureStatus()
+  }
 
   // Check if bursts are currently snoozed
   const checkBurstSnooze = () => {
@@ -369,6 +399,8 @@ export default function GrovePage() {
           treeCount,
           treeLimit: grove.treeLimit,
         }}
+        onTreasureClick={() => setShowTreasure(true)}
+        treasureStreak={treasureStreak}
       />
 
       {/* Nest Nudge - Shows when user has old photos in nest */}
@@ -394,6 +426,14 @@ export default function GrovePage() {
         <AudioSparks
           onClose={() => setShowAudioSparks(false)}
           branches={grove.allBranches || []}
+        />
+      )}
+
+      {/* Treasure Chest Modal */}
+      {showTreasure && (
+        <TreasureChestModal
+          onClose={() => setShowTreasure(false)}
+          onSave={handleTreasureSave}
         />
       )}
 
