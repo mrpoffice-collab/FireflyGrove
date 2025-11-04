@@ -1,4 +1,4 @@
-import PDFDocument from 'pdfkit'
+import { PDFDocument, StandardFonts, rgb } from 'pdf-lib'
 import { prisma } from './prisma'
 import { format, startOfWeek, endOfWeek } from 'date-fns'
 
@@ -8,18 +8,18 @@ import { format, startOfWeek, endOfWeek } from 'date-fns'
  */
 
 // Page dimensions (8.5" x 11" letter size)
-const PAGE_WIDTH = 8.5 * 72 // 612 pts
-const PAGE_HEIGHT = 11 * 72 // 792 pts
-const MARGIN = 0.75 * 72 // 54 pts
+const PAGE_WIDTH = 612 // 8.5 * 72
+const PAGE_HEIGHT = 792 // 11 * 72
+const MARGIN = 54 // 0.75 * 72
 const CONTENT_WIDTH = PAGE_WIDTH - (MARGIN * 2)
 
-// Colors - Firefly Grove theme
+// Colors - Firefly Grove theme (converted to RGB 0-1 scale)
 const COLORS = {
-  primary: '#8B9556', // firefly-glow
-  secondary: '#6B7346', // firefly-dim
-  text: '#E8E6E3', // text-soft
-  muted: '#9B9892', // text-muted
-  background: '#1A1A1A', // bg-dark
+  primary: rgb(0.545, 0.584, 0.337), // #8B9556 firefly-glow
+  secondary: rgb(0.420, 0.451, 0.275), // #6B7346 firefly-dim
+  text: rgb(0.910, 0.902, 0.890), // #E8E6E3 text-soft
+  muted: rgb(0.608, 0.596, 0.573), // #9B9892 text-muted
+  background: rgb(0.102, 0.102, 0.102), // #1A1A1A bg-dark
 }
 
 interface WeeklyKeepsakeOptions {
@@ -28,7 +28,7 @@ interface WeeklyKeepsakeOptions {
 }
 
 interface GeneratedKeepsake {
-  pdf: Buffer
+  pdf: Uint8Array
   entryCount: number
   weekLabel: string
 }
@@ -83,238 +83,304 @@ async function generateKeepsakePDF(
   entries: any[],
   weekStart: Date,
   weekEnd: Date
-): Promise<Buffer> {
-  return new Promise((resolve, reject) => {
-    try {
-      const doc = new PDFDocument({
-        size: [PAGE_WIDTH, PAGE_HEIGHT],
-        margins: {
-          top: MARGIN,
-          bottom: MARGIN,
-          left: MARGIN,
-          right: MARGIN,
-        },
-      })
+): Promise<Uint8Array> {
+  const pdfDoc = await PDFDocument.create()
+  const font = await pdfDoc.embedFont(StandardFonts.Helvetica)
+  const fontBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold)
 
-      const chunks: Buffer[] = []
-      doc.on('data', (chunk) => chunks.push(chunk))
-      doc.on('end', () => resolve(Buffer.concat(chunks)))
-      doc.on('error', reject)
+  // Cover page
+  await addCoverPage(pdfDoc, font, fontBold, weekStart, weekEnd, entries.length)
 
-      // Cover page
-      addCoverPage(doc, weekStart, weekEnd, entries.length)
+  // Entry pages
+  for (let i = 0; i < entries.length; i++) {
+    await addEntryPage(pdfDoc, font, fontBold, entries[i], i + 1, entries.length)
+  }
 
-      // Entry pages
-      entries.forEach((entry, index) => {
-        doc.addPage()
-        addEntryPage(doc, entry, index + 1, entries.length)
-      })
+  // Closing page
+  if (entries.length > 0) {
+    await addClosingPage(pdfDoc, font, fontBold, entries.length)
+  }
 
-      // Closing page
-      if (entries.length > 0) {
-        doc.addPage()
-        addClosingPage(doc, entries.length)
-      }
-
-      doc.end()
-    } catch (error) {
-      reject(error)
-    }
-  })
+  return await pdfDoc.save()
 }
 
 /**
  * Cover page
  */
-function addCoverPage(
-  doc: PDFKit.PDFDocument,
+async function addCoverPage(
+  pdfDoc: PDFDocument,
+  font: any,
+  fontBold: any,
   weekStart: Date,
   weekEnd: Date,
   entryCount: number
 ) {
+  const page = pdfDoc.addPage([PAGE_WIDTH, PAGE_HEIGHT])
   const centerX = PAGE_WIDTH / 2
   const centerY = PAGE_HEIGHT / 2
 
   // Title
-  doc
-    .font('Helvetica-Bold')
-    .fontSize(36)
-    .fillColor(COLORS.primary)
-    .text('Weekly Keepsake', 0, centerY - 100, {
-      width: PAGE_WIDTH,
-      align: 'center',
-    })
+  const title = 'Weekly Keepsake'
+  const titleSize = 36
+  const titleWidth = fontBold.widthOfTextAtSize(title, titleSize)
+  page.drawText(title, {
+    x: centerX - titleWidth / 2,
+    y: centerY + 100,
+    size: titleSize,
+    font: fontBold,
+    color: COLORS.primary,
+  })
 
-  // Scroll emoji
-  doc.fontSize(48).text('📜', 0, centerY - 40, {
-    width: PAGE_WIDTH,
-    align: 'center',
+  // Note: Emojis don't render in pdf-lib, so we'll use text decoration instead
+  const scrollText = '~~ Scroll ~~'
+  const scrollSize = 20
+  const scrollWidth = font.widthOfTextAtSize(scrollText, scrollSize)
+  page.drawText(scrollText, {
+    x: centerX - scrollWidth / 2,
+    y: centerY + 40,
+    size: scrollSize,
+    font: font,
+    color: COLORS.primary,
   })
 
   // Week dates
-  doc
-    .font('Helvetica')
-    .fontSize(18)
-    .fillColor(COLORS.text)
-    .text(`${format(weekStart, 'MMMM d')} - ${format(weekEnd, 'MMMM d, yyyy')}`, 0, centerY + 30, {
-      width: PAGE_WIDTH,
-      align: 'center',
-    })
+  const dateText = `${format(weekStart, 'MMMM d')} - ${format(weekEnd, 'MMMM d, yyyy')}`
+  const dateSize = 18
+  const dateWidth = font.widthOfTextAtSize(dateText, dateSize)
+  page.drawText(dateText, {
+    x: centerX - dateWidth / 2,
+    y: centerY - 30,
+    size: dateSize,
+    font: font,
+    color: COLORS.text,
+  })
 
   // Entry count
-  doc
-    .fontSize(14)
-    .fillColor(COLORS.muted)
-    .text(`${entryCount} ${entryCount === 1 ? 'treasure' : 'treasures'} this week`, 0, centerY + 60, {
-      width: PAGE_WIDTH,
-      align: 'center',
-    })
+  const countText = `${entryCount} ${entryCount === 1 ? 'treasure' : 'treasures'} this week`
+  const countSize = 14
+  const countWidth = font.widthOfTextAtSize(countText, countSize)
+  page.drawText(countText, {
+    x: centerX - countWidth / 2,
+    y: centerY - 60,
+    size: countSize,
+    font: font,
+    color: COLORS.muted,
+  })
 
   // Footer
-  doc
-    .fontSize(10)
-    .fillColor(COLORS.muted)
-    .text('From your Firefly Grove Treasure Chest', 0, PAGE_HEIGHT - MARGIN - 30, {
-      width: PAGE_WIDTH,
-      align: 'center',
-    })
+  const footerText = 'From your Firefly Grove Treasure Chest'
+  const footerSize = 10
+  const footerWidth = font.widthOfTextAtSize(footerText, footerSize)
+  page.drawText(footerText, {
+    x: centerX - footerWidth / 2,
+    y: MARGIN + 30,
+    size: footerSize,
+    font: font,
+    color: COLORS.muted,
+  })
 }
 
 /**
  * Entry page
  */
-function addEntryPage(
-  doc: PDFKit.PDFDocument,
+async function addEntryPage(
+  pdfDoc: PDFDocument,
+  font: any,
+  fontBold: any,
   entry: any,
   index: number,
   total: number
 ) {
-  let yPosition = MARGIN
+  const page = pdfDoc.addPage([PAGE_WIDTH, PAGE_HEIGHT])
+  let yPosition = PAGE_HEIGHT - MARGIN
 
   // Date header
-  doc
-    .font('Helvetica')
-    .fontSize(10)
-    .fillColor(COLORS.muted)
-    .text(format(new Date(entry.entryUTC), 'EEEE, MMMM d, yyyy'), MARGIN, yPosition)
+  const dateText = format(new Date(entry.entryUTC), 'EEEE, MMMM d, yyyy')
+  page.drawText(dateText, {
+    x: MARGIN,
+    y: yPosition,
+    size: 10,
+    font: font,
+    color: COLORS.muted,
+  })
 
-  yPosition += 25
+  // Entry number (right-aligned)
+  const entryNumText = `Entry ${index} of ${total}`
+  const entryNumWidth = font.widthOfTextAtSize(entryNumText, 8)
+  page.drawText(entryNumText, {
+    x: PAGE_WIDTH - MARGIN - entryNumWidth,
+    y: yPosition,
+    size: 8,
+    font: font,
+    color: COLORS.muted,
+  })
 
-  // Entry number
-  doc
-    .fontSize(8)
-    .text(`Entry ${index} of ${total}`, PAGE_WIDTH - MARGIN - 80, MARGIN, {
-      width: 80,
-      align: 'right',
+  yPosition -= 25
+
+  // Divider line
+  page.drawLine({
+    start: { x: MARGIN, y: yPosition },
+    end: { x: PAGE_WIDTH - MARGIN, y: yPosition },
+    color: COLORS.secondary,
+    thickness: 1,
+  })
+
+  yPosition -= 30
+
+  // Prompt (we'll use regular font since pdf-lib doesn't have italic built-in)
+  const promptText = `"${entry.promptText}"`
+  const promptLines = wrapText(promptText, font, 12, CONTENT_WIDTH)
+  for (const line of promptLines) {
+    page.drawText(line, {
+      x: MARGIN,
+      y: yPosition,
+      size: 12,
+      font: font,
+      color: COLORS.muted,
     })
+    yPosition -= 16
+  }
 
-  // Divider
-  doc
-    .moveTo(MARGIN, yPosition)
-    .lineTo(PAGE_WIDTH - MARGIN, yPosition)
-    .strokeColor(COLORS.secondary)
-    .lineWidth(1)
-    .stroke()
-
-  yPosition += 30
-
-  // Prompt (italic)
-  doc
-    .font('Helvetica-Oblique')
-    .fontSize(12)
-    .fillColor(COLORS.muted)
-    .text(`"${entry.promptText}"`, MARGIN, yPosition, {
-      width: CONTENT_WIDTH,
-      align: 'left',
-    })
-
-  yPosition += doc.heightOfString(`"${entry.promptText}"`, { width: CONTENT_WIDTH }) + 20
+  yPosition -= 10
 
   // Response text
   if (entry.text) {
-    doc
-      .font('Helvetica')
-      .fontSize(13)
-      .fillColor(COLORS.text)
-      .text(entry.text, MARGIN, yPosition, {
-        width: CONTENT_WIDTH,
-        align: 'left',
-        lineGap: 4,
+    const responseLines = wrapText(entry.text, font, 13, CONTENT_WIDTH)
+    for (const line of responseLines) {
+      if (yPosition < MARGIN + 50) break // Avoid overflow
+      page.drawText(line, {
+        x: MARGIN,
+        y: yPosition,
+        size: 13,
+        font: font,
+        color: COLORS.text,
       })
-
-    yPosition += doc.heightOfString(entry.text, { width: CONTENT_WIDTH }) + 20
+      yPosition -= 18
+    }
+    yPosition -= 10
   }
 
   // Audio indicator
   if (entry.audioUrl) {
-    doc
-      .fontSize(10)
-      .fillColor(COLORS.primary)
-      .text('🎙️ Voice recording included', MARGIN, yPosition)
-
-    yPosition += 25
+    if (yPosition > MARGIN + 50) {
+      page.drawText('Voice recording included', {
+        x: MARGIN,
+        y: yPosition,
+        size: 10,
+        font: font,
+        color: COLORS.primary,
+      })
+      yPosition -= 25
+    }
   }
 
   // Branch assignment
   if (entry.branch) {
-    doc
-      .fontSize(9)
-      .fillColor(COLORS.muted)
-      .text(`🌿 ${entry.branch.title}`, MARGIN, yPosition)
-
-    yPosition += 20
+    if (yPosition > MARGIN + 50) {
+      page.drawText(`Branch: ${entry.branch.title}`, {
+        x: MARGIN,
+        y: yPosition,
+        size: 9,
+        font: font,
+        color: COLORS.muted,
+      })
+      yPosition -= 20
+    }
   }
 
-  // Category badge
+  // Category badge (at bottom)
   const categoryLabel = entry.category.replace('_', ' ')
-  doc
-    .fontSize(8)
-    .fillColor(COLORS.muted)
-    .text(categoryLabel, MARGIN, PAGE_HEIGHT - MARGIN - 20)
+  page.drawText(categoryLabel, {
+    x: MARGIN,
+    y: MARGIN + 20,
+    size: 8,
+    font: font,
+    color: COLORS.muted,
+  })
+}
+
+/**
+ * Helper: Wrap text to fit within width
+ */
+function wrapText(text: string, font: any, size: number, maxWidth: number): string[] {
+  const words = text.split(' ')
+  const lines: string[] = []
+  let currentLine = ''
+
+  for (const word of words) {
+    const testLine = currentLine ? `${currentLine} ${word}` : word
+    const testWidth = font.widthOfTextAtSize(testLine, size)
+
+    if (testWidth <= maxWidth) {
+      currentLine = testLine
+    } else {
+      if (currentLine) lines.push(currentLine)
+      currentLine = word
+    }
+  }
+
+  if (currentLine) lines.push(currentLine)
+  return lines
 }
 
 /**
  * Closing page
  */
-function addClosingPage(doc: PDFKit.PDFDocument, entryCount: number) {
+async function addClosingPage(
+  pdfDoc: PDFDocument,
+  font: any,
+  fontBold: any,
+  entryCount: number
+) {
+  const page = pdfDoc.addPage([PAGE_WIDTH, PAGE_HEIGHT])
   const centerX = PAGE_WIDTH / 2
   const centerY = PAGE_HEIGHT / 2
 
-  // Sparkle emoji
-  doc.fontSize(48).fillColor(COLORS.primary).text('✨', 0, centerY - 60, {
-    width: PAGE_WIDTH,
-    align: 'center',
+  // Sparkle decoration (since emojis don't work, use text)
+  const sparkleText = '* * *'
+  const sparkleSize = 24
+  const sparkleWidth = font.widthOfTextAtSize(sparkleText, sparkleSize)
+  page.drawText(sparkleText, {
+    x: centerX - sparkleWidth / 2,
+    y: centerY + 60,
+    size: sparkleSize,
+    font: font,
+    color: COLORS.primary,
   })
 
   // Message
-  doc
-    .font('Helvetica')
-    .fontSize(16)
-    .fillColor(COLORS.text)
-    .text('Your Glow Trail This Week', 0, centerY, {
-      width: PAGE_WIDTH,
-      align: 'center',
-    })
+  const mainText = 'Your Glow Trail This Week'
+  const mainSize = 16
+  const mainWidth = font.widthOfTextAtSize(mainText, mainSize)
+  page.drawText(mainText, {
+    x: centerX - mainWidth / 2,
+    y: centerY,
+    size: mainSize,
+    font: font,
+    color: COLORS.text,
+  })
 
-  doc
-    .fontSize(12)
-    .fillColor(COLORS.muted)
-    .text(
-      `${entryCount} ${entryCount === 1 ? 'night' : 'nights'} of wisdom, gratitude, and treasured thoughts`,
-      0,
-      centerY + 40,
-      {
-        width: PAGE_WIDTH,
-        align: 'center',
-      }
-    )
+  // Count message
+  const countMsg = `${entryCount} ${entryCount === 1 ? 'night' : 'nights'} of wisdom, gratitude, and treasured thoughts`
+  const countSize = 12
+  const countWidth = font.widthOfTextAtSize(countMsg, countSize)
+  page.drawText(countMsg, {
+    x: centerX - countWidth / 2,
+    y: centerY - 40,
+    size: countSize,
+    font: font,
+    color: COLORS.muted,
+  })
 
   // Footer message
-  doc
-    .fontSize(10)
-    .fillColor(COLORS.muted)
-    .text('Keep glowing ✨', 0, PAGE_HEIGHT - MARGIN - 30, {
-      width: PAGE_WIDTH,
-      align: 'center',
-    })
+  const footerMsg = 'Keep glowing'
+  const footerSize = 10
+  const footerWidth = font.widthOfTextAtSize(footerMsg, footerSize)
+  page.drawText(footerMsg, {
+    x: centerX - footerWidth / 2,
+    y: MARGIN + 30,
+    size: footerSize,
+    font: font,
+    color: COLORS.muted,
+  })
 }
