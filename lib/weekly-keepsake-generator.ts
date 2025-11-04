@@ -109,16 +109,7 @@ async function createKeepsakePage(
   const page = pdfDoc.addPage([PAGE_WIDTH, PAGE_HEIGHT])
   const centerX = PAGE_WIDTH / 2
   const centerY = PAGE_HEIGHT / 2
-  let yPosition = PAGE_HEIGHT - MARGIN
-
-  // Decorative top border
-  page.drawLine({
-    start: { x: MARGIN, y: yPosition },
-    end: { x: PAGE_WIDTH - MARGIN, y: yPosition },
-    color: COLORS.primary,
-    thickness: 2,
-  })
-  yPosition -= 20
+  let yPosition = PAGE_HEIGHT - MARGIN - 10 // Start a bit lower
 
   // Title
   const title = 'My Glow Trail'
@@ -131,7 +122,16 @@ async function createKeepsakePage(
     font: fontBold,
     color: COLORS.primary,
   })
-  yPosition -= 30
+  yPosition -= 10
+
+  // Decorative line under title (not overlapping)
+  page.drawLine({
+    start: { x: centerX - 80, y: yPosition },
+    end: { x: centerX + 80, y: yPosition },
+    color: COLORS.primary,
+    thickness: 2,
+  })
+  yPosition -= 25
 
   // Week dates
   const dateText = `${format(weekStart, 'MMMM d')} - ${format(weekEnd, 'MMMM d, yyyy')}`
@@ -144,7 +144,7 @@ async function createKeepsakePage(
     font: font,
     color: COLORS.muted,
   })
-  yPosition -= 15
+  yPosition -= 20
 
   // Decorative stars
   const starsText = '* * *'
@@ -157,10 +157,14 @@ async function createKeepsakePage(
     font: font,
     color: COLORS.primary,
   })
-  yPosition -= 30
+  yPosition -= 35
 
-  // If no entries, show encouraging message
-  if (entries.length === 0) {
+  // Calculate dynamic layout based on number of entries
+  const availableHeight = yPosition - (MARGIN + 120) // Space for entries
+  const numEntries = entries.length
+
+  if (numEntries === 0) {
+    // Empty state
     const emptyMsg = 'No treasures captured this week'
     const emptySize = 12
     const emptyWidth = font.widthOfTextAtSize(emptyMsg, emptySize)
@@ -172,93 +176,98 @@ async function createKeepsakePage(
       color: COLORS.muted,
     })
   } else {
-    // Display entries in a grid/list format
-    const entrySpacing = 95 // Space between entries
-    const maxEntriesPerColumn = 5
-    const columnWidth = CONTENT_WIDTH / 2
+    // Determine layout: 1 column for 1-7 entries, 2 columns for 8+
+    const useTwoColumns = numEntries > 7
+    const entriesPerColumn = useTwoColumns ? Math.ceil(numEntries / 2) : numEntries
 
-    for (let i = 0; i < Math.min(entries.length, 10); i++) {
+    // Calculate dynamic spacing to fit all entries
+    const entrySpacing = Math.min(
+      120, // Max spacing for few entries (spacious)
+      Math.floor(availableHeight / entriesPerColumn) // Fit to page
+    )
+
+    const columnWidth = useTwoColumns ? (CONTENT_WIDTH / 2) - 15 : CONTENT_WIDTH
+
+    for (let i = 0; i < numEntries; i++) {
       const entry = entries[i]
-      const column = Math.floor(i / maxEntriesPerColumn)
-      const row = i % maxEntriesPerColumn
+      const column = useTwoColumns ? Math.floor(i / entriesPerColumn) : 0
+      const row = useTwoColumns ? i % entriesPerColumn : i
 
-      const xPos = column === 0 ? MARGIN : MARGIN + columnWidth + 30
+      const xPos = column === 0 ? MARGIN : MARGIN + (CONTENT_WIDTH / 2) + 30
       const yPos = yPosition - (row * entrySpacing)
 
       // Check if we have space
-      if (yPos < MARGIN + 80) break
+      if (yPos < MARGIN + 120) break
 
       // Day label (e.g., "Monday, Nov 4")
       const dayLabel = format(new Date(entry.entryUTC), 'EEEE, MMM d')
+      const daySize = numEntries <= 3 ? 11 : 9
       page.drawText(dayLabel, {
         x: xPos,
         y: yPos,
-        size: 9,
+        size: daySize,
         font: fontBold,
         color: COLORS.primary,
       })
 
-      // Prompt (truncated)
-      const promptText = entry.promptText.length > 50
-        ? entry.promptText.substring(0, 50) + '...'
+      let contentY = yPos - (numEntries <= 3 ? 14 : 12)
+
+      // Prompt
+      const promptMaxChars = numEntries <= 3 ? 80 : (numEntries <= 7 ? 60 : 50)
+      const promptText = entry.promptText.length > promptMaxChars
+        ? entry.promptText.substring(0, promptMaxChars) + '...'
         : entry.promptText
-      const promptLines = wrapText(`"${promptText}"`, font, 8, columnWidth - 20)
-      let promptY = yPos - 12
-      for (let j = 0; j < Math.min(promptLines.length, 2); j++) {
+      const promptSize = numEntries <= 3 ? 9 : 8
+      const promptLines = wrapText(`"${promptText}"`, font, promptSize, columnWidth - 10)
+      const maxPromptLines = numEntries <= 3 ? 2 : (numEntries <= 7 ? 2 : 1)
+
+      for (let j = 0; j < Math.min(promptLines.length, maxPromptLines); j++) {
         page.drawText(promptLines[j], {
           x: xPos,
-          y: promptY,
-          size: 8,
+          y: contentY,
+          size: promptSize,
           font: font,
           color: COLORS.muted,
         })
-        promptY -= 10
+        contentY -= (promptSize + 2)
       }
 
-      // Response preview (first 80 chars)
+      contentY -= 3
+
+      // Response preview
       if (entry.text) {
-        const responsePreview = entry.text.length > 80
-          ? entry.text.substring(0, 80) + '...'
+        const responseMaxChars = numEntries <= 3 ? 150 : (numEntries <= 7 ? 100 : 70)
+        const responsePreview = entry.text.length > responseMaxChars
+          ? entry.text.substring(0, responseMaxChars) + '...'
           : entry.text
-        const responseLines = wrapText(responsePreview, font, 9, columnWidth - 20)
-        let responseY = promptY - 5
-        for (let j = 0; j < Math.min(responseLines.length, 3); j++) {
-          if (responseY < MARGIN + 80) break
+        const responseSize = numEntries <= 3 ? 10 : 9
+        const responseLines = wrapText(responsePreview, font, responseSize, columnWidth - 10)
+        const maxResponseLines = numEntries <= 3 ? 4 : (numEntries <= 7 ? 3 : 2)
+
+        for (let j = 0; j < Math.min(responseLines.length, maxResponseLines); j++) {
+          if (contentY < MARGIN + 120) break
           page.drawText(responseLines[j], {
             x: xPos,
-            y: responseY,
-            size: 9,
+            y: contentY,
+            size: responseSize,
             font: font,
             color: COLORS.text,
           })
-          responseY -= 11
+          contentY -= (responseSize + 2)
         }
       }
 
       // Audio indicator
-      if (entry.audioUrl) {
-        page.drawText('♪ Voice', {
+      if (entry.audioUrl && contentY > MARGIN + 120) {
+        contentY -= 5
+        page.drawText('♪ Voice recording', {
           x: xPos,
-          y: yPos - 80,
+          y: contentY,
           size: 7,
           font: font,
           color: COLORS.primary,
         })
       }
-    }
-
-    // If more than 10 entries, add note
-    if (entries.length > 10) {
-      const moreText = `+ ${entries.length - 10} more treasures this week`
-      const moreSize = 9
-      const moreWidth = font.widthOfTextAtSize(moreText, moreSize)
-      page.drawText(moreText, {
-        x: centerX - moreWidth / 2,
-        y: MARGIN + 90,
-        size: moreSize,
-        font: font,
-        color: COLORS.muted,
-      })
     }
   }
 
