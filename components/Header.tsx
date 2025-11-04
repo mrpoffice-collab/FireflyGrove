@@ -316,6 +316,15 @@ export default function Header({ userName, isBetaTester: propBetaTester, isAdmin
                   )}
                   <button
                     onClick={() => {
+                      router.push('/treasure-history')
+                      setIsDropdownOpen(false)
+                    }}
+                    className="w-full text-left px-3 py-2.5 text-sm text-text-muted hover:bg-border-subtle hover:text-text-soft transition-soft"
+                  >
+                    📜 My Treasure Chest
+                  </button>
+                  <button
+                    onClick={() => {
                       router.push('/settings/imports')
                       setIsDropdownOpen(false)
                     }}
@@ -468,6 +477,13 @@ export default function Header({ userName, isBetaTester: propBetaTester, isAdmin
               className="text-lg font-light text-text-soft hover:text-[var(--legacy-glow)] transition-soft py-2.5 border-b border-border-subtle"
             >
               🕯️ Open Grove
+            </Link>
+            <Link
+              href="/treasure-history"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="text-lg font-light text-text-soft hover:text-firefly-glow transition-soft py-2.5 border-b border-border-subtle"
+            >
+              📜 My Treasure Chest
             </Link>
             <Link
               href="/settings/imports"
