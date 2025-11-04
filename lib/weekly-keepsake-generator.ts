@@ -14,12 +14,13 @@ const MARGIN = 54 // 0.75 * 72
 const CONTENT_WIDTH = PAGE_WIDTH - (MARGIN * 2)
 
 // Colors - Firefly Grove theme (converted to RGB 0-1 scale)
+// Using darker colors for better readability on white paper
 const COLORS = {
-  primary: rgb(0.545, 0.584, 0.337), // #8B9556 firefly-glow
-  secondary: rgb(0.420, 0.451, 0.275), // #6B7346 firefly-dim
-  text: rgb(0.910, 0.902, 0.890), // #E8E6E3 text-soft
-  muted: rgb(0.608, 0.596, 0.573), // #9B9892 text-muted
-  background: rgb(0.102, 0.102, 0.102), // #1A1A1A bg-dark
+  primary: rgb(0.420, 0.451, 0.275), // #6B7346 firefly-dim (darker green)
+  secondary: rgb(0.3, 0.3, 0.3), // Dark grey for lines
+  text: rgb(0.1, 0.1, 0.1), // Nearly black for main text
+  muted: rgb(0.4, 0.4, 0.4), // Medium grey for secondary text
+  background: rgb(1, 1, 1), // White background
 }
 
 interface WeeklyKeepsakeOptions {
