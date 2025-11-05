@@ -38,6 +38,7 @@ export default function OpenGrovePage() {
     }
   }, [session])
   const [memoryAges, setMemoryAges] = useState<number[]>([])
+  const featuredPhoto = '' // TODO: Add featured photo from actual memorial
 
   useEffect(() => {
     fetchMemorials()
@@ -81,18 +82,47 @@ export default function OpenGrovePage() {
       <Header userName={session?.user?.name || ''} isAdmin={isAdmin} />
 
       <div className="container mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="text-center mb-6">
-          <div className="text-6xl mb-4">🕯️</div>
-          <h1 className="text-4xl font-light text-[var(--legacy-text)] mb-2">
-            Open Grove
-          </h1>
-          <p className="text-text-muted max-w-2xl mx-auto mb-4">
-            A public garden where every story glows.<br />
-            Each candle a memory, each memory a life that still shines.
-          </p>
+        {/* Hero Section with Featured Photo */}
+        {featuredPhoto && (
+          <div className="relative mb-8 rounded-lg overflow-hidden" style={{ height: '400px' }}>
+            <img
+              src={featuredPhoto}
+              alt="Open Grove"
+              className="w-full h-full object-cover"
+              style={{ objectPosition: 'center' }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-bg-darker/60 to-bg-darker" />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="text-center px-4">
+                <div className="text-6xl mb-4">🕯️</div>
+                <h1 className="text-5xl font-light text-white mb-3 drop-shadow-lg">
+                  Open Grove
+                </h1>
+                <p className="text-white/90 text-lg max-w-2xl mx-auto mb-4 drop-shadow">
+                  A public garden where every story glows.<br />
+                  Each candle a memory, each memory a life that still shines.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
 
-          {/* Small Create Memorial Button */}
+        {/* Header - fallback if no photo */}
+        {!featuredPhoto && (
+          <div className="text-center mb-6">
+            <div className="text-6xl mb-4">🕯️</div>
+            <h1 className="text-4xl font-light text-[var(--legacy-text)] mb-2">
+              Open Grove
+            </h1>
+            <p className="text-text-muted max-w-2xl mx-auto mb-4">
+              A public garden where every story glows.<br />
+              Each candle a memory, each memory a life that still shines.
+            </p>
+          </div>
+        )}
+
+        {/* Create Memorial Button */}
+        <div className="text-center mb-6">
           <button
             onClick={() => router.push('/memorial/create')}
             className="px-4 py-2 bg-[var(--legacy-amber)]/20 hover:bg-[var(--legacy-amber)]/30 text-[var(--legacy-text)] rounded border border-[var(--legacy-amber)]/40 text-sm transition-soft"
