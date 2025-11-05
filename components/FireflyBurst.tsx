@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import MemoryText from './MemoryText'
 
@@ -38,6 +38,8 @@ export default function FireflyBurst({ memories, burstId, onClose, onViewNext, o
   const [isPaused, setIsPaused] = useState(false)
   const [imageLoaded, setImageLoaded] = useState(false)
   const [imageError, setImageError] = useState(false)
+  const memoryAudioRef = useRef<HTMLAudioElement>(null)
+  const memoryAudioWithImageRef = useRef<HTMLAudioElement>(null)
   const [audio] = useState(() => {
     if (typeof window !== 'undefined') {
       const bgAudio = new Audio('/sounds/firefly-ambient.mp3')
@@ -55,6 +57,35 @@ export default function FireflyBurst({ memories, burstId, onClose, onViewNext, o
     setImageLoaded(false)
     setImageError(false)
   }, [currentIndex])
+
+  // Auto-play memory audio when memory changes
+  useEffect(() => {
+    // Play audio for memory with image
+    if (currentMemory.audioUrl && currentMemory.mediaUrl && memoryAudioWithImageRef.current) {
+      memoryAudioWithImageRef.current.play().catch(err =>
+        console.log('Memory audio autoplay prevented:', err)
+      )
+    }
+
+    // Play audio for audio-only memory
+    if (currentMemory.audioUrl && !currentMemory.mediaUrl && memoryAudioRef.current) {
+      memoryAudioRef.current.play().catch(err =>
+        console.log('Memory audio autoplay prevented:', err)
+      )
+    }
+
+    // Cleanup: pause audio when memory changes
+    return () => {
+      if (memoryAudioWithImageRef.current) {
+        memoryAudioWithImageRef.current.pause()
+        memoryAudioWithImageRef.current.currentTime = 0
+      }
+      if (memoryAudioRef.current) {
+        memoryAudioRef.current.pause()
+        memoryAudioRef.current.currentTime = 0
+      }
+    }
+  }, [currentMemory.audioUrl, currentMemory.mediaUrl, currentIndex])
 
   // Calculate duration based on text length and media presence
   const calculateDuration = (memory: Memory) => {
@@ -423,7 +454,7 @@ export default function FireflyBurst({ memories, burstId, onClose, onViewNext, o
 
           {currentMemory.audioUrl && !currentMemory.mediaUrl && (
             <div className="p-8 bg-bg-darker flex items-center justify-center min-h-[8rem]">
-              <audio controls className="w-full max-w-md">
+              <audio ref={memoryAudioRef} controls className="w-full max-w-md">
                 <source src={currentMemory.audioUrl} type="audio/mpeg" />
                 Your browser does not support the audio element.
               </audio>
@@ -450,6 +481,16 @@ export default function FireflyBurst({ memories, burstId, onClose, onViewNext, o
                 ))}
               </div>
               <div className="text-6xl opacity-20">✨</div>
+            </div>
+          )}
+
+          {/* Audio player if memory has audio AND image */}
+          {currentMemory.audioUrl && currentMemory.mediaUrl && (
+            <div className="px-6 pt-4">
+              <audio ref={memoryAudioWithImageRef} controls className="w-full">
+                <source src={currentMemory.audioUrl} type="audio/mpeg" />
+                Your browser does not support the audio element.
+              </audio>
             </div>
           )}
 

@@ -79,6 +79,7 @@ export default function FireflyGrove({ memoryCount, memoryAges }: FireflyGrovePr
     <div
       className="relative w-full rounded-lg overflow-hidden border border-[var(--legacy-amber)]/20"
       style={{
+        minHeight: '700px',
         height: '700px',
         background: 'linear-gradient(to bottom, rgba(17, 24, 28, 0.95), rgba(17, 24, 28, 0.85))',
       }}

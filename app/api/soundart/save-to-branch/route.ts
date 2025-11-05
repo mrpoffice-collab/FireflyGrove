@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
-import { put } from '@vercel/blob'
+import { safeBlobUpload } from '@/lib/blob-upload-safe'
 
 export async function POST(req: NextRequest) {
   try {
@@ -53,11 +53,33 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Branch not found or access denied' }, { status: 404 })
     }
 
-    // Upload image to Vercel Blob
-    const blob = await put(imageFile.name, imageFile, {
-      access: 'public',
-      addRandomSuffix: true,
-    })
+    // 🔒 SAFE UPLOAD: Upload image to Vercel Blob with verification
+    const uploadResult = await safeBlobUpload(
+      imageFile.name,
+      imageFile,
+      {
+        userId: user.id,
+        type: 'image',
+        recordType: 'entry'
+      }
+    )
+
+    if (!uploadResult.success || !uploadResult.verified) {
+      console.error('🚨 Sound art image upload verification failed', {
+        error: uploadResult.error,
+        userId: user.id,
+        branchId,
+        filename: imageFile.name
+      })
+
+      return NextResponse.json(
+        {
+          error: 'Upload verification failed. Please try again.',
+          details: uploadResult.error
+        },
+        { status: 500 }
+      )
+    }
 
     // Create entry in the database
     const entry = await prisma.entry.create({
@@ -65,7 +87,7 @@ export async function POST(req: NextRequest) {
         branchId,
         authorId: user.id,
         text: text || 'Sound wave art created with Firefly Grove',
-        mediaUrl: blob.url,
+        mediaUrl: uploadResult.url!,
         visibility: 'PRIVATE',
         approved: true,
         status: 'ACTIVE',

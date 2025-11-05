@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
-import { put } from '@vercel/blob'
+import { safeBlobUpload } from '@/lib/blob-upload-safe'
 
 /**
  * POST /api/blog-video/upload-image
@@ -47,17 +47,41 @@ export async function POST(req: NextRequest) {
     const sanitizedFilename = file.name.replace(/[^a-zA-Z0-9.-]/g, '_')
     const blobPath = `blog-video-uploads/${userId}/${timestamp}-${sanitizedFilename}`
 
-    // Upload to Vercel Blob
-    const blob = await put(blobPath, file, {
-      access: 'public',
-      addRandomSuffix: false,
-    })
+    // 🔒 SAFE UPLOAD: Upload to Vercel Blob with verification
+    const uploadResult = await safeBlobUpload(
+      blobPath,
+      file,
+      {
+        userId,
+        type: 'image',
+        recordType: 'blogVideo'
+      },
+      {
+        addRandomSuffix: false
+      }
+    )
 
-    console.log(`Uploaded custom image: ${blob.url}`)
+    if (!uploadResult.success || !uploadResult.verified) {
+      console.error('🚨 Blog video image upload verification failed', {
+        error: uploadResult.error,
+        userId,
+        filename: file.name
+      })
+
+      return NextResponse.json(
+        {
+          error: 'Upload verification failed. Please try again.',
+          details: uploadResult.error
+        },
+        { status: 500 }
+      )
+    }
+
+    console.log(`Uploaded custom image: ${uploadResult.url}`)
 
     return NextResponse.json({
       success: true,
-      url: blob.url,
+      url: uploadResult.url,
       filename: file.name,
       size: file.size,
       type: file.type,

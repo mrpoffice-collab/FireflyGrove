@@ -17,6 +17,27 @@ export default function BetaInvitesPage() {
   const [isBetaTester, setIsBetaTester] = useState(false)
   const [isAdmin, setIsAdmin] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
+  const [pageLoadTime] = useState(Date.now())
+
+  // Analytics tracking helper
+  const trackEvent = async (eventType: string, action: string, metadata?: any) => {
+    try {
+      await fetch('/api/analytics/track', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          eventType,
+          category: 'invites',
+          action,
+          metadata,
+          isSuccess: true,
+        }),
+      })
+    } catch (error) {
+      // Fail silently - don't disrupt user experience
+      console.error('Analytics tracking failed:', error)
+    }
+  }
 
   useEffect(() => {
     if (session?.user) {
@@ -27,6 +48,16 @@ export default function BetaInvitesPage() {
     // Detect if user is on mobile
     setIsMobile(/iPhone|iPad|iPod|Android/i.test(navigator.userAgent))
   }, [session])
+
+  // Track page view
+  useEffect(() => {
+    if (session?.user) {
+      trackEvent('invite_page_viewed', 'viewed', {
+        isMobile,
+        userType: (session.user as any).isAdmin ? 'admin' : 'beta_tester'
+      })
+    }
+  }, [session, isMobile])
 
   // Redirect if not beta tester or admin
   useEffect(() => {
@@ -47,9 +78,23 @@ export default function BetaInvitesPage() {
 
   const handleSendSMS = () => {
     if (!phone.trim()) {
+      // Track abandoned SMS attempt
+      trackEvent('invite_sms_attempted', 'abandoned', {
+        reason: 'no_phone_number',
+        hasMessage: !!message.trim(),
+        hasName: !!name.trim()
+      })
       setResult({ type: 'error', message: 'Phone number is required for SMS invite' })
       return
     }
+
+    // Track successful SMS button click
+    trackEvent('invite_sms_clicked', 'clicked', {
+      hasCustomMessage: !!message.trim(),
+      hasName: !!name.trim(),
+      isMobile,
+      timeOnPage: Date.now() - pageLoadTime
+    })
 
     // Create SMS message text with beta landing page link
     const inviterName = session?.user?.name || 'A friend'
@@ -71,12 +116,29 @@ export default function BetaInvitesPage() {
     e.preventDefault()
 
     if (!email.trim()) {
+      // Track abandoned email attempt
+      trackEvent('invite_email_attempted', 'abandoned', {
+        reason: 'no_email',
+        hasMessage: !!message.trim(),
+        hasName: !!name.trim(),
+        hasPhone: !!phone.trim()
+      })
       setResult({ type: 'error', message: 'Email is required' })
       return
     }
 
+    // Track email invite attempt
+    trackEvent('invite_email_clicked', 'clicked', {
+      hasCustomMessage: !!message.trim(),
+      hasName: !!name.trim(),
+      hasPhone: !!phone.trim(),
+      timeOnPage: Date.now() - pageLoadTime
+    })
+
     setSending(true)
     setResult(null)
+
+    const startTime = Date.now()
 
     try {
       const response = await fetch('/api/admin/send-beta-invite', {
@@ -90,17 +152,40 @@ export default function BetaInvitesPage() {
       })
 
       const data = await response.json()
+      const duration = Date.now() - startTime
 
       if (response.ok) {
+        // Track successful email send
+        trackEvent('invite_email_sent', 'success', {
+          duration,
+          hasCustomMessage: !!message.trim(),
+          hasName: !!name.trim(),
+          recipientEmail: email.trim()
+        })
+
         setResult({ type: 'success', message: data.message })
         // Clear form on success
         setEmail('')
         setName('')
         setMessage('')
       } else {
+        // Track failed email send
+        trackEvent('invite_email_failed', 'error', {
+          duration,
+          error: data.error,
+          statusCode: response.status
+        })
+
         setResult({ type: 'error', message: data.error || 'Failed to send invite' })
       }
     } catch (error) {
+      // Track network error
+      trackEvent('invite_email_failed', 'error', {
+        duration: Date.now() - startTime,
+        error: 'Network error',
+        errorMessage: error instanceof Error ? error.message : 'Unknown error'
+      })
+
       setResult({ type: 'error', message: 'Network error. Please try again.' })
     } finally {
       setSending(false)

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
-import { put } from '@vercel/blob'
+import { safeBlobUpload } from '@/lib/blob-upload-safe'
 import AdmZip from 'adm-zip'
 import { parseFacebookExport, facebookTimestampToDate, extractCaption } from '@/lib/facebook-parser'
 
@@ -14,18 +14,33 @@ export const maxDuration = 300 // 5 minutes max execution time
 // The bodyParser config is not needed in App Router
 
 /**
- * Upload a photo buffer to Vercel Blob storage
+ * 🔒 SAFE UPLOAD: Upload a photo buffer to Vercel Blob storage with verification
  */
 async function uploadPhotoToBlob(
   photoBuffer: Buffer,
   filename: string,
   userId: string
 ): Promise<string> {
-  const blob = await put(`imports/${userId}/${Date.now()}-${filename}`, photoBuffer, {
-    access: 'public',
-    addRandomSuffix: true,
-  })
-  return blob.url
+  const uploadResult = await safeBlobUpload(
+    `imports/${userId}/${Date.now()}-${filename}`,
+    photoBuffer,
+    {
+      userId,
+      type: 'image',
+      recordType: 'facebookImport'
+    }
+  )
+
+  if (!uploadResult.success || !uploadResult.verified) {
+    console.error('🚨 Facebook import photo upload verification failed', {
+      error: uploadResult.error,
+      userId,
+      filename
+    })
+    throw new Error(`Upload verification failed: ${uploadResult.error}`)
+  }
+
+  return uploadResult.url!
 }
 
 /**

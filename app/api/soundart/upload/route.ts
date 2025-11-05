@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
-import { put } from '@vercel/blob'
+import { safeBlobUpload } from '@/lib/blob-upload-safe'
 
 // Maximum file size: 50MB
 const MAX_FILE_SIZE = 50 * 1024 * 1024
@@ -82,20 +82,45 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    // Upload audio file to Vercel Blob
-    const blob = await put(`soundart/${uniqueCode}/${audioFile.name}`, audioFile, {
-      access: 'public',
-      addRandomSuffix: false,
-    })
+    // 🔒 SAFE UPLOAD: Upload audio file to Vercel Blob with verification
+    const uploadResult = await safeBlobUpload(
+      `soundart/${uniqueCode}/${audioFile.name}`,
+      audioFile,
+      {
+        userId: userId || 'anonymous',
+        type: 'audio',
+        recordType: 'soundArt'
+      },
+      {
+        addRandomSuffix: false
+      }
+    )
 
-    console.log(`[SoundArt Upload] Uploaded audio to blob: ${blob.url}`)
+    if (!uploadResult.success || !uploadResult.verified) {
+      console.error('🚨 SoundArt upload verification failed', {
+        error: uploadResult.error,
+        userId,
+        uniqueCode,
+        filename: audioFile.name
+      })
+
+      return NextResponse.json(
+        {
+          error: 'Upload verification failed. Please try again.',
+          details: uploadResult.error
+        },
+        { status: 500 }
+      )
+    }
+
+    console.log(`[SoundArt Upload] Uploaded audio to blob: ${uploadResult.url}`)
 
     // Create SoundArt record in database
     const soundArt = await prisma.soundArt.create({
       data: {
         userId,
         uniqueCode,
-        audioUrl: blob.url,
+        audioUrl: uploadResult.url!,
         audioFilename: audioFile.name,
         audioSizeBytes: audioFile.size,
         audioDuration,

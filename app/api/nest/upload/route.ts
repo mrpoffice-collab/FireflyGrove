@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
-import { put } from '@vercel/blob'
+import { safeBlobUpload } from '@/lib/blob-upload-safe'
 
 export const dynamic = 'force-dynamic'
 
@@ -66,19 +66,40 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    // Upload to Vercel Blob with appropriate path
+    // 🔒 SAFE UPLOAD: Upload to Vercel Blob with verification
     const pathPrefix = isVideo ? 'nest/videos' : 'nest'
-    const blob = await put(`${pathPrefix}/${userId}/${Date.now()}-${file.name}`, file, {
-      access: 'public',
-      addRandomSuffix: true,
-    })
+    const uploadResult = await safeBlobUpload(
+      `${pathPrefix}/${userId}/${Date.now()}-${file.name}`,
+      file,
+      {
+        userId,
+        type: isImage ? 'image' : 'video',
+        recordType: 'nestItem'
+      }
+    )
+
+    if (!uploadResult.success || !uploadResult.verified) {
+      console.error('🚨 Nest item upload verification failed', {
+        error: uploadResult.error,
+        userId,
+        filename: file.name
+      })
+
+      return NextResponse.json(
+        {
+          error: 'Upload verification failed. Please try again.',
+          details: uploadResult.error
+        },
+        { status: 500 }
+      )
+    }
 
     // Create nest item in database
     const nestItem = await prisma.nestItem.create({
       data: {
         userId,
-        photoUrl: isImage ? blob.url : null,
-        videoUrl: isVideo ? blob.url : null,
+        photoUrl: isImage ? uploadResult.url! : null,
+        videoUrl: isVideo ? uploadResult.url! : null,
         mediaType: isVideo ? 'video' : 'photo',
         filename: file.name,
         sizeBytes: file.size,
@@ -87,6 +108,7 @@ export async function POST(req: NextRequest) {
     })
 
     console.log(`✅ Nest item created: ${file.name} (${isVideo ? 'VIDEO' : 'PHOTO'}) - ID: ${nestItem.id}`)
+    console.log(`✅ Blob verified and accessible: ${uploadResult.url}`)
 
     return NextResponse.json({ item: nestItem }, { status: 201 })
   } catch (error: any) {

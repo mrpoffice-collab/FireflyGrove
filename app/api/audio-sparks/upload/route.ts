@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
-import { put } from '@vercel/blob'
+import { safeBlobUpload } from '@/lib/blob-upload-safe'
 
 export async function POST(request: NextRequest) {
   try {
@@ -33,12 +33,33 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Audio file is required' }, { status: 400 })
     }
 
-    // Upload to Vercel Blob
+    // 🔒 SAFE UPLOAD: Upload to Vercel Blob with verification
     const filename = `audio-spark-${Date.now()}-${audioFile.name}`
-    const blob = await put(filename, audioFile, {
-      access: 'public',
-      addRandomSuffix: true,
-    })
+    const uploadResult = await safeBlobUpload(
+      filename,
+      audioFile,
+      {
+        userId: user.id,
+        type: 'audio',
+        recordType: 'audioSpark'
+      }
+    )
+
+    if (!uploadResult.success || !uploadResult.verified) {
+      console.error('🚨 Audio spark upload verification failed', {
+        error: uploadResult.error,
+        userId: user.id,
+        filename
+      })
+
+      return NextResponse.json(
+        {
+          error: 'Upload verification failed. Please try again.',
+          details: uploadResult.error
+        },
+        { status: 500 }
+      )
+    }
 
     // Create AudioSpark record
     const audioSpark = await prisma.audioSpark.create({
@@ -46,7 +67,7 @@ export async function POST(request: NextRequest) {
         userId: user.id,
         promptId: promptId || null,
         customPrompt,
-        audioUrl: blob.url,
+        audioUrl: uploadResult.url!,
         audioFilename: filename,
         audioSizeBytes: audioFile.size,
         audioDuration: duration,
