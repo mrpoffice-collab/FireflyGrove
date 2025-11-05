@@ -44,6 +44,38 @@ interface AnalyticsData {
   }
 }
 
+// Event label mapping for user-friendly display
+const eventLabels: Record<string, string> = {
+  // Invite events
+  'invite_page_viewed': '👥 Invite Page Viewed',
+  'invite_email_clicked': '📧 Email Invite Button Clicked',
+  'invite_email_sent': '✅ Email Invite Sent',
+  'invite_email_failed': '❌ Email Invite Failed',
+  'invite_email_attempted': '⚠️ Email Invite Abandoned',
+  'invite_sms_clicked': '📱 SMS Invite Button Clicked',
+  'invite_sms_attempted': '⚠️ SMS Invite Abandoned',
+
+  // Branch events
+  'branch_created': '🌿 Branch Created',
+  'branch_updated': '🌿 Branch Updated',
+  'branch_deleted': '🌿 Branch Deleted',
+
+  // Memory events
+  'memory_created': '📸 Memory Created',
+  'memory_updated': '📸 Memory Updated',
+  'memory_deleted': '📸 Memory Deleted',
+
+  // Other common events
+  'page_view': '👁️ Page View',
+  'user_signup': '✨ User Signup',
+  'user_login': '🔐 User Login',
+}
+
+// Function to get readable event label
+const getEventLabel = (eventType: string): string => {
+  return eventLabels[eventType] || eventType
+}
+
 export default function AnalyticsPage() {
   const { data: session } = useSession()
   const router = useRouter()
@@ -280,7 +312,7 @@ export default function AnalyticsPage() {
             <div className="space-y-3">
               {data.eventsByType.map((item) => (
                 <div key={item.eventType} className="flex justify-between text-sm">
-                  <span className="text-text-soft">{item.eventType}</span>
+                  <span className="text-text-soft">{getEventLabel(item.eventType)}</span>
                   <span className="text-firefly-glow font-medium">{item.count}</span>
                 </div>
               ))}
@@ -317,8 +349,8 @@ export default function AnalyticsPage() {
                         {event.category}
                       </span>
                     </td>
-                    <td className="py-2 pr-4 text-text-soft">{event.eventType}</td>
-                    <td className="py-2 pr-4 text-text-muted">{event.action}</td>
+                    <td className="py-2 pr-4 text-text-soft">{getEventLabel(event.eventType)}</td>
+                    <td className="py-2 pr-4 text-text-muted capitalize">{event.action}</td>
                     <td className="py-2">
                       {event.isError && (
                         <span className="px-2 py-1 bg-red-500/20 text-error-text rounded text-xs">
