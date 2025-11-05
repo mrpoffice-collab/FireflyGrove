@@ -62,7 +62,6 @@ export async function safeBlobUpload(
     })
 
     console.log(`📤 [SAFE UPLOAD] Upload complete: ${blob.url}`, {
-      size: blob.size,
       duration: Date.now() - startTime
     })
 
