@@ -61,6 +61,13 @@ export default function MemoryModal({ onClose, onSave, spark, onRefreshSpark, cu
   const videoInputRef = useRef<HTMLInputElement>(null)
   const [triggerElement, setTriggerElement] = useState<HTMLElement | null>(null)
 
+  // Speech-to-text state
+  const [isListening, setIsListening] = useState(false)
+  const [isListeningMemoryCard, setIsListeningMemoryCard] = useState(false)
+  const [speechSupported, setSpeechSupported] = useState(false)
+  const recognitionRef = useRef<any>(null)
+  const memoryCardRecognitionRef = useRef<any>(null)
+
   // Cross-branch sharing state
   const [availableBranches, setAvailableBranches] = useState<Branch[]>([])
   const [selectedBranchIds, setSelectedBranchIds] = useState<string[]>([])
@@ -82,6 +89,14 @@ export default function MemoryModal({ onClose, onSave, spark, onRefreshSpark, cu
       if (triggerElement) {
         setTimeout(() => triggerElement.focus(), 0)
       }
+    }
+  }, [])
+
+  // Check for speech recognition support
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
+      setSpeechSupported(!!SpeechRecognition)
     }
   }, [])
 
@@ -207,6 +222,118 @@ export default function MemoryModal({ onClose, onSave, spark, onRefreshSpark, cu
     }
   }
 
+  // Speech-to-text functions
+  const startListening = () => {
+    if (!speechSupported) return
+
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
+    const recognition = new SpeechRecognition()
+
+    recognition.continuous = true
+    recognition.interimResults = true
+    recognition.lang = 'en-US'
+
+    recognition.onstart = () => {
+      setIsListening(true)
+    }
+
+    recognition.onresult = (event: any) => {
+      let interimTranscript = ''
+      let finalTranscript = ''
+
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        const transcript = event.results[i][0].transcript
+        if (event.results[i].isFinal) {
+          finalTranscript += transcript + ' '
+        } else {
+          interimTranscript += transcript
+        }
+      }
+
+      // Dedupe consecutive duplicate words (Android Chrome bug workaround)
+      const dedupe = (text: string) => {
+        const words = text.split(' ')
+        return words.filter((word, i) => i === 0 || word !== words[i - 1]).join(' ')
+      }
+
+      if (finalTranscript) {
+        setText(prev => {
+          const newText = prev + dedupe(finalTranscript)
+          return newText
+        })
+      }
+    }
+
+    recognition.onerror = (event: any) => {
+      console.error('Speech recognition error:', event.error)
+      setIsListening(false)
+    }
+
+    recognition.onend = () => {
+      setIsListening(false)
+    }
+
+    recognitionRef.current = recognition
+    recognition.start()
+  }
+
+  const stopListening = () => {
+    if (recognitionRef.current) {
+      recognitionRef.current.stop()
+      setIsListening(false)
+    }
+  }
+
+  // Speech-to-text for memory card field
+  const startListeningMemoryCard = () => {
+    if (!speechSupported) return
+
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
+    const recognition = new SpeechRecognition()
+
+    recognition.continuous = false
+    recognition.interimResults = false
+    recognition.lang = 'en-US'
+
+    recognition.onstart = () => {
+      setIsListeningMemoryCard(true)
+    }
+
+    recognition.onresult = (event: any) => {
+      const transcript = event.results[0][0].transcript
+
+      // Dedupe consecutive duplicate words (Android Chrome bug workaround)
+      const dedupe = (text: string) => {
+        const words = text.split(' ')
+        return words.filter((word, i) => i === 0 || word !== words[i - 1]).join(' ')
+      }
+
+      setMemoryCard(prev => {
+        const newText = prev ? prev + ' ' + dedupe(transcript) : dedupe(transcript)
+        return newText
+      })
+    }
+
+    recognition.onerror = (event: any) => {
+      console.error('Speech recognition error:', event.error)
+      setIsListeningMemoryCard(false)
+    }
+
+    recognition.onend = () => {
+      setIsListeningMemoryCard(false)
+    }
+
+    memoryCardRecognitionRef.current = recognition
+    recognition.start()
+  }
+
+  const stopListeningMemoryCard = () => {
+    if (memoryCardRecognitionRef.current) {
+      memoryCardRecognitionRef.current.stop()
+      setIsListeningMemoryCard(false)
+    }
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!text.trim() || isSubmitting) return
@@ -321,10 +448,10 @@ export default function MemoryModal({ onClose, onSave, spark, onRefreshSpark, cu
     : 'New Memory'
 
   return (
-    <div className="fixed inset-0 bg-black/30 flex items-center justify-center p-4 z-50 overflow-y-auto backdrop-blur-sm">
+    <div className="fixed inset-0 bg-black/30 flex items-center justify-center p-4 z-50 overflow-y-auto backdrop-blur-sm touch-auto">
       <FocusTrap>
         <div
-          className="bg-bg-dark border border-border-subtle rounded-lg max-w-2xl w-full p-6 my-8"
+          className="bg-bg-dark border border-border-subtle rounded-lg max-w-2xl w-full p-6 my-8 max-h-[90vh] overflow-y-auto"
           role="dialog"
           aria-modal="true"
           aria-labelledby="memory-modal-title"
@@ -362,15 +489,33 @@ export default function MemoryModal({ onClose, onSave, spark, onRefreshSpark, cu
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="text" className="block text-sm text-text-soft mb-2">
-              Your Memory
-            </label>
+            <div className="flex items-center justify-between mb-2">
+              <label htmlFor="text" className="block text-sm text-text-soft">
+                Your Memory
+              </label>
+              {speechSupported && (
+                <button
+                  type="button"
+                  onClick={isListening ? stopListening : startListening}
+                  className={`min-h-[36px] px-3 py-1.5 rounded text-xs font-medium transition-soft flex items-center gap-1.5 ${
+                    isListening
+                      ? 'bg-red-600 text-white animate-pulse'
+                      : 'bg-bg-darker border border-firefly-dim text-firefly-glow hover:bg-firefly-dim hover:text-bg-dark'
+                  }`}
+                  aria-label={isListening ? 'Stop speech-to-text' : 'Start speech-to-text'}
+                >
+                  <span>🎤</span>
+                  <span>{isListening ? 'Stop' : 'Speak'}</span>
+                </button>
+              )}
+            </div>
             <textarea
               id="text"
               value={text}
               onChange={(e) => setText(e.target.value)}
               placeholder="Write what comes to mind..."
-              className="w-full px-4 py-3 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50 transition-soft resize-none text-center"
+              className="w-full px-4 py-3 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50 transition-soft resize-none touch-auto"
+              style={{ touchAction: 'manipulation' }}
               rows={6}
               autoFocus
               required
@@ -378,9 +523,26 @@ export default function MemoryModal({ onClose, onSave, spark, onRefreshSpark, cu
           </div>
 
           <div>
-            <label className="block text-sm text-text-soft mb-2">
-              When was this? <span className="text-text-muted text-xs">(optional)</span>
-            </label>
+            <div className="flex items-center justify-between mb-2">
+              <label className="block text-sm text-text-soft">
+                When was this? <span className="text-text-muted text-xs">(optional)</span>
+              </label>
+              {speechSupported && (
+                <button
+                  type="button"
+                  onClick={isListeningMemoryCard ? stopListeningMemoryCard : startListeningMemoryCard}
+                  className={`min-h-[36px] px-3 py-1.5 rounded text-xs font-medium transition-soft flex items-center gap-1.5 ${
+                    isListeningMemoryCard
+                      ? 'bg-red-600 text-white animate-pulse'
+                      : 'bg-bg-darker border border-firefly-dim text-firefly-glow hover:bg-firefly-dim hover:text-bg-dark'
+                  }`}
+                  aria-label={isListeningMemoryCard ? 'Stop speech-to-text' : 'Start speech-to-text'}
+                >
+                  <span>🎤</span>
+                  <span>{isListeningMemoryCard ? 'Stop' : 'Speak'}</span>
+                </button>
+              )}
+            </div>
             <input
               type="text"
               value={memoryCard}
