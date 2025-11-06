@@ -4,6 +4,7 @@ import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { generateContentHash, checkRecentDuplicate } from '@/lib/content-hash'
 import { trackEventServer, AnalyticsEvents, AnalyticsCategories, AnalyticsActions } from '@/lib/analytics'
+import { copyNestBlobToMemory, extractFilenameFromBlobUrl } from '@/lib/blob-copy'
 
 export async function POST(
   req: NextRequest,
@@ -114,6 +115,25 @@ export async function POST(
       }
     }
 
+    // 🔒 CRITICAL FIX: Copy nest blobs to permanent storage
+    // Detect if mediaUrl is from nest storage and copy it
+    let finalMediaUrl = mediaUrl
+    let finalVideoUrl = videoUrl
+
+    if (mediaUrl && mediaUrl.includes('/nest/') && !mediaUrl.startsWith('data:')) {
+      console.log(`📋 [NEST COPY] Detected nest photo, copying to permanent storage...`, { mediaUrl })
+
+      // We need to create the entry first to get the ID for the destination path
+      // So we'll do this after entry creation
+      // For now, just log it
+      console.log(`⚠️  [NEST COPY] Will copy after entry creation`)
+    }
+
+    if (videoUrl && videoUrl.includes('/nest/') && !videoUrl.startsWith('data:')) {
+      console.log(`📋 [NEST COPY] Detected nest video, copying to permanent storage...`, { videoUrl })
+      console.log(`⚠️  [NEST COPY] Will copy after entry creation`)
+    }
+
     // Determine if entry needs approval (if user is not owner)
     const isOwner = branch.ownerId === userId
     const approved = isOwner
@@ -125,8 +145,8 @@ export async function POST(
         text,
         visibility: visibility || 'PRIVATE',
         legacyFlag: legacyFlag || false,
-        mediaUrl: mediaUrl || null,
-        videoUrl: videoUrl || null,
+        mediaUrl: finalMediaUrl || null,
+        videoUrl: finalVideoUrl || null,
         audioUrl: audioUrl || null,
         memoryCard: memoryCard || null,
         approved,
@@ -142,6 +162,58 @@ export async function POST(
         },
       },
     })
+
+    // 🔒 CRITICAL FIX: Now copy nest blobs to permanent storage
+    if (mediaUrl && mediaUrl.includes('/nest/') && !mediaUrl.startsWith('data:')) {
+      console.log(`📋 [NEST COPY] Copying nest photo to permanent storage for entry ${entry.id}`)
+
+      const filename = extractFilenameFromBlobUrl(mediaUrl)
+      const destinationPath = `memories/${entry.id}/${filename}`
+
+      const copyResult = await copyNestBlobToMemory(mediaUrl, destinationPath, userId, entry.id)
+
+      if (copyResult.success && copyResult.newUrl) {
+        console.log(`✅ [NEST COPY] Successfully copied! Updating entry with new URL: ${copyResult.newUrl}`)
+
+        // Update the entry with the new permanent URL
+        await prisma.entry.update({
+          where: { id: entry.id },
+          data: { mediaUrl: copyResult.newUrl }
+        })
+
+        // Update the entry object to return the new URL
+        entry.mediaUrl = copyResult.newUrl
+      } else {
+        console.error(`❌ [NEST COPY] Failed to copy nest photo! Entry will keep original URL.`, {
+          error: copyResult.error
+        })
+        // Entry still has the nest URL - not ideal but at least it's saved
+      }
+    }
+
+    if (videoUrl && videoUrl.includes('/nest/') && !videoUrl.startsWith('data:')) {
+      console.log(`📋 [NEST COPY] Copying nest video to permanent storage for entry ${entry.id}`)
+
+      const filename = extractFilenameFromBlobUrl(videoUrl)
+      const destinationPath = `memories/${entry.id}/${filename}`
+
+      const copyResult = await copyNestBlobToMemory(videoUrl, destinationPath, userId, entry.id)
+
+      if (copyResult.success && copyResult.newUrl) {
+        console.log(`✅ [NEST COPY] Successfully copied video! Updating entry with new URL: ${copyResult.newUrl}`)
+
+        await prisma.entry.update({
+          where: { id: entry.id },
+          data: { videoUrl: copyResult.newUrl }
+        })
+
+        entry.videoUrl = copyResult.newUrl
+      } else {
+        console.error(`❌ [NEST COPY] Failed to copy nest video!`, {
+          error: copyResult.error
+        })
+      }
+    }
 
     // Increment memory count for legacy trees
     let memoryStatus = null
