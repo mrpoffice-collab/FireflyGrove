@@ -23,7 +23,7 @@ export async function PATCH(
 
     const { entryId } = params
     const body = await request.json()
-    const { text } = body
+    const { text, mediaUrl, videoUrl, audioUrl } = body
 
     if (!text || text.trim() === '') {
       return NextResponse.json({ error: 'Text is required' }, { status: 400 })
@@ -49,6 +49,9 @@ export async function PATCH(
       where: { id: entryId },
       data: {
         text: text.trim(),
+        mediaUrl: mediaUrl !== undefined ? mediaUrl : undefined,
+        videoUrl: videoUrl !== undefined ? videoUrl : undefined,
+        audioUrl: audioUrl !== undefined ? audioUrl : undefined,
         updatedAt: new Date(),
       },
     })
