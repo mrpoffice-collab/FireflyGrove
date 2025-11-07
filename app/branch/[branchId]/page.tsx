@@ -119,10 +119,12 @@ export default function BranchPage() {
   }, [status, branchId])
 
   // Check for nest photo in URL params (from "Hatch from Nest")
+  // Also check for tab parameter to auto-open settings
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search)
       const nestPhotoParam = params.get('nestPhoto')
+      const tabParam = params.get('tab')
 
       if (nestPhotoParam) {
         try {
@@ -135,6 +137,13 @@ export default function BranchPage() {
         } catch (error) {
           console.error('Failed to parse nest photo data:', error)
         }
+      }
+
+      // Auto-open settings with specific tab (e.g., ?tab=heirs)
+      if (tabParam === 'heirs' || tabParam === 'settings') {
+        setShowSettings(true)
+        // Clean up URL
+        window.history.replaceState({}, '', `/branch/${branchId}`)
       }
     }
   }, [branchId])

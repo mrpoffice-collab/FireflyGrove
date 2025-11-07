@@ -303,8 +303,24 @@ export default function GrovePage() {
   }
 
   const handleHeirsWelcomeAction = () => {
-    // Navigate to settings to set up heirs
-    router.push('/grove?tab=heirs')
+    // Close modal first
+    handleHeirsWelcomeClose()
+
+    // Heirs are set per-branch, so route to first available branch
+    // Priority: regular branches > person branches > rooted persons
+    if (grove?.trees && grove.trees.length > 0 && grove.trees[0].id) {
+      // Route to first tree to select a branch
+      router.push(`/tree/${grove.trees[0].id}?openHeirs=true`)
+    } else if (grove?.persons && grove.persons.length > 0 && grove.persons[0].id) {
+      // Route to first person tree
+      router.push(`/tree/${grove.persons[0].id}?openHeirs=true`)
+    } else if (grove?.allBranches && grove.allBranches.length > 0) {
+      // Route directly to first branch with heirs tab open
+      router.push(`/branch/${grove.allBranches[0].id}?tab=heirs`)
+    } else {
+      // No branches yet - guide them to create a tree first
+      alert('First, plant a tree and create a branch. Then you can choose keepers for that branch.')
+    }
   }
 
   const handleTreesWelcomeClose = () => {
