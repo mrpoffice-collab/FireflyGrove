@@ -222,16 +222,15 @@ export default function OpenGrovePage() {
       </div>
 
       {/* Share Panel */}
-      {showSharePanel && (
-        <SharePanel
-          shareData={{
-            title: 'Open Grove - Firefly Grove',
-            text: `Visit the Open Grove, where ${totalMemories.toLocaleString()} memories shine. A public garden where every story glows.`,
-            url: typeof window !== 'undefined' ? window.location.href : 'https://firefly-grove.com/open-grove'
-          }}
-          onClose={() => setShowSharePanel(false)}
-        />
-      )}
+      <SharePanel
+        isOpen={showSharePanel}
+        shareData={{
+          title: 'Open Grove - Firefly Grove',
+          text: `Visit the Open Grove, where ${totalMemories.toLocaleString()} memories shine. A public garden where every story glows.`,
+          url: typeof window !== 'undefined' ? window.location.href : 'https://firefly-grove.com/open-grove'
+        }}
+        onClose={() => setShowSharePanel(false)}
+      />
     </div>
   )
 }
