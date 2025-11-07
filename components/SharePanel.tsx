@@ -46,8 +46,9 @@ export default function SharePanel({ isOpen, onClose, shareData }: SharePanelPro
     console.log('Title:', shareData.title)
     console.log('Text:', shareData.text)
 
-    // Use Facebook's dialog.share which triggers automatic scraping
-    const fbUrl = `https://www.facebook.com/dialog/share?app_id=966242223397117&display=popup&href=${encodeURIComponent(shareData.url)}&redirect_uri=${encodeURIComponent(shareData.url)}`
+    // Use sharer.php - works without app registration
+    // Facebook will automatically fetch Open Graph data from the URL
+    const fbUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareData.url)}`
     console.log('Facebook URL:', fbUrl)
 
     const popup = window.open(fbUrl, '_blank', 'width=600,height=400')
