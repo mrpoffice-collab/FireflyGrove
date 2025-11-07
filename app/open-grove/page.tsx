@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
 import Header from '@/components/Header'
 import FireflyGrove from '@/components/FireflyGrove'
+import SharePanel from '@/components/SharePanel'
 
 interface Memorial {
   id: string
@@ -39,6 +40,7 @@ export default function OpenGrovePage() {
   }, [session])
   const [memoryAges, setMemoryAges] = useState<number[]>([])
   const featuredPhoto = '' // TODO: Add featured photo from actual memorial
+  const [showSharePanel, setShowSharePanel] = useState(false)
 
   useEffect(() => {
     fetchMemorials()
@@ -121,13 +123,22 @@ export default function OpenGrovePage() {
           </div>
         )}
 
-        {/* Create Memorial Button */}
-        <div className="text-center mb-6">
+        {/* Action Buttons */}
+        <div className="text-center mb-6 flex flex-wrap justify-center gap-3">
           <button
             onClick={() => router.push('/memorial/create')}
             className="px-4 py-2 bg-[var(--legacy-amber)]/20 hover:bg-[var(--legacy-amber)]/30 text-[var(--legacy-text)] rounded border border-[var(--legacy-amber)]/40 text-sm transition-soft"
           >
             Create Memorial
+          </button>
+          <button
+            onClick={() => setShowSharePanel(true)}
+            className="px-4 py-2 bg-bg-dark hover:bg-border-subtle text-text-soft rounded border border-border-subtle text-sm transition-soft inline-flex items-center gap-2"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+            </svg>
+            Share Open Grove
           </button>
         </div>
 
@@ -209,6 +220,18 @@ export default function OpenGrovePage() {
           </div>
         </div>
       </div>
+
+      {/* Share Panel */}
+      {showSharePanel && (
+        <SharePanel
+          shareData={{
+            title: 'Open Grove - Firefly Grove',
+            text: `Visit the Open Grove, where ${totalMemories.toLocaleString()} memories shine. A public garden where every story glows.`,
+            url: typeof window !== 'undefined' ? window.location.href : 'https://firefly-grove.com/open-grove'
+          }}
+          onClose={() => setShowSharePanel(false)}
+        />
+      )}
     </div>
   )
 }
