@@ -40,7 +40,8 @@ export default function SharePanel({ isOpen, onClose, shareData }: SharePanelPro
   const isNativeShareSupported = typeof navigator !== 'undefined' && 'share' in navigator
 
   const handleFacebookShare = () => {
-    const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareData.url)}&quote=${encodeURIComponent(shareData.text)}`
+    // Use Facebook's dialog.share which triggers automatic scraping
+    const url = `https://www.facebook.com/dialog/share?app_id=966242223397117&display=popup&href=${encodeURIComponent(shareData.url)}&redirect_uri=${encodeURIComponent(shareData.url)}`
     window.open(url, '_blank', 'width=600,height=400')
     onClose()
   }
