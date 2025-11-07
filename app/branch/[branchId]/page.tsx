@@ -131,8 +131,12 @@ export default function BranchPage() {
   // Pre-warm Facebook's Open Graph cache when page loads
   useEffect(() => {
     const prefetchFacebook = async () => {
+      console.log('Prefetch check - window:', typeof window !== 'undefined', 'branchId:', branchId)
+
       if (typeof window !== 'undefined' && branchId) {
         const url = `${window.location.origin}/branch/${branchId}`
+        console.log('Built URL for Facebook prefetch:', url)
+
         try {
           const response = await fetch('/api/prefetch-facebook', {
             method: 'POST',
@@ -140,16 +144,19 @@ export default function BranchPage() {
             body: JSON.stringify({ url })
           })
           const result = await response.json()
-          console.log('Facebook prefetch result:', result)
+          console.log('Facebook prefetch API response:', result)
 
           if (result.success) {
-            console.log('✅ Facebook cache pre-warmed for:', url)
+            console.log('✅ Facebook cache pre-warmed successfully')
+            console.log('Facebook said:', result.data)
           } else {
             console.warn('⚠️ Facebook cache warming had issues:', result)
           }
         } catch (error) {
-          console.error('❌ Failed to pre-warm Facebook cache:', error)
+          console.error('❌ Failed to call prefetch API:', error)
         }
+      } else {
+        console.log('Skipping prefetch - conditions not met')
       }
     }
     prefetchFacebook()
