@@ -22,17 +22,20 @@ export async function GET(request: NextRequest) {
     }
 
     // Count unique collaborators the user has invited across their branches
-    const collaboratorCount = await prisma.branchInvite.count({
+    const invites = await prisma.invite.findMany({
       where: {
-        branch: {
-          ownerId: user.id,
-        },
+        inviterId: user.id,
         status: {
-          in: ['pending', 'accepted'],
+          in: ['PENDING', 'ACCEPTED'],
         },
       },
-      distinct: ['inviteeEmail'],
+      select: {
+        email: true,
+      },
+      distinct: ['email'],
     })
+
+    const collaboratorCount = invites.length
 
     return NextResponse.json({ count: collaboratorCount })
   } catch (error) {
