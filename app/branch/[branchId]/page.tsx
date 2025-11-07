@@ -1573,9 +1573,12 @@ export default function BranchPage() {
             </div>
 
             {/* Confidence Message */}
-            <div className="mb-6 p-4 bg-firefly-glow/5 border border-firefly-glow/20 rounded-lg">
+            <div className="mb-6 p-4 bg-firefly-glow/5 border border-firefly-glow/20 rounded-lg space-y-3">
               <p className="text-sm text-text-soft text-center leading-relaxed">
                 ✨ This link invites people to view AND ADD their own memories, photos, and stories. They can contribute immediately - no account required.
+              </p>
+              <p className="text-sm text-firefly-glow text-center leading-relaxed font-medium">
+                Every memory shared, every photo liked, every moment remembered makes {branch.person?.name || 'their'} light shine brighter. 🌟
               </p>
             </div>
 
@@ -1606,8 +1609,8 @@ export default function BranchPage() {
         isOpen={showSharePanel}
         onClose={() => setShowSharePanel(false)}
         shareData={{
-          title: `Honor ${branch.person?.name || branch.title} with your memories`,
-          text: `Please share your stories, photos, and memories of ${branch.person?.name || branch.title}. Every memory helps preserve their light. ${branch.entries.length} ${branch.entries.length === 1 ? 'memory' : 'memories'} shared so far.`,
+          title: `Honor ${branch.person?.name || branch.title} - Share Your Memories`,
+          text: `Please share your stories, photos, and memories of ${branch.person?.name || branch.title}. Every memory shared, every photo liked, every moment remembered makes their light shine brighter. ${branch.entries.length} ${branch.entries.length === 1 ? 'memory' : 'memories'} glowing so far. ✨`,
           url: typeof window !== 'undefined' ? `${window.location.origin}/branch/${branchId}` : '',
         }}
       />
