@@ -134,12 +134,19 @@ export default function BranchPage() {
       if (typeof window !== 'undefined' && branchId) {
         const url = `${window.location.origin}/branch/${branchId}`
         try {
-          await fetch('/api/prefetch-facebook', {
+          const response = await fetch('/api/prefetch-facebook', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ url })
           })
-          console.log('✅ Facebook cache pre-warmed for:', url)
+          const result = await response.json()
+          console.log('Facebook prefetch result:', result)
+
+          if (result.success) {
+            console.log('✅ Facebook cache pre-warmed for:', url)
+          } else {
+            console.warn('⚠️ Facebook cache warming had issues:', result)
+          }
         } catch (error) {
           console.error('❌ Failed to pre-warm Facebook cache:', error)
         }

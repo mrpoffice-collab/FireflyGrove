@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Trigger Facebook scraper
-    const fbDebugUrl = `https://graph.facebook.com/?id=${encodeURIComponent(url)}&scrape=true&access_token=966242223397117|d41d8cd98f00b204e9800998ecf8427e`
+    const fbDebugUrl = `https://graph.facebook.com/?id=${encodeURIComponent(url)}&scrape=true`
 
     try {
       const response = await fetch(fbDebugUrl, {
@@ -24,17 +24,22 @@ export async function POST(req: NextRequest) {
 
       const data = await response.json()
 
+      console.log('Facebook scrape response:', data)
+
       return NextResponse.json({
         success: true,
         message: 'Facebook cache warmed',
-        data
+        data,
+        url
       })
     } catch (error: any) {
       console.error('Facebook scrape error:', error)
       // Don't fail - just log and continue
       return NextResponse.json({
-        success: true,
-        message: 'Attempted to warm cache'
+        success: false,
+        message: 'Failed to warm cache',
+        error: error.message,
+        url
       })
     }
   } catch (error: any) {
