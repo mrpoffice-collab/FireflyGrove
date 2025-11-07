@@ -10,6 +10,7 @@ import BranchSettingsModal from '@/components/BranchSettingsModal'
 import UndoBanner from '@/components/UndoBanner'
 import SharePanel from '@/components/SharePanel'
 import SparkPicker from '@/components/SparkPicker'
+import Tooltip from '@/components/Tooltip'
 import { getActiveChallenge, getRandomSpark, getRandomSparkExcluding, SparkCollection } from '@/lib/sparks'
 import { SkeletonMemoryCard, SkeletonList, SkeletonTitle, SkeletonText } from '@/components/SkeletonLoader'
 
@@ -631,41 +632,44 @@ export default function BranchPage() {
                   )}
                   {/* Only show edit buttons for authenticated owners */}
                   {!isPublicView && isAuthenticated && branch.owner.id === (session.user as any)?.id && (
-                    <button
-                      onClick={handleEditBranch}
-                      className="text-text-muted hover:text-firefly-dim transition-soft min-w-[44px] min-h-[44px] flex items-center justify-center"
-                      title="Edit branch name"
-                      aria-label="Edit branch name and description"
-                    >
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                      </svg>
-                    </button>
+                    <Tooltip content="Tend this branch">
+                      <button
+                        onClick={handleEditBranch}
+                        className="text-text-muted hover:text-firefly-dim transition-soft min-w-[44px] min-h-[44px] flex items-center justify-center"
+                        aria-label="Edit branch name and description"
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                      </button>
+                    </Tooltip>
                   )}
                   {!isPublicView && isAuthenticated && branch.person && (
                     <>
-                      <button
-                        onClick={handleEditPerson}
-                        className="text-text-muted hover:text-[var(--legacy-amber)] transition-soft min-w-[44px] min-h-[44px] flex items-center justify-center"
-                        title="Edit memorial information"
-                        aria-label="Edit memorial information"
-                      >
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                        </svg>
-                      </button>
-                      {branch.entries.length === 0 && (
+                      <Tooltip content="Update their story">
                         <button
-                          onClick={handleDeletePerson}
-                          disabled={deletingPerson}
-                          className="text-text-muted hover:text-error-text transition-soft disabled:opacity-50 min-w-[44px] min-h-[44px] flex items-center justify-center"
-                          title="Delete memorial tree"
-                          aria-label="Delete memorial tree"
+                          onClick={handleEditPerson}
+                          className="text-text-muted hover:text-[var(--legacy-amber)] transition-soft min-w-[44px] min-h-[44px] flex items-center justify-center"
+                          aria-label="Edit memorial information"
                         >
                           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                           </svg>
                         </button>
+                      </Tooltip>
+                      {branch.entries.length === 0 && (
+                        <Tooltip content="Remove from grove">
+                          <button
+                            onClick={handleDeletePerson}
+                            disabled={deletingPerson}
+                            className="text-text-muted hover:text-error-text transition-soft disabled:opacity-50 min-w-[44px] min-h-[44px] flex items-center justify-center"
+                            aria-label="Delete memorial tree"
+                          >
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                          </button>
+                        </Tooltip>
                       )}
                     </>
                   )}
@@ -702,45 +706,47 @@ export default function BranchPage() {
               </div>
               <div className="flex items-center gap-2 sm:gap-3">
                 {/* Share Button */}
-                <button
-                  onClick={() => setShowSharePanel(true)}
-                  className="text-text-muted hover:text-firefly-glow transition-soft min-w-[44px] min-h-[44px] flex items-center justify-center"
-                  title="Share this branch"
-                  aria-label="Share this branch"
-                >
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
-                  </svg>
-                </button>
+                <Tooltip content="Share the light">
+                  <button
+                    onClick={() => setShowSharePanel(true)}
+                    className="text-text-muted hover:text-firefly-glow transition-soft min-w-[44px] min-h-[44px] flex items-center justify-center"
+                    aria-label="Share this branch"
+                  >
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+                    </svg>
+                  </button>
+                </Tooltip>
 
                 {/* Only show settings button for authenticated owners */}
                 {!isPublicView && isAuthenticated && branch.owner.id === (session.user as any)?.id && (
-                  <button
-                    onClick={() => setShowSettings(true)}
-                    className="text-text-muted hover:text-text-soft transition-soft min-w-[44px] min-h-[44px] flex items-center justify-center"
-                    title="Manage heirs and settings"
-                    aria-label="Manage heirs and settings"
-                  >
-                    <svg
-                      className="w-6 h-6"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
+                  <Tooltip content="Pass the light">
+                    <button
+                      onClick={() => setShowSettings(true)}
+                      className="text-text-muted hover:text-text-soft transition-soft min-w-[44px] min-h-[44px] flex items-center justify-center"
+                      aria-label="Manage heirs and settings"
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
-                      />
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                      />
-                    </svg>
-                  </button>
+                      <svg
+                        className="w-6 h-6"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+                        />
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                        />
+                      </svg>
+                    </button>
+                  </Tooltip>
                 )}
               </div>
             </div>
@@ -787,20 +793,21 @@ export default function BranchPage() {
                       </svg>
                       <span className="hidden sm:inline">My Sparks</span>
                     </button>
-                    <button
-                      onClick={refreshSpark}
-                      className={`min-w-[44px] min-h-[44px] flex items-center justify-center rounded transition-soft ${
-                        isLegacy
-                          ? 'text-[var(--legacy-amber)] hover:bg-[var(--legacy-amber)]/10'
-                          : 'text-firefly-dim hover:bg-firefly-dim/10'
-                      }`}
-                      title="Get a different random spark"
-                      aria-label="Get a different story spark"
-                    >
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                      </svg>
-                    </button>
+                    <Tooltip content="Find another spark">
+                      <button
+                        onClick={refreshSpark}
+                        className={`min-w-[44px] min-h-[44px] flex items-center justify-center rounded transition-soft ${
+                          isLegacy
+                            ? 'text-[var(--legacy-amber)] hover:bg-[var(--legacy-amber)]/10'
+                            : 'text-firefly-dim hover:bg-firefly-dim/10'
+                        }`}
+                        aria-label="Get a different story spark"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                        </svg>
+                      </button>
+                    </Tooltip>
                   </div>
                 </div>
                 <p className={`text-xs italic mb-3 sm:mb-4 line-clamp-3 ${
