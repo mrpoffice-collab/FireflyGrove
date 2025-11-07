@@ -154,6 +154,17 @@ export default function BranchPage() {
         // Clean up URL
         window.history.replaceState({}, '', `/branch/${branchId}`)
       }
+
+      // Check for discovery modal preview
+      const discoveryManager = getDiscoveryManager()
+      const previewModal = discoveryManager.checkPreview()
+      if (previewModal === 'voiceWelcome') {
+        setShowVoiceWelcome(true)
+      } else if (previewModal === 'photoWelcome') {
+        setShowPhotoWelcome(true)
+      } else if (previewModal === 'sharingWelcome') {
+        setShowSharingWelcome(true)
+      }
     }
   }, [branchId])
 
@@ -1296,6 +1307,49 @@ export default function BranchPage() {
           branchId={branchId}
           onClose={() => setShowSettings(false)}
           onBranchUpdate={fetchBranch}
+        />
+      )}
+
+      {/* Discovery Modals */}
+      {showVoiceWelcome && (
+        <VoiceMemoriesWelcomeModal
+          onClose={() => {
+            const discoveryManager = getDiscoveryManager()
+            discoveryManager.markShown('voiceWelcome')
+            setShowVoiceWelcome(false)
+          }}
+          onAction={() => {
+            setShowVoiceWelcome(false)
+            setShowNewMemory(true)
+          }}
+        />
+      )}
+
+      {showPhotoWelcome && (
+        <PhotoMemoriesWelcomeModal
+          onClose={() => {
+            const discoveryManager = getDiscoveryManager()
+            discoveryManager.markShown('photoWelcome')
+            setShowPhotoWelcome(false)
+          }}
+          onAction={() => {
+            setShowPhotoWelcome(false)
+            setShowNewMemory(true)
+          }}
+        />
+      )}
+
+      {showSharingWelcome && (
+        <SharingWelcomeModal
+          onClose={() => {
+            const discoveryManager = getDiscoveryManager()
+            discoveryManager.markShown('sharingWelcome')
+            setShowSharingWelcome(false)
+          }}
+          onAction={() => {
+            setShowSharingWelcome(false)
+            setShowSettings(true)
+          }}
         />
       )}
 
