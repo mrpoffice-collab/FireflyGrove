@@ -41,6 +41,7 @@ export default function OpenGrovePage() {
   const [memoryAges, setMemoryAges] = useState<number[]>([])
   const featuredPhoto = '' // TODO: Add featured photo from actual memorial
   const [showSharePanel, setShowSharePanel] = useState(false)
+  const [showSharePreview, setShowSharePreview] = useState(false)
 
   useEffect(() => {
     fetchMemorials()
@@ -132,7 +133,7 @@ export default function OpenGrovePage() {
             Create Memorial
           </button>
           <button
-            onClick={() => setShowSharePanel(true)}
+            onClick={() => setShowSharePreview(true)}
             className="px-4 py-2 bg-bg-dark hover:bg-border-subtle text-text-soft rounded border border-border-subtle text-sm transition-soft inline-flex items-center gap-2"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -220,6 +221,78 @@ export default function OpenGrovePage() {
           </div>
         </div>
       </div>
+
+      {/* Share Preview Modal */}
+      {showSharePreview && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-bg-elevated border-2 border-[var(--legacy-amber)]/30 rounded-xl max-w-2xl w-full p-8 shadow-2xl animate-fadeIn">
+            {/* Header */}
+            <div className="text-center mb-6">
+              <div className="inline-block text-5xl mb-4">🕯️</div>
+              <h2 className="text-2xl font-light text-[var(--legacy-text)] mb-2">
+                Share the Open Grove
+              </h2>
+              <p className="text-text-muted text-sm">Preview what will be shared</p>
+            </div>
+
+            {/* Preview Card - What they'll see */}
+            <div className="mb-8 bg-gradient-to-b from-bg-dark/80 to-bg-darker rounded-lg border border-[var(--legacy-amber)]/20 overflow-hidden shadow-lg">
+              {/* Featured Image Area */}
+              <div className="relative h-48 bg-gradient-to-b from-[var(--legacy-amber)]/10 to-bg-darker flex items-center justify-center">
+                <div className="text-center px-4">
+                  <div className="text-6xl mb-3 animate-pulse">🕯️</div>
+                  <div className="text-[var(--legacy-glow)] font-light text-2xl drop-shadow-lg">
+                    Open Grove
+                  </div>
+                </div>
+              </div>
+
+              {/* Share Preview Content */}
+              <div className="p-6">
+                <h3 className="text-lg font-medium text-[var(--legacy-text)] mb-2">
+                  Open Grove - Firefly Grove
+                </h3>
+                <p className="text-text-soft leading-relaxed mb-4">
+                  Visit the Open Grove, where <span className="text-[var(--legacy-glow)] font-semibold">{totalMemories.toLocaleString()}</span> {totalMemories === 1 ? 'memory' : 'memories'} shine. A public garden where every story glows.
+                </p>
+                <div className="flex items-center gap-2 text-xs text-text-muted">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                  </svg>
+                  <span className="truncate">{typeof window !== 'undefined' ? window.location.href : 'firefly-grove.com/open-grove'}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Confidence Message */}
+            <div className="mb-6 p-4 bg-[var(--legacy-amber)]/5 border border-[var(--legacy-amber)]/20 rounded-lg">
+              <p className="text-sm text-text-soft text-center leading-relaxed">
+                ✨ This link leads to the public Open Grove, where anyone can view and search memorials.
+                No personal information is shared beyond what's already public.
+              </p>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex flex-col sm:flex-row gap-3">
+              <button
+                onClick={() => {
+                  setShowSharePreview(false)
+                  setShowSharePanel(true)
+                }}
+                className="flex-1 py-3 bg-[var(--legacy-amber)]/20 hover:bg-[var(--legacy-amber)]/30 text-[var(--legacy-text)] rounded-lg border border-[var(--legacy-amber)]/40 font-medium transition-soft"
+              >
+                Continue to Share
+              </button>
+              <button
+                onClick={() => setShowSharePreview(false)}
+                className="px-6 py-3 bg-bg-dark hover:bg-border-subtle text-text-muted rounded-lg border border-border-subtle transition-soft"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Share Panel */}
       <SharePanel
