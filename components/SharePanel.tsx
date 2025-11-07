@@ -40,9 +40,23 @@ export default function SharePanel({ isOpen, onClose, shareData }: SharePanelPro
   const isNativeShareSupported = typeof navigator !== 'undefined' && 'share' in navigator
 
   const handleFacebookShare = () => {
+    console.log('=== FACEBOOK SHARE DEBUG ===')
+    console.log('Share Data:', shareData)
+    console.log('URL being shared:', shareData.url)
+    console.log('Title:', shareData.title)
+    console.log('Text:', shareData.text)
+
     // Use Facebook's dialog.share which triggers automatic scraping
-    const url = `https://www.facebook.com/dialog/share?app_id=966242223397117&display=popup&href=${encodeURIComponent(shareData.url)}&redirect_uri=${encodeURIComponent(shareData.url)}`
-    window.open(url, '_blank', 'width=600,height=400')
+    const fbUrl = `https://www.facebook.com/dialog/share?app_id=966242223397117&display=popup&href=${encodeURIComponent(shareData.url)}&redirect_uri=${encodeURIComponent(shareData.url)}`
+    console.log('Facebook URL:', fbUrl)
+
+    const popup = window.open(fbUrl, '_blank', 'width=600,height=400')
+    console.log('Popup opened:', !!popup)
+
+    if (!popup) {
+      alert('Popup was blocked! Please allow popups for this site.')
+    }
+
     onClose()
   }
 

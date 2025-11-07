@@ -1586,6 +1586,9 @@ export default function BranchPage() {
             <div className="flex flex-col sm:flex-row gap-3">
               <button
                 onClick={() => {
+                  console.log('Continue to Share clicked')
+                  console.log('Person name:', branch.person?.name || branch.title)
+                  console.log('Branch ID:', branchId)
                   setShowSharePreview(false)
                   setShowSharePanel(true)
                 }}
@@ -1607,11 +1610,18 @@ export default function BranchPage() {
       {/* Share Panel */}
       <SharePanel
         isOpen={showSharePanel}
-        onClose={() => setShowSharePanel(false)}
+        onClose={() => {
+          console.log('SharePanel closed')
+          setShowSharePanel(false)
+        }}
         shareData={{
           title: `Honor ${branch.person?.name || branch.title} - Share Your Memories`,
           text: `Please share your stories, photos, and memories of ${branch.person?.name || branch.title}. Every memory shared, every photo liked, every moment remembered makes their light shine brighter. ${branch.entries.length} ${branch.entries.length === 1 ? 'memory' : 'memories'} glowing so far. ✨`,
-          url: typeof window !== 'undefined' ? `${window.location.origin}/branch/${branchId}` : '',
+          url: (() => {
+            const shareUrl = typeof window !== 'undefined' ? `${window.location.origin}/branch/${branchId}` : ''
+            console.log('Branch Share URL created:', shareUrl)
+            return shareUrl
+          })(),
         }}
       />
     </div>
