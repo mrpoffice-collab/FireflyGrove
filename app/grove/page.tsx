@@ -11,7 +11,11 @@ import FireflyBurst from '@/components/FireflyBurst'
 import AudioSparks from '@/components/AudioSparks'
 import TreasureChestModal from '@/components/TreasureChestModal'
 import TreasureWelcomeModal from '@/components/TreasureWelcomeModal'
+import HeirsWelcomeModal from '@/components/discovery/HeirsWelcomeModal'
+import TreesVsBranchesWelcomeModal from '@/components/discovery/TreesVsBranchesWelcomeModal'
+import SharingWelcomeModal from '@/components/discovery/SharingWelcomeModal'
 import { getPlanById } from '@/lib/plans'
+import { getDiscoveryManager } from '@/lib/discoveryManager'
 import { SkeletonTreeCard, SkeletonPersonCard, SkeletonGrid, SkeletonTitle, SkeletonText } from '@/components/SkeletonLoader'
 import { useToast } from '@/lib/toast'
 
@@ -135,6 +139,11 @@ export default function GrovePage() {
   const [showTreasureWelcome, setShowTreasureWelcome] = useState(false)
   const [hasSeenTreasureWelcome, setHasSeenTreasureWelcome] = useState(false)
 
+  // Discovery modals state
+  const [showHeirsWelcome, setShowHeirsWelcome] = useState(false)
+  const [showTreesWelcome, setShowTreesWelcome] = useState(false)
+  const [showSharingWelcome, setShowSharingWelcome] = useState(false)
+
   // Check for pending nest photo from URL and preview parameters
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -147,13 +156,24 @@ export default function GrovePage() {
       }
 
       // Preview parameter for testing popups/announcements (admin/testing)
-      // Usage: /grove?preview=treasureWelcome
+      // Usage: /grove?preview=treasureWelcome or ?preview=heirsWelcome, etc.
       const preview = urlParams.get('preview')
       if (preview === 'treasureWelcome') {
         setShowTreasureWelcome(true)
         setHasSeenTreasureWelcome(true)
         // Clean up URL
         window.history.replaceState({}, '', '/grove')
+      }
+
+      // Check for discovery modal preview
+      const discoveryManager = getDiscoveryManager()
+      const previewModal = discoveryManager.checkPreview()
+      if (previewModal === 'heirsWelcome') {
+        setShowHeirsWelcome(true)
+      } else if (previewModal === 'treesWelcome') {
+        setShowTreesWelcome(true)
+      } else if (previewModal === 'sharingWelcome') {
+        setShowSharingWelcome(true)
       }
     }
   }, [])
@@ -176,6 +196,58 @@ export default function GrovePage() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status])
+
+  // Check for discovery modal triggers after grove is loaded
+  useEffect(() => {
+    if (!grove || typeof window === 'undefined') return
+
+    const discoveryManager = getDiscoveryManager()
+
+    // Calculate total memory count across all trees
+    const totalMemories =
+      (grove.trees?.reduce((sum, t) => sum + t.memoryCount, 0) || 0) +
+      (grove.persons?.reduce((sum, p) => sum + p.memoryCount, 0) || 0) +
+      (grove.rootedPersons?.reduce((sum, p) => sum + p.memoryCount, 0) || 0)
+
+    // Check heirs count (would need API endpoint - for now assume 0 if not set)
+    // This is the MOST CRITICAL modal - triggers after 3 memories
+    if (totalMemories >= 3 && discoveryManager.canShow('heirsWelcome')) {
+      // Check if user has heirs set up
+      fetch('/api/heirs/count')
+        .then(res => res.json())
+        .then(data => {
+          if (data.count === 0) {
+            setShowHeirsWelcome(true)
+          }
+        })
+        .catch(() => {
+          // If API fails, show modal anyway as it's critical
+          setShowHeirsWelcome(true)
+        })
+    }
+
+    // Trees vs Branches Welcome - Show if no trees and first time
+    const treeCount = grove.trees?.length || 0
+    if (treeCount === 0 && discoveryManager.canShow('treesWelcome')) {
+      setShowTreesWelcome(true)
+    }
+
+    // Sharing Welcome - Show after 5 memories if no collaborators
+    if (totalMemories >= 5 && discoveryManager.canShow('sharingWelcome')) {
+      // Check if user has invited anyone
+      fetch('/api/collaborators/count')
+        .then(res => res.json())
+        .then(data => {
+          if (data.count === 0) {
+            setShowSharingWelcome(true)
+          }
+        })
+        .catch(() => {
+          // Silent fail - not as critical as heirs modal
+        })
+    }
+  }, [grove])
+
 
   // Check treasure status and show modal if needed
   const checkTreasureStatus = async () => {
@@ -221,6 +293,41 @@ export default function GrovePage() {
     }
     // Now show the regular treasure modal
     setShowTreasure(true)
+  }
+
+  // Handle discovery modal closes
+  const handleHeirsWelcomeClose = () => {
+    const discoveryManager = getDiscoveryManager()
+    discoveryManager.markShown('heirsWelcome')
+    setShowHeirsWelcome(false)
+  }
+
+  const handleHeirsWelcomeAction = () => {
+    // Navigate to settings to set up heirs
+    router.push('/grove?tab=heirs')
+  }
+
+  const handleTreesWelcomeClose = () => {
+    const discoveryManager = getDiscoveryManager()
+    discoveryManager.markShown('treesWelcome')
+    setShowTreesWelcome(false)
+  }
+
+  const handleTreesWelcomeAction = () => {
+    // Navigate to create tree page
+    router.push('/grove/new-tree')
+  }
+
+  const handleSharingWelcomeClose = () => {
+    const discoveryManager = getDiscoveryManager()
+    discoveryManager.markShown('sharingWelcome')
+    setShowSharingWelcome(false)
+  }
+
+  const handleSharingWelcomeAction = () => {
+    // For now just close - user will need to go to branch settings
+    // Could improve by storing which branch to auto-open settings for
+    setShowSharingWelcome(false)
   }
 
   // Check if bursts are currently snoozed
@@ -479,6 +586,28 @@ export default function GrovePage() {
         <TreasureChestModal
           onClose={() => setShowTreasure(false)}
           onSave={handleTreasureSave}
+        />
+      )}
+
+      {/* Discovery Modals */}
+      {showHeirsWelcome && (
+        <HeirsWelcomeModal
+          onClose={handleHeirsWelcomeClose}
+          onAction={handleHeirsWelcomeAction}
+        />
+      )}
+
+      {showTreesWelcome && (
+        <TreesVsBranchesWelcomeModal
+          onClose={handleTreesWelcomeClose}
+          onAction={handleTreesWelcomeAction}
+        />
+      )}
+
+      {showSharingWelcome && (
+        <SharingWelcomeModal
+          onClose={handleSharingWelcomeClose}
+          onAction={handleSharingWelcomeAction}
         />
       )}
 

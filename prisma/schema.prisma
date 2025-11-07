@@ -1636,3 +1636,104 @@ model TreasureEvent {
   @@index([userId, eventType])
   @@index([createdAt])
 }
+
+// Knowledge Bank - Searchable help articles
+model KnowledgeArticle {
+  id          String   @id @default(cuid())
+  slug        String   @unique // URL-friendly: "inviting-family-members"
+  title       String
+  subtitle    String?
+  category    KnowledgeCategory
+  tags        String[] // For search
+  timeToRead  Int      @default(3) // In minutes
+  difficulty  KnowledgeDifficulty @default(BEGINNER)
+  content     String   @db.Text // Markdown content
+  featured    Boolean  @default(false) // Show in "Popular" section
+  isNew       Boolean  @default(false) // Show "New!" badge
+  viewCount   Int      @default(0) // Track popularity
+  helpfulYes  Int      @default(0) // Positive feedback
+  helpfulNo   Int      @default(0) // Negative feedback
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  screenshots KnowledgeScreenshot[]
+  relatedArticles KnowledgeRelation[] @relation("ArticleRelations")
+  relatedFrom     KnowledgeRelation[] @relation("RelatedArticles")
+
+  @@index([category])
+  @@index([featured])
+  @@index([isNew])
+  @@index([slug])
+}
+
+// Knowledge Bank Categories
+enum KnowledgeCategory {
+  GETTING_STARTED
+  SHARING
+  LEGACY
+  PHOTOS_MEDIA
+  VOICE_AUDIO
+  SPECIAL_FEATURES
+  GROVE_EXCHANGE
+  ACCOUNT_SETTINGS
+  ORGANIZATION
+  TIPS_TRICKS
+}
+
+// Knowledge Article Difficulty
+enum KnowledgeDifficulty {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+
+// Knowledge Article Screenshots
+model KnowledgeScreenshot {
+  id        String   @id @default(cuid())
+  articleId String
+  url       String
+  caption   String?
+  alt       String
+  order     Int      @default(0)
+
+  createdAt DateTime @default(now())
+
+  // Relations
+  article   KnowledgeArticle @relation(fields: [articleId], references: [id], onDelete: Cascade)
+
+  @@index([articleId])
+}
+
+// Knowledge Article Relations (related articles)
+model KnowledgeRelation {
+  id              String   @id @default(cuid())
+  articleId       String
+  relatedArticleId String
+
+  createdAt       DateTime @default(now())
+
+  // Relations
+  article         KnowledgeArticle @relation("ArticleRelations", fields: [articleId], references: [id], onDelete: Cascade)
+  relatedArticle  KnowledgeArticle @relation("RelatedArticles", fields: [relatedArticleId], references: [id], onDelete: Cascade)
+
+  @@unique([articleId, relatedArticleId])
+  @@index([articleId])
+  @@index([relatedArticleId])
+}
+
+// Knowledge Bank Analytics
+model KnowledgeEvent {
+  id        String   @id @default(cuid())
+  userId    String?  // Optional - track anonymous usage too
+  eventType String   // SEARCH, VIEW_ARTICLE, HELPFUL_YES, HELPFUL_NO, CATEGORY_BROWSE
+  articleId String?
+  query     String?  // For search events
+  metadata  Json?
+  createdAt DateTime @default(now())
+
+  @@index([userId, eventType])
+  @@index([eventType, createdAt])
+  @@index([articleId])
+}
