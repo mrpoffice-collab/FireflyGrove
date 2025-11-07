@@ -130,7 +130,7 @@ export default function Tooltip({
       {wrappedChild}
       {isVisible && (
         <div
-          className="fixed z-[9999] px-3 py-2 text-sm bg-bg-darker border border-firefly-dim/30 text-text-soft rounded-md shadow-lg whitespace-nowrap pointer-events-none animate-fadeIn"
+          className="fixed z-[9999] px-3 py-2 text-sm bg-[#0f1419] border border-firefly-glow/40 text-text-soft rounded-md shadow-2xl whitespace-nowrap pointer-events-none animate-fadeIn"
           style={{
             ...tooltipStyle,
             transform: getTransform(),
