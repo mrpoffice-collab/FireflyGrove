@@ -1531,9 +1531,9 @@ export default function BranchPage() {
         isOpen={showSharePanel}
         onClose={() => setShowSharePanel(false)}
         shareData={{
-          title: `${branch.title} - Firefly Grove`,
-          text: branch.description || `Check out this memory branch about ${branch.title}`,
-          url: typeof window !== 'undefined' ? `${window.location.origin}/branch/${branchId}?share=${Date.now()}` : '',
+          title: `Honor ${branch.person?.name || branch.title} with your memories`,
+          text: `Please share your stories, photos, and memories of ${branch.person?.name || branch.title}. Every memory helps preserve their light. ${branch.entries.length} ${branch.entries.length === 1 ? 'memory' : 'memories'} shared so far.`,
+          url: typeof window !== 'undefined' ? `${window.location.origin}/branch/${branchId}` : '',
         }}
       />
     </div>
