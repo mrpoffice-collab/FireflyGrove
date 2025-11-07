@@ -596,38 +596,44 @@ export default function GrovePage() {
             {/* Quick Actions */}
             <div className="mb-4 flex flex-wrap items-center justify-center gap-2 sm:gap-3">
               {burstSnoozed ? (
-                <button
-                  onClick={unsnoozeBursts}
-                  className="inline-flex items-center gap-2 min-h-[44px] px-4 py-2.5 bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 text-amber-400 rounded-lg text-sm font-medium transition-soft"
-                  aria-label="Bursts snoozed for 3 hours - click to wake them"
-                >
-                  <span>😴</span>
-                  <span className="hidden xs:inline">Bursts Snoozed</span>
-                  <span className="xs:hidden">Snoozed</span>
-                </button>
+                <Tooltip content="Wake your memories">
+                  <button
+                    onClick={unsnoozeBursts}
+                    className="inline-flex items-center gap-2 min-h-[44px] px-4 py-2.5 bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 text-amber-400 rounded-lg text-sm font-medium transition-soft"
+                    aria-label="Bursts snoozed for 3 hours - click to wake them"
+                  >
+                    <span>😴</span>
+                    <span className="hidden xs:inline">Bursts Snoozed</span>
+                    <span className="xs:hidden">Snoozed</span>
+                  </button>
+                </Tooltip>
               ) : (
                 <>
                   {burstMemories.length > 0 && (
-                    <button
-                      onClick={generateBurst}
-                      className="inline-flex items-center gap-2 min-h-[44px] px-4 py-2.5 bg-firefly-dim/20 hover:bg-firefly-dim/30 border border-firefly-dim/40 text-firefly-glow rounded-lg text-sm font-medium transition-soft"
-                      aria-label="Generate another firefly burst of random memories"
-                    >
-                      <span>✨</span>
-                      <span className="hidden xs:inline">Get Another Burst</span>
-                      <span className="xs:hidden">Burst</span>
-                    </button>
+                    <Tooltip content="Discover memories from your past">
+                      <button
+                        onClick={generateBurst}
+                        className="inline-flex items-center gap-2 min-h-[44px] px-4 py-2.5 bg-firefly-dim/20 hover:bg-firefly-dim/30 border border-firefly-dim/40 text-firefly-glow rounded-lg text-sm font-medium transition-soft"
+                        aria-label="Generate another firefly burst of random memories"
+                      >
+                        <span>✨</span>
+                        <span className="hidden xs:inline">Get Another Burst</span>
+                        <span className="xs:hidden">Burst</span>
+                      </button>
+                    </Tooltip>
                   )}
                 </>
               )}
-              <button
-                onClick={() => setShowAudioSparks(true)}
-                className="inline-flex items-center gap-2 min-h-[44px] px-4 py-2.5 bg-firefly-glow hover:bg-firefly-bright text-bg-darker rounded-lg text-sm font-medium transition-soft"
-                aria-label="Record audio sparks for your branches"
-              >
-                <span>🎙️</span>
-                <span>Audio Sparks</span>
-              </button>
+              <Tooltip content="Capture quick voice memories">
+                <button
+                  onClick={() => setShowAudioSparks(true)}
+                  className="inline-flex items-center gap-2 min-h-[44px] px-4 py-2.5 bg-firefly-glow hover:bg-firefly-bright text-bg-darker rounded-lg text-sm font-medium transition-soft"
+                  aria-label="Record audio sparks for your branches"
+                >
+                  <span>🎙️</span>
+                  <span>Audio Sparks</span>
+                </button>
+              </Tooltip>
             </div>
 
             {/* Grove Stats */}
