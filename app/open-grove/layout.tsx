@@ -1,11 +1,11 @@
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Open Grove - Firefly Grove',
-  description: 'A public garden where every story glows. Visit the Open Grove to explore and search memorials, where memories shine eternal.',
+  title: 'Open Grove - Where Memories Shine Eternal | Firefly Grove',
+  description: 'Where memories shine eternal. Every story honored. Every light a life well-lived. Visit the Open Grove to celebrate lives and preserve legacies.',
   openGraph: {
-    title: 'Open Grove - Firefly Grove',
-    description: 'A public garden where every story glows. Visit the Open Grove to explore and search memorials.',
+    title: 'Open Grove - Where Memories Shine Eternal',
+    description: 'Where memories shine eternal. Every story honored. Every light a life well-lived.',
     url: 'https://fireflygrove.app/open-grove',
     siteName: 'Firefly Grove',
     locale: 'en_US',
@@ -13,8 +13,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Open Grove - Firefly Grove',
-    description: 'A public garden where every story glows. Visit the Open Grove to explore and search memorials.',
+    title: 'Open Grove - Where Memories Shine Eternal',
+    description: 'Where memories shine eternal. Every story honored. Every light a life well-lived.',
   },
 }
 
