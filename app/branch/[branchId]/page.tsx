@@ -82,6 +82,7 @@ export default function BranchPage() {
   const [prePopulatedPhoto, setPrePopulatedPhoto] = useState<{url: string, mediaType?: string, nestItemId?: string} | undefined>()
   const [showSettings, setShowSettings] = useState(false)
   const [showSharePanel, setShowSharePanel] = useState(false)
+  const [showSharePreview, setShowSharePreview] = useState(false)
   const [isAdmin, setIsAdmin] = useState(false)
   const [showUndoBanner, setShowUndoBanner] = useState(false)
   const [lastCreatedEntry, setLastCreatedEntry] = useState<{
@@ -766,7 +767,7 @@ export default function BranchPage() {
                 {/* Share Button */}
                 <Tooltip content="Share the light">
                   <button
-                    onClick={() => setShowSharePanel(true)}
+                    onClick={() => setShowSharePreview(true)}
                     className="text-text-muted hover:text-firefly-glow transition-soft min-w-[44px] min-h-[44px] flex items-center justify-center"
                     aria-label="Share this branch"
                   >
@@ -1521,6 +1522,80 @@ export default function BranchPage() {
                   {updatingPerson ? 'Saving...' : 'Save Changes'}
                 </button>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Share Preview Modal */}
+      {showSharePreview && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-bg-elevated border-2 border-firefly-glow/30 rounded-xl max-w-2xl w-full p-8 shadow-2xl animate-fadeIn">
+            {/* Header */}
+            <div className="text-center mb-6">
+              <div className="inline-block text-5xl mb-4">🕯️</div>
+              <h2 className="text-2xl font-light text-firefly-glow mb-2">
+                Share {branch.person?.name || branch.title}'s Memorial
+              </h2>
+              <p className="text-text-muted text-sm">Invite others to add their memories</p>
+            </div>
+
+            {/* Preview Card */}
+            <div className="mb-8 bg-gradient-to-b from-bg-dark/80 to-bg-darker rounded-lg border border-firefly-glow/20 overflow-hidden shadow-lg">
+              <div className="relative h-48 bg-gradient-to-b from-firefly-glow/10 to-bg-darker flex items-center justify-center">
+                <div className="text-center px-4">
+                  <div className="text-6xl mb-3 animate-pulse">🕯️</div>
+                  <div className="text-firefly-glow font-light text-2xl drop-shadow-lg">
+                    {branch.person?.name || branch.title}
+                  </div>
+                  {branch.person?.birthDate && branch.person?.deathDate && (
+                    <div className="text-text-muted text-sm mt-2">
+                      {new Date(branch.person.birthDate).getFullYear()} - {new Date(branch.person.deathDate).getFullYear()}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="p-6">
+                <h3 className="text-lg font-medium text-firefly-glow mb-2">
+                  Honor {branch.person?.name || branch.title} with your memories
+                </h3>
+                <p className="text-text-soft leading-relaxed mb-4">
+                  Please share your stories, photos, and memories of {branch.person?.name || branch.title}. Every memory helps preserve their light. {branch.entries.length} {branch.entries.length === 1 ? 'memory' : 'memories'} shared so far.
+                </p>
+                <div className="flex items-center gap-2 text-xs text-text-muted">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                  </svg>
+                  <span className="truncate">{typeof window !== 'undefined' ? `${window.location.origin}/branch/${branchId}` : ''}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Confidence Message */}
+            <div className="mb-6 p-4 bg-firefly-glow/5 border border-firefly-glow/20 rounded-lg">
+              <p className="text-sm text-text-soft text-center leading-relaxed">
+                ✨ This link invites people to view AND ADD their own memories, photos, and stories. They can contribute immediately - no account required.
+              </p>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex flex-col sm:flex-row gap-3">
+              <button
+                onClick={() => {
+                  setShowSharePreview(false)
+                  setShowSharePanel(true)
+                }}
+                className="flex-1 py-3 bg-firefly-glow/20 hover:bg-firefly-glow/30 text-firefly-glow rounded-lg border border-firefly-glow/40 font-medium transition-soft"
+              >
+                Continue to Share
+              </button>
+              <button
+                onClick={() => setShowSharePreview(false)}
+                className="px-6 py-3 bg-bg-dark hover:bg-border-subtle text-text-muted rounded-lg border border-border-subtle transition-soft"
+              >
+                Cancel
+              </button>
             </div>
           </div>
         </div>
