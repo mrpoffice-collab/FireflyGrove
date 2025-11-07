@@ -128,6 +128,26 @@ export default function BranchPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, branchId])
 
+  // Pre-warm Facebook's Open Graph cache when page loads
+  useEffect(() => {
+    const prefetchFacebook = async () => {
+      if (typeof window !== 'undefined' && branchId) {
+        const url = `${window.location.origin}/branch/${branchId}`
+        try {
+          await fetch('/api/prefetch-facebook', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ url })
+          })
+          console.log('✅ Facebook cache pre-warmed for:', url)
+        } catch (error) {
+          console.error('❌ Failed to pre-warm Facebook cache:', error)
+        }
+      }
+    }
+    prefetchFacebook()
+  }, [branchId])
+
   // Check for nest photo in URL params (from "Hatch from Nest")
   // Also check for tab parameter to auto-open settings
   useEffect(() => {
