@@ -19,6 +19,8 @@ export type DiscoveryModalName =
   | 'photoWelcome'
   | 'nestWelcome'
   | 'treasureWelcome'
+  | 'branchWelcome'
+  | 'treeWelcome'
 
 interface DiscoveryState {
   seenModals: DiscoveryModalName[]
@@ -102,8 +104,15 @@ export class DiscoveryManager {
 
   /**
    * Check if a modal should be shown
+   *
+   * @param aggressive - If true, ignores session limits (for testing/development)
    */
-  canShow(modalName: DiscoveryModalName): boolean {
+  canShow(modalName: DiscoveryModalName, aggressive = false): boolean {
+    // In aggressive mode, only check if seen before
+    if (aggressive) {
+      return !this.state.seenModals.includes(modalName)
+    }
+
     // Never show more than one modal per session
     if (this.state.sessionModalShown) {
       return false
@@ -147,6 +156,8 @@ export class DiscoveryManager {
       'photoWelcome',
       'nestWelcome',
       'treasureWelcome',
+      'branchWelcome',
+      'treeWelcome',
     ]
     return validNames.includes(name as DiscoveryModalName)
   }

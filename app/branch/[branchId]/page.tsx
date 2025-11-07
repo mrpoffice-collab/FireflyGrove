@@ -11,7 +11,11 @@ import UndoBanner from '@/components/UndoBanner'
 import SharePanel from '@/components/SharePanel'
 import SparkPicker from '@/components/SparkPicker'
 import Tooltip from '@/components/Tooltip'
+import VoiceMemoriesWelcomeModal from '@/components/discovery/VoiceMemoriesWelcomeModal'
+import PhotoMemoriesWelcomeModal from '@/components/discovery/PhotoMemoriesWelcomeModal'
+import SharingWelcomeModal from '@/components/discovery/SharingWelcomeModal'
 import { getActiveChallenge, getRandomSpark, getRandomSparkExcluding, SparkCollection } from '@/lib/sparks'
+import { getDiscoveryManager } from '@/lib/discoveryManager'
 import { SkeletonMemoryCard, SkeletonList, SkeletonTitle, SkeletonText } from '@/components/SkeletonLoader'
 
 interface Entry {
@@ -93,6 +97,11 @@ export default function BranchPage() {
   const [currentSpark, setCurrentSpark] = useState('')
   const [showSparkPicker, setShowSparkPicker] = useState(false)
 
+  // Discovery modals
+  const [showVoiceWelcome, setShowVoiceWelcome] = useState(false)
+  const [showPhotoWelcome, setShowPhotoWelcome] = useState(false)
+  const [showSharingWelcome, setShowSharingWelcome] = useState(false)
+
   // Challenge Sparks
   const [challengeCollection, setChallengeCollection] = useState<SparkCollection | null>(null)
   const [currentChallengeSpark, setCurrentChallengeSpark] = useState('')
@@ -147,6 +156,35 @@ export default function BranchPage() {
       }
     }
   }, [branchId])
+
+  // Check for discovery modal triggers when branch loads
+  useEffect(() => {
+    if (!branch || typeof window === 'undefined') return
+
+    const discoveryManager = getDiscoveryManager()
+
+    // Count memories with audio
+    const audioMemories = branch.entries?.filter((e: any) => e.audioUrl)?.length || 0
+    const totalMemories = branch.entries?.length || 0
+
+    // Count memories with photos
+    const photoMemories = branch.entries?.filter((e: any) => e.mediaUrl)?.length || 0
+
+    // Voice welcome - if 5+ text memories but no audio (aggressive mode)
+    if (totalMemories >= 5 && audioMemories === 0 && discoveryManager.canShow('voiceWelcome', true)) {
+      setTimeout(() => setShowVoiceWelcome(true), 500)
+    }
+
+    // Photo welcome - if 5+ memories but no photos (aggressive mode)
+    if (totalMemories >= 5 && photoMemories === 0 && discoveryManager.canShow('photoWelcome', true)) {
+      setTimeout(() => setShowPhotoWelcome(true), 500)
+    }
+
+    // Sharing welcome - if branch owner and no collaborators (aggressive mode)
+    if (branch.owner && discoveryManager.canShow('sharingWelcome', true)) {
+      setTimeout(() => setShowSharingWelcome(true), 500)
+    }
+  }, [branch])
 
   // Initialize spark when branch data is loaded
   useEffect(() => {

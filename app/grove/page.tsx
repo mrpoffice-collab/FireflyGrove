@@ -211,7 +211,8 @@ export default function GrovePage() {
 
     // Check heirs count (would need API endpoint - for now assume 0 if not set)
     // This is the MOST CRITICAL modal - triggers after 3 memories
-    if (totalMemories >= 3 && discoveryManager.canShow('heirsWelcome')) {
+    // Using aggressive mode to show on every visit during development
+    if (totalMemories >= 3 && discoveryManager.canShow('heirsWelcome', true)) {
       // Check if user has heirs set up
       fetch('/api/heirs/count')
         .then(res => res.json())
@@ -228,12 +229,12 @@ export default function GrovePage() {
 
     // Trees vs Branches Welcome - Show if no trees and first time
     const treeCount = grove.trees?.length || 0
-    if (treeCount === 0 && discoveryManager.canShow('treesWelcome')) {
+    if (treeCount === 0 && discoveryManager.canShow('treesWelcome', true)) {
       setShowTreesWelcome(true)
     }
 
     // Sharing Welcome - Show after 5 memories if no collaborators
-    if (totalMemories >= 5 && discoveryManager.canShow('sharingWelcome')) {
+    if (totalMemories >= 5 && discoveryManager.canShow('sharingWelcome', true)) {
       // Check if user has invited anyone
       fetch('/api/collaborators/count')
         .then(res => res.json())
