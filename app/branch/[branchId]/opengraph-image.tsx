@@ -14,7 +14,7 @@ export default async function Image({ params }: { params: Promise<{ branchId: st
   try {
     // Simple test - just show branch ID to verify it's working
     const personName = 'Memorial - Firefly Grove'
-    const memoryCount = 0
+    const memoryCount: number = 0
     const years = ''
 
     return new ImageResponse(
