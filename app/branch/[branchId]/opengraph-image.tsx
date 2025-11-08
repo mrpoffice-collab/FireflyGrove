@@ -18,9 +18,8 @@ export default async function Image({ params }: { params: Promise<{ branchId: st
   let description = 'Help us honor this life by sharing your stories, photos, and memories.'
 
   try {
-    const apiUrl = process.env.VERCEL_URL
-      ? `https://${process.env.VERCEL_URL}/api/og/branch/${branchId}`
-      : `http://localhost:3000/api/og/branch/${branchId}`
+    // Always use production URL since this runs in Vercel edge runtime
+    const apiUrl = `https://fireflygrove.app/api/og/branch/${branchId}`
 
     console.log('[OG Image] Fetching from:', apiUrl)
 
