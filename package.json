@@ -18,7 +18,8 @@
     "extract-glow-guides": "tsx scripts/extract-glow-guides.ts",
     "seed-knowledge-bank": "tsx scripts/seed-knowledge-bank.ts",
     "update-sentiments": "npx ts-node scripts/update-sentiments-from-config.ts",
-    "import-sentiments": "npx ts-node scripts/import-sentiments.ts"
+    "import-sentiments": "npx ts-node scripts/import-sentiments.ts",
+    "prepare": "husky"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.67.0",
@@ -69,6 +70,7 @@
     "autoprefixer": "^10.4.20",
     "eslint": "^8",
     "eslint-config-next": "14.2.15",
+    "husky": "^9.1.7",
     "jest": "^30.2.0",
     "jest-environment-jsdom": "^30.2.0",
     "postcss": "^8.4.49",

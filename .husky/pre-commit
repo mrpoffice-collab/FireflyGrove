@@ -1,0 +1,8 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Run Glow Guide check
+node scripts/check-glow-guide-needed.js
+
+# Run tests
+npm test
