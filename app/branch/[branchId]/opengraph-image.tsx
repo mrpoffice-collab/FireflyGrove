@@ -24,13 +24,34 @@ export default async function Image({ params }: { params: Promise<{ branchId: st
     })
 
     if (!response.ok) {
-      return new ImageResponse(<div>Branch not found</div>, { ...size })
+      // Return error image with status code for debugging
+      return new ImageResponse(
+        (
+          <div style={{
+            height: '100%',
+            width: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: '#1a1410',
+            color: '#ffd89b',
+            fontSize: '32px',
+            flexDirection: 'column',
+            gap: '20px',
+          }}>
+            <div>Branch not found</div>
+            <div style={{ fontSize: '20px', color: '#c4a574' }}>Error {response.status}</div>
+          </div>
+        ),
+        { ...size }
+      )
     }
 
     const branch = await response.json()
 
+    // Use person.memoryCount instead of entries.length (which may be paginated)
     const personName = branch.person?.name || branch.title
-    const memoryCount = branch.entries?.length || branch.pagination?.total || 0
+    const memoryCount = branch.person?.memoryCount || branch.pagination?.total || 0
     const years = branch.person?.birthDate && branch.person?.deathDate
       ? `${new Date(branch.person.birthDate).getFullYear()} - ${new Date(branch.person.deathDate).getFullYear()}`
       : ''
