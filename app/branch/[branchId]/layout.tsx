@@ -38,7 +38,7 @@ export async function generateMetadata({
         type: 'website',
         images: [
           {
-            url: 'https://fireflygrove.app/firefly%20logo.png',
+            url: 'https://fireflygrove.app/firefly-logo.png',
             width: 1024,
             height: 1024,
             alt: branch.title,
