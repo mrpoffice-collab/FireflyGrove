@@ -38,7 +38,7 @@ export async function generateMetadata({
         type: 'website',
         images: [
           {
-            url: `${branchUrl}/opengraph-image`,
+            url: 'https://fireflygrove.app/og-image.png',
             width: 1200,
             height: 630,
             alt: branch.title,

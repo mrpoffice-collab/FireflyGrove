@@ -49,7 +49,9 @@
       "Bash(git log:*)",
       "Bash(node scripts/find-broken-image.ts:*)",
       "Bash(npm run dev:*)",
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "Bash(timeout 5 curl:*)",
+      "Bash(timeout 10 curl:*)"
     ],
     "deny": [],
     "ask": []
