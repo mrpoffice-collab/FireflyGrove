@@ -157,7 +157,7 @@ export default async function Image({ params }: { params: Promise<{ branchId: st
                 lineHeight: 1.5,
               }}
             >
-              {branch.description || 'Help us honor this life by sharing your stories, photos, and memories.'}
+              Help us honor this life by sharing your stories, photos, and memories.
             </div>
 
             {/* Footer */}
