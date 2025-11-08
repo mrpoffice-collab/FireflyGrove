@@ -14,6 +14,11 @@ import TreasureWelcomeModal from '@/components/TreasureWelcomeModal'
 import HeirsGlowGuide from '@/components/glow-guides/HeirsGlowGuide'
 import TreesVsBranchesGlowGuide from '@/components/glow-guides/TreesVsBranchesGlowGuide'
 import SharingGlowGuide from '@/components/glow-guides/SharingGlowGuide'
+import MultipleTreesGlowGuide from '@/components/glow-guides/MultipleTreesGlowGuide'
+import BranchesOrganizationGlowGuide from '@/components/glow-guides/BranchesOrganizationGlowGuide'
+import HeirConditionsGlowGuide from '@/components/glow-guides/HeirConditionsGlowGuide'
+import MultipleHeirsGlowGuide from '@/components/glow-guides/MultipleHeirsGlowGuide'
+import NestGlowGuide from '@/components/glow-guides/NestGlowGuide'
 import GlowGuideReminder from '@/components/GlowGuideReminder'
 import { getPlanById } from '@/lib/plans'
 import { getGlowGuideManager } from '@/lib/glowGuideManager'
@@ -146,6 +151,11 @@ export default function GrovePage() {
   const [showHeirsWelcome, setShowHeirsWelcome] = useState(false)
   const [showTreesWelcome, setShowTreesWelcome] = useState(false)
   const [showSharingWelcome, setShowSharingWelcome] = useState(false)
+  const [showMultipleTrees, setShowMultipleTrees] = useState(false)
+  const [showBranchesOrg, setShowBranchesOrg] = useState(false)
+  const [showHeirConditions, setShowHeirConditions] = useState(false)
+  const [showMultipleHeirs, setShowMultipleHeirs] = useState(false)
+  const [showNestGuide, setShowNestGuide] = useState(false)
 
   // Glow Guide Reminder state
   const [guideToRemind, setGuideToRemind] = useState<{
@@ -184,6 +194,16 @@ export default function GrovePage() {
         setShowTreesWelcome(true)
       } else if (previewModal === 'sharing') {
         setShowSharingWelcome(true)
+      } else if (previewModal === 'multiple-trees') {
+        setShowMultipleTrees(true)
+      } else if (previewModal === 'branches-organization') {
+        setShowBranchesOrg(true)
+      } else if (previewModal === 'heir-conditions') {
+        setShowHeirConditions(true)
+      } else if (previewModal === 'multiple-heirs') {
+        setShowMultipleHeirs(true)
+      } else if (previewModal === 'nest') {
+        setShowNestGuide(true)
       }
     }
   }, [])
@@ -237,9 +257,11 @@ export default function GrovePage() {
         })
     }
 
+    // Calculate total tree count (includes all tree types)
+    const totalTreeCount = (grove.trees?.length || 0) + (grove.persons?.length || 0) + (grove.rootedPersons?.length || 0)
+
     // Trees vs Branches Welcome - Show if no trees and first time
-    const treeCount = grove.trees?.length || 0
-    if (treeCount === 0 && glowGuideManager.canShow('trees-branches', true)) {
+    if (totalTreeCount === 0 && glowGuideManager.canShow('trees-branches', true)) {
       setShowTreesWelcome(true)
     }
 
@@ -256,6 +278,41 @@ export default function GrovePage() {
         .catch(() => {
           // Silent fail - not as critical as heirs modal
         })
+    }
+
+    // Multiple Trees - Show when user has 1 tree but 20+ memories
+    if (totalTreeCount === 1 && totalMemories >= 20 && glowGuideManager.canShow('multiple-trees')) {
+      setTimeout(() => setShowMultipleTrees(true), 500)
+    }
+
+    // Branches Organization - Show when user has 1 tree with 30+ memories
+    if (totalTreeCount >= 1 && totalMemories >= 30 && glowGuideManager.canShow('branches-organization')) {
+      setTimeout(() => setShowBranchesOrg(true), 500)
+    }
+
+    // Heir Conditions - Show when user has 1+ heirs but hasn't set up conditions
+    fetch('/api/heirs/count')
+      .then(res => res.json())
+      .then(data => {
+        if (data.count >= 1 && glowGuideManager.canShow('heir-conditions')) {
+          setTimeout(() => setShowHeirConditions(true), 500)
+        }
+      })
+      .catch(() => {})
+
+    // Multiple Heirs - Show when user has 10+ memories but only 1 heir
+    fetch('/api/heirs/count')
+      .then(res => res.json())
+      .then(data => {
+        if (data.count === 1 && totalMemories >= 10 && glowGuideManager.canShow('multiple-heirs')) {
+          setTimeout(() => setShowMultipleHeirs(true), 500)
+        }
+      })
+      .catch(() => {})
+
+    // Nest Guide - Show when user has 20+ memories but never used The Nest
+    if (totalMemories >= 20 && glowGuideManager.canShow('nest')) {
+      setTimeout(() => setShowNestGuide(true), 500)
     }
   }, [grove])
 
@@ -395,6 +452,119 @@ export default function GrovePage() {
       // No branches or trees yet
       alert('First, plant a tree and create a branch. Then you can invite others to tend it with you.')
     }
+  }
+
+  // New guide handlers
+  const handleMultipleTreesClose = (showReminder: boolean = false) => {
+    const manager = getGlowGuideManager()
+    manager.markShown('multiple-trees')
+    setShowMultipleTrees(false)
+
+    if (showReminder && !manager.hadReminderShown('multiple-trees')) {
+      const metadata = getGuideMetadata('multiple-trees')
+      setGuideToRemind({
+        slug: metadata.slug,
+        title: metadata.title,
+        guideName: 'multiple-trees',
+      })
+      manager.markDismissedWithReminder('multiple-trees')
+    }
+  }
+
+  const handleMultipleTreesAction = () => {
+    handleMultipleTreesClose()
+    router.push('/grove/new-tree')
+  }
+
+  const handleBranchesOrgClose = (showReminder: boolean = false) => {
+    const manager = getGlowGuideManager()
+    manager.markShown('branches-organization')
+    setShowBranchesOrg(false)
+
+    if (showReminder && !manager.hadReminderShown('branches-organization')) {
+      const metadata = getGuideMetadata('branches-organization')
+      setGuideToRemind({
+        slug: metadata.slug,
+        title: metadata.title,
+        guideName: 'branches-organization',
+      })
+      manager.markDismissedWithReminder('branches-organization')
+    }
+  }
+
+  const handleBranchesOrgAction = () => {
+    handleBranchesOrgClose()
+    // Route to knowledge bank article about branch organization
+    router.push('/knowledge/organizing-with-branches')
+  }
+
+  const handleHeirConditionsClose = (showReminder: boolean = false) => {
+    const manager = getGlowGuideManager()
+    manager.markShown('heir-conditions')
+    setShowHeirConditions(false)
+
+    if (showReminder && !manager.hadReminderShown('heir-conditions')) {
+      const metadata = getGuideMetadata('heir-conditions')
+      setGuideToRemind({
+        slug: metadata.slug,
+        title: metadata.title,
+        guideName: 'heir-conditions',
+      })
+      manager.markDismissedWithReminder('heir-conditions')
+    }
+  }
+
+  const handleHeirConditionsAction = () => {
+    handleHeirConditionsClose()
+    // Route to first branch with heirs tab
+    if (grove?.allBranches && grove.allBranches.length > 0) {
+      router.push(`/branch/${grove.allBranches[0].id}?tab=heirs`)
+    }
+  }
+
+  const handleMultipleHeirsClose = (showReminder: boolean = false) => {
+    const manager = getGlowGuideManager()
+    manager.markShown('multiple-heirs')
+    setShowMultipleHeirs(false)
+
+    if (showReminder && !manager.hadReminderShown('multiple-heirs')) {
+      const metadata = getGuideMetadata('multiple-heirs')
+      setGuideToRemind({
+        slug: metadata.slug,
+        title: metadata.title,
+        guideName: 'multiple-heirs',
+      })
+      manager.markDismissedWithReminder('multiple-heirs')
+    }
+  }
+
+  const handleMultipleHeirsAction = () => {
+    handleMultipleHeirsClose()
+    // Route to first branch with heirs tab
+    if (grove?.allBranches && grove.allBranches.length > 0) {
+      router.push(`/branch/${grove.allBranches[0].id}?tab=heirs`)
+    }
+  }
+
+  const handleNestGuideClose = (showReminder: boolean = false) => {
+    const manager = getGlowGuideManager()
+    manager.markShown('nest')
+    setShowNestGuide(false)
+
+    if (showReminder && !manager.hadReminderShown('nest')) {
+      const metadata = getGuideMetadata('nest')
+      setGuideToRemind({
+        slug: metadata.slug,
+        title: metadata.title,
+        guideName: 'nest',
+      })
+      manager.markDismissedWithReminder('nest')
+    }
+  }
+
+  const handleNestGuideAction = () => {
+    handleNestGuideClose()
+    router.push('/nest')
   }
 
   // Check if bursts are currently snoozed
@@ -675,6 +845,41 @@ export default function GrovePage() {
         <SharingGlowGuide
           onClose={handleSharingWelcomeClose}
           onAction={handleSharingWelcomeAction}
+        />
+      )}
+
+      {showMultipleTrees && (
+        <MultipleTreesGlowGuide
+          onClose={handleMultipleTreesClose}
+          onAction={handleMultipleTreesAction}
+        />
+      )}
+
+      {showBranchesOrg && (
+        <BranchesOrganizationGlowGuide
+          onClose={handleBranchesOrgClose}
+          onAction={handleBranchesOrgAction}
+        />
+      )}
+
+      {showHeirConditions && (
+        <HeirConditionsGlowGuide
+          onClose={handleHeirConditionsClose}
+          onAction={handleHeirConditionsAction}
+        />
+      )}
+
+      {showMultipleHeirs && (
+        <MultipleHeirsGlowGuide
+          onClose={handleMultipleHeirsClose}
+          onAction={handleMultipleHeirsAction}
+        />
+      )}
+
+      {showNestGuide && (
+        <NestGlowGuide
+          onClose={handleNestGuideClose}
+          onAction={handleNestGuideAction}
         />
       )}
 

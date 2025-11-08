@@ -14,6 +14,9 @@ import Tooltip from '@/components/Tooltip'
 import VoiceMemoriesGlowGuide from '@/components/glow-guides/VoiceMemoriesGlowGuide'
 import PhotoMemoriesGlowGuide from '@/components/glow-guides/PhotoMemoriesGlowGuide'
 import SharingGlowGuide from '@/components/glow-guides/SharingGlowGuide'
+import AudioSparksGlowGuide from '@/components/glow-guides/AudioSparksGlowGuide'
+import MemoryThreadingGlowGuide from '@/components/glow-guides/MemoryThreadingGlowGuide'
+import StorySparksGlowGuide from '@/components/glow-guides/StorySparksGlowGuide'
 import GlowGuideReminder from '@/components/GlowGuideReminder'
 import { getActiveChallenge, getRandomSpark, getRandomSparkExcluding, SparkCollection } from '@/lib/sparks'
 import { getGlowGuideManager } from '@/lib/glowGuideManager'
@@ -105,6 +108,9 @@ export default function BranchPage() {
   const [showVoiceWelcome, setShowVoiceWelcome] = useState(false)
   const [showPhotoWelcome, setShowPhotoWelcome] = useState(false)
   const [showSharingWelcome, setShowSharingWelcome] = useState(false)
+  const [showAudioSparks, setShowAudioSparks] = useState(false)
+  const [showMemoryThreading, setShowMemoryThreading] = useState(false)
+  const [showStorySparks, setShowStorySparks] = useState(false)
 
   // Glow Guide Reminder state
   const [guideToRemind, setGuideToRemind] = useState<{
@@ -186,6 +192,12 @@ export default function BranchPage() {
         setShowPhotoWelcome(true)
       } else if (previewModal === 'sharing') {
         setShowSharingWelcome(true)
+      } else if (previewModal === 'audio-sparks') {
+        setShowAudioSparks(true)
+      } else if (previewModal === 'memory-threading') {
+        setShowMemoryThreading(true)
+      } else if (previewModal === 'story-sparks') {
+        setShowStorySparks(true)
       }
     }
   }, [branchId])
@@ -216,6 +228,21 @@ export default function BranchPage() {
     // Sharing welcome - if branch owner and no collaborators (aggressive mode)
     if (branch.owner && glowGuideManager.canShow('sharing', true)) {
       setTimeout(() => setShowSharingWelcome(true), 500)
+    }
+
+    // Audio Sparks - if user has 3+ voice memories but never clicked the audio spark icon
+    if (audioMemories >= 3 && glowGuideManager.canShow('audio-sparks')) {
+      setTimeout(() => setShowAudioSparks(true), 500)
+    }
+
+    // Memory Threading - if user has 10+ memories but none with explicit connections
+    if (totalMemories >= 10 && glowGuideManager.canShow('memory-threading')) {
+      setTimeout(() => setShowMemoryThreading(true), 500)
+    }
+
+    // Story Sparks - if user has created 5+ memories but never refreshed a spark
+    if (totalMemories >= 5 && glowGuideManager.canShow('story-sparks')) {
+      setTimeout(() => setShowStorySparks(true), 500)
     }
   }, [branch])
 
@@ -1401,6 +1428,82 @@ export default function BranchPage() {
           onAction={() => {
             setShowSharingWelcome(false)
             setShowSettings(true)
+          }}
+        />
+      )}
+
+      {/* Audio Sparks Guide */}
+      {showAudioSparks && (
+        <AudioSparksGlowGuide
+          onClose={(showReminder: boolean = false) => {
+            const manager = getGlowGuideManager()
+            manager.markShown('audio-sparks')
+            setShowAudioSparks(false)
+
+            if (showReminder && !manager.hadReminderShown('audio-sparks')) {
+              const metadata = getGuideMetadata('audio-sparks')
+              setGuideToRemind({
+                slug: metadata.slug,
+                title: metadata.title,
+                guideName: 'audio-sparks',
+              })
+              manager.markDismissedWithReminder('audio-sparks')
+            }
+          }}
+          onAction={() => {
+            setShowAudioSparks(false)
+            setShowNewMemory(true)
+          }}
+        />
+      )}
+
+      {/* Memory Threading Guide */}
+      {showMemoryThreading && (
+        <MemoryThreadingGlowGuide
+          onClose={(showReminder: boolean = false) => {
+            const manager = getGlowGuideManager()
+            manager.markShown('memory-threading')
+            setShowMemoryThreading(false)
+
+            if (showReminder && !manager.hadReminderShown('memory-threading')) {
+              const metadata = getGuideMetadata('memory-threading')
+              setGuideToRemind({
+                slug: metadata.slug,
+                title: metadata.title,
+                guideName: 'memory-threading',
+              })
+              manager.markDismissedWithReminder('memory-threading')
+            }
+          }}
+          onAction={() => {
+            setShowMemoryThreading(false)
+            // Open knowledge bank article
+            router.push('/knowledge/connecting-memories')
+          }}
+        />
+      )}
+
+      {/* Story Sparks Guide */}
+      {showStorySparks && (
+        <StorySparksGlowGuide
+          onClose={(showReminder: boolean = false) => {
+            const manager = getGlowGuideManager()
+            manager.markShown('story-sparks')
+            setShowStorySparks(false)
+
+            if (showReminder && !manager.hadReminderShown('story-sparks')) {
+              const metadata = getGuideMetadata('story-sparks')
+              setGuideToRemind({
+                slug: metadata.slug,
+                title: metadata.title,
+                guideName: 'story-sparks',
+              })
+              manager.markDismissedWithReminder('story-sparks')
+            }
+          }}
+          onAction={() => {
+            setShowStorySparks(false)
+            setShowSparkPicker(true)
           }}
         />
       )}

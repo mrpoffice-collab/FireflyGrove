@@ -9,8 +9,8 @@ timeToRead: 2
 icon: 📷
 featured: false
 isNew: false
-createdAt: 2025-11-08T19:21:58.463Z
-updatedAt: 2025-11-08T19:21:58.463Z
+createdAt: 2025-11-08T19:47:36.757Z
+updatedAt: 2025-11-08T19:47:36.757Z
 ---
 
 # 📷 Mobile Photo Upload: Capture the Moment

@@ -60,7 +60,8 @@
       "Bash(npm run seed-knowledge-bank:*)",
       "Bash(for file in ShareableLinksGlowGuide.tsx MemberRemovalGlowGuide.tsx BranchPermissionsGlowGuide.tsx ApprovalWorkflowGlowGuide.tsx CoAuthoringGlowGuide.tsx)",
       "Bash(do sed -i \"s/category: ''COLLABORATION''/category: ''SHARING''/g\" \"$file\")",
-      "Bash(timeout 180 npm run build)"
+      "Bash(timeout 180 npm run build)",
+      "Bash(timeout 90 npm run build:*)"
     ],
     "deny": [],
     "ask": []

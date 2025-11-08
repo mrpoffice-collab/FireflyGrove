@@ -84,7 +84,13 @@ export default function KnowledgeArticlePage() {
         <Header />
         <div className="container mx-auto px-4 py-8 max-w-3xl">
           <SkeletonTitle />
-          <SkeletonText lines={10} />
+          <div className="space-y-2">
+            <SkeletonText />
+            <SkeletonText />
+            <SkeletonText />
+            <SkeletonText />
+            <SkeletonText />
+          </div>
         </div>
       </div>
     )
