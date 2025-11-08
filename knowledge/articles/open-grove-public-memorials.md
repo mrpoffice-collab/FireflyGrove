@@ -65,7 +65,6 @@ Open Grove is our public memorial space where anyone can discover and honor rema
 - 💡 Take your time - this feature is designed to be intuitive
 - 💡 You can preview before committing to changes
 - 💡 Settings can be updated anytime
-- 💡 If you get stuck, look for the (?) help icons
 
 ---
 

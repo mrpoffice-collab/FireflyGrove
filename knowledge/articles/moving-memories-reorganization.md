@@ -65,7 +65,6 @@ As your grove grows, you'll discover better ways to organize. Moving memories le
 - 💡 Take your time - this feature is designed to be intuitive
 - 💡 You can preview before committing to changes
 - 💡 Settings can be updated anytime
-- 💡 If you get stuck, look for the (?) help icons
 
 ---
 

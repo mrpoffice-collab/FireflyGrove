@@ -65,7 +65,6 @@ Glowing is our way of saying "this matters to me" — a gentle way to show appre
 - 💡 Take your time - this feature is designed to be intuitive
 - 💡 You can preview before committing to changes
 - 💡 Settings can be updated anytime
-- 💡 If you get stuck, look for the (?) help icons
 
 ---
 

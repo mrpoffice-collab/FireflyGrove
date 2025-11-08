@@ -65,7 +65,6 @@ The Firefly Grove mobile app is built specifically for capturing memories in the
 - 💡 Take your time - this feature is designed to be intuitive
 - 💡 You can preview before committing to changes
 - 💡 Settings can be updated anytime
-- 💡 If you get stuck, look for the (?) help icons
 
 ---
 

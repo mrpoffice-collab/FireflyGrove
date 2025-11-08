@@ -65,7 +65,6 @@ Your Treasure Chest grows richer as you show up for yourself. Milestones unlock 
 - 💡 Take your time - this feature is designed to be intuitive
 - 💡 You can preview before committing to changes
 - 💡 Settings can be updated anytime
-- 💡 If you get stuck, look for the (?) help icons
 
 ---
 

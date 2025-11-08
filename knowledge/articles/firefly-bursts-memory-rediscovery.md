@@ -65,7 +65,6 @@ Firefly Bursts take your memories and create a beautiful, shareable moment of re
 - 💡 Take your time - this feature is designed to be intuitive
 - 💡 You can preview before committing to changes
 - 💡 Settings can be updated anytime
-- 💡 If you get stuck, look for the (?) help icons
 
 ---
 

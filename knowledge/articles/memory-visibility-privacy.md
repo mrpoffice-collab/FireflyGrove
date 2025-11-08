@@ -65,7 +65,6 @@ Not every memory is meant for everyone. Some are just for you. Some are gifts fo
 - 💡 Take your time - this feature is designed to be intuitive
 - 💡 You can preview before committing to changes
 - 💡 Settings can be updated anytime
-- 💡 If you get stuck, look for the (?) help icons
 
 ---
 

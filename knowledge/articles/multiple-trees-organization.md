@@ -65,7 +65,6 @@ Different parts of your life deserve different trees. Separate your own story fr
 - 💡 Take your time - this feature is designed to be intuitive
 - 💡 You can preview before committing to changes
 - 💡 Settings can be updated anytime
-- 💡 If you get stuck, look for the (?) help icons
 
 ---
 

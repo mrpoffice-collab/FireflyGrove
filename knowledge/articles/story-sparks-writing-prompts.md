@@ -65,7 +65,6 @@ Story Sparks are thoughtful questions designed to unlock memories you didn't eve
 - 💡 Take your time - this feature is designed to be intuitive
 - 💡 You can preview before committing to changes
 - 💡 Settings can be updated anytime
-- 💡 If you get stuck, look for the (?) help icons
 
 ---
 
