@@ -138,6 +138,7 @@ export default function BranchPage() {
       const params = new URLSearchParams(window.location.search)
       const nestPhotoParam = params.get('nestPhoto')
       const tabParam = params.get('tab')
+      const openSharingParam = params.get('openSharing')
 
       if (nestPhotoParam) {
         try {
@@ -150,6 +151,13 @@ export default function BranchPage() {
         } catch (error) {
           console.error('Failed to parse nest photo data:', error)
         }
+      }
+
+      // Auto-open sharing from Glow Guide CTA
+      if (openSharingParam === 'true') {
+        setShowSettings(true)
+        // Clean up URL
+        window.history.replaceState({}, '', `/branch/${branchId}`)
       }
 
       // Auto-open settings with specific tab (e.g., ?tab=heirs)

@@ -342,9 +342,19 @@ export default function GrovePage() {
   }
 
   const handleSharingWelcomeAction = () => {
-    // For now just close - user will need to go to branch settings
-    // Could improve by storing which branch to auto-open settings for
-    setShowSharingWelcome(false)
+    // Close modal first
+    handleSharingWelcomeClose()
+
+    // Route to first available branch with sharing settings open
+    if (grove?.allBranches && grove.allBranches.length > 0) {
+      router.push(`/branch/${grove.allBranches[0].id}?openSharing=true`)
+    } else if (grove?.trees && grove.trees.length > 0 && grove.trees[0].id) {
+      // If no branches yet, route to first tree
+      router.push(`/tree/${grove.trees[0].id}`)
+    } else {
+      // No branches or trees yet
+      alert('First, plant a tree and create a branch. Then you can invite others to tend it with you.')
+    }
   }
 
   // Check if bursts are currently snoozed
