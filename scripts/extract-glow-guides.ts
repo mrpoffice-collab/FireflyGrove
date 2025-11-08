@@ -180,9 +180,12 @@ function generateMarkdown(
   const now = new Date()
   const dateStr = now.toISOString().split('T')[0]
 
+  // Quote title if it contains colons (YAML requirement)
+  const safeTitle = metadata.title.includes(':') ? `"${metadata.title}"` : metadata.title
+
   return `---
 slug: ${metadata.slug}
-title: ${metadata.title}
+title: ${safeTitle}
 subtitle: ${metadata.subtitle}
 category: ${metadata.category}
 tags: ${metadata.tags.join(', ')}

@@ -16,6 +16,7 @@
     "db:seed": "tsx prisma/seed.ts",
     "db:studio": "prisma studio",
     "extract-glow-guides": "tsx scripts/extract-glow-guides.ts",
+    "seed-knowledge-bank": "tsx scripts/seed-knowledge-bank.ts",
     "update-sentiments": "npx ts-node scripts/update-sentiments-from-config.ts",
     "import-sentiments": "npx ts-node scripts/import-sentiments.ts"
   },

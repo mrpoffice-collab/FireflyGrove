@@ -51,7 +51,8 @@
       "Bash(npm run dev:*)",
       "Bash(npx tsc:*)",
       "Bash(timeout 5 curl:*)",
-      "Bash(timeout 10 curl:*)"
+      "Bash(timeout 10 curl:*)",
+      "Bash(node scripts/add-glow-guide-metadata.js:*)"
     ],
     "deny": [],
     "ask": []

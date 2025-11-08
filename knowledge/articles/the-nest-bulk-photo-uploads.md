@@ -1,6 +1,6 @@
 ---
 slug: the-nest-bulk-photo-uploads
-title: The Nest: Bulk Photo Uploads
+title: "The Nest: Bulk Photo Uploads"
 subtitle: Organize Before You Hatch
 category: PHOTOS_MEDIA
 tags: nest, photos, bulk-upload, organization, workflow
