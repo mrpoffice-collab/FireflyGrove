@@ -36,7 +36,7 @@ async function extractGlowGuides() {
   console.log('🔍 Finding Glow Guide components...\n')
 
   // Find all Glow Guide components
-  const glowGuideFiles = await glob('components/discovery/**/*Modal.tsx')
+  const glowGuideFiles = await glob('components/glow-guides/**/*GlowGuide.tsx')
 
   if (glowGuideFiles.length === 0) {
     console.error('❌ No Glow Guide components found!')

@@ -11,9 +11,9 @@ import FireflyBurst from '@/components/FireflyBurst'
 import AudioSparks from '@/components/AudioSparks'
 import TreasureChestModal from '@/components/TreasureChestModal'
 import TreasureWelcomeModal from '@/components/TreasureWelcomeModal'
-import HeirsWelcomeModal from '@/components/discovery/HeirsWelcomeModal'
-import TreesVsBranchesWelcomeModal from '@/components/discovery/TreesVsBranchesWelcomeModal'
-import SharingWelcomeModal from '@/components/discovery/SharingWelcomeModal'
+import HeirsGlowGuide from '@/components/glow-guides/HeirsGlowGuide'
+import TreesVsBranchesGlowGuide from '@/components/glow-guides/TreesVsBranchesGlowGuide'
+import SharingGlowGuide from '@/components/glow-guides/SharingGlowGuide'
 import { getPlanById } from '@/lib/plans'
 import { getDiscoveryManager } from '@/lib/discoveryManager'
 import { SkeletonTreeCard, SkeletonPersonCard, SkeletonGrid, SkeletonTitle, SkeletonText } from '@/components/SkeletonLoader'
@@ -616,23 +616,23 @@ export default function GrovePage() {
         />
       )}
 
-      {/* Discovery Modals */}
+      {/* Glow Guides */}
       {showHeirsWelcome && (
-        <HeirsWelcomeModal
+        <HeirsGlowGuide
           onClose={handleHeirsWelcomeClose}
           onAction={handleHeirsWelcomeAction}
         />
       )}
 
       {showTreesWelcome && (
-        <TreesVsBranchesWelcomeModal
+        <TreesVsBranchesGlowGuide
           onClose={handleTreesWelcomeClose}
           onAction={handleTreesWelcomeAction}
         />
       )}
 
       {showSharingWelcome && (
-        <SharingWelcomeModal
+        <SharingGlowGuide
           onClose={handleSharingWelcomeClose}
           onAction={handleSharingWelcomeAction}
         />

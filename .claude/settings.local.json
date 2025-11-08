@@ -52,7 +52,11 @@
       "Bash(npx tsc:*)",
       "Bash(timeout 5 curl:*)",
       "Bash(timeout 10 curl:*)",
-      "Bash(node scripts/add-glow-guide-metadata.js:*)"
+      "Bash(node scripts/add-glow-guide-metadata.js:*)",
+      "Bash(npx husky init)",
+      "Bash(git reset:*)",
+      "Bash(git mv:*)",
+      "Bash(npm run extract-glow-guides:*)"
     ],
     "deny": [],
     "ask": []

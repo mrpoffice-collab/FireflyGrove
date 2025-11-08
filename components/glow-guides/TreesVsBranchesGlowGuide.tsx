@@ -19,12 +19,12 @@ export const glowGuideMetadata = {
   ctaAction: 'Routes to /grove/new-tree',
 }
 
-interface TreesVsBranchesWelcomeModalProps {
+interface TreesVsBranchesGlowGuideProps {
   onClose: () => void
   onAction?: () => void
 }
 
-export default function TreesVsBranchesWelcomeModal({ onClose, onAction }: TreesVsBranchesWelcomeModalProps) {
+export default function TreesVsBranchesGlowGuide({ onClose, onAction }: TreesVsBranchesGlowGuideProps) {
   const handlePlantTree = () => {
     if (onAction) onAction()
     onClose()

@@ -67,7 +67,7 @@ assignees: ''
 ## Implementation Checklist
 
 Once approved:
-- [ ] Create component in `components/discovery/[Name]GlowGuide.tsx`
+- [ ] Create component in `components/glow-guides/[Name]GlowGuide.tsx`
 - [ ] Add `glowGuideMetadata` export
 - [ ] Implement trigger logic in parent component
 - [ ] Add preview URL support (`?preview=guideName`)

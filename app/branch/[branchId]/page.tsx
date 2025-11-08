@@ -11,9 +11,9 @@ import UndoBanner from '@/components/UndoBanner'
 import SharePanel from '@/components/SharePanel'
 import SparkPicker from '@/components/SparkPicker'
 import Tooltip from '@/components/Tooltip'
-import VoiceMemoriesWelcomeModal from '@/components/discovery/VoiceMemoriesWelcomeModal'
-import PhotoMemoriesWelcomeModal from '@/components/discovery/PhotoMemoriesWelcomeModal'
-import SharingWelcomeModal from '@/components/discovery/SharingWelcomeModal'
+import VoiceMemoriesGlowGuide from '@/components/glow-guides/VoiceMemoriesGlowGuide'
+import PhotoMemoriesGlowGuide from '@/components/glow-guides/PhotoMemoriesGlowGuide'
+import SharingGlowGuide from '@/components/glow-guides/SharingGlowGuide'
 import { getActiveChallenge, getRandomSpark, getRandomSparkExcluding, SparkCollection } from '@/lib/sparks'
 import { getDiscoveryManager } from '@/lib/discoveryManager'
 import { SkeletonMemoryCard, SkeletonList, SkeletonTitle, SkeletonText } from '@/components/SkeletonLoader'
@@ -1322,9 +1322,9 @@ export default function BranchPage() {
         />
       )}
 
-      {/* Discovery Modals */}
+      {/* Glow Guides */}
       {showVoiceWelcome && (
-        <VoiceMemoriesWelcomeModal
+        <VoiceMemoriesGlowGuide
           onClose={() => {
             const discoveryManager = getDiscoveryManager()
             discoveryManager.markShown('voiceWelcome')
@@ -1338,7 +1338,7 @@ export default function BranchPage() {
       )}
 
       {showPhotoWelcome && (
-        <PhotoMemoriesWelcomeModal
+        <PhotoMemoriesGlowGuide
           onClose={() => {
             const discoveryManager = getDiscoveryManager()
             discoveryManager.markShown('photoWelcome')
@@ -1352,7 +1352,7 @@ export default function BranchPage() {
       )}
 
       {showSharingWelcome && (
-        <SharingWelcomeModal
+        <SharingGlowGuide
           onClose={() => {
             const discoveryManager = getDiscoveryManager()
             discoveryManager.markShown('sharingWelcome')

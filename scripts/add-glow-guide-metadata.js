@@ -6,7 +6,7 @@ const fs = require('fs')
 const path = require('path')
 
 const metadataToAdd = {
-  'VoiceMemoriesWelcomeModal.tsx': `/**
+  'VoiceMemoriesGlowGuide.tsx': `/**
  * Glow Guide Metadata
  */
 export const glowGuideMetadata = {
@@ -26,7 +26,7 @@ export const glowGuideMetadata = {
 }
 
 `,
-  'PhotoMemoriesWelcomeModal.tsx': `/**
+  'PhotoMemoriesGlowGuide.tsx': `/**
  * Glow Guide Metadata
  */
 export const glowGuideMetadata = {
@@ -46,7 +46,7 @@ export const glowGuideMetadata = {
 }
 
 `,
-  'NestWelcomeModal.tsx': `/**
+  'NestGlowGuide.tsx': `/**
  * Glow Guide Metadata
  */
 export const glowGuideMetadata = {
@@ -68,7 +68,7 @@ export const glowGuideMetadata = {
 `
 }
 
-const componentsDir = path.join(__dirname, '../components/discovery')
+const componentsDir = path.join(__dirname, '../components/glow-guides')
 
 for (const [filename, metadata] of Object.entries(metadataToAdd)) {
   const filePath = path.join(componentsDir, filename)

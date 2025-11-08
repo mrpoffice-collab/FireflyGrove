@@ -20,12 +20,12 @@ export const glowGuideMetadata = {
 }
 
 
-interface NestWelcomeModalProps {
+interface NestGlowGuideProps {
   onClose: () => void
   onAction?: () => void
 }
 
-export default function NestWelcomeModal({ onClose, onAction }: NestWelcomeModalProps) {
+export default function NestGlowGuide({ onClose, onAction }: NestGlowGuideProps) {
   const handleExploreNest = () => {
     if (onAction) onAction()
     onClose()

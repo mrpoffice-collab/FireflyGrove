@@ -9,8 +9,8 @@ timeToRead: 2
 icon: 🎙️
 featured: false
 isNew: false
-createdAt: 2025-11-08T18:01:24.404Z
-updatedAt: 2025-11-08T18:01:24.404Z
+createdAt: 2025-11-08T18:36:02.245Z
+updatedAt: 2025-11-08T18:36:02.245Z
 ---
 
 # 🎙️ Recording Voice Memories
