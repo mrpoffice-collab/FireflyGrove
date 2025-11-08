@@ -13,14 +13,12 @@ export default async function Image({ params }: { params: Promise<{ branchId: st
 
   try {
     // Fetch branch data from API route instead of Prisma (edge runtime doesn't support Prisma)
-    const baseUrl = process.env.VERCEL_URL
-      ? `https://${process.env.VERCEL_URL}`
-      : 'https://fireflygrove.app'
-
-    const response = await fetch(`${baseUrl}/api/branches/${branchId}`, {
+    // Always use production URL to avoid edge runtime fetch issues
+    const response = await fetch(`https://fireflygrove.app/api/branches/${branchId}`, {
       headers: {
         'Cache-Control': 'no-cache',
       },
+      cache: 'no-store',
     })
 
     if (!response.ok) {
