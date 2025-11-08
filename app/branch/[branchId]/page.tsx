@@ -128,56 +128,8 @@ export default function BranchPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, branchId])
 
-  // Pre-warm Facebook's Open Graph cache when page loads
-  useEffect(() => {
-    const prefetchFacebook = async () => {
-      console.log('=== FACEBOOK PREFETCH START ===')
-      console.log('window defined?', typeof window !== 'undefined')
-      console.log('branchId:', branchId)
-      console.log('window.location.origin:', typeof window !== 'undefined' ? window.location.origin : 'N/A')
-
-      if (typeof window !== 'undefined' && branchId) {
-        const url = `${window.location.origin}/branch/${branchId}`
-        console.log('Built URL for Facebook prefetch:', url)
-
-        const requestBody = { url }
-        console.log('Request body being sent:', JSON.stringify(requestBody))
-
-        try {
-          console.log('Calling /api/prefetch-facebook...')
-          const response = await fetch('/api/prefetch-facebook', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(requestBody)
-          })
-
-          console.log('Response status:', response.status)
-          console.log('Response ok:', response.ok)
-
-          const result = await response.json()
-          console.log('Facebook prefetch API response:', JSON.stringify(result, null, 2))
-
-          if (result.success) {
-            console.log('✅ Facebook cache pre-warmed successfully')
-            console.log('Facebook said:', result.data)
-          } else {
-            console.warn('⚠️ Facebook cache warming had issues:', result)
-            if (result.error) {
-              console.error('Error details:', result.error)
-            }
-          }
-        } catch (error) {
-          console.error('❌ Failed to call prefetch API:', error)
-          console.error('Error type:', error instanceof Error ? error.constructor.name : typeof error)
-          console.error('Error message:', error instanceof Error ? error.message : String(error))
-        }
-      } else {
-        console.log('Skipping prefetch - conditions not met')
-      }
-      console.log('=== FACEBOOK PREFETCH END ===')
-    }
-    prefetchFacebook()
-  }, [branchId])
+  // Note: Facebook will automatically scrape Open Graph tags when someone first shares this page
+  // The Open Graph image and metadata are configured in opengraph-image.tsx and the page metadata
 
   // Check for nest photo in URL params (from "Hatch from Nest")
   // Also check for tab parameter to auto-open settings

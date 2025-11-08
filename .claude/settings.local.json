@@ -48,7 +48,8 @@
       "Bash(node -e:*)",
       "Bash(git log:*)",
       "Bash(node scripts/find-broken-image.ts:*)",
-      "Bash(npm run dev:*)"
+      "Bash(npm run dev:*)",
+      "Bash(npx tsc:*)"
     ],
     "deny": [],
     "ask": []
