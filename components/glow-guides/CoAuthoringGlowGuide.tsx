@@ -9,7 +9,7 @@ export const glowGuideMetadata = {
   title: 'Co-Authoring: Write Memories Together',
   subtitle: 'Shared Experiences, Shared Stories',
   icon: '✍️',
-  category: 'COLLABORATION',
+  category: 'SHARING',
   tags: ['co-authoring', 'collaboration', 'shared', 'joint', 'together'],
   difficulty: 'INTERMEDIATE',
   timeToRead: 2,

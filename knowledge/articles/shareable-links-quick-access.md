@@ -2,22 +2,22 @@
 slug: shareable-links-quick-access
 title: "Shareable Links: One-Time Access"
 subtitle: Share Without Adding Members
-category: COLLABORATION
+category: SHARING
 tags: links, sharing, temporary, quick, access
 difficulty: BEGINNER
 timeToRead: 2
 icon: 🔗
 featured: false
 isNew: false
-createdAt: 2025-11-08T18:54:15.925Z
-updatedAt: 2025-11-08T18:54:15.925Z
+createdAt: 2025-11-08T19:07:15.942Z
+updatedAt: 2025-11-08T19:07:15.942Z
 ---
 
 # 🔗 Shareable Links: One-Time Access
 
 > Share Without Adding Members
 
-**Category:** COLLABORATION
+**Category:** SHARING
 **Time to Read:** 2 minutes
 **Difficulty:** BEGINNER
 

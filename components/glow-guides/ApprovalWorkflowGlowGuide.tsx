@@ -9,7 +9,7 @@ export const glowGuideMetadata = {
   title: 'Approval Workflow: Curate Your Tree',
   subtitle: 'Review Before Publishing',
   icon: '✅',
-  category: 'COLLABORATION',
+  category: 'SHARING',
   tags: ['approval', 'workflow', 'review', 'moderation', 'quality'],
   difficulty: 'INTERMEDIATE',
   timeToRead: 2,

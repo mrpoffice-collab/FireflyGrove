@@ -2,22 +2,22 @@
 slug: member-removal-managing-collaborators
 title: "Member Removal: Manage Your Circle"
 subtitle: Sometimes Relationships Change
-category: COLLABORATION
+category: SHARING
 tags: removal, management, conflict, privacy, access
 difficulty: INTERMEDIATE
 timeToRead: 2
 icon: 👋
 featured: false
 isNew: false
-createdAt: 2025-11-08T18:54:15.961Z
-updatedAt: 2025-11-08T18:54:15.961Z
+createdAt: 2025-11-08T19:07:15.965Z
+updatedAt: 2025-11-08T19:07:15.965Z
 ---
 
 # 👋 Member Removal: Manage Your Circle
 
 > Sometimes Relationships Change
 
-**Category:** COLLABORATION
+**Category:** SHARING
 **Time to Read:** 2 minutes
 **Difficulty:** INTERMEDIATE
 

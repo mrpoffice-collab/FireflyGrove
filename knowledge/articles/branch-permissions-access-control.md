@@ -2,22 +2,22 @@
 slug: branch-permissions-access-control
 title: "Branch Permissions: Fine-Tune Access"
 subtitle: Customize Who Can Do What
-category: COLLABORATION
+category: SHARING
 tags: permissions, access, control, roles, security
 difficulty: INTERMEDIATE
 timeToRead: 3
 icon: 🔐
 featured: false
 isNew: false
-createdAt: 2025-11-08T18:54:15.986Z
-updatedAt: 2025-11-08T18:54:15.986Z
+createdAt: 2025-11-08T19:07:15.974Z
+updatedAt: 2025-11-08T19:07:15.974Z
 ---
 
 # 🔐 Branch Permissions: Fine-Tune Access
 
 > Customize Who Can Do What
 
-**Category:** COLLABORATION
+**Category:** SHARING
 **Time to Read:** 3 minutes
 **Difficulty:** INTERMEDIATE
 

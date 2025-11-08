@@ -9,7 +9,7 @@ export const glowGuideMetadata = {
   title: 'Shareable Links: One-Time Access',
   subtitle: 'Share Without Adding Members',
   icon: '🔗',
-  category: 'COLLABORATION',
+  category: 'SHARING',
   tags: ['links', 'sharing', 'temporary', 'quick', 'access'],
   difficulty: 'BEGINNER',
   timeToRead: 2,

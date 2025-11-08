@@ -9,8 +9,8 @@ timeToRead: 2
 icon: ✨
 featured: false
 isNew: false
-createdAt: 2025-11-08T18:54:15.977Z
-updatedAt: 2025-11-08T18:54:15.977Z
+createdAt: 2025-11-08T19:07:15.971Z
+updatedAt: 2025-11-08T19:07:15.971Z
 ---
 
 # ✨ Firefly Bursts: Rediscover Your Memories

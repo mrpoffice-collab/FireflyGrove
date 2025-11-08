@@ -2,22 +2,22 @@
 slug: approval-workflow-review-contributions
 title: "Approval Workflow: Curate Your Tree"
 subtitle: Review Before Publishing
-category: COLLABORATION
+category: SHARING
 tags: approval, workflow, review, moderation, quality
 difficulty: INTERMEDIATE
 timeToRead: 2
 icon: ✅
 featured: false
 isNew: false
-createdAt: 2025-11-08T18:54:15.992Z
-updatedAt: 2025-11-08T18:54:15.992Z
+createdAt: 2025-11-08T19:07:15.976Z
+updatedAt: 2025-11-08T19:07:15.976Z
 ---
 
 # ✅ Approval Workflow: Curate Your Tree
 
 > Review Before Publishing
 
-**Category:** COLLABORATION
+**Category:** SHARING
 **Time to Read:** 2 minutes
 **Difficulty:** INTERMEDIATE
 

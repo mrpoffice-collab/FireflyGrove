@@ -9,7 +9,7 @@ export const glowGuideMetadata = {
   title: 'Branch Permissions: Fine-Tune Access',
   subtitle: 'Customize Who Can Do What',
   icon: '🔐',
-  category: 'COLLABORATION',
+  category: 'SHARING',
   tags: ['permissions', 'access', 'control', 'roles', 'security'],
   difficulty: 'INTERMEDIATE',
   timeToRead: 3,

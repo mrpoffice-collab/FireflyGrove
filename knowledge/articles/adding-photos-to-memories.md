@@ -9,8 +9,8 @@ timeToRead: 2
 icon: 📸
 featured: false
 isNew: false
-createdAt: 2025-11-08T18:54:15.931Z
-updatedAt: 2025-11-08T18:54:15.931Z
+createdAt: 2025-11-08T19:07:15.947Z
+updatedAt: 2025-11-08T19:07:15.947Z
 ---
 
 # 📸 Adding Photos to Memories

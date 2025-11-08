@@ -2,22 +2,22 @@
 slug: co-authoring-joint-memories
 title: "Co-Authoring: Write Memories Together"
 subtitle: Shared Experiences, Shared Stories
-category: COLLABORATION
+category: SHARING
 tags: co-authoring, collaboration, shared, joint, together
 difficulty: INTERMEDIATE
 timeToRead: 2
 icon: ✍️
 featured: false
 isNew: false
-createdAt: 2025-11-08T18:54:15.983Z
-updatedAt: 2025-11-08T18:54:15.983Z
+createdAt: 2025-11-08T19:07:15.973Z
+updatedAt: 2025-11-08T19:07:15.973Z
 ---
 
 # ✍️ Co-Authoring: Write Memories Together
 
 > Shared Experiences, Shared Stories
 
-**Category:** COLLABORATION
+**Category:** SHARING
 **Time to Read:** 2 minutes
 **Difficulty:** INTERMEDIATE
 

@@ -9,8 +9,8 @@ timeToRead: 3
 icon: ⭐
 featured: false
 isNew: false
-createdAt: 2025-11-08T18:54:15.944Z
-updatedAt: 2025-11-08T18:54:15.944Z
+createdAt: 2025-11-08T19:07:15.955Z
+updatedAt: 2025-11-08T19:07:15.955Z
 ---
 
 # ⭐ Moderator Role: Your Trusted Helper

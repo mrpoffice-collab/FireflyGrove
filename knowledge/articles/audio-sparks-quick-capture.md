@@ -9,8 +9,8 @@ timeToRead: 2
 icon: ⚡
 featured: false
 isNew: false
-createdAt: 2025-11-08T18:54:15.990Z
-updatedAt: 2025-11-08T18:54:15.990Z
+createdAt: 2025-11-08T19:07:15.975Z
+updatedAt: 2025-11-08T19:07:15.975Z
 ---
 
 # ⚡ Audio Sparks: Quick Voice Capture

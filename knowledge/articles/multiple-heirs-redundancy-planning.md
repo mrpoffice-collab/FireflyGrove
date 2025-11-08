@@ -9,8 +9,8 @@ timeToRead: 3
 icon: 👨‍👩‍👧‍👦
 featured: false
 isNew: false
-createdAt: 2025-11-08T18:54:15.940Z
-updatedAt: 2025-11-08T18:54:15.940Z
+createdAt: 2025-11-08T19:07:15.951Z
+updatedAt: 2025-11-08T19:07:15.951Z
 ---
 
 # 👨‍👩‍👧‍👦 Multiple Heirs: Redundancy & Fairness

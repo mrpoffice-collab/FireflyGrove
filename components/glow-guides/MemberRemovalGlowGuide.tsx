@@ -9,7 +9,7 @@ export const glowGuideMetadata = {
   title: 'Member Removal: Manage Your Circle',
   subtitle: 'Sometimes Relationships Change',
   icon: '👋',
-  category: 'COLLABORATION',
+  category: 'SHARING',
   tags: ['removal', 'management', 'conflict', 'privacy', 'access'],
   difficulty: 'INTERMEDIATE',
   timeToRead: 2,

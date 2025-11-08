@@ -9,8 +9,8 @@ timeToRead: 3
 icon: 🪺
 featured: false
 isNew: false
-createdAt: 2025-11-08T18:54:15.935Z
-updatedAt: 2025-11-08T18:54:15.935Z
+createdAt: 2025-11-08T19:07:15.949Z
+updatedAt: 2025-11-08T19:07:15.949Z
 ---
 
 # 🪺 The Nest: Bulk Photo Uploads

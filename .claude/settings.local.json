@@ -56,7 +56,10 @@
       "Bash(npx husky init)",
       "Bash(git reset:*)",
       "Bash(git mv:*)",
-      "Bash(npm run extract-glow-guides:*)"
+      "Bash(npm run extract-glow-guides:*)",
+      "Bash(npm run seed-knowledge-bank:*)",
+      "Bash(for file in ShareableLinksGlowGuide.tsx MemberRemovalGlowGuide.tsx BranchPermissionsGlowGuide.tsx ApprovalWorkflowGlowGuide.tsx CoAuthoringGlowGuide.tsx)",
+      "Bash(do sed -i \"s/category: ''COLLABORATION''/category: ''SHARING''/g\" \"$file\")"
     ],
     "deny": [],
     "ask": []
