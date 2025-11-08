@@ -1,5 +1,5 @@
 import { ImageResponse } from 'next/og'
-import { PrismaClient } from '@prisma/client'
+import { prisma } from '@/lib/prisma'
 
 export const runtime = 'nodejs'
 export const alt = 'Memorial - Firefly Grove'
@@ -10,8 +10,6 @@ export const size = {
 export const contentType = 'image/png'
 
 export default async function Image({ params }: { params: { branchId: string } }) {
-  // Create Prisma client
-  const prisma = new PrismaClient()
 
   try {
     // Fetch branch data
@@ -235,7 +233,5 @@ export default async function Image({ params }: { params: { branchId: string } }
       ),
       { ...size }
     )
-  } finally {
-    await prisma.$disconnect()
   }
 }
