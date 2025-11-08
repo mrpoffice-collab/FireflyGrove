@@ -9,7 +9,7 @@ import StructuredData from '@/components/StructuredData'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://firefly-grove.vercel.app'),
+  metadataBase: new URL('https://fireflygrove.app'),
   title: {
     default: 'Firefly Grove - Preserve Your Family Legacy Forever',
     template: '%s | Firefly Grove'
@@ -48,7 +48,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://firefly-grove.vercel.app',
+    url: 'https://fireflygrove.app',
     title: 'Firefly Grove - Preserve Your Family Legacy Forever',
     description: 'Create a beautiful digital legacy for your family. Preserve memories, photos, videos, and sound art. Build memorial tributes and share your family story across generations.',
     siteName: 'Firefly Grove',

@@ -8,7 +8,12 @@ export default function robots(): MetadataRoute.Robots {
         allow: '/',
         disallow: ['/api/', '/grove/*', '/admin/*'],
       },
+      {
+        // Explicitly allow Facebook's crawler
+        userAgent: 'facebookexternalhit',
+        allow: '/',
+      },
     ],
-    sitemap: 'https://firefly-grove.vercel.app/sitemap.xml',
+    sitemap: 'https://fireflygrove.app/sitemap.xml',
   }
 }

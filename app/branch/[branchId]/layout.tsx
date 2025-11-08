@@ -12,16 +12,6 @@ export async function generateMetadata({
       select: {
         title: true,
         description: true,
-        entries: {
-          where: {
-            mediaUrl: { not: null },
-          },
-          select: {
-            mediaUrl: true,
-          },
-          take: 1,
-          orderBy: { createdAt: 'desc' },
-        },
       },
     })
 
@@ -31,10 +21,10 @@ export async function generateMetadata({
       }
     }
 
-    const imageUrl = branch.entries[0]?.mediaUrl || 'https://firefly-grove.vercel.app/icon.svg'
     const description = branch.description || `Memories and stories about ${branch.title}`
+    const branchUrl = `https://fireflygrove.app/branch/${params.branchId}`
 
-    console.log(`[OG Meta] Branch: ${branch.title}, Image: ${imageUrl}`)
+    console.log(`[OG Meta] Branch: ${branch.title}, URL: ${branchUrl}`)
 
     return {
       title: `${branch.title} - Firefly Grove`,
@@ -42,21 +32,18 @@ export async function generateMetadata({
       openGraph: {
         title: `${branch.title} - Firefly Grove`,
         description,
-        images: [
-          {
-            url: imageUrl,
-            width: 1200,
-            height: 630,
-            alt: branch.title,
-          },
-        ],
+        url: branchUrl,
+        siteName: 'Firefly Grove',
+        locale: 'en_US',
         type: 'website',
       },
       twitter: {
         card: 'summary_large_image',
         title: `${branch.title} - Firefly Grove`,
         description,
-        images: [imageUrl],
+      },
+      other: {
+        'fb:app_id': '1485185606045442',
       },
     }
   } catch (error) {

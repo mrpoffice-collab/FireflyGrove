@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     description: 'A place where memories take root and light never fades.',
   },
   other: {
-    'fb:app_id': '1234567890', // Placeholder - can be updated with real Facebook App ID
+    'fb:app_id': '1485185606045442',
   },
 }
 
