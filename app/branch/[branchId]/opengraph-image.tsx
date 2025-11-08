@@ -9,12 +9,13 @@ export const size = {
 }
 export const contentType = 'image/png'
 
-export default async function Image({ params }: { params: { branchId: string } }) {
+export default async function Image({ params }: { params: Promise<{ branchId: string }> }) {
+  const { branchId } = await params
 
   try {
     // Fetch branch data
     const branch = await prisma.branch.findUnique({
-      where: { id: params.branchId },
+      where: { id: branchId },
       select: {
         title: true,
         description: true,
