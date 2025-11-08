@@ -9,8 +9,8 @@ timeToRead: 2
 icon: 🤝
 featured: false
 isNew: false
-createdAt: 2025-11-08T18:36:02.248Z
-updatedAt: 2025-11-08T18:36:02.248Z
+createdAt: 2025-11-08T18:54:15.923Z
+updatedAt: 2025-11-08T18:54:15.923Z
 ---
 
 # 🤝 Inviting Family Members

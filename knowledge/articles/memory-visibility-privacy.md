@@ -1,23 +1,23 @@
 ---
-slug: recording-voice-memories
-title: Recording Voice Memories
-subtitle: Capture Your Voice
-category: VOICE_AUDIO
-tags: voice, audio, recording, stories, memories
+slug: memory-visibility-privacy
+title: "Memory Visibility: Private vs Shared"
+subtitle: Control Who Sees What
+category: CORE_FEATURES
+tags: visibility, privacy, sharing, control, permissions
 difficulty: BEGINNER
 timeToRead: 2
-icon: 🎙️
+icon: 👁️
 featured: false
 isNew: false
-createdAt: 2025-11-08T18:54:15.897Z
-updatedAt: 2025-11-08T18:54:15.897Z
+createdAt: 2025-11-08T18:54:15.950Z
+updatedAt: 2025-11-08T18:54:15.950Z
 ---
 
-# 🎙️ Recording Voice Memories
+# 👁️ Memory Visibility: Private vs Shared
 
-> Capture Your Voice
+> Control Who Sees What
 
-**Category:** VOICE_AUDIO
+**Category:** CORE_FEATURES
 **Time to Read:** 2 minutes
 **Difficulty:** BEGINNER
 
@@ -25,8 +25,7 @@ updatedAt: 2025-11-08T18:54:15.897Z
 
 ## What is it?
 
-Voice recordings carry something text can't — the warmth of your tone, the pauses between thoughts,
-            the laughter that punctuates your stories.
+Not every memory is meant for everyone. Some are just for you. Some are gifts for family now. Some are treasures for heirs later.
 
 ---
 
@@ -37,17 +36,17 @@ Voice recordings carry something text can't — the warmth of your tone, the pau
 - Connect with your family story in meaningful ways
 
 
-> 🔒 **Privacy Note:** Record anywhere — at your computer or on your phone while memories are fresh.
+> 🔒 **Privacy Note:** You can change visibility settings anytime, even after saving.
 
 
 ---
 
 ## How to access this feature
 
-**Trigger:** User has 10+ text memories but 0 audio memories
+**Trigger:** Creating first memory in shared branch
 
-1. **Record a Memory**
-   - Opens new memory modal with audio tab
+1. **Learn About Visibility**
+   - Opens visibility explanation overlay
 
 2. **Follow the guided flow**
    - The interface will walk you through the process
@@ -72,9 +71,9 @@ Voice recordings carry something text can't — the warmth of your tone, the pau
 
 ## Related Features
 
-- [Audio Sparks](/knowledge/audio-sparks)
-- [Audio Quality Tips](/knowledge/audio-quality-tips)
-- [Speech To Text](/knowledge/speech-to-text)
+- [Privacy Settings](/knowledge/privacy-settings)
+- [Sharing Memories](/knowledge/sharing-memories)
+- [Branch Permissions](/knowledge/branch-permissions)
 
 ---
 
@@ -87,7 +86,7 @@ Voice recordings carry something text can't — the warmth of your tone, the pau
 ---
 
 <small>
-**Glow Guide:** This article is auto-generated from the voice-memories Glow Guide component.
+**Glow Guide:** This article is auto-generated from the memory-visibility Glow Guide component.
 **Last Updated:** 2025-11-08
-**Related Glow Guide:** Appears user has 10+ text memories but 0 audio memories
+**Related Glow Guide:** Appears creating first memory in shared branch
 </small>

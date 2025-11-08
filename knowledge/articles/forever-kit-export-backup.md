@@ -1,23 +1,23 @@
 ---
-slug: recording-voice-memories
-title: Recording Voice Memories
-subtitle: Capture Your Voice
-category: VOICE_AUDIO
-tags: voice, audio, recording, stories, memories
+slug: forever-kit-export-backup
+title: "Forever Kit: Own Your Memories"
+subtitle: Export Everything, Anytime
+category: PRODUCTS
+tags: export, backup, download, archive, ownership
 difficulty: BEGINNER
 timeToRead: 2
-icon: 🎙️
+icon: 📦
 featured: false
 isNew: false
-createdAt: 2025-11-08T18:54:15.897Z
-updatedAt: 2025-11-08T18:54:15.897Z
+createdAt: 2025-11-08T18:54:15.975Z
+updatedAt: 2025-11-08T18:54:15.975Z
 ---
 
-# 🎙️ Recording Voice Memories
+# 📦 Forever Kit: Own Your Memories
 
-> Capture Your Voice
+> Export Everything, Anytime
 
-**Category:** VOICE_AUDIO
+**Category:** PRODUCTS
 **Time to Read:** 2 minutes
 **Difficulty:** BEGINNER
 
@@ -25,8 +25,7 @@ updatedAt: 2025-11-08T18:54:15.897Z
 
 ## What is it?
 
-Voice recordings carry something text can't — the warmth of your tone, the pauses between thoughts,
-            the laughter that punctuates your stories.
+A Forever Kit is a complete package of your memories — text, audio, photos, everything — ready to download, archive, or take with you.
 
 ---
 
@@ -37,17 +36,17 @@ Voice recordings carry something text can't — the warmth of your tone, the pau
 - Connect with your family story in meaningful ways
 
 
-> 🔒 **Privacy Note:** Record anywhere — at your computer or on your phone while memories are fresh.
+> 🔒 **Privacy Note:** Pro tip: Export regularly to keep an offline backup of your growing collection.
 
 
 ---
 
 ## How to access this feature
 
-**Trigger:** User has 10+ text memories but 0 audio memories
+**Trigger:** 10+ memories, never exported
 
-1. **Record a Memory**
-   - Opens new memory modal with audio tab
+1. **Create Your First Forever Kit**
+   - Opens Forever Kit generator
 
 2. **Follow the guided flow**
    - The interface will walk you through the process
@@ -72,9 +71,9 @@ Voice recordings carry something text can't — the warmth of your tone, the pau
 
 ## Related Features
 
-- [Audio Sparks](/knowledge/audio-sparks)
-- [Audio Quality Tips](/knowledge/audio-quality-tips)
-- [Speech To Text](/knowledge/speech-to-text)
+- [Memory Book](/knowledge/memory-book)
+- [Data Ownership](/knowledge/data-ownership)
+- [Platform Independence](/knowledge/platform-independence)
 
 ---
 
@@ -87,7 +86,7 @@ Voice recordings carry something text can't — the warmth of your tone, the pau
 ---
 
 <small>
-**Glow Guide:** This article is auto-generated from the voice-memories Glow Guide component.
+**Glow Guide:** This article is auto-generated from the forever-kit Glow Guide component.
 **Last Updated:** 2025-11-08
-**Related Glow Guide:** Appears user has 10+ text memories but 0 audio memories
+**Related Glow Guide:** Appears 10+ memories, never exported
 </small>

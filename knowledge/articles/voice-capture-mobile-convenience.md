@@ -1,23 +1,23 @@
 ---
-slug: recording-voice-memories
-title: Recording Voice Memories
-subtitle: Capture Your Voice
-category: VOICE_AUDIO
-tags: voice, audio, recording, stories, memories
+slug: voice-capture-mobile-convenience
+title: "Voice Capture on Mobile: Your Best Tool"
+subtitle: Record Anywhere, Anytime
+category: MOBILE
+tags: mobile, voice, recording, convenience, hands-free
 difficulty: BEGINNER
 timeToRead: 2
-icon: 🎙️
+icon: 🎤
 featured: false
 isNew: false
-createdAt: 2025-11-08T18:54:15.897Z
-updatedAt: 2025-11-08T18:54:15.897Z
+createdAt: 2025-11-08T18:54:15.901Z
+updatedAt: 2025-11-08T18:54:15.901Z
 ---
 
-# 🎙️ Recording Voice Memories
+# 🎤 Voice Capture on Mobile: Your Best Tool
 
-> Capture Your Voice
+> Record Anywhere, Anytime
 
-**Category:** VOICE_AUDIO
+**Category:** MOBILE
 **Time to Read:** 2 minutes
 **Difficulty:** BEGINNER
 
@@ -25,8 +25,7 @@ updatedAt: 2025-11-08T18:54:15.897Z
 
 ## What is it?
 
-Voice recordings carry something text can't — the warmth of your tone, the pauses between thoughts,
-            the laughter that punctuates your stories.
+Mobile voice recording is hands-free, effortless, and perfect for those moments when typing would break the flow of memory.
 
 ---
 
@@ -37,17 +36,17 @@ Voice recordings carry something text can't — the warmth of your tone, the pau
 - Connect with your family story in meaningful ways
 
 
-> 🔒 **Privacy Note:** Record anywhere — at your computer or on your phone while memories are fresh.
+> 🔒 **Privacy Note:** Auto-transcribed to text, so your voice becomes searchable — best of both worlds.
 
 
 ---
 
 ## How to access this feature
 
-**Trigger:** User has 10+ text memories but 0 audio memories
+**Trigger:** Mobile device, never recorded
 
-1. **Record a Memory**
-   - Opens new memory modal with audio tab
+1. **Record Your Voice**
+   - Opens mobile voice recorder
 
 2. **Follow the guided flow**
    - The interface will walk you through the process
@@ -72,9 +71,9 @@ Voice recordings carry something text can't — the warmth of your tone, the pau
 
 ## Related Features
 
-- [Audio Sparks](/knowledge/audio-sparks)
-- [Audio Quality Tips](/knowledge/audio-quality-tips)
-- [Speech To Text](/knowledge/speech-to-text)
+- [Recording Voice Memories](/knowledge/recording-voice-memories)
+- [Audio Sparks Quick Capture](/knowledge/audio-sparks-quick-capture)
+- [Mobile App Download](/knowledge/mobile-app-download)
 
 ---
 
@@ -87,7 +86,7 @@ Voice recordings carry something text can't — the warmth of your tone, the pau
 ---
 
 <small>
-**Glow Guide:** This article is auto-generated from the voice-memories Glow Guide component.
+**Glow Guide:** This article is auto-generated from the voice-capture-mobile Glow Guide component.
 **Last Updated:** 2025-11-08
-**Related Glow Guide:** Appears user has 10+ text memories but 0 audio memories
+**Related Glow Guide:** Appears mobile device, never recorded
 </small>

@@ -1,23 +1,23 @@
 ---
-slug: recording-voice-memories
-title: Recording Voice Memories
-subtitle: Capture Your Voice
-category: VOICE_AUDIO
-tags: voice, audio, recording, stories, memories
+slug: mobile-app-download
+title: "Mobile App: Memory Preservation On-the-Go"
+subtitle: Take Firefly Grove Everywhere
+category: MOBILE
+tags: mobile, app, download, ios, android
 difficulty: BEGINNER
 timeToRead: 2
-icon: 🎙️
+icon: 📱
 featured: false
 isNew: false
-createdAt: 2025-11-08T18:54:15.897Z
-updatedAt: 2025-11-08T18:54:15.897Z
+createdAt: 2025-11-08T18:54:15.947Z
+updatedAt: 2025-11-08T18:54:15.947Z
 ---
 
-# 🎙️ Recording Voice Memories
+# 📱 Mobile App: Memory Preservation On-the-Go
 
-> Capture Your Voice
+> Take Firefly Grove Everywhere
 
-**Category:** VOICE_AUDIO
+**Category:** MOBILE
 **Time to Read:** 2 minutes
 **Difficulty:** BEGINNER
 
@@ -25,8 +25,7 @@ updatedAt: 2025-11-08T18:54:15.897Z
 
 ## What is it?
 
-Voice recordings carry something text can't — the warmth of your tone, the pauses between thoughts,
-            the laughter that punctuates your stories.
+The Firefly Grove mobile app is built specifically for capturing memories in the moment — when inspiration strikes and you're away from your desk.
 
 ---
 
@@ -37,17 +36,17 @@ Voice recordings carry something text can't — the warmth of your tone, the pau
 - Connect with your family story in meaningful ways
 
 
-> 🔒 **Privacy Note:** Record anywhere — at your computer or on your phone while memories are fresh.
+> 🔒 **Privacy Note:** Available for iOS and Android — same account, seamless sync.
 
 
 ---
 
 ## How to access this feature
 
-**Trigger:** User has 10+ text memories but 0 audio memories
+**Trigger:** Mobile browser, been active 3+ sessions
 
-1. **Record a Memory**
-   - Opens new memory modal with audio tab
+1. **Download App**
+   - Redirects to app store
 
 2. **Follow the guided flow**
    - The interface will walk you through the process
@@ -72,9 +71,9 @@ Voice recordings carry something text can't — the warmth of your tone, the pau
 
 ## Related Features
 
-- [Audio Sparks](/knowledge/audio-sparks)
-- [Audio Quality Tips](/knowledge/audio-quality-tips)
-- [Speech To Text](/knowledge/speech-to-text)
+- [Mobile Photo Upload](/knowledge/mobile-photo-upload)
+- [Voice Capture Mobile](/knowledge/voice-capture-mobile)
+- [Offline Access](/knowledge/offline-access)
 
 ---
 
@@ -87,7 +86,7 @@ Voice recordings carry something text can't — the warmth of your tone, the pau
 ---
 
 <small>
-**Glow Guide:** This article is auto-generated from the voice-memories Glow Guide component.
+**Glow Guide:** This article is auto-generated from the mobile-app Glow Guide component.
 **Last Updated:** 2025-11-08
-**Related Glow Guide:** Appears user has 10+ text memories but 0 audio memories
+**Related Glow Guide:** Appears mobile browser, been active 3+ sessions
 </small>

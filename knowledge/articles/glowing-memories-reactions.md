@@ -1,23 +1,23 @@
 ---
-slug: recording-voice-memories
-title: Recording Voice Memories
-subtitle: Capture Your Voice
-category: VOICE_AUDIO
-tags: voice, audio, recording, stories, memories
+slug: glowing-memories-reactions
+title: "Glowing Memories: React to Stories"
+subtitle: Show Your Appreciation
+category: CORE_FEATURES
+tags: reactions, glowing, engagement, appreciation, favorites
 difficulty: BEGINNER
 timeToRead: 2
-icon: 🎙️
+icon: ✨
 featured: false
 isNew: false
-createdAt: 2025-11-08T18:54:15.897Z
-updatedAt: 2025-11-08T18:54:15.897Z
+createdAt: 2025-11-08T18:54:15.973Z
+updatedAt: 2025-11-08T18:54:15.973Z
 ---
 
-# 🎙️ Recording Voice Memories
+# ✨ Glowing Memories: React to Stories
 
-> Capture Your Voice
+> Show Your Appreciation
 
-**Category:** VOICE_AUDIO
+**Category:** CORE_FEATURES
 **Time to Read:** 2 minutes
 **Difficulty:** BEGINNER
 
@@ -25,8 +25,7 @@ updatedAt: 2025-11-08T18:54:15.897Z
 
 ## What is it?
 
-Voice recordings carry something text can't — the warmth of your tone, the pauses between thoughts,
-            the laughter that punctuates your stories.
+Glowing is our way of saying "this matters to me" — a gentle way to show appreciation without interrupting the intimacy of the memory.
 
 ---
 
@@ -37,17 +36,17 @@ Voice recordings carry something text can't — the warmth of your tone, the pau
 - Connect with your family story in meaningful ways
 
 
-> 🔒 **Privacy Note:** Record anywhere — at your computer or on your phone while memories are fresh.
+> 🔒 **Privacy Note:** Glow as many memories as you want — there's no limit to appreciation.
 
 
 ---
 
 ## How to access this feature
 
-**Trigger:** User has 10+ text memories but 0 audio memories
+**Trigger:** Viewing shared branch, never glowed
 
-1. **Record a Memory**
-   - Opens new memory modal with audio tab
+1. **Glow This Memory**
+   - Adds glow reaction to current memory
 
 2. **Follow the guided flow**
    - The interface will walk you through the process
@@ -72,9 +71,9 @@ Voice recordings carry something text can't — the warmth of your tone, the pau
 
 ## Related Features
 
-- [Audio Sparks](/knowledge/audio-sparks)
-- [Audio Quality Tips](/knowledge/audio-quality-tips)
-- [Speech To Text](/knowledge/speech-to-text)
+- [Memory Threading Replies](/knowledge/memory-threading-replies)
+- [Sharing Memories](/knowledge/sharing-memories)
+- [Family Collaboration](/knowledge/family-collaboration)
 
 ---
 
@@ -87,7 +86,7 @@ Voice recordings carry something text can't — the warmth of your tone, the pau
 ---
 
 <small>
-**Glow Guide:** This article is auto-generated from the voice-memories Glow Guide component.
+**Glow Guide:** This article is auto-generated from the glowing-memories Glow Guide component.
 **Last Updated:** 2025-11-08
-**Related Glow Guide:** Appears user has 10+ text memories but 0 audio memories
+**Related Glow Guide:** Appears viewing shared branch, never glowed
 </small>

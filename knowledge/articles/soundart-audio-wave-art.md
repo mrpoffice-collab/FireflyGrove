@@ -1,23 +1,23 @@
 ---
-slug: recording-voice-memories
-title: Recording Voice Memories
-subtitle: Capture Your Voice
-category: VOICE_AUDIO
-tags: voice, audio, recording, stories, memories
+slug: soundart-audio-wave-art
+title: "SoundArt: Turn Voice into Visual Beauty"
+subtitle: Their Voice as Art
+category: PRODUCTS
+tags: soundart, audio, visualization, gifts, memorials
 difficulty: BEGINNER
 timeToRead: 2
-icon: 🎙️
+icon: 🎨
 featured: false
 isNew: false
-createdAt: 2025-11-08T18:54:15.897Z
-updatedAt: 2025-11-08T18:54:15.897Z
+createdAt: 2025-11-08T18:54:15.921Z
+updatedAt: 2025-11-08T18:54:15.921Z
 ---
 
-# 🎙️ Recording Voice Memories
+# 🎨 SoundArt: Turn Voice into Visual Beauty
 
-> Capture Your Voice
+> Their Voice as Art
 
-**Category:** VOICE_AUDIO
+**Category:** PRODUCTS
 **Time to Read:** 2 minutes
 **Difficulty:** BEGINNER
 
@@ -25,8 +25,7 @@ updatedAt: 2025-11-08T18:54:15.897Z
 
 ## What is it?
 
-Voice recordings carry something text can't — the warmth of your tone, the pauses between thoughts,
-            the laughter that punctuates your stories.
+SoundArt transforms voice recordings into beautiful waveform visualizations — perfect for framing, gifting, or remembering.
 
 ---
 
@@ -37,17 +36,17 @@ Voice recordings carry something text can't — the warmth of your tone, the pau
 - Connect with your family story in meaningful ways
 
 
-> 🔒 **Privacy Note:** Record anywhere — at your computer or on your phone while memories are fresh.
+> 🔒 **Privacy Note:** Customize colors, styles, and add text to make each piece uniquely meaningful.
 
 
 ---
 
 ## How to access this feature
 
-**Trigger:** User has 10+ text memories but 0 audio memories
+**Trigger:** Visiting /soundart, has audio memories
 
-1. **Record a Memory**
-   - Opens new memory modal with audio tab
+1. **Turn a Memory into Art**
+   - Opens SoundArt creator
 
 2. **Follow the guided flow**
    - The interface will walk you through the process
@@ -72,9 +71,9 @@ Voice recordings carry something text can't — the warmth of your tone, the pau
 
 ## Related Features
 
-- [Audio Sparks](/knowledge/audio-sparks)
-- [Audio Quality Tips](/knowledge/audio-quality-tips)
-- [Speech To Text](/knowledge/speech-to-text)
+- [Recording Voice Memories](/knowledge/recording-voice-memories)
+- [Greeting Cards](/knowledge/greeting-cards)
+- [Memory Book](/knowledge/memory-book)
 
 ---
 
@@ -87,7 +86,7 @@ Voice recordings carry something text can't — the warmth of your tone, the pau
 ---
 
 <small>
-**Glow Guide:** This article is auto-generated from the voice-memories Glow Guide component.
+**Glow Guide:** This article is auto-generated from the soundart Glow Guide component.
 **Last Updated:** 2025-11-08
-**Related Glow Guide:** Appears user has 10+ text memories but 0 audio memories
+**Related Glow Guide:** Appears visiting /soundart, has audio memories
 </small>

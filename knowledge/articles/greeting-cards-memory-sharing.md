@@ -1,23 +1,23 @@
 ---
-slug: recording-voice-memories
-title: Recording Voice Memories
-subtitle: Capture Your Voice
-category: VOICE_AUDIO
-tags: voice, audio, recording, stories, memories
+slug: greeting-cards-memory-sharing
+title: "Greeting Cards: Share Memories Beautifully"
+subtitle: Turn Memories into Keepsakes
+category: PRODUCTS
+tags: cards, gifts, sharing, sympathy, celebration
 difficulty: BEGINNER
 timeToRead: 2
-icon: 🎙️
+icon: 💌
 featured: false
 isNew: false
-createdAt: 2025-11-08T18:54:15.897Z
-updatedAt: 2025-11-08T18:54:15.897Z
+createdAt: 2025-11-08T18:54:15.972Z
+updatedAt: 2025-11-08T18:54:15.972Z
 ---
 
-# 🎙️ Recording Voice Memories
+# 💌 Greeting Cards: Share Memories Beautifully
 
-> Capture Your Voice
+> Turn Memories into Keepsakes
 
-**Category:** VOICE_AUDIO
+**Category:** PRODUCTS
 **Time to Read:** 2 minutes
 **Difficulty:** BEGINNER
 
@@ -25,8 +25,7 @@ updatedAt: 2025-11-08T18:54:15.897Z
 
 ## What is it?
 
-Voice recordings carry something text can't — the warmth of your tone, the pauses between thoughts,
-            the laughter that punctuates your stories.
+Whether it's sympathy, celebration, or just "thinking of you" — a card with a real memory means infinitely more than store-bought words.
 
 ---
 
@@ -37,17 +36,17 @@ Voice recordings carry something text can't — the warmth of your tone, the pau
 - Connect with your family story in meaningful ways
 
 
-> 🔒 **Privacy Note:** Record anywhere — at your computer or on your phone while memories are fresh.
+> 🔒 **Privacy Note:** Choose from beautiful templates designed to let your memory shine.
 
 
 ---
 
 ## How to access this feature
 
-**Trigger:** User has 10+ text memories but 0 audio memories
+**Trigger:** Visiting /cards for first time
 
-1. **Record a Memory**
-   - Opens new memory modal with audio tab
+1. **Create Your First Card**
+   - Opens card creator
 
 2. **Follow the guided flow**
    - The interface will walk you through the process
@@ -72,9 +71,9 @@ Voice recordings carry something text can't — the warmth of your tone, the pau
 
 ## Related Features
 
-- [Audio Sparks](/knowledge/audio-sparks)
-- [Audio Quality Tips](/knowledge/audio-quality-tips)
-- [Speech To Text](/knowledge/speech-to-text)
+- [Memory Book](/knowledge/memory-book)
+- [Soundart](/knowledge/soundart)
+- [Sharing Memories](/knowledge/sharing-memories)
 
 ---
 
@@ -87,7 +86,7 @@ Voice recordings carry something text can't — the warmth of your tone, the pau
 ---
 
 <small>
-**Glow Guide:** This article is auto-generated from the voice-memories Glow Guide component.
+**Glow Guide:** This article is auto-generated from the greeting-cards Glow Guide component.
 **Last Updated:** 2025-11-08
-**Related Glow Guide:** Appears user has 10+ text memories but 0 audio memories
+**Related Glow Guide:** Appears visiting /cards for first time
 </small>

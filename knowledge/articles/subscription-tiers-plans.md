@@ -1,23 +1,23 @@
 ---
-slug: recording-voice-memories
-title: Recording Voice Memories
-subtitle: Capture Your Voice
-category: VOICE_AUDIO
-tags: voice, audio, recording, stories, memories
+slug: subscription-tiers-plans
+title: "Subscription Tiers: Choose Your Plan"
+subtitle: Find the Right Fit
+category: ACCOUNT_SETTINGS
+tags: subscription, plans, pricing, upgrade, limits
 difficulty: BEGINNER
 timeToRead: 2
-icon: 🎙️
+icon: 💎
 featured: false
 isNew: false
-createdAt: 2025-11-08T18:54:15.897Z
-updatedAt: 2025-11-08T18:54:15.897Z
+createdAt: 2025-11-08T18:54:15.911Z
+updatedAt: 2025-11-08T18:54:15.911Z
 ---
 
-# 🎙️ Recording Voice Memories
+# 💎 Subscription Tiers: Choose Your Plan
 
-> Capture Your Voice
+> Find the Right Fit
 
-**Category:** VOICE_AUDIO
+**Category:** ACCOUNT_SETTINGS
 **Time to Read:** 2 minutes
 **Difficulty:** BEGINNER
 
@@ -25,8 +25,7 @@ updatedAt: 2025-11-08T18:54:15.897Z
 
 ## What is it?
 
-Voice recordings carry something text can't — the warmth of your tone, the pauses between thoughts,
-            the laughter that punctuates your stories.
+Firefly Grove offers plans for every stage of your memory preservation journey — from casual preservers to serious legacy builders.
 
 ---
 
@@ -37,17 +36,17 @@ Voice recordings carry something text can't — the warmth of your tone, the pau
 - Connect with your family story in meaningful ways
 
 
-> 🔒 **Privacy Note:** Record anywhere — at your computer or on your phone while memories are fresh.
+> 🔒 **Privacy Note:** All plans include full access to products, exports, and heir planning features.
 
 
 ---
 
 ## How to access this feature
 
-**Trigger:** User has 10+ text memories but 0 audio memories
+**Trigger:** Approaching tree limit
 
-1. **Record a Memory**
-   - Opens new memory modal with audio tab
+1. **View Plans**
+   - Opens pricing page
 
 2. **Follow the guided flow**
    - The interface will walk you through the process
@@ -72,9 +71,9 @@ Voice recordings carry something text can't — the warmth of your tone, the pau
 
 ## Related Features
 
-- [Audio Sparks](/knowledge/audio-sparks)
-- [Audio Quality Tips](/knowledge/audio-quality-tips)
-- [Speech To Text](/knowledge/speech-to-text)
+- [Storage Limits](/knowledge/storage-limits)
+- [Feature Comparison](/knowledge/feature-comparison)
+- [Billing Management](/knowledge/billing-management)
 
 ---
 
@@ -87,7 +86,7 @@ Voice recordings carry something text can't — the warmth of your tone, the pau
 ---
 
 <small>
-**Glow Guide:** This article is auto-generated from the voice-memories Glow Guide component.
+**Glow Guide:** This article is auto-generated from the subscription-tiers Glow Guide component.
 **Last Updated:** 2025-11-08
-**Related Glow Guide:** Appears user has 10+ text memories but 0 audio memories
+**Related Glow Guide:** Appears approaching tree limit
 </small>

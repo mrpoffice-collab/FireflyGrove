@@ -1,32 +1,31 @@
 ---
-slug: the-nest-bulk-photo-uploads
-title: "The Nest: Bulk Photo Uploads"
-subtitle: Organize Before You Hatch
-category: PHOTOS_MEDIA
-tags: nest, photos, bulk-upload, organization, workflow
+slug: mobile-photo-upload-camera-integration
+title: "Mobile Photo Upload: Capture the Moment"
+subtitle: Your Camera, Your Memories
+category: MOBILE
+tags: mobile, photos, camera, upload, capture
 difficulty: BEGINNER
-timeToRead: 3
-icon: 🪺
+timeToRead: 2
+icon: 📷
 featured: false
 isNew: false
-createdAt: 2025-11-08T18:54:15.935Z
-updatedAt: 2025-11-08T18:54:15.935Z
+createdAt: 2025-11-08T18:54:15.946Z
+updatedAt: 2025-11-08T18:54:15.946Z
 ---
 
-# 🪺 The Nest: Bulk Photo Uploads
+# 📷 Mobile Photo Upload: Capture the Moment
 
-> Organize Before You Hatch
+> Your Camera, Your Memories
 
-**Category:** PHOTOS_MEDIA
-**Time to Read:** 3 minutes
+**Category:** MOBILE
+**Time to Read:** 2 minutes
 **Difficulty:** BEGINNER
 
 ---
 
 ## What is it?
 
-The Nest is where photos wait before they become memories. Upload hundreds at once,
-            then "hatch" them into memories when you're ready.
+Mobile photo capture lets you preserve moments instantly — no need to wait until you're at a computer to upload them later.
 
 ---
 
@@ -37,15 +36,17 @@ The Nest is where photos wait before they become memories. Upload hundreds at on
 - Connect with your family story in meaningful ways
 
 
+> 🔒 **Privacy Note:** Perfect for family gatherings, travel, and everyday moments you don't want to forget.
+
 
 ---
 
 ## How to access this feature
 
-**Trigger:** User visits /nest for first time
+**Trigger:** Mobile device, never used camera
 
-1. **Upload Photos**
-   - Triggers file picker or focuses upload area
+1. **Take a Photo Now**
+   - Opens camera with memory creation
 
 2. **Follow the guided flow**
    - The interface will walk you through the process
@@ -70,9 +71,9 @@ The Nest is where photos wait before they become memories. Upload hundreds at on
 
 ## Related Features
 
-- [Hatching Photos](/knowledge/hatching-photos)
+- [Nest Photo Upload](/knowledge/nest-photo-upload)
+- [Mobile App Download](/knowledge/mobile-app-download)
 - [Photo Memories](/knowledge/photo-memories)
-- [Organizing Photos](/knowledge/organizing-photos)
 
 ---
 
@@ -85,7 +86,7 @@ The Nest is where photos wait before they become memories. Upload hundreds at on
 ---
 
 <small>
-**Glow Guide:** This article is auto-generated from the nest Glow Guide component.
+**Glow Guide:** This article is auto-generated from the mobile-photo-upload Glow Guide component.
 **Last Updated:** 2025-11-08
-**Related Glow Guide:** Appears user visits /nest for first time
+**Related Glow Guide:** Appears mobile device, never used camera
 </small>
