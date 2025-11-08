@@ -1,5 +1,25 @@
 'use client'
 
+/**
+ * Glow Guide Metadata
+ * Used by automation to generate Knowledge Bank articles
+ */
+export const glowGuideMetadata = {
+  id: 'heirs',
+  slug: 'choosing-your-keepers',
+  title: 'Choosing Your Keepers',
+  subtitle: 'Pass the Light',
+  icon: '🕯️',
+  category: 'LEGACY',
+  tags: ['heirs', 'legacy', 'keepers', 'inheritance', 'planning'],
+  difficulty: 'BEGINNER',
+  timeToRead: 3,
+  relatedArticles: ['legacy-release-conditions', 'multiple-heirs', 'moderator-role'],
+  trigger: 'User has created 3+ memories but 0 heirs set',
+  cta: 'Choose My Keepers',
+  ctaAction: 'Opens branch settings with heir configuration',
+}
+
 interface HeirsWelcomeModalProps {
   onClose: () => void
   onAction?: () => void

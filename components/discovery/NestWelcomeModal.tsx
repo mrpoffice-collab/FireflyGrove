@@ -1,5 +1,25 @@
 'use client'
 
+/**
+ * Glow Guide Metadata
+ */
+export const glowGuideMetadata = {
+  id: 'nest',
+  slug: 'the-nest-bulk-photo-uploads',
+  title: 'The Nest: Bulk Photo Uploads',
+  subtitle: 'Organize Before You Hatch',
+  icon: '🪺',
+  category: 'PHOTOS_MEDIA',
+  tags: ['nest', 'photos', 'bulk-upload', 'organization', 'workflow'],
+  difficulty: 'BEGINNER',
+  timeToRead: 3,
+  relatedArticles: ['hatching-photos', 'photo-memories', 'organizing-photos'],
+  trigger: 'User visits /nest for first time',
+  cta: 'Upload Photos',
+  ctaAction: 'Triggers file picker or focuses upload area',
+}
+
+
 interface NestWelcomeModalProps {
   onClose: () => void
   onAction?: () => void

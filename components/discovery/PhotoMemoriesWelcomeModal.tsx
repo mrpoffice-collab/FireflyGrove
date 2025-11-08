@@ -1,5 +1,25 @@
 'use client'
 
+/**
+ * Glow Guide Metadata
+ */
+export const glowGuideMetadata = {
+  id: 'photo-memories',
+  slug: 'adding-photos-to-memories',
+  title: 'Adding Photos to Memories',
+  subtitle: 'A Picture Holds a Thousand Stories',
+  icon: '📸',
+  category: 'PHOTOS_MEDIA',
+  tags: ['photos', 'images', 'visual', 'media', 'nest'],
+  difficulty: 'BEGINNER',
+  timeToRead: 2,
+  relatedArticles: ['the-nest-bulk-uploads', 'hatching-photos', 'photo-organization'],
+  trigger: 'User has 10+ text memories but 0 photos',
+  cta: 'Add a Photo',
+  ctaAction: 'Opens new memory modal with photo upload',
+}
+
+
 interface PhotoMemoriesWelcomeModalProps {
   onClose: () => void
   onAction?: () => void

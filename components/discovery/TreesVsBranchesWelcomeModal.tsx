@@ -1,5 +1,24 @@
 'use client'
 
+/**
+ * Glow Guide Metadata
+ */
+export const glowGuideMetadata = {
+  id: 'trees-branches',
+  slug: 'understanding-trees-and-branches',
+  title: 'Understanding Trees and Branches',
+  subtitle: 'Welcome to Your Grove',
+  icon: '🌳',
+  category: 'GETTING_STARTED',
+  tags: ['trees', 'branches', 'organization', 'getting-started', 'concepts'],
+  difficulty: 'BEGINNER',
+  timeToRead: 2,
+  relatedArticles: ['creating-first-memory', 'multiple-trees', 'branching-strategies'],
+  trigger: 'User visits grove page with 0 trees',
+  cta: 'Plant My First Tree',
+  ctaAction: 'Routes to /grove/new-tree',
+}
+
 interface TreesVsBranchesWelcomeModalProps {
   onClose: () => void
   onAction?: () => void

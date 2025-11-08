@@ -1,5 +1,24 @@
 'use client'
 
+/**
+ * Glow Guide Metadata
+ */
+export const glowGuideMetadata = {
+  id: 'sharing',
+  slug: 'inviting-family-members',
+  title: 'Inviting Family Members',
+  subtitle: 'Tend Your Grove Together',
+  icon: '🤝',
+  category: 'SHARING',
+  tags: ['collaboration', 'sharing', 'family', 'invites', 'members'],
+  difficulty: 'BEGINNER',
+  timeToRead: 2,
+  relatedArticles: ['branch-permissions', 'co-authoring', 'managing-members'],
+  trigger: 'User has 5+ memories but 0 collaborators invited',
+  cta: 'Invite Someone to Garden',
+  ctaAction: 'Opens sharing settings in first branch',
+}
+
 interface SharingWelcomeModalProps {
   onClose: () => void
   onAction?: () => void

@@ -1,5 +1,25 @@
 'use client'
 
+/**
+ * Glow Guide Metadata
+ */
+export const glowGuideMetadata = {
+  id: 'voice-memories',
+  slug: 'recording-voice-memories',
+  title: 'Recording Voice Memories',
+  subtitle: 'Capture Your Voice',
+  icon: '🎙️',
+  category: 'VOICE_AUDIO',
+  tags: ['voice', 'audio', 'recording', 'stories', 'memories'],
+  difficulty: 'BEGINNER',
+  timeToRead: 2,
+  relatedArticles: ['audio-sparks', 'audio-quality-tips', 'speech-to-text'],
+  trigger: 'User has 10+ text memories but 0 audio memories',
+  cta: 'Record a Memory',
+  ctaAction: 'Opens new memory modal with audio tab',
+}
+
+
 interface VoiceMemoriesWelcomeModalProps {
   onClose: () => void
   onAction?: () => void
