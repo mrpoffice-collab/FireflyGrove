@@ -9,8 +9,8 @@ timeToRead: 2
 icon: ✅
 featured: false
 isNew: false
-createdAt: 2025-11-08T19:47:36.834Z
-updatedAt: 2025-11-08T19:47:36.834Z
+createdAt: 2025-11-08T20:00:37.182Z
+updatedAt: 2025-11-08T20:00:37.182Z
 ---
 
 # ✅ Approval Workflow: Curate Your Tree

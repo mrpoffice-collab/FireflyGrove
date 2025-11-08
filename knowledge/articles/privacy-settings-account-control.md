@@ -9,8 +9,8 @@ timeToRead: 3
 icon: 🔒
 featured: false
 isNew: false
-createdAt: 2025-11-08T19:47:36.723Z
-updatedAt: 2025-11-08T19:47:36.723Z
+createdAt: 2025-11-08T20:00:37.116Z
+updatedAt: 2025-11-08T20:00:37.116Z
 ---
 
 # 🔒 Privacy Settings: Your Data, Your Rules

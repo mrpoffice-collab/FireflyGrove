@@ -9,8 +9,8 @@ timeToRead: 2
 icon: 📦
 featured: false
 isNew: false
-createdAt: 2025-11-08T19:47:36.749Z
-updatedAt: 2025-11-08T19:47:36.749Z
+createdAt: 2025-11-08T20:00:37.123Z
+updatedAt: 2025-11-08T20:00:37.123Z
 ---
 
 # 📦 Moving Memories: Reorganize as You Grow

@@ -130,6 +130,12 @@ export default function Header({ userName, isBetaTester: propBetaTester, isAdmin
               >
                 🕯️ Open Grove
               </Link>
+              <Link
+                href="/knowledge"
+                className="text-text-muted hover:text-firefly-glow text-sm transition-soft"
+              >
+                💡 Knowledge Bank
+              </Link>
             </nav>
           </div>
 
@@ -323,6 +329,15 @@ export default function Header({ userName, isBetaTester: propBetaTester, isAdmin
                   )}
                   <button
                     onClick={() => {
+                      router.push('/knowledge')
+                      setIsDropdownOpen(false)
+                    }}
+                    className="w-full text-left px-3 py-2.5 text-sm text-text-muted hover:bg-border-subtle hover:text-text-soft transition-soft"
+                  >
+                    💡 Knowledge Bank
+                  </button>
+                  <button
+                    onClick={() => {
                       router.push('/treasure-history')
                       setIsDropdownOpen(false)
                     }}
@@ -484,6 +499,13 @@ export default function Header({ userName, isBetaTester: propBetaTester, isAdmin
               className="text-lg font-light text-text-soft hover:text-[var(--legacy-glow)] transition-soft py-2.5 border-b border-border-subtle"
             >
               🕯️ Open Grove
+            </Link>
+            <Link
+              href="/knowledge"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="text-lg font-light text-text-soft hover:text-firefly-glow transition-soft py-2.5 border-b border-border-subtle"
+            >
+              💡 Knowledge Bank
             </Link>
             <Link
               href="/treasure-history"
