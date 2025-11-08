@@ -12,47 +12,10 @@ export default async function Image({ params }: { params: Promise<{ branchId: st
   const { branchId } = await params
 
   try {
-    // Fetch branch data from API route instead of Prisma (edge runtime doesn't support Prisma)
-    // Always use production URL to avoid edge runtime fetch issues
-    const response = await fetch(`https://fireflygrove.app/api/branches/${branchId}`, {
-      headers: {
-        'Cache-Control': 'no-cache',
-      },
-      cache: 'no-store',
-    })
-
-    if (!response.ok) {
-      // Return error image with status code for debugging
-      return new ImageResponse(
-        (
-          <div style={{
-            height: '100%',
-            width: '100%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            background: '#1a1410',
-            color: '#ffd89b',
-            fontSize: '32px',
-            flexDirection: 'column',
-            gap: '20px',
-          }}>
-            <div>Branch not found</div>
-            <div style={{ fontSize: '20px', color: '#c4a574' }}>Error {response.status}</div>
-          </div>
-        ),
-        { ...size }
-      )
-    }
-
-    const branch = await response.json()
-
-    // Use person.memoryCount instead of entries.length (which may be paginated)
-    const personName = branch.person?.name || branch.title
-    const memoryCount = branch.person?.memoryCount || branch.pagination?.total || 0
-    const years = branch.person?.birthDate && branch.person?.deathDate
-      ? `${new Date(branch.person.birthDate).getFullYear()} - ${new Date(branch.person.deathDate).getFullYear()}`
-      : ''
+    // Simple test - just show branch ID to verify it's working
+    const personName = 'Memorial - Firefly Grove'
+    const memoryCount = 0
+    const years = ''
 
     return new ImageResponse(
       (
