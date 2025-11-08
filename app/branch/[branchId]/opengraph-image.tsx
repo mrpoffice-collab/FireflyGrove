@@ -1,5 +1,4 @@
 import { ImageResponse } from 'next/og'
-import { prisma } from '@/lib/prisma'
 
 export const runtime = 'edge'
 export const alt = 'Memorial - Firefly Grove'
@@ -13,36 +12,25 @@ export default async function Image({ params }: { params: Promise<{ branchId: st
   const { branchId } = await params
 
   try {
-    // Fetch branch data
-    const branch = await prisma.branch.findUnique({
-      where: { id: branchId },
-      select: {
-        title: true,
-        description: true,
-        person: {
-          select: {
-            name: true,
-            birthDate: true,
-            deathDate: true,
-          },
-        },
-        entries: {
-          where: {
-            status: 'ACTIVE',
-          },
-          select: {
-            id: true,
-          },
-        },
+    // Fetch branch data from API route instead of Prisma (edge runtime doesn't support Prisma)
+    const baseUrl = process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}`
+      : 'https://fireflygrove.app'
+
+    const response = await fetch(`${baseUrl}/api/branches/${branchId}`, {
+      headers: {
+        'Cache-Control': 'no-cache',
       },
     })
 
-    if (!branch) {
+    if (!response.ok) {
       return new ImageResponse(<div>Branch not found</div>, { ...size })
     }
 
+    const branch = await response.json()
+
     const personName = branch.person?.name || branch.title
-    const memoryCount = branch.entries.length
+    const memoryCount = branch.entries?.length || branch.pagination?.total || 0
     const years = branch.person?.birthDate && branch.person?.deathDate
       ? `${new Date(branch.person.birthDate).getFullYear()} - ${new Date(branch.person.deathDate).getFullYear()}`
       : ''
