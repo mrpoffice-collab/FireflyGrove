@@ -50,8 +50,8 @@ export async function generateMetadata({
         title: `${branch.title} - Firefly Grove`,
         description,
       },
-      other: {
-        'fb:app_id': '1485185606045442',
+      facebook: {
+        appId: '1485185606045442',
       },
     }
   } catch (error) {

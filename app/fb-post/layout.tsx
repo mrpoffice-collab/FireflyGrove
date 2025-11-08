@@ -16,8 +16,8 @@ export const metadata: Metadata = {
     title: 'My Heart in a Grove of Light',
     description: 'A place where memories take root and light never fades.',
   },
-  other: {
-    'fb:app_id': '1485185606045442',
+  facebook: {
+    appId: '1485185606045442',
   },
 }
 
