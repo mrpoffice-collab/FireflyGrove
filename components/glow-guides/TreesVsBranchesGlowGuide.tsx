@@ -20,14 +20,14 @@ export const glowGuideMetadata = {
 }
 
 interface TreesVsBranchesGlowGuideProps {
-  onClose: () => void
+  onClose: (showReminder?: boolean) => void
   onAction?: () => void
 }
 
 export default function TreesVsBranchesGlowGuide({ onClose, onAction }: TreesVsBranchesGlowGuideProps) {
   const handlePlantTree = () => {
     if (onAction) onAction()
-    onClose()
+    onClose(false) // No reminder when taking action
   }
 
   return (
@@ -100,7 +100,7 @@ export default function TreesVsBranchesGlowGuide({ onClose, onAction }: TreesVsB
             Plant My First Tree
           </button>
           <button
-            onClick={onClose}
+            onClick={() => onClose(true)}
             className="text-text-muted hover:text-text-soft text-sm transition-soft"
           >
             I'll explore on my own

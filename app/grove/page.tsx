@@ -14,8 +14,11 @@ import TreasureWelcomeModal from '@/components/TreasureWelcomeModal'
 import HeirsGlowGuide from '@/components/glow-guides/HeirsGlowGuide'
 import TreesVsBranchesGlowGuide from '@/components/glow-guides/TreesVsBranchesGlowGuide'
 import SharingGlowGuide from '@/components/glow-guides/SharingGlowGuide'
+import GlowGuideReminder from '@/components/GlowGuideReminder'
 import { getPlanById } from '@/lib/plans'
-import { getDiscoveryManager } from '@/lib/discoveryManager'
+import { getGlowGuideManager } from '@/lib/glowGuideManager'
+import { getGuideMetadata } from '@/lib/glowGuideMetadata'
+import type { GlowGuideName } from '@/lib/glowGuideManager'
 import { SkeletonTreeCard, SkeletonPersonCard, SkeletonGrid, SkeletonTitle, SkeletonText } from '@/components/SkeletonLoader'
 import { useToast } from '@/lib/toast'
 
@@ -144,6 +147,13 @@ export default function GrovePage() {
   const [showTreesWelcome, setShowTreesWelcome] = useState(false)
   const [showSharingWelcome, setShowSharingWelcome] = useState(false)
 
+  // Glow Guide Reminder state
+  const [guideToRemind, setGuideToRemind] = useState<{
+    slug: string
+    title: string
+    guideName: GlowGuideName
+  } | null>(null)
+
   // Check for pending nest photo from URL and preview parameters
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -166,13 +176,13 @@ export default function GrovePage() {
       }
 
       // Check for discovery modal preview
-      const discoveryManager = getDiscoveryManager()
-      const previewModal = discoveryManager.checkPreview()
-      if (previewModal === 'heirsWelcome') {
+      const glowGuideManager = getGlowGuideManager()
+      const previewModal = glowGuideManager.checkPreview()
+      if (previewModal === 'heirs') {
         setShowHeirsWelcome(true)
-      } else if (previewModal === 'treesWelcome') {
+      } else if (previewModal === 'trees-branches') {
         setShowTreesWelcome(true)
-      } else if (previewModal === 'sharingWelcome') {
+      } else if (previewModal === 'sharing') {
         setShowSharingWelcome(true)
       }
     }
@@ -201,7 +211,7 @@ export default function GrovePage() {
   useEffect(() => {
     if (!grove || typeof window === 'undefined') return
 
-    const discoveryManager = getDiscoveryManager()
+    const glowGuideManager = getGlowGuideManager()
 
     // Calculate total memory count across all trees
     const totalMemories =
@@ -212,7 +222,7 @@ export default function GrovePage() {
     // Check heirs count (would need API endpoint - for now assume 0 if not set)
     // This is the MOST CRITICAL modal - triggers after 3 memories
     // Using aggressive mode to show on every visit during development
-    if (totalMemories >= 3 && discoveryManager.canShow('heirsWelcome', true)) {
+    if (totalMemories >= 3 && glowGuideManager.canShow('heirs', true)) {
       // Check if user has heirs set up
       fetch('/api/heirs/count')
         .then(res => res.json())
@@ -229,12 +239,12 @@ export default function GrovePage() {
 
     // Trees vs Branches Welcome - Show if no trees and first time
     const treeCount = grove.trees?.length || 0
-    if (treeCount === 0 && discoveryManager.canShow('treesWelcome', true)) {
+    if (treeCount === 0 && glowGuideManager.canShow('trees-branches', true)) {
       setShowTreesWelcome(true)
     }
 
     // Sharing Welcome - Show after 5 memories if no collaborators
-    if (totalMemories >= 5 && discoveryManager.canShow('sharingWelcome', true)) {
+    if (totalMemories >= 5 && glowGuideManager.canShow('sharing', true)) {
       // Check if user has invited anyone
       fetch('/api/collaborators/count')
         .then(res => res.json())
@@ -297,10 +307,20 @@ export default function GrovePage() {
   }
 
   // Handle discovery modal closes
-  const handleHeirsWelcomeClose = () => {
-    const discoveryManager = getDiscoveryManager()
-    discoveryManager.markShown('heirsWelcome')
+  const handleHeirsWelcomeClose = (showReminder: boolean = false) => {
+    const manager = getGlowGuideManager()
+    manager.markShown('heirs')
     setShowHeirsWelcome(false)
+
+    if (showReminder && !manager.hadReminderShown('heirs')) {
+      const metadata = getGuideMetadata('heirs')
+      setGuideToRemind({
+        slug: metadata.slug,
+        title: metadata.title,
+        guideName: 'heirs',
+      })
+      manager.markDismissedWithReminder('heirs')
+    }
   }
 
   const handleHeirsWelcomeAction = () => {
@@ -324,10 +344,20 @@ export default function GrovePage() {
     }
   }
 
-  const handleTreesWelcomeClose = () => {
-    const discoveryManager = getDiscoveryManager()
-    discoveryManager.markShown('treesWelcome')
+  const handleTreesWelcomeClose = (showReminder: boolean = false) => {
+    const manager = getGlowGuideManager()
+    manager.markShown('trees-branches')
     setShowTreesWelcome(false)
+
+    if (showReminder && !manager.hadReminderShown('trees-branches')) {
+      const metadata = getGuideMetadata('trees-branches')
+      setGuideToRemind({
+        slug: metadata.slug,
+        title: metadata.title,
+        guideName: 'trees-branches',
+      })
+      manager.markDismissedWithReminder('trees-branches')
+    }
   }
 
   const handleTreesWelcomeAction = () => {
@@ -335,10 +365,20 @@ export default function GrovePage() {
     router.push('/grove/new-tree')
   }
 
-  const handleSharingWelcomeClose = () => {
-    const discoveryManager = getDiscoveryManager()
-    discoveryManager.markShown('sharingWelcome')
+  const handleSharingWelcomeClose = (showReminder: boolean = false) => {
+    const manager = getGlowGuideManager()
+    manager.markShown('sharing')
     setShowSharingWelcome(false)
+
+    if (showReminder && !manager.hadReminderShown('sharing')) {
+      const metadata = getGuideMetadata('sharing')
+      setGuideToRemind({
+        slug: metadata.slug,
+        title: metadata.title,
+        guideName: 'sharing',
+      })
+      manager.markDismissedWithReminder('sharing')
+    }
   }
 
   const handleSharingWelcomeAction = () => {
@@ -635,6 +675,16 @@ export default function GrovePage() {
         <SharingGlowGuide
           onClose={handleSharingWelcomeClose}
           onAction={handleSharingWelcomeAction}
+        />
+      )}
+
+      {/* Glow Guide Reminder */}
+      {guideToRemind && (
+        <GlowGuideReminder
+          guideSlug={guideToRemind.slug}
+          guideTitle={guideToRemind.title}
+          show={true}
+          onClose={() => setGuideToRemind(null)}
         />
       )}
 

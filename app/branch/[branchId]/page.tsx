@@ -14,8 +14,11 @@ import Tooltip from '@/components/Tooltip'
 import VoiceMemoriesGlowGuide from '@/components/glow-guides/VoiceMemoriesGlowGuide'
 import PhotoMemoriesGlowGuide from '@/components/glow-guides/PhotoMemoriesGlowGuide'
 import SharingGlowGuide from '@/components/glow-guides/SharingGlowGuide'
+import GlowGuideReminder from '@/components/GlowGuideReminder'
 import { getActiveChallenge, getRandomSpark, getRandomSparkExcluding, SparkCollection } from '@/lib/sparks'
-import { getDiscoveryManager } from '@/lib/discoveryManager'
+import { getGlowGuideManager } from '@/lib/glowGuideManager'
+import { getGuideMetadata } from '@/lib/glowGuideMetadata'
+import type { GlowGuideName } from '@/lib/glowGuideManager'
 import { SkeletonMemoryCard, SkeletonList, SkeletonTitle, SkeletonText } from '@/components/SkeletonLoader'
 
 interface Entry {
@@ -103,6 +106,13 @@ export default function BranchPage() {
   const [showPhotoWelcome, setShowPhotoWelcome] = useState(false)
   const [showSharingWelcome, setShowSharingWelcome] = useState(false)
 
+  // Glow Guide Reminder state
+  const [guideToRemind, setGuideToRemind] = useState<{
+    slug: string
+    title: string
+    guideName: GlowGuideName
+  } | null>(null)
+
   // Challenge Sparks
   const [challengeCollection, setChallengeCollection] = useState<SparkCollection | null>(null)
   const [currentChallengeSpark, setCurrentChallengeSpark] = useState('')
@@ -168,13 +178,13 @@ export default function BranchPage() {
       }
 
       // Check for discovery modal preview
-      const discoveryManager = getDiscoveryManager()
-      const previewModal = discoveryManager.checkPreview()
-      if (previewModal === 'voiceWelcome') {
+      const glowGuideManager = getGlowGuideManager()
+      const previewModal = glowGuideManager.checkPreview()
+      if (previewModal === 'voice-memories') {
         setShowVoiceWelcome(true)
-      } else if (previewModal === 'photoWelcome') {
+      } else if (previewModal === 'photo-memories') {
         setShowPhotoWelcome(true)
-      } else if (previewModal === 'sharingWelcome') {
+      } else if (previewModal === 'sharing') {
         setShowSharingWelcome(true)
       }
     }
@@ -184,7 +194,7 @@ export default function BranchPage() {
   useEffect(() => {
     if (!branch || typeof window === 'undefined') return
 
-    const discoveryManager = getDiscoveryManager()
+    const glowGuideManager = getGlowGuideManager()
 
     // Count memories with audio
     const audioMemories = branch.entries?.filter((e: any) => e.audioUrl)?.length || 0
@@ -194,17 +204,17 @@ export default function BranchPage() {
     const photoMemories = branch.entries?.filter((e: any) => e.mediaUrl)?.length || 0
 
     // Voice welcome - if 5+ text memories but no audio (aggressive mode)
-    if (totalMemories >= 5 && audioMemories === 0 && discoveryManager.canShow('voiceWelcome', true)) {
+    if (totalMemories >= 5 && audioMemories === 0 && glowGuideManager.canShow('voice-memories', true)) {
       setTimeout(() => setShowVoiceWelcome(true), 500)
     }
 
     // Photo welcome - if 5+ memories but no photos (aggressive mode)
-    if (totalMemories >= 5 && photoMemories === 0 && discoveryManager.canShow('photoWelcome', true)) {
+    if (totalMemories >= 5 && photoMemories === 0 && glowGuideManager.canShow('photo-memories', true)) {
       setTimeout(() => setShowPhotoWelcome(true), 500)
     }
 
     // Sharing welcome - if branch owner and no collaborators (aggressive mode)
-    if (branch.owner && discoveryManager.canShow('sharingWelcome', true)) {
+    if (branch.owner && glowGuideManager.canShow('sharing', true)) {
       setTimeout(() => setShowSharingWelcome(true), 500)
     }
   }, [branch])
@@ -1325,10 +1335,20 @@ export default function BranchPage() {
       {/* Glow Guides */}
       {showVoiceWelcome && (
         <VoiceMemoriesGlowGuide
-          onClose={() => {
-            const discoveryManager = getDiscoveryManager()
-            discoveryManager.markShown('voiceWelcome')
+          onClose={(showReminder: boolean = false) => {
+            const manager = getGlowGuideManager()
+            manager.markShown('voice-memories')
             setShowVoiceWelcome(false)
+
+            if (showReminder && !manager.hadReminderShown('voice-memories')) {
+              const metadata = getGuideMetadata('voice-memories')
+              setGuideToRemind({
+                slug: metadata.slug,
+                title: metadata.title,
+                guideName: 'voice-memories',
+              })
+              manager.markDismissedWithReminder('voice-memories')
+            }
           }}
           onAction={() => {
             setShowVoiceWelcome(false)
@@ -1339,10 +1359,20 @@ export default function BranchPage() {
 
       {showPhotoWelcome && (
         <PhotoMemoriesGlowGuide
-          onClose={() => {
-            const discoveryManager = getDiscoveryManager()
-            discoveryManager.markShown('photoWelcome')
+          onClose={(showReminder: boolean = false) => {
+            const manager = getGlowGuideManager()
+            manager.markShown('photo-memories')
             setShowPhotoWelcome(false)
+
+            if (showReminder && !manager.hadReminderShown('photo-memories')) {
+              const metadata = getGuideMetadata('photo-memories')
+              setGuideToRemind({
+                slug: metadata.slug,
+                title: metadata.title,
+                guideName: 'photo-memories',
+              })
+              manager.markDismissedWithReminder('photo-memories')
+            }
           }}
           onAction={() => {
             setShowPhotoWelcome(false)
@@ -1353,15 +1383,35 @@ export default function BranchPage() {
 
       {showSharingWelcome && (
         <SharingGlowGuide
-          onClose={() => {
-            const discoveryManager = getDiscoveryManager()
-            discoveryManager.markShown('sharingWelcome')
+          onClose={(showReminder: boolean = false) => {
+            const manager = getGlowGuideManager()
+            manager.markShown('sharing')
             setShowSharingWelcome(false)
+
+            if (showReminder && !manager.hadReminderShown('sharing')) {
+              const metadata = getGuideMetadata('sharing')
+              setGuideToRemind({
+                slug: metadata.slug,
+                title: metadata.title,
+                guideName: 'sharing',
+              })
+              manager.markDismissedWithReminder('sharing')
+            }
           }}
           onAction={() => {
             setShowSharingWelcome(false)
             setShowSettings(true)
           }}
+        />
+      )}
+
+      {/* Glow Guide Reminder */}
+      {guideToRemind && (
+        <GlowGuideReminder
+          guideSlug={guideToRemind.slug}
+          guideTitle={guideToRemind.title}
+          show={true}
+          onClose={() => setGuideToRemind(null)}
         />
       )}
 

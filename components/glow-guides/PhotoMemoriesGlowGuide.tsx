@@ -21,14 +21,14 @@ export const glowGuideMetadata = {
 
 
 interface PhotoMemoriesGlowGuideProps {
-  onClose: () => void
+  onClose: (showReminder?: boolean) => void
   onAction?: () => void
 }
 
 export default function PhotoMemoriesGlowGuide({ onClose, onAction }: PhotoMemoriesGlowGuideProps) {
   const handleAddPhoto = () => {
     if (onAction) onAction()
-    onClose()
+    onClose(false) // No reminder when taking action
   }
 
   return (
@@ -98,7 +98,7 @@ export default function PhotoMemoriesGlowGuide({ onClose, onAction }: PhotoMemor
             Add a Photo Memory
           </button>
           <button
-            onClick={onClose}
+            onClick={() => onClose(true)}
             className="text-text-muted hover:text-text-soft text-sm transition-soft"
           >
             Maybe later

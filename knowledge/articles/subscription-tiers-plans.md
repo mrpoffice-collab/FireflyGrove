@@ -9,8 +9,8 @@ timeToRead: 2
 icon: 💎
 featured: false
 isNew: false
-createdAt: 2025-11-08T19:07:15.934Z
-updatedAt: 2025-11-08T19:07:15.934Z
+createdAt: 2025-11-08T19:21:58.452Z
+updatedAt: 2025-11-08T19:21:58.452Z
 ---
 
 # 💎 Subscription Tiers: Choose Your Plan

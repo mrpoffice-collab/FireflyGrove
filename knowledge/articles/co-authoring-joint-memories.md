@@ -9,8 +9,8 @@ timeToRead: 2
 icon: ✍️
 featured: false
 isNew: false
-createdAt: 2025-11-08T19:07:15.973Z
-updatedAt: 2025-11-08T19:07:15.973Z
+createdAt: 2025-11-08T19:21:58.476Z
+updatedAt: 2025-11-08T19:21:58.476Z
 ---
 
 # ✍️ Co-Authoring: Write Memories Together

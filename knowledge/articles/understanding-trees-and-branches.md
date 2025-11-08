@@ -9,8 +9,8 @@ timeToRead: 2
 icon: 🌳
 featured: false
 isNew: false
-createdAt: 2025-11-08T19:07:15.930Z
-updatedAt: 2025-11-08T19:07:15.930Z
+createdAt: 2025-11-08T19:21:58.450Z
+updatedAt: 2025-11-08T19:21:58.450Z
 ---
 
 # 🌳 Understanding Trees and Branches

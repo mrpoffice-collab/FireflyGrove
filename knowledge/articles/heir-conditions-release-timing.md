@@ -9,8 +9,8 @@ timeToRead: 3
 icon: ⏳
 featured: false
 isNew: false
-createdAt: 2025-11-08T19:07:15.968Z
-updatedAt: 2025-11-08T19:07:15.968Z
+createdAt: 2025-11-08T19:21:58.472Z
+updatedAt: 2025-11-08T19:21:58.472Z
 ---
 
 # ⏳ Heir Conditions: When They Receive Access

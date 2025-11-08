@@ -9,8 +9,8 @@ timeToRead: 2
 icon: 📱
 featured: false
 isNew: false
-createdAt: 2025-11-08T19:07:15.957Z
-updatedAt: 2025-11-08T19:07:15.957Z
+createdAt: 2025-11-08T19:21:58.464Z
+updatedAt: 2025-11-08T19:21:58.464Z
 ---
 
 # 📱 Mobile App: Memory Preservation On-the-Go

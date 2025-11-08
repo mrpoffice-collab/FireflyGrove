@@ -20,14 +20,14 @@ export const glowGuideMetadata = {
 }
 
 interface SharingGlowGuideProps {
-  onClose: () => void
+  onClose: (showReminder?: boolean) => void
   onAction?: () => void
 }
 
 export default function SharingGlowGuide({ onClose, onAction }: SharingGlowGuideProps) {
   const handleInvite = () => {
     if (onAction) onAction()
-    onClose()
+    onClose(false) // No reminder when taking action
   }
 
   return (
@@ -97,7 +97,7 @@ export default function SharingGlowGuide({ onClose, onAction }: SharingGlowGuide
             Invite Someone to Garden
           </button>
           <button
-            onClick={onClose}
+            onClick={() => onClose(true)}
             className="text-text-muted hover:text-text-soft text-sm transition-soft"
           >
             I'll do this later

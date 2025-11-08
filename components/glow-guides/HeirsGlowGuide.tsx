@@ -21,14 +21,14 @@ export const glowGuideMetadata = {
 }
 
 interface HeirsGlowGuideProps {
-  onClose: () => void
+  onClose: (showReminder?: boolean) => void
   onAction?: () => void
 }
 
 export default function HeirsGlowGuide({ onClose, onAction }: HeirsGlowGuideProps) {
   const handleChooseKeepers = () => {
     if (onAction) onAction()
-    onClose()
+    onClose(false) // No reminder when taking action
   }
 
   return (
@@ -99,7 +99,7 @@ export default function HeirsGlowGuide({ onClose, onAction }: HeirsGlowGuideProp
             Choose My Keepers
           </button>
           <button
-            onClick={onClose}
+            onClick={() => onClose(true)}
             className="text-text-muted hover:text-text-soft text-sm transition-soft"
           >
             Maybe later

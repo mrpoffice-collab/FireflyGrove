@@ -21,14 +21,14 @@ export const glowGuideMetadata = {
 
 
 interface VoiceMemoriesGlowGuideProps {
-  onClose: () => void
+  onClose: (showReminder?: boolean) => void
   onAction?: () => void
 }
 
 export default function VoiceMemoriesGlowGuide({ onClose, onAction }: VoiceMemoriesGlowGuideProps) {
   const handleRecordVoice = () => {
     if (onAction) onAction()
-    onClose()
+    onClose(false) // No reminder when taking action
   }
 
   return (
@@ -98,7 +98,7 @@ export default function VoiceMemoriesGlowGuide({ onClose, onAction }: VoiceMemor
             Record a Voice Memory
           </button>
           <button
-            onClick={onClose}
+            onClick={() => onClose(true)}
             className="text-text-muted hover:text-text-soft text-sm transition-soft"
           >
             Not right now

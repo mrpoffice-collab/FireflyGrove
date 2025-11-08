@@ -9,8 +9,8 @@ timeToRead: 2
 icon: ✨
 featured: false
 isNew: false
-createdAt: 2025-11-08T19:07:15.939Z
-updatedAt: 2025-11-08T19:07:15.939Z
+createdAt: 2025-11-08T19:21:58.455Z
+updatedAt: 2025-11-08T19:21:58.455Z
 ---
 
 # ✨ Spark Collections: Organize Your Journey

@@ -9,8 +9,8 @@ timeToRead: 3
 icon: 🕯️
 featured: false
 isNew: false
-createdAt: 2025-11-08T19:07:15.967Z
-updatedAt: 2025-11-08T19:07:15.967Z
+createdAt: 2025-11-08T19:21:58.471Z
+updatedAt: 2025-11-08T19:21:58.471Z
 ---
 
 # 🕯️ Choosing Your Keepers

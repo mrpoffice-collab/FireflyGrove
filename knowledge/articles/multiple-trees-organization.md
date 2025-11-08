@@ -9,8 +9,8 @@ timeToRead: 2
 icon: 🌳
 featured: false
 isNew: false
-createdAt: 2025-11-08T19:07:15.950Z
-updatedAt: 2025-11-08T19:07:15.950Z
+createdAt: 2025-11-08T19:21:58.461Z
+updatedAt: 2025-11-08T19:21:58.461Z
 ---
 
 # 🌳 Multiple Trees: Organize by Life
