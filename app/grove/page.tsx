@@ -118,6 +118,9 @@ interface TransplantablePerson {
 }
 
 export default function GrovePage() {
+  // Version check - if you see this in console, deployment is live
+  console.log('🔥 Firefly Grove v2025.01.12 - Burst fixes deployed')
+
   const { data: session, status } = useSession()
   const router = useRouter()
   const toast = useToast()
