@@ -50,30 +50,30 @@ export default function GlowGuideReminder({
 
   return (
     <div
-      className={`fixed bottom-6 right-6 z-50 transition-all duration-300 ${
+      className={`fixed bottom-4 right-4 left-4 sm:left-auto sm:bottom-6 sm:right-6 z-50 transition-all duration-300 ${
         visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
       }`}
     >
-      <div className="bg-bg-elevated border-2 border-firefly-glow rounded-lg shadow-2xl p-4 max-w-sm">
+      <div className="bg-bg-elevated border-2 border-firefly-glow rounded-lg shadow-2xl p-4 max-w-sm sm:ml-auto mx-auto">
         <div className="flex items-start gap-3">
-          <div className="text-2xl">💡</div>
-          <div className="flex-1">
-            <h4 className="text-sm font-medium text-firefly-glow mb-1">
+          <div className="text-xl sm:text-2xl">💡</div>
+          <div className="flex-1 min-w-0">
+            <h4 className="text-xs sm:text-sm font-medium text-firefly-glow mb-1">
               You can always find this tip again
             </h4>
-            <p className="text-xs text-text-muted mb-3">
+            <p className="text-xs text-text-muted mb-3 truncate">
               "{guideTitle}" is saved in your Knowledge Bank
             </p>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
               <button
                 onClick={handleViewInKnowledgeBank}
-                className="px-3 py-1.5 bg-firefly-glow hover:bg-firefly-glow/90 text-bg-dark text-xs rounded font-medium transition-soft"
+                className="px-3 py-1.5 bg-firefly-glow hover:bg-firefly-glow/90 text-bg-dark text-xs rounded font-medium transition-soft whitespace-nowrap"
               >
                 View in Knowledge Bank
               </button>
               <button
                 onClick={handleClose}
-                className="px-3 py-1.5 text-text-muted hover:text-text-soft text-xs transition-soft"
+                className="px-3 py-1.5 text-text-muted hover:text-text-soft text-xs transition-soft sm:hidden"
               >
                 Dismiss
               </button>
@@ -81,7 +81,8 @@ export default function GlowGuideReminder({
           </div>
           <button
             onClick={handleClose}
-            className="text-text-muted hover:text-text-soft transition-soft"
+            className="text-text-muted hover:text-text-soft transition-soft text-lg sm:text-xl flex-shrink-0"
+            aria-label="Close"
           >
             ✕
           </button>

@@ -316,6 +316,46 @@ export default function GrovePage() {
     }
   }, [grove])
 
+  // Trigger burst after all popups are closed
+  useEffect(() => {
+    // Check if any popups are currently showing
+    const anyPopupShowing =
+      showTreasureWelcome ||
+      showTreasure ||
+      showHeirsWelcome ||
+      showTreesWelcome ||
+      showSharingWelcome ||
+      showMultipleTrees ||
+      showBranchesOrg ||
+      showHeirConditions ||
+      showMultipleHeirs ||
+      showNestGuide ||
+      showAudioSparks
+
+    // If no popups showing, not snoozed, and burst not already showing, trigger it
+    if (!anyPopupShowing && !burstSnoozed && !showBurst && grove) {
+      // Small delay to ensure popup transitions are complete
+      const timer = setTimeout(() => {
+        generateBurst()
+      }, 1000)
+      return () => clearTimeout(timer)
+    }
+  }, [
+    showTreasureWelcome,
+    showTreasure,
+    showHeirsWelcome,
+    showTreesWelcome,
+    showSharingWelcome,
+    showMultipleTrees,
+    showBranchesOrg,
+    showHeirConditions,
+    showMultipleHeirs,
+    showNestGuide,
+    showAudioSparks,
+    burstSnoozed,
+    showBurst,
+    grove,
+  ])
 
   // Check treasure status and show modal if needed
   const checkTreasureStatus = async () => {
@@ -586,9 +626,9 @@ export default function GrovePage() {
       }
     }
 
-    // Not snoozed, trigger burst
+    // Not snoozed, but DON'T trigger burst yet
+    // Will be triggered after all popups are dismissed
     setBurstSnoozed(false)
-    generateBurst()
   }
 
   // Snooze bursts for 3 hours

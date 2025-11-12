@@ -60,22 +60,40 @@ export default function FireflyBurst({ memories, burstId, onClose, onViewNext, o
 
   // Auto-play memory audio when memory changes
   useEffect(() => {
-    // Play audio for memory with image
-    if (currentMemory.audioUrl && currentMemory.mediaUrl && memoryAudioWithImageRef.current) {
-      memoryAudioWithImageRef.current.play().catch(err =>
-        console.log('Memory audio autoplay prevented:', err)
-      )
-    }
+    // Add a small delay to let the UI settle before attempting audio playback
+    const timer = setTimeout(() => {
+      // Play audio for memory with image
+      if (currentMemory.audioUrl && currentMemory.mediaUrl && memoryAudioWithImageRef.current) {
+        // Try to play with more aggressive retry
+        const audioElement = memoryAudioWithImageRef.current
+        audioElement.muted = false // Ensure not muted
+        audioElement.play()
+          .then(() => {
+            console.log('Memory audio playing successfully')
+          })
+          .catch(err => {
+            console.log('Memory audio autoplay prevented, will require user interaction:', err)
+            // Set a flag to show a play button or instruction
+          })
+      }
 
-    // Play audio for audio-only memory
-    if (currentMemory.audioUrl && !currentMemory.mediaUrl && memoryAudioRef.current) {
-      memoryAudioRef.current.play().catch(err =>
-        console.log('Memory audio autoplay prevented:', err)
-      )
-    }
+      // Play audio for audio-only memory
+      if (currentMemory.audioUrl && !currentMemory.mediaUrl && memoryAudioRef.current) {
+        const audioElement = memoryAudioRef.current
+        audioElement.muted = false
+        audioElement.play()
+          .then(() => {
+            console.log('Memory audio playing successfully')
+          })
+          .catch(err => {
+            console.log('Memory audio autoplay prevented, will require user interaction:', err)
+          })
+      }
+    }, 300) // Small delay to let UI settle
 
     // Cleanup: pause audio when memory changes
     return () => {
+      clearTimeout(timer)
       if (memoryAudioWithImageRef.current) {
         memoryAudioWithImageRef.current.pause()
         memoryAudioWithImageRef.current.currentTime = 0
@@ -87,10 +105,25 @@ export default function FireflyBurst({ memories, burstId, onClose, onViewNext, o
     }
   }, [currentMemory.audioUrl, currentMemory.mediaUrl, currentIndex])
 
-  // Calculate duration based on text length and media presence
+  // Calculate duration based on text length, media presence, and audio duration
   const calculateDuration = (memory: Memory) => {
     const textLength = memory.text.length
     const lines = Math.ceil(textLength / 80) // Approx 80 chars per line
+
+    // If memory has audio, get its duration
+    let audioDuration = 0
+    if (memory.audioUrl) {
+      // Try to get audio duration from the refs
+      if (memory.mediaUrl && memoryAudioWithImageRef.current) {
+        audioDuration = (memoryAudioWithImageRef.current.duration || 0) * 1000
+      } else if (!memory.mediaUrl && memoryAudioRef.current) {
+        audioDuration = (memoryAudioRef.current.duration || 0) * 1000
+      }
+      // If we couldn't get duration (not loaded yet), estimate 30 seconds for audio
+      if (audioDuration === 0 || isNaN(audioDuration)) {
+        audioDuration = 30000 // Default 30s for audio memories
+      }
+    }
 
     // If memory has image/video, add extra time to view both text and media
     const hasMedia = memory.mediaUrl || memory.videoUrl
@@ -99,10 +132,22 @@ export default function FireflyBurst({ memories, burstId, onClose, onViewNext, o
     const baseTime = hasMedia ? 8000 : 6000 // 8s base for media (time to view image), 6s for text-only
     const extraTime = 6000 // 6 seconds per line (actual measured reading speed)
 
-    // Calculate duration: base + (lines * 6s per line), min 10s for media / 8s for text, max 40s
+    // Calculate text reading time
+    const textReadingTime = baseTime + (lines * extraTime)
+
+    // If audio is present, use the longer of: audio duration + 2s buffer OR text reading time
+    let duration
+    if (audioDuration > 0) {
+      const audioWithBuffer = audioDuration + 2000 // Add 2 seconds after audio finishes
+      duration = Math.max(audioWithBuffer, textReadingTime)
+    } else {
+      duration = textReadingTime
+    }
+
+    // Apply min/max constraints
     const minTime = hasMedia ? 10000 : 8000
-    const maxTime = 40000 // Increased max to accommodate longer memories
-    const duration = Math.min(Math.max(baseTime + (lines * extraTime), minTime), maxTime)
+    const maxTime = 60000 // Increased max to 60s to accommodate longer audio
+    duration = Math.min(Math.max(duration, minTime), maxTime)
 
     return duration
   }
@@ -423,27 +468,33 @@ export default function FireflyBurst({ memories, burstId, onClose, onViewNext, o
               )}
 
               {/* Image */}
-              <img
-                key={currentMemory.id}
-                src={currentMemory.mediaUrl}
-                alt="Memory"
-                loading="eager"
-                decoding="async"
-                onLoad={() => setImageLoaded(true)}
-                onError={(e) => {
-                  console.error('Failed to load image:', currentMemory.mediaUrl)
-                  console.error('Image error event:', e)
-                  setImageError(true)
-                }}
-                className={`w-full h-auto max-h-[70vh] object-contain transition-opacity duration-700 ${
-                  imageLoaded && !isAnimating ? 'opacity-100' : 'opacity-0'
-                }`}
-                style={{
-                  WebkitTransform: 'translateZ(0)', // Force hardware acceleration on Safari
-                  WebkitBackfaceVisibility: 'hidden', // Prevent flicker on Safari
-                  backfaceVisibility: 'hidden',
-                }}
-              />
+              {!imageError && (
+                <img
+                  key={currentMemory.id}
+                  src={currentMemory.mediaUrl}
+                  alt="Memory"
+                  loading="eager"
+                  decoding="async"
+                  crossOrigin="anonymous"
+                  onLoad={() => {
+                    console.log('Image loaded successfully:', currentMemory.mediaUrl)
+                    setImageLoaded(true)
+                  }}
+                  onError={(e) => {
+                    console.error('Failed to load image:', currentMemory.mediaUrl)
+                    console.error('Image error event:', e)
+                    setImageError(true)
+                  }}
+                  className={`w-full h-auto max-h-[70vh] object-contain transition-opacity duration-700 ${
+                    imageLoaded && !isAnimating ? 'opacity-100' : 'opacity-0'
+                  }`}
+                  style={{
+                    WebkitTransform: 'translateZ(0)', // Force hardware acceleration on Safari
+                    WebkitBackfaceVisibility: 'hidden', // Prevent flicker on Safari
+                    backfaceVisibility: 'hidden',
+                  }}
+                />
+              )}
 
               {/* Glowing overlay effect */}
               {imageLoaded && !imageError && (
@@ -453,11 +504,22 @@ export default function FireflyBurst({ memories, burstId, onClose, onViewNext, o
           )}
 
           {currentMemory.audioUrl && !currentMemory.mediaUrl && (
-            <div className="p-8 bg-bg-darker flex items-center justify-center min-h-[8rem]">
-              <audio ref={memoryAudioRef} controls className="w-full max-w-md">
+            <div className="p-8 bg-bg-darker flex flex-col items-center justify-center min-h-[8rem] gap-4">
+              <div className="text-4xl mb-2">🎙️</div>
+              <audio
+                ref={memoryAudioRef}
+                controls
+                autoPlay
+                className="w-full max-w-md"
+                onLoadedMetadata={() => {
+                  // Force recalculation when audio metadata loads
+                  setIsPaused(false)
+                }}
+              >
                 <source src={currentMemory.audioUrl} type="audio/mpeg" />
                 Your browser does not support the audio element.
               </audio>
+              <p className="text-text-muted text-sm text-center">Voice memory</p>
             </div>
           )}
 
@@ -486,8 +548,21 @@ export default function FireflyBurst({ memories, burstId, onClose, onViewNext, o
 
           {/* Audio player if memory has audio AND image */}
           {currentMemory.audioUrl && currentMemory.mediaUrl && (
-            <div className="px-6 pt-4">
-              <audio ref={memoryAudioWithImageRef} controls className="w-full">
+            <div className="px-6 pt-4 pb-2">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-lg">🎙️</span>
+                <span className="text-text-muted text-sm">Listen to this memory</span>
+              </div>
+              <audio
+                ref={memoryAudioWithImageRef}
+                controls
+                autoPlay
+                className="w-full"
+                onLoadedMetadata={() => {
+                  // Force recalculation when audio metadata loads
+                  setIsPaused(false)
+                }}
+              >
                 <source src={currentMemory.audioUrl} type="audio/mpeg" />
                 Your browser does not support the audio element.
               </audio>

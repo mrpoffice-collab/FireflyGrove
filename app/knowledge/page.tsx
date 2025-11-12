@@ -138,31 +138,31 @@ export default function KnowledgeBankPage() {
 
       <div className="container mx-auto px-4 py-8 max-w-5xl">
         {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-light text-firefly-glow mb-4">
+        <div className="text-center mb-8 sm:mb-12">
+          <h1 className="text-3xl sm:text-4xl font-light text-firefly-glow mb-3 sm:mb-4 px-4">
             Knowledge Bank
           </h1>
-          <p className="text-text-muted text-lg">
+          <p className="text-text-muted text-base sm:text-lg px-4">
             Find answers, tips, and guides for every Firefly Grove feature
           </p>
         </div>
 
         {/* Search */}
-        <div className="mb-8">
+        <div className="mb-6 sm:mb-8">
           <input
             type="text"
             placeholder="Search guides, tips, and features..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full px-6 py-4 bg-bg-elevated border border-firefly-dim/30 rounded-lg text-text-primary placeholder-text-muted focus:outline-none focus:border-firefly-glow transition-soft text-lg"
+            className="w-full px-4 py-3 sm:px-6 sm:py-4 bg-bg-elevated border border-firefly-dim/30 rounded-lg text-text-primary placeholder-text-muted focus:outline-none focus:border-firefly-glow transition-soft text-base sm:text-lg"
           />
         </div>
 
         {/* Category Filter Pills */}
-        <div className="flex flex-wrap gap-2 mb-8">
+        <div className="flex flex-wrap gap-2 mb-6 sm:mb-8">
           <button
             onClick={() => setSelectedCategory(null)}
-            className={`px-4 py-2 rounded-full text-sm font-medium transition-soft ${
+            className={`px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-medium transition-soft min-h-[44px] sm:min-h-0 ${
               selectedCategory === null
                 ? 'bg-firefly-glow text-bg-dark'
                 : 'bg-bg-elevated text-text-soft hover:bg-bg-dark border border-firefly-dim/30'
@@ -174,7 +174,7 @@ export default function KnowledgeBankPage() {
             <button
               key={category}
               onClick={() => setSelectedCategory(category)}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-soft ${
+              className={`px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-medium transition-soft min-h-[44px] sm:min-h-0 ${
                 selectedCategory === category
                   ? 'bg-firefly-glow text-bg-dark'
                   : 'bg-bg-elevated text-text-soft hover:bg-bg-dark border border-firefly-dim/30'
@@ -203,39 +203,39 @@ export default function KnowledgeBankPage() {
           <div className="space-y-12">
             {categories.map((category) => (
               <div key={category}>
-                <h2 className="text-2xl font-light text-firefly-glow mb-6 flex items-center gap-3">
-                  <span className="text-3xl">{categoryIcons[category]}</span>
-                  {categoryLabels[category] || category}
-                  <span className="text-sm text-text-muted font-normal">
+                <h2 className="text-xl sm:text-2xl font-light text-firefly-glow mb-4 sm:mb-6 flex items-center gap-2 sm:gap-3 flex-wrap">
+                  <span className="text-2xl sm:text-3xl">{categoryIcons[category]}</span>
+                  <span>{categoryLabels[category] || category}</span>
+                  <span className="text-xs sm:text-sm text-text-muted font-normal">
                     ({groupedArticles[category].length})
                   </span>
                 </h2>
 
-                <div className="grid gap-4 md:grid-cols-2">
+                <div className="grid gap-4 sm:grid-cols-2">
                   {groupedArticles[category].map((article) => (
                     <a
                       key={article.id}
                       href={`/knowledge/${article.slug}`}
-                      className="block bg-bg-elevated border border-firefly-dim/30 rounded-lg p-6 hover:border-firefly-glow transition-soft group"
+                      className="block bg-bg-elevated border border-firefly-dim/30 rounded-lg p-4 sm:p-6 hover:border-firefly-glow transition-soft group"
                     >
-                      <div className="flex items-start justify-between mb-3">
-                        <h3 className="text-lg font-medium text-firefly-glow group-hover:text-firefly-glow/80 transition-soft flex-1">
+                      <div className="flex items-start justify-between mb-2 sm:mb-3 gap-2">
+                        <h3 className="text-base sm:text-lg font-medium text-firefly-glow group-hover:text-firefly-glow/80 transition-soft flex-1">
                           {article.title}
                         </h3>
                         {article.isNew && (
-                          <span className="ml-2 px-2 py-1 bg-firefly-glow/20 text-firefly-glow text-xs rounded-full">
+                          <span className="ml-2 px-2 py-1 bg-firefly-glow/20 text-firefly-glow text-xs rounded-full flex-shrink-0">
                             New!
                           </span>
                         )}
                       </div>
 
                       {article.subtitle && (
-                        <p className="text-text-muted text-sm mb-4">
+                        <p className="text-text-muted text-sm mb-3 sm:mb-4 line-clamp-2">
                           {article.subtitle}
                         </p>
                       )}
 
-                      <div className="flex items-center gap-4 text-xs text-text-muted">
+                      <div className="flex items-center flex-wrap gap-3 sm:gap-4 text-xs text-text-muted">
                         <span>{article.timeToRead} min read</span>
                         <span className="capitalize">{article.difficulty.toLowerCase()}</span>
                         {article.viewCount > 0 && (
@@ -244,7 +244,7 @@ export default function KnowledgeBankPage() {
                       </div>
 
                       {article.tags.length > 0 && (
-                        <div className="flex flex-wrap gap-2 mt-4">
+                        <div className="flex flex-wrap gap-2 mt-3 sm:mt-4">
                           {article.tags.slice(0, 3).map((tag) => (
                             <span
                               key={tag}

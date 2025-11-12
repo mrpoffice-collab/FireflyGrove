@@ -115,22 +115,22 @@ export default function KnowledgeArticlePage() {
 
         {/* Article Header */}
         <article>
-          <header className="mb-8 pb-8 border-b border-firefly-dim/20">
-            <h1 className="text-4xl font-light text-firefly-glow mb-4">
+          <header className="mb-6 sm:mb-8 pb-6 sm:pb-8 border-b border-firefly-dim/20">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-light text-firefly-glow mb-3 sm:mb-4">
               {article.title}
             </h1>
 
             {article.subtitle && (
-              <p className="text-xl text-text-soft mb-6">
+              <p className="text-lg sm:text-xl text-text-soft mb-4 sm:mb-6">
                 {article.subtitle}
               </p>
             )}
 
-            <div className="flex flex-wrap items-center gap-4 text-sm text-text-muted">
-              <span className="px-3 py-1 bg-bg-elevated rounded-full border border-firefly-dim/30">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm text-text-muted">
+              <span className="px-3 py-1.5 bg-bg-elevated rounded-full border border-firefly-dim/30">
                 {article.timeToRead} min read
               </span>
-              <span className="px-3 py-1 bg-bg-elevated rounded-full border border-firefly-dim/30 capitalize">
+              <span className="px-3 py-1.5 bg-bg-elevated rounded-full border border-firefly-dim/30 capitalize">
                 {article.difficulty.toLowerCase()}
               </span>
               {article.viewCount > 0 && (
@@ -139,11 +139,11 @@ export default function KnowledgeArticlePage() {
             </div>
 
             {article.tags.length > 0 && (
-              <div className="flex flex-wrap gap-2 mt-4">
+              <div className="flex flex-wrap gap-2 mt-3 sm:mt-4">
                 {article.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="px-3 py-1 bg-bg-dark/50 text-text-muted text-sm rounded"
+                    className="px-2 sm:px-3 py-1 bg-bg-dark/50 text-text-muted text-xs sm:text-sm rounded"
                   >
                     {tag}
                   </span>
@@ -211,26 +211,26 @@ export default function KnowledgeArticlePage() {
           </div>
 
           {/* Feedback Section */}
-          <div className="bg-bg-elevated border border-firefly-dim/30 rounded-lg p-6 mb-8">
-            <h3 className="text-lg font-medium text-text-primary mb-4">
+          <div className="bg-bg-elevated border border-firefly-dim/30 rounded-lg p-4 sm:p-6 mb-6 sm:mb-8">
+            <h3 className="text-base sm:text-lg font-medium text-text-primary mb-3 sm:mb-4">
               Was this article helpful?
             </h3>
 
             {feedbackSubmitted ? (
-              <p className="text-firefly-glow">
+              <p className="text-firefly-glow text-sm sm:text-base">
                 ✓ Thank you for your feedback!
               </p>
             ) : (
-              <div className="flex gap-3">
+              <div className="flex flex-col sm:flex-row gap-3">
                 <button
                   onClick={() => handleFeedback(true)}
-                  className="px-6 py-2 bg-firefly-glow hover:bg-firefly-glow/90 text-bg-dark rounded-lg font-medium transition-soft"
+                  className="px-5 sm:px-6 py-2.5 sm:py-2 bg-firefly-glow hover:bg-firefly-glow/90 text-bg-dark rounded-lg font-medium transition-soft text-sm sm:text-base"
                 >
                   👍 Yes
                 </button>
                 <button
                   onClick={() => handleFeedback(false)}
-                  className="px-6 py-2 bg-bg-dark hover:bg-bg-dark/80 text-text-soft rounded-lg font-medium transition-soft border border-firefly-dim/30"
+                  className="px-5 sm:px-6 py-2.5 sm:py-2 bg-bg-dark hover:bg-bg-dark/80 text-text-soft rounded-lg font-medium transition-soft border border-firefly-dim/30 text-sm sm:text-base"
                 >
                   👎 No
                 </button>
@@ -239,16 +239,16 @@ export default function KnowledgeArticlePage() {
           </div>
 
           {/* Related Navigation */}
-          <div className="flex justify-between items-center pt-8 border-t border-firefly-dim/20">
+          <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-4 pt-6 sm:pt-8 border-t border-firefly-dim/20">
             <a
               href="/knowledge"
-              className="text-firefly-glow hover:text-firefly-glow/80 transition-soft"
+              className="text-firefly-glow hover:text-firefly-glow/80 transition-soft text-sm sm:text-base text-center sm:text-left"
             >
               ← Browse all guides
             </a>
             <a
               href="/feedback"
-              className="text-text-muted hover:text-text-soft transition-soft"
+              className="text-text-muted hover:text-text-soft transition-soft text-sm sm:text-base text-center sm:text-right"
             >
               Suggest improvements →
             </a>
