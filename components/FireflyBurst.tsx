@@ -475,13 +475,20 @@ export default function FireflyBurst({ memories, burstId, onClose, onViewNext, o
                   alt="Memory"
                   loading="eager"
                   decoding="async"
-                  crossOrigin="anonymous"
+                  crossOrigin={currentMemory.mediaUrl?.startsWith('data:') ? undefined : 'anonymous'}
                   onLoad={() => {
-                    console.log('Image loaded successfully:', currentMemory.mediaUrl)
+                    const isBase64 = currentMemory.mediaUrl?.startsWith('data:')
+                    const type = isBase64 ? 'base64' : 'URL'
+                    console.log(`Image loaded successfully (${type}):`,
+                      isBase64 ? 'data:image/... (base64)' : currentMemory.mediaUrl)
                     setImageLoaded(true)
                   }}
                   onError={(e) => {
-                    console.error('Failed to load image:', currentMemory.mediaUrl)
+                    const isBase64 = currentMemory.mediaUrl?.startsWith('data:')
+                    console.error(`Failed to load ${isBase64 ? 'base64' : 'URL'} image`)
+                    if (!isBase64) {
+                      console.error('Image URL:', currentMemory.mediaUrl)
+                    }
                     console.error('Image error event:', e)
                     setImageError(true)
                   }}
