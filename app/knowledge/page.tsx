@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react'
 import Header from '@/components/Header'
 import { SkeletonList, SkeletonTitle } from '@/components/SkeletonLoader'
 import { getAllKnowledgeArticles } from '@/lib/knowledgeContent'
+import { getGlowGuide } from '@/lib/glowGuideRegistry'
 
 const categoryLabels: Record<string, string> = {
   GETTING_STARTED: 'Getting Started',
@@ -34,6 +35,7 @@ export default function KnowledgeBankPage() {
   const router = useRouter()
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
+  const [activeGuideSlug, setActiveGuideSlug] = useState<string | null>(null)
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -75,6 +77,9 @@ export default function KnowledgeBankPage() {
 
   const categories = Object.keys(groupedArticles).sort()
 
+  // Get the active Glow Guide component
+  const ActiveGlowGuide = activeGuideSlug ? getGlowGuide(activeGuideSlug) : null
+
   if (status === 'loading') {
     return (
       <div className="min-h-screen bg-bg-primary">
@@ -102,7 +107,7 @@ export default function KnowledgeBankPage() {
             Knowledge Bank
           </h1>
           <p className="text-text-muted text-base sm:text-lg px-4">
-            Comprehensive guides to help you master every Firefly Grove feature
+            Interactive guides to help you discover every Firefly Grove feature
           </p>
         </div>
 
@@ -151,7 +156,7 @@ export default function KnowledgeBankPage() {
           </div>
         )}
 
-        {/* Article Cards by Category */}
+        {/* Glow Guide Cards by Category */}
         {categories.length === 0 ? (
           <div className="text-center py-12">
             <div className="text-6xl mb-4">🔍</div>
@@ -172,10 +177,10 @@ export default function KnowledgeBankPage() {
 
                 <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                   {groupedArticles[category].map((article) => (
-                    <a
+                    <button
                       key={article.slug}
-                      href={`/knowledge/${article.slug}`}
-                      className="block bg-bg-elevated border-2 border-firefly-dim/30 rounded-lg p-6 hover:border-firefly-glow hover:shadow-lg hover:shadow-firefly-glow/10 transition-soft group text-left"
+                      onClick={() => setActiveGuideSlug(article.slug)}
+                      className="block bg-bg-elevated border-2 border-firefly-dim/30 rounded-lg p-6 hover:border-firefly-glow hover:shadow-lg hover:shadow-firefly-glow/10 transition-soft group text-left w-full"
                     >
                       <div className="text-center mb-4">
                         <div className="text-5xl mb-3 group-hover:scale-110 transition-transform">
@@ -192,10 +197,10 @@ export default function KnowledgeBankPage() {
                       </p>
 
                       <div className="flex items-center justify-center gap-2 text-xs text-firefly-glow/70">
-                        <span>📖</span>
-                        <span>Read Guide</span>
+                        <span>✨</span>
+                        <span>Launch Guide</span>
                       </div>
-                    </a>
+                    </button>
                   ))}
                 </div>
               </div>
@@ -216,6 +221,17 @@ export default function KnowledgeBankPage() {
           </a>
         </div>
       </div>
+
+      {/* Render Active Glow Guide Modal */}
+      {ActiveGlowGuide && (
+        <ActiveGlowGuide
+          onClose={() => setActiveGuideSlug(null)}
+          onAction={() => {
+            // TODO: Navigate to the actual feature
+            setActiveGuideSlug(null)
+          }}
+        />
+      )}
     </div>
   )
 }
