@@ -11,6 +11,7 @@ const config: Config = {
       colors: {
         'bg-dark': '#0a0e14',
         'bg-darker': '#050810',
+        'bg-elevated': '#141a24', // Slightly lighter than bg-dark for elevated surfaces
         'firefly-glow': '#ffd966',
         'firefly-dim': '#cc9933',
         'text-soft': '#e0e6ed',
