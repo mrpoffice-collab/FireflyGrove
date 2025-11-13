@@ -9,8 +9,8 @@ timeToRead: 3
 icon: 🌱
 featured: false
 isNew: false
-createdAt: 2025-11-13T14:49:02.755Z
-updatedAt: 2025-11-13T14:49:02.755Z
+createdAt: 2025-11-13T15:16:35.005Z
+updatedAt: 2025-11-13T15:16:35.005Z
 ---
 
 # 🌱 Rooting Trees: Connect Family Heritage

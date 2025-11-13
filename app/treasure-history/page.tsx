@@ -37,6 +37,7 @@ export default function TreasureHistoryPage() {
   const [deletingId, setDeletingId] = useState<string | null>(null)
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editText, setEditText] = useState<string>('')
+  const [selectedDate, setSelectedDate] = useState<string>('') // Empty = current week
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -215,47 +216,74 @@ export default function TreasureHistoryPage() {
         </div>
 
         {/* Actions */}
-        <div className="mb-6 flex gap-3">
-          <button
-            onClick={async () => {
-              try {
-                const response = await fetch('/api/treasure/weekly-keepsake')
+        <div className="mb-6 space-y-4">
+          {/* Date Range Selector */}
+          <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-end">
+            <div className="flex-1">
+              <label htmlFor="startDate" className="block text-sm text-text-muted mb-2">
+                Select Week (any date in the week)
+              </label>
+              <input
+                type="date"
+                id="startDate"
+                value={selectedDate}
+                onChange={(e) => setSelectedDate(e.target.value)}
+                className="w-full px-4 py-2 bg-bg-dark border border-border-subtle rounded-lg text-text-soft focus:outline-none focus:border-firefly-glow transition-soft"
+              />
+              <p className="text-xs text-text-muted mt-1">
+                PDF will include treasures from the full week (Sunday-Saturday)
+              </p>
+            </div>
 
-                if (!response.ok) {
-                  const error = await response.json()
-                  alert(error.details || 'Failed to generate keepsake PDF')
-                  return
+            <button
+              onClick={async () => {
+                try {
+                  // Build URL with date parameter
+                  const apiUrl = selectedDate
+                    ? `/api/treasure/weekly-keepsake?week=${selectedDate}`
+                    : '/api/treasure/weekly-keepsake'
+
+                  const response = await fetch(apiUrl)
+
+                  if (!response.ok) {
+                    const error = await response.json()
+                    alert(error.details || 'Failed to generate keepsake PDF')
+                    return
+                  }
+
+                  // Check if response is actually a PDF
+                  const contentType = response.headers.get('content-type')
+                  if (!contentType?.includes('application/pdf')) {
+                    alert('Error: Server did not return a PDF. Please try again.')
+                    return
+                  }
+
+                  // Download the PDF
+                  const blob = await response.blob()
+                  const blobUrl = window.URL.createObjectURL(blob)
+                  const a = document.createElement('a')
+                  a.href = blobUrl
+                  const dateLabel = selectedDate
+                    ? new Date(selectedDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+                    : new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+                  a.download = `Treasure-Cards-${dateLabel}.pdf`
+                  document.body.appendChild(a)
+                  a.click()
+                  document.body.removeChild(a)
+                  window.URL.revokeObjectURL(blobUrl)
+                } catch (error) {
+                  console.error('Download error:', error)
+                  alert('Failed to download keepsake. Please try again.')
                 }
-
-                // Check if response is actually a PDF
-                const contentType = response.headers.get('content-type')
-                if (!contentType?.includes('application/pdf')) {
-                  alert('Error: Server did not return a PDF. Please try again.')
-                  return
-                }
-
-                // Download the PDF
-                const blob = await response.blob()
-                const url = window.URL.createObjectURL(blob)
-                const a = document.createElement('a')
-                a.href = url
-                a.download = `Weekly-Keepsake-${new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}.pdf`
-                document.body.appendChild(a)
-                a.click()
-                document.body.removeChild(a)
-                window.URL.revokeObjectURL(url)
-              } catch (error) {
-                console.error('Download error:', error)
-                alert('Failed to download keepsake. Please try again.')
-              }
-            }}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg text-sm font-medium transition-soft"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
-            Download This Week's Keepsake PDF
-          </button>
+              }}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg text-sm font-medium transition-soft whitespace-nowrap"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              Download Treasure Cards
+            </button>
+          </div>
         </div>
 
         {/* Stats */}

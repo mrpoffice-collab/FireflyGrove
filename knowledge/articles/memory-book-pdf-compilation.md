@@ -9,8 +9,8 @@ timeToRead: 2
 icon: 📖
 featured: false
 isNew: false
-createdAt: 2025-11-13T14:49:02.762Z
-updatedAt: 2025-11-13T14:49:02.762Z
+createdAt: 2025-11-13T15:16:35.012Z
+updatedAt: 2025-11-13T15:16:35.012Z
 ---
 
 # 📖 Memory Book: Beautiful Printed Stories

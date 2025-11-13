@@ -9,8 +9,8 @@ timeToRead: 2
 icon: 📝
 featured: false
 isNew: false
-createdAt: 2025-11-13T14:49:02.753Z
-updatedAt: 2025-11-13T14:49:02.753Z
+createdAt: 2025-11-13T15:16:35.002Z
+updatedAt: 2025-11-13T15:16:35.002Z
 ---
 
 # 📝 Story Sparks: Writing Prompts
