@@ -2085,6 +2085,1298 @@ export const knowledgeArticles: Record<string, KnowledgeArticle> = {
     ],
   },
 
+  'co-authoring-joint-memories': {
+    slug: 'co-authoring-joint-memories',
+    title: 'Co-Authoring: Joint Memories',
+    subtitle: 'Create memories together with multiple authors',
+    icon: '✍️',
+    category: 'COLLABORATION',
+
+    overview: `Co-authoring lets multiple family members write a memory together. Perfect for shared experiences where everyone has a different perspective. Each co-author can edit, add photos, and contribute their unique voice to the same memory.`,
+
+    howItWorks: [
+      {
+        title: 'Start Co-Authored Memory',
+        content: 'When creating a memory, click "Add Co-Authors" and invite family members. They receive notification and can join the editing process.',
+      },
+      {
+        title: 'Collaborative Editing',
+        content: 'All co-authors can edit the memory simultaneously. Changes sync in real-time. See who\'s editing and what they\'re working on.',
+      },
+      {
+        title: 'Multi-Voice Sections',
+        content: 'Use section headers to separate perspectives. "Mom\'s Version:", "Dad\'s Side of Story:", etc. Each voice adds richness.',
+      },
+      {
+        title: 'Publish Together',
+        content: 'When everyone\'s satisfied, any co-author can publish. All names appear as memory authors. Credit shared equally.',
+      },
+    ],
+
+    useCases: [
+      'Family vacation memories where everyone experienced different moments',
+      'Wedding day recollections from bride and groom perspectives',
+      'Sibling memories of growing up together',
+      'Grandparent and grandchild joint stories',
+      'Historical family events witnessed by multiple relatives',
+      'Anniversary memories from both spouses',
+    ],
+
+    tips: [
+      'Establish who writes which sections before starting',
+      'Use clear section headers to separate different voices',
+      'All co-authors should agree before publishing',
+      'Great for resolving "remember when..." disagreements with multiple perspectives',
+      'Co-authored memories are especially engaging for younger generations',
+      'Can add co-authors after initial creation if needed',
+    ],
+
+    faqs: [
+      {
+        question: 'How many co-authors can a memory have?',
+        answer: 'Up to 10 co-authors per memory. More than that gets chaotic. Consider breaking into separate related memories.',
+      },
+      {
+        question: 'What if co-authors disagree on content?',
+        answer: 'Communication is key. Use comments to discuss. Can also split into separate memories with different perspectives.',
+      },
+      {
+        question: 'Can I remove a co-author after adding them?',
+        answer: 'Yes, but only before publishing. Once published, all co-authors are permanently credited. This protects authorship integrity.',
+      },
+      {
+        question: 'Do co-authors need to be family members?',
+        answer: 'They must have access to the tree. Invite them first, then add as co-authors. Can\'t co-author with non-members.',
+      },
+      {
+        question: 'What happens if a co-author deletes content I wrote?',
+        answer: 'Version history saves everything. Can restore previous versions. Accidental deletions aren\'t permanent.',
+      },
+    ],
+
+    relatedGuides: [
+      'memory-threading-replies',
+      'inviting-family-members',
+      'approval-workflow-review-contributions',
+    ],
+  },
+
+  'approval-workflow-review-contributions': {
+    slug: 'approval-workflow-review-contributions',
+    title: 'Approval Workflow: Review Contributions',
+    subtitle: 'Review and approve memories before they go live',
+    icon: '✅',
+    category: 'COLLABORATION',
+
+    overview: `Approval workflow lets tree owners review memories before they appear on the tree. Family members can contribute freely, but nothing goes live until approved. Perfect for maintaining quality, accuracy, and appropriateness while still encouraging contributions.`,
+
+    howItWorks: [
+      {
+        title: 'Enable Approval Mode',
+        content: 'Tree settings → Approval Workflow → Enable. All new memories from non-owners go to approval queue instead of publishing immediately.',
+      },
+      {
+        title: 'Family Contributes',
+        content: 'Family members write memories normally. They see "Pending Approval" status. Contributors know their memory is waiting for review.',
+      },
+      {
+        title: 'Review Queue',
+        content: 'Tree owner sees notification of pending memories. Review queue shows all submissions. Read through, check photos, verify accuracy.',
+      },
+      {
+        title: 'Approve or Request Changes',
+        content: 'Approve to publish immediately. Reject with feedback for contributor to revise. Can also edit before approving.',
+      },
+    ],
+
+    useCases: [
+      'Trees with young contributors who need guidance',
+      'Protecting sensitive family information from accidental disclosure',
+      'Maintaining historical accuracy for genealogy projects',
+      'Trees with many contributors where quality control matters',
+      'Memorial trees where tone and appropriateness are important',
+      'Trees being prepared for print products (books, cards)',
+    ],
+
+    tips: [
+      'Communicate why approval is enabled - helps contributors understand',
+      'Review promptly so contributors don\'t feel ignored',
+      'Give specific feedback when rejecting to help improve',
+      'Can approve with minor edits yourself instead of sending back',
+      'Disable approval for trusted contributors in branch permissions',
+      'Use approval workflow during initial tree building, disable once established',
+    ],
+
+    faqs: [
+      {
+        question: 'Can I require approval from some members but not others?',
+        answer: 'Yes! Branch permissions let you exempt trusted members. New/young members go through approval, experienced family doesn\'t.',
+      },
+      {
+        question: 'What happens to rejected memories?',
+        answer: 'Contributor gets notification with your feedback. They can revise and resubmit. Original stays in their drafts.',
+      },
+      {
+        question: 'Can contributors see their approval status?',
+        answer: 'Yes. They see "Pending Approval", "Approved", or "Changes Requested" on their memory. Transparency prevents confusion.',
+      },
+      {
+        question: 'How long do memories stay in approval queue?',
+        answer: 'Forever until you act. No automatic approval or rejection. Review at your own pace.',
+      },
+      {
+        question: 'Can multiple people approve memories?',
+        answer: 'Yes! All tree owners/admins can approve. Useful for sharing moderation responsibilities.',
+      },
+    ],
+
+    relatedGuides: [
+      'branch-permissions-access-control',
+      'co-authoring-joint-memories',
+      'open-grove-public-memorials',
+    ],
+  },
+
+  'branch-permissions-access-control': {
+    slug: 'branch-permissions-access-control',
+    title: 'Branch Permissions: Access Control',
+    subtitle: 'Control who can view and edit specific branches',
+    icon: '🔐',
+    category: 'COLLABORATION',
+
+    overview: `Branch permissions let you control access to specific parts of your tree. Some branches might be private (personal thoughts), some shared with immediate family, others open to extended relatives. Fine-grained control over who sees and edits what.`,
+
+    howItWorks: [
+      {
+        title: 'Set Branch Permissions',
+        content: 'Branch settings → Permissions → Choose visibility (Private, Family, Extended, Public). Then set edit permissions separately.',
+      },
+      {
+        title: 'Viewing Rights',
+        content: 'Private: Only you. Family: Immediate family members. Extended: All tree members. Public: Anyone with tree link.',
+      },
+      {
+        title: 'Editing Rights',
+        content: 'Separate from viewing. Can allow viewing but restrict editing. Or require approval workflow for certain members\' edits.',
+      },
+      {
+        title: 'Inheritance',
+        content: 'New memories inherit branch permissions. Change branch permissions anytime - updates all existing memories in that branch.',
+      },
+    ],
+
+    useCases: [
+      'Private journal branches for personal reflections',
+      'Sensitive family matters (health, finances) restricted to immediate family',
+      'Extended family branches everyone can contribute to',
+      'Heritage/genealogy branches open to all cousins',
+      'Wedding planning branches for couple only',
+      'Parent-specific branches (Mom\'s side, Dad\'s side)',
+    ],
+
+    tips: [
+      'Default new branches to most restrictive, then open up as needed',
+      'Use branch permissions instead of separate trees when possible',
+      'Communicate permission changes to family so they understand why access changed',
+      'Private branches are truly private - end-to-end encrypted',
+      'Can create "approval only" branches where anyone views but owner approves edits',
+      'Branch permissions override tree-level sharing settings',
+    ],
+
+    faqs: [
+      {
+        question: 'If I restrict a branch, do existing viewers lose access?',
+        answer: 'Yes. Permission changes apply immediately. Members who could see branch suddenly can\'t. Use with care.',
+      },
+      {
+        question: 'Can I share individual memories instead of whole branches?',
+        answer: 'Yes! Memory-level visibility settings override branch permissions. Useful for sharing one special memory more widely.',
+      },
+      {
+        question: 'What happens to memories I contributed to branches I no longer access?',
+        answer: 'They stay there. You contributed them to the tree owner. If you want them back, export before losing access.',
+      },
+      {
+        question: 'Can someone see that a private branch exists?',
+        answer: 'No. Private branches are completely invisible to non-permitted members. They don\'t see branch name or that it exists.',
+      },
+      {
+        question: 'How does this work with heirs?',
+        answer: 'Heirs inherit your permission level to all branches. If you can\'t see it, they can\'t either. Plan accordingly.',
+      },
+    ],
+
+    relatedGuides: [
+      'memory-visibility-privacy',
+      'approval-workflow-review-contributions',
+      'inviting-family-members',
+    ],
+  },
+
+  'member-removal-managing-collaborators': {
+    slug: 'member-removal-managing-collaborators',
+    title: 'Member Removal: Managing Collaborators',
+    subtitle: 'Remove members and manage access gracefully',
+    icon: '👋',
+    category: 'COLLABORATION',
+
+    overview: `Sometimes you need to remove family members from your tree. Relationship changes, privacy concerns, or unwanted behavior. Member removal lets you revoke access while preserving tree integrity. Their contributions stay (unless you delete), but they can no longer view or edit.`,
+
+    howItWorks: [
+      {
+        title: 'Remove Member',
+        content: 'Tree settings → Members → Select member → Remove. Confirm action. They immediately lose all access to tree.',
+      },
+      {
+        title: 'Member Notification',
+        content: 'Removed member receives notification (optional). Can disable notification for sensitive situations. They see "Access Revoked" when trying to view tree.',
+      },
+      {
+        title: 'Content Ownership',
+        content: 'Their memories stay on tree by default. You own tree, they contributed. Can optionally delete their content during removal.',
+      },
+      {
+        title: 'Future Invitations',
+        content: 'Can reinvite later if circumstances change. They rejoin as new member - previous edit history preserved but permissions reset.',
+      },
+    ],
+
+    useCases: [
+      'Divorce or relationship breakdown',
+      'Family disputes where access needs revoking',
+      'Removing deceased members (convert to memorial)',
+      'Inappropriate behavior or harassment',
+      'Privacy concerns or trust issues',
+      'Simplifying member list for inactive users',
+    ],
+
+    tips: [
+      'Export tree before removing someone in case you need their contributions',
+      'Consider restricting to view-only before full removal',
+      'Have conversation first if possible - removal is dramatic',
+      'Removed members can\'t see tree but memories about them remain',
+      'Can remove and block to prevent re-invitation requests',
+      'Keep their memories unless they were harmful - history matters',
+    ],
+
+    faqs: [
+      {
+        question: 'Can removed members see their old memories?',
+        answer: 'No. They lose all access. If they want copies, they should export before being removed. You\'re not obligated to provide.',
+      },
+      {
+        question: 'What if I accidentally remove someone?',
+        answer: 'Reinvite them immediately. They rejoin with same content but reset permissions. Explain accident - most understand.',
+      },
+      {
+        question: 'Can I remove the person who invited me to the tree?',
+        answer: 'Only if you\'re tree owner. If they own tree and you\'re member, you can only leave voluntarily. Can\'t kick owner.',
+      },
+      {
+        question: 'What happens to co-authored memories?',
+        answer: 'They stay with all authors credited. Can\'t remove authorship after publishing. But removed member can\'t edit anymore.',
+      },
+      {
+        question: 'Can removed members still see their Firefly Bursts?',
+        answer: 'No. Firefly Bursts only show memories you have access to. Removal means no more bursts from that tree.',
+      },
+    ],
+
+    relatedGuides: [
+      'inviting-family-members',
+      'branch-permissions-access-control',
+      'transplanting-trees-grove-transfer',
+    ],
+  },
+
+  'shareable-links-quick-access': {
+    slug: 'shareable-links-quick-access',
+    title: 'Shareable Links: Quick Access',
+    subtitle: 'Share memories with temporary secure links',
+    icon: '🔗',
+    category: 'COLLABORATION',
+
+    overview: `Shareable links let you share specific memories or branches without adding someone as full tree member. Generate time-limited links for viewing only. Perfect for sharing memories with friends, distant relatives, or including in printed materials.`,
+
+    howItWorks: [
+      {
+        title: 'Generate Link',
+        content: 'Memory or branch → Share → "Create Shareable Link". Choose expiration (1 day, 1 week, 1 month, never). Set view-only or allow comments.',
+      },
+      {
+        title: 'Share Link',
+        content: 'Copy link and share via email, text, social media, or print in QR code. Anyone with link can access without logging in.',
+      },
+      {
+        title: 'Time-Limited Access',
+        content: 'Link expires automatically after chosen duration. Recipients can view during active period. After expiration, link shows "Expired".',
+      },
+      {
+        title: 'Revoke Anytime',
+        content: 'Can manually revoke links before expiration. Useful if you change mind or shared accidentally. Immediate revocation.',
+      },
+    ],
+
+    useCases: [
+      'Sharing memories at funerals or memorial services',
+      'Including QR codes in printed memory books',
+      'Sharing with friends who aren\'t family members',
+      'Temporary access for biography writers or journalists',
+      'Wedding invitations with engagement story link',
+      'Holiday cards with family memory link',
+    ],
+
+    tips: [
+      'Use short expiration for sensitive content (1-3 days)',
+      'Never expire for printed materials (QR codes in books)',
+      'Track active links in settings to manage what\'s shared',
+      'Can password-protect links for extra security',
+      'Shareable links don\'t allow editing - viewing/commenting only',
+      'Consider watermarking photos in shared memories',
+    ],
+
+    faqs: [
+      {
+        question: 'Can people with shareable links download photos?',
+        answer: 'Yes, if you allow it. Can disable downloads on link settings. But screenshots always possible - assume content is copyable.',
+      },
+      {
+        question: 'Do shareable links count toward storage limits?',
+        answer: 'No. Links don\'t consume additional storage. Just sharing existing content. No limits on number of links.',
+      },
+      {
+        question: 'Can I see who viewed my shareable link?',
+        answer: 'Yes! View count and timestamps shown. Can see general location (city level) of viewers if enabled.',
+      },
+      {
+        question: 'What if someone shares my link publicly?',
+        answer: 'Links can be re-shared. Assume anything linked could become public. Only share what you\'re comfortable with wide audience.',
+      },
+      {
+        question: 'Can shareable link viewers add reactions?',
+        answer: 'Only if you enable "Allow reactions". Off by default. Comments and reactions require name/email from viewer.',
+      },
+    ],
+
+    relatedGuides: [
+      'memory-visibility-privacy',
+      'inviting-family-members',
+      'open-grove-public-memorials',
+    ],
+  },
+
+  'heir-conditions-release-timing': {
+    slug: 'heir-conditions-release-timing',
+    title: 'Heir Conditions: Release Timing',
+    subtitle: 'Control when heirs receive your legacy',
+    icon: '⏳',
+    category: 'LEGACY',
+
+    overview: `Heir conditions let you control exactly when your designated heirs receive access to your tree. Immediate upon passing? After certain time? On specific date? Flexible timing ensures legacy transfers at the right moment for each heir.`,
+
+    howItWorks: [
+      {
+        title: 'Set Transfer Conditions',
+        content: 'Heir settings → Conditions → Choose: Immediate, Time delay (days/months/years), Specific date, or Manual trigger by moderator.',
+      },
+      {
+        title: 'Multiple Condition Types',
+        content: 'Can combine conditions. Example: "6 months after passing OR when heir turns 18, whichever is later." Complex logic supported.',
+      },
+      {
+        title: 'Verification Process',
+        content: 'System verifies conditions met before releasing access. Moderators can manually trigger if conditions ambiguous. Safety checks prevent premature access.',
+      },
+      {
+        title: 'Staged Release',
+        content: 'Different branches can have different conditions. Some immediate, others delayed. Graduated access based on heir maturity or circumstances.',
+      },
+    ],
+
+    useCases: [
+      'Delaying access until young children reach adulthood',
+      'Time for grieving before overwhelming with memories',
+      'Coordinating with will reading or estate distribution',
+      'Releasing sensitive information only after certain events',
+      'Staggered access as children reach milestone ages (18, 21, 25)',
+      'Waiting for legal/financial matters to settle',
+    ],
+
+    tips: [
+      'Consider heir\'s emotional readiness, not just legal age',
+      'Build in flexibility with moderator override option',
+      'Communicate conditions to heirs in advance if possible',
+      'Different heirs can have different conditions (individualized timing)',
+      'Test verification process while alive to ensure it works',
+      'Write letter explaining why you chose certain delays',
+    ],
+
+    faqs: [
+      {
+        question: 'What if the specified date passes but I\'m still alive?',
+        answer: 'Date conditions only activate after your passing is confirmed. If alive past that date, heir still waits. Conditions are AND, not OR.',
+      },
+      {
+        question: 'Can heirs override conditions early?',
+        answer: 'No. Only moderators can override with documented justification. Protects your wishes from impatient heirs.',
+      },
+      {
+        question: 'How is "passing" verified?',
+        answer: 'Multiple methods: Death certificate upload, extended inactivity + verification, moderator certification, heir attestation with corroboration.',
+      },
+      {
+        question: 'What happens if moderator becomes unavailable?',
+        answer: 'Backup moderators can step in. If all moderators unavailable, support team can verify with legal documentation.',
+      },
+      {
+        question: 'Can I change conditions after setting them?',
+        answer: 'Yes, anytime while alive. Update as circumstances or heirs change. Can\'t change after passing (obviously).',
+      },
+    ],
+
+    relatedGuides: [
+      'choosing-keepers-heirs',
+      'multiple-heirs-redundancy-planning',
+      'moderator-role-trustee',
+    ],
+  },
+
+  'multiple-heirs-redundancy-planning': {
+    slug: 'multiple-heirs-redundancy-planning',
+    title: 'Multiple Heirs: Redundancy Planning',
+    subtitle: 'Designate backup heirs for legacy protection',
+    icon: '👥',
+    category: 'LEGACY',
+
+    overview: `Multiple heirs provide redundancy so your legacy isn't lost if primary heir is unavailable, predeceases you, or declines. Ranked system ensures someone always receives your memories. Critical for long-term legacy preservation.`,
+
+    howItWorks: [
+      {
+        title: 'Rank Your Heirs',
+        content: 'Add multiple heirs in order of preference: Primary, Secondary, Tertiary. System works down list until finding available heir.',
+      },
+      {
+        title: 'Automatic Failover',
+        content: 'If primary heir unavailable/deceased/declines, secondary automatically becomes primary. Seamless transition without manual intervention.',
+      },
+      {
+        title: 'Heir Notification Cascade',
+        content: 'System contacts heirs in order. Primary gets first notification. If no response in 30 days, moves to secondary. Ensures someone claims legacy.',
+      },
+      {
+        title: 'Split Legacy Option',
+        content: 'Can also designate multiple heirs to receive simultaneously instead of ranked. All get access at once - shared stewardship.',
+      },
+    ],
+
+    useCases: [
+      'Protecting against heir predeceasing you',
+      'Backup if primary heir declines responsibility',
+      'Geographic redundancy (heirs in different locations)',
+      'Aging heirs who might not outlive you',
+      'Estranged relationships that might reconcile',
+      'Multiple children receiving equal inheritance',
+    ],
+
+    tips: [
+      'Always have at least 2-3 ranked heirs for safety',
+      'Consider age differences - younger heirs as backups',
+      'Mix family generations (child, grandchild, sibling)',
+      'Communicate with all heirs about their ranking',
+      'Review heir list annually - circumstances change',
+      'Consider institutional heir as final backup (library, archive)',
+    ],
+
+    faqs: [
+      {
+        question: 'Can multiple heirs access simultaneously?',
+        answer: 'Yes! Can choose "Joint heirs" instead of "Ranked heirs". All receive access at once. Good for siblings who\'ll share stewardship.',
+      },
+      {
+        question: 'What if heirs disagree on legacy management?',
+        answer: 'Joint heirs all have equal admin rights. Majority rules for decisions. Can also designate one "primary admin" among joint heirs.',
+      },
+      {
+        question: 'Can I give different branches to different heirs?',
+        answer: 'Yes! Branch-level heir designation. Dad\'s side goes to his kids, Mom\'s side to hers. Super flexible.',
+      },
+      {
+        question: 'What happens if all heirs decline?',
+        answer: 'Legacy goes to your designated moderator, then to account default heir setting, then to Firefly Grove archive (if you consent).',
+      },
+      {
+        question: 'Can heirs add their own heirs?',
+        answer: 'Yes! Legacy passes down generations. Your heir becomes owner and designates their heirs. Perpetual preservation.',
+      },
+    ],
+
+    relatedGuides: [
+      'choosing-keepers-heirs',
+      'heir-conditions-release-timing',
+      'moderator-role-trustee',
+    ],
+  },
+
+  'moderator-role-trustee': {
+    slug: 'moderator-role-trustee',
+    title: 'Moderator Role: Legacy Trustee',
+    subtitle: 'Appoint trusted overseer for legacy transition',
+    icon: '🛡️',
+    category: 'LEGACY',
+
+    overview: `Moderator is your legacy trustee - handles transition logistics when you pass. Verifies your passing, contacts heirs, resolves disputes, ensures smooth handoff. Choose someone organized, diplomatic, trustworthy. Not necessarily heir themselves.`,
+
+    howItWorks: [
+      {
+        title: 'Appoint Moderator',
+        content: 'Settings → Legacy → Moderator → Invite trusted person. They accept moderator role. Often attorney, executor, or responsible family member.',
+      },
+      {
+        title: 'Moderator Monitors',
+        content: 'Moderator has limited viewing access while you\'re alive (you control what they see). After passing, they verify and initiate heir transfer.',
+      },
+      {
+        title: 'Transition Management',
+        content: 'Moderator certifies your passing, contacts heirs, answers questions, resolves access issues, ensures conditions are met properly.',
+      },
+      {
+        title: 'Handoff Complete',
+        content: 'Once heir has access and is comfortable, moderator role can end or continue as advisor. You decide moderator duration.',
+      },
+    ],
+
+    useCases: [
+      'Estate attorney managing full estate including digital legacy',
+      'Executor of will coordinating all inheritance',
+      'Trusted friend/sibling handling family logistics',
+      'Family member not receiving tree but good at organization',
+      'Professional digital estate manager',
+      'Religious/spiritual advisor for memorial coordination',
+    ],
+
+    tips: [
+      'Choose someone younger and likely to outlive you',
+      'Pick organized, diplomatic person - they\'ll handle emotions',
+      'Not same person as heir - separation of duties reduces conflict',
+      'Brief moderator on your wishes while you\'re alive',
+      'Give moderator access to your "legacy instructions" branch',
+      'Name backup moderator in case primary unavailable',
+    ],
+
+    faqs: [
+      {
+        question: 'Can moderator see my private memories?',
+        answer: 'Only what you grant. Can give full access or limit to specific branches. Common setup: moderator sees "legacy instructions" branch only.',
+      },
+      {
+        question: 'What if moderator abuses their role?',
+        answer: 'While alive, you can remove/replace them anytime. After passing, heirs can report abuse to Firefly Grove for investigation.',
+      },
+      {
+        question: 'Is moderator legally liable for legacy?',
+        answer: 'No legal liability. It\'s advisory role, not legal executor. However, choose responsibly - they represent your wishes.',
+      },
+      {
+        question: 'Can I have multiple moderators?',
+        answer: 'Yes! Co-moderators share responsibilities. Useful for complex families or if one moderator might be unavailable.',
+      },
+      {
+        question: 'Does moderator need paid Firefly Grove account?',
+        answer: 'No. Moderator access is free as part of your account. They don\'t need their own subscription.',
+      },
+    ],
+
+    relatedGuides: [
+      'choosing-keepers-heirs',
+      'heir-conditions-release-timing',
+      'legacy-transfer-immediate-handoff',
+    ],
+  },
+
+  'legacy-transfer-immediate-handoff': {
+    slug: 'legacy-transfer-immediate-handoff',
+    title: 'Legacy Transfer: Immediate Handoff',
+    subtitle: 'Transfer your tree before passing',
+    icon: '🎁',
+    category: 'LEGACY',
+
+    overview: `Legacy transfer lets you hand off your tree to heirs while you're still alive. Bypass estate complications, teach them to be steward, transition gradually. You can maintain access or fully transfer. Ultimate legacy planning control.`,
+
+    howItWorks: [
+      {
+        title: 'Initiate Transfer',
+        content: 'Settings → Legacy → Transfer Now → Choose heir. Select full transfer (you lose ownership) or co-ownership (both admin).',
+      },
+      {
+        title: 'Heir Accepts',
+        content: 'Heir receives invitation to accept tree ownership. They review responsibilities and accept. Can decline if not ready.',
+      },
+      {
+        title: 'Transition Period',
+        content: 'Recommended: Start with co-ownership. Both admin rights. Train heir on tree management. Gradually reduce your involvement.',
+      },
+      {
+        title: 'Complete Handoff',
+        content: 'When ready, transfer full ownership. You can maintain viewing access or exit completely. Heir is now sole owner.',
+      },
+    ],
+
+    useCases: [
+      'Advanced age and wanting to ensure legacy security',
+      'Terminal illness - arranging affairs while capable',
+      'Moving to assisted living - simplifying responsibilities',
+      'Teaching next generation about stewardship while you can guide',
+      'Tax/estate planning - asset transfer before death',
+      'Preventing account access issues after passing',
+    ],
+
+    tips: [
+      'Start with co-ownership, not full transfer - easier to reverse',
+      'Transfer when you\'re healthy enough to train heir properly',
+      'Document your organizational system for heir',
+      'Consider transferring in stages (branch by branch)',
+      'Maintain viewing access even after ownership transfer',
+      'Have "transfer celebration" with heir - meaningful moment',
+    ],
+
+    faqs: [
+      {
+        question: 'Can I reverse a transfer?',
+        answer: 'Co-ownership can be adjusted. Full transfer is permanent - heir must transfer back if they agree. Choose carefully.',
+      },
+      {
+        question: 'What if heir mismanages the tree after transfer?',
+        answer: 'That\'s their right as owner. Export everything before transferring if worried. Can\'t reclaim after full transfer.',
+      },
+      {
+        question: 'Does transfer affect subscription billing?',
+        answer: 'Yes. Heir must have paid subscription to accept tree (or upgrade). Transfer doesn\'t include your subscription.',
+      },
+      {
+        question: 'Can I transfer to someone outside my family?',
+        answer: 'Yes. Can transfer to anyone - friend, institution, archive. Recipient becomes full owner regardless of family relationship.',
+      },
+      {
+        question: 'What\'s difference between transfer and heir designation?',
+        answer: 'Transfer happens now (immediate), heir designation happens after passing (future). Transfer is proactive, heir is reactive.',
+      },
+    ],
+
+    relatedGuides: [
+      'choosing-keepers-heirs',
+      'transplanting-trees-grove-transfer',
+      'moderator-role-trustee',
+    ],
+  },
+
+  'subscription-tiers-plans': {
+    slug: 'subscription-tiers-plans',
+    title: 'Subscription Tiers: Choose Your Plan',
+    subtitle: 'Find the perfect plan for your legacy needs',
+    icon: '💎',
+    category: 'ACCOUNT',
+
+    overview: `Firefly Grove offers multiple subscription tiers to match your needs and budget. From free basic accounts to unlimited legacy preservation, choose what works for your family. All plans include core memory features - higher tiers add storage, products, and advanced tools.`,
+
+    howItWorks: [
+      {
+        title: 'Choose Your Tier',
+        content: 'Billing → Plans → Compare features. Free (basic), Sapling ($9/mo, 10GB), Grove ($19/mo, 50GB), Forest ($39/mo, unlimited). Choose based on storage needs and features.',
+      },
+      {
+        title: 'Start Trial',
+        content: 'All paid plans include 14-day free trial. Full access during trial. Cancel anytime - no charge if within trial period.',
+      },
+      {
+        title: 'Upgrade Anytime',
+        content: 'Start free, upgrade when needed. Storage filling up? Upgrade instantly. Downgrade also possible (keeps content, limits new uploads).',
+      },
+      {
+        title: 'Annual Discount',
+        content: 'Pay annually for 2 months free. Significant savings for committed users. Monthly billing also available for flexibility.',
+      },
+    ],
+
+    useCases: [
+      'Free tier for trying Firefly Grove with limited content',
+      'Sapling for individuals with modest photo collections',
+      'Grove for active families with regular photo uploads',
+      'Forest for extensive archives, professional genealogists, or multi-tree users',
+      'Legacy tier for institutions, large families, historical societies',
+      'Gift subscriptions for family members',
+    ],
+
+    tips: [
+      'Start free, upgrade when you hit storage limits',
+      'Annual billing saves 16% versus monthly',
+      'Downgrading keeps existing content accessible (read-only if over limit)',
+      'Student/senior discounts available - contact support',
+      'Family plans let multiple people share subscription cost',
+      'Product credits roll over month-to-month (don\'t lose unused credits)',
+    ],
+
+    faqs: [
+      {
+        question: 'What happens if I cancel my subscription?',
+        answer: 'Downgrade to free tier. Keeps existing content viewable. Can\'t add new memories/photos until under free storage limit. Exports remain available.',
+      },
+      {
+        question: 'Can I share subscription with family members?',
+        answer: 'Grove and Forest include multi-user access. Family members get their own accounts under your subscription. Shared storage pool.',
+      },
+      {
+        question: 'What if I go over my storage limit?',
+        answer: 'Grace period (30 days) to upgrade or delete content. After grace period, can\'t upload new content but existing stays accessible.',
+      },
+      {
+        question: 'Do heirs need their own subscription?',
+        answer: 'When they inherit tree, they need active subscription to manage it. Can view/export on free tier. Subscription transfers with tree if gifted.',
+      },
+      {
+        question: 'Are there nonprofit/educational discounts?',
+        answer: 'Yes! 50% discount for 501(c)(3) nonprofits, schools, libraries, archives. Contact support with documentation.',
+      },
+    ],
+
+    relatedGuides: [
+      'storage-limits-management',
+      'forever-kit-export-backup',
+      'greeting-cards-memory-sharing',
+    ],
+  },
+
+  'storage-limits-management': {
+    slug: 'storage-limits-management',
+    title: 'Storage Limits: Manage Your Space',
+    subtitle: 'Understand and optimize storage usage',
+    icon: '💾',
+    category: 'ACCOUNT',
+
+    overview: `Every subscription tier includes storage for photos, videos, and audio. Free tier gets 1GB, paid tiers range from 10GB to unlimited. Smart management keeps your most important memories accessible while staying within limits. Tools help optimize and understand usage.`,
+
+    howItWorks: [
+      {
+        title: 'Check Usage',
+        content: 'Settings → Storage → See current usage breakdown. Photos, videos, audio shown separately. Visual chart shows what\'s consuming space.',
+      },
+      {
+        title: 'Optimize Media',
+        content: 'Use built-in compression tools. Original quality vs. optimized for web. Keep originals for prints, use optimized for viewing. Saves significant space.',
+      },
+      {
+        title: 'Archive Old Content',
+        content: 'Export old memories to Forever Kit (local backup). Delete from cloud but keep locally. Frees space while preserving everything.',
+      },
+      {
+        title: 'Upgrade If Needed',
+        content: 'When approaching limit, get notification. Upgrade to higher tier or optimize/archive content. Flexible solutions.',
+      },
+    ],
+
+    useCases: [
+      'Managing large photo collections on limited storage',
+      'Understanding what\'s consuming most space',
+      'Preparing for major photo upload (vacation, event)',
+      'Optimizing before downgrading subscription',
+      'Balancing cloud storage with local backups',
+      'Planning subscription tier based on content volume',
+    ],
+
+    tips: [
+      'Upload photos at "High Quality" not "Original" to save 60% space',
+      'Videos consume 10-50x more space than photos - use sparingly',
+      'Audio recordings minimal impact - don\'t worry about these',
+      'Regularly export and archive old content you don\'t view often',
+      'Duplicate photo detection tool finds and removes copies',
+      'Preview storage impact before bulk uploads',
+    ],
+
+    faqs: [
+      {
+        question: 'What counts toward storage limits?',
+        answer: 'Photos, videos, and audio recordings. Text memories don\'t count - unlimited text on all tiers. PDFs and documents count as well.',
+      },
+      {
+        question: 'If I optimize photos, can I get originals back?',
+        answer: 'Only if you kept local copies. Optimization is permanent cloud-side. Always export originals to Forever Kit before optimizing.',
+      },
+      {
+        question: 'Can I buy additional storage without upgrading tier?',
+        answer: 'Yes! $5/mo per 10GB add-on storage. Available on all paid tiers. Cheaper to upgrade tier if close to next level.',
+      },
+      {
+        question: 'What happens to content if I exceed my limit?',
+        answer: '30-day grace period. Can\'t upload new content but existing accessible. After grace period, oldest content archived (still accessible via Forever Kit).',
+      },
+      {
+        question: 'Do shared memories count toward my storage?',
+        answer: 'Only if you uploaded them. Family members\' uploads count toward their storage. Shared tree = combined storage pool on family plans.',
+      },
+    ],
+
+    relatedGuides: [
+      'subscription-tiers-plans',
+      'forever-kit-export-backup',
+      'adding-photos-to-memories',
+    ],
+  },
+
+  'import-features-migration': {
+    slug: 'import-features-migration',
+    title: 'Import Features: Migrate Your Memories',
+    subtitle: 'Bring memories from other platforms',
+    icon: '📥',
+    category: 'ACCOUNT',
+
+    overview: `Import features let you migrate memories from other platforms into Firefly Grove. Facebook, Instagram, Google Photos, Apple Photos, and more. Bulk import preserves dates, captions, and metadata. Seamless transition from other services to your family legacy.`,
+
+    howItWorks: [
+      {
+        title: 'Choose Import Source',
+        content: 'Settings → Import → Select platform (Facebook, Google Photos, Instagram, local files, etc.). Authenticate connection securely.',
+      },
+      {
+        title: 'Select Content',
+        content: 'Choose what to import. All content, date ranges, specific albums, or tagged photos. Preview before importing.',
+      },
+      {
+        title: 'Map to Tree Structure',
+        content: 'Decide where imported content goes. Auto-create branches by year/album, or specify existing branches. Smart categorization.',
+      },
+      {
+        title: 'Import and Review',
+        content: 'Bulk import runs in background. Get notification when complete. Review imported memories, adjust organization, add context.',
+      },
+    ],
+
+    useCases: [
+      'Migrating Facebook memories before account closure',
+      'Importing 20 years of Google Photos to family tree',
+      'Consolidating Instagram posts into memory timeline',
+      'Bringing Apple Photos library into organized structure',
+      'Importing scanned photo collections from computer',
+      'Rescuing memories from defunct services (Flickr, Picasa)',
+    ],
+
+    tips: [
+      'Import in chunks (year by year) for easier organization',
+      'Review and edit after import - auto-imported content needs context',
+      'Check duplicates before importing - detection tool catches repeats',
+      'Import preserves original dates - timeline stays chronological',
+      'Captions become memory descriptions - editable after import',
+      'Can re-import same source multiple times for new content',
+    ],
+
+    faqs: [
+      {
+        question: 'Does import delete content from original platform?',
+        answer: 'No. Import copies content. Originals stay on source platform. Delete from source manually if desired.',
+      },
+      {
+        question: 'What if I hit storage limits during import?',
+        answer: 'Import pauses, notification sent. Upgrade storage or optimize existing content, then resume import. Progress saved.',
+      },
+      {
+        question: 'Can I import private/friends-only Facebook posts?',
+        answer: 'Yes, you authenticate so Firefly Grove accesses your content. Privacy settings don\'t transfer - set visibility per memory after import.',
+      },
+      {
+        question: 'How long does large import take?',
+        answer: 'Depends on size. 1000 photos = 1-2 hours. Runs in background. Get email when complete. Can keep using Firefly Grove during import.',
+      },
+      {
+        question: 'What metadata is preserved during import?',
+        answer: 'Date/time, location (if tagged), captions/descriptions, tagged people (converted to text), album organization. Reactions/comments not imported.',
+      },
+    ],
+
+    relatedGuides: [
+      'the-nest-bulk-photo-uploads',
+      'adding-photos-to-memories',
+      'storage-limits-management',
+    ],
+  },
+
+  'privacy-settings-account-control': {
+    slug: 'privacy-settings-account-control',
+    title: 'Privacy Settings: Control Your Data',
+    subtitle: 'Manage privacy, security, and data preferences',
+    icon: '🔒',
+    category: 'ACCOUNT',
+
+    overview: `Privacy settings give you complete control over your data, who sees it, and how it's used. From account security to data sharing preferences, customize everything. Firefly Grove is privacy-first - you own your memories, we just store them securely.`,
+
+    howItWorks: [
+      {
+        title: 'Account Security',
+        content: 'Settings → Privacy → Security. Enable 2FA (two-factor authentication), review login sessions, set password requirements, trusted devices.',
+      },
+      {
+        title: 'Data Sharing',
+        content: 'Control what data Firefly Grove can use. Analytics (anonymized usage), AI training (opt-out available), marketing emails, feature suggestions.',
+      },
+      {
+        title: 'Visibility Defaults',
+        content: 'Set default visibility for new memories. Private, family-only, or shared. Prevents accidental oversharing. Override per memory.',
+      },
+      {
+        title: 'Export and Delete',
+        content: 'Request full data export (GDPR right). Download everything. Delete account permanently - removes all data within 30 days.',
+      },
+    ],
+
+    useCases: [
+      'Securing account with two-factor authentication',
+      'Opting out of AI training on your content',
+      'Setting all new memories to private by default',
+      'Reviewing who has accessed your trees',
+      'Exporting data before switching services',
+      'Managing email notification preferences',
+    ],
+
+    tips: [
+      'Enable 2FA immediately - critical for legacy protection',
+      'Review active sessions quarterly - revoke unknown devices',
+      'Use strong, unique password (password manager recommended)',
+      'Set aggressive auto-logout for shared devices',
+      'Opt out of marketing but keep security notifications enabled',
+      'Export data annually as backup insurance',
+    ],
+
+    faqs: [
+      {
+        question: 'Who can see my memories?',
+        answer: 'Only people you explicitly invite. Firefly Grove staff cannot view private content. End-to-end encryption for private branches.',
+      },
+      {
+        question: 'Does Firefly Grove sell my data?',
+        answer: 'Never. We\'re subscription-funded, not ad-supported. Your data is never sold, shared, or used for advertising. Privacy-first business model.',
+      },
+      {
+        question: 'Can I opt out of AI features?',
+        answer: 'Yes. Settings → Privacy → AI Usage → Disable. Turns off AI transcription, image recognition, suggestion features. Manual entry only.',
+      },
+      {
+        question: 'What happens to my data if Firefly Grove shuts down?',
+        answer: 'We\'re committed to 90-day notice. Export tools available. Working on data portability consortium for seamless migration. Legacy preservation priority.',
+      },
+      {
+        question: 'How do I delete my account completely?',
+        answer: 'Settings → Account → Delete Account. 30-day grace period (recoverable). After 30 days, permanent deletion. Heirs notified if designated.',
+      },
+    ],
+
+    relatedGuides: [
+      'memory-visibility-privacy',
+      'forever-kit-export-backup',
+      'choosing-keepers-heirs',
+    ],
+  },
+
+  'mobile-app-download': {
+    slug: 'mobile-app-download',
+    title: 'Mobile App: Memories On-the-Go',
+    subtitle: 'Access Firefly Grove anywhere, anytime',
+    icon: '📱',
+    category: 'MOBILE',
+
+    overview: `Firefly Grove mobile app brings your family legacy to your pocket. iOS and Android apps offer full functionality - browse memories, capture moments, get Firefly Bursts notifications. Seamless sync with web keeps everything updated. Memory preservation shouldn't be chained to a desktop.`,
+
+    howItWorks: [
+      {
+        title: 'Download App',
+        content: 'Search "Firefly Grove" in App Store (iOS) or Google Play (Android). Free download. Install and sign in with existing account.',
+      },
+      {
+        title: 'Sync and Explore',
+        content: 'First launch syncs your trees, branches, and memories. Browse everything from mobile. Offline mode caches recent memories for no-signal viewing.',
+      },
+      {
+        title: 'Capture Moments',
+        content: 'Quick capture button for photos, audio, and text. Camera integration lets you snap and save immediately. Voice memos transcribed automatically.',
+      },
+      {
+        title: 'Stay Connected',
+        content: 'Push notifications for Firefly Bursts, family contributions, and memory reactions. Never miss important moments or rediscoveries.',
+      },
+    ],
+
+    useCases: [
+      'Capturing memories while traveling or at events',
+      'Reading bedtime stories from grandparent\'s voice recordings',
+      'Getting Firefly Burst notifications of past memories',
+      'Quick photo uploads from family gatherings',
+      'Reviewing and approving family contributions',
+      'Adding memories during commute or downtime',
+    ],
+
+    tips: [
+      'Enable notifications for Firefly Bursts - magical surprise memories',
+      'Use offline mode for flights or low-signal areas',
+      'Quick capture widget on home screen for instant memory creation',
+      'Auto-upload photos in background (WiFi only to save data)',
+      'Face ID/Touch ID for quick secure access',
+      'Share memories directly from Photos app via share sheet',
+    ],
+
+    faqs: [
+      {
+        question: 'Does mobile app have all features of website?',
+        answer: 'Almost all. Complex editing easier on desktop, but viewing, capturing, and most management available. Missing: Memory books, some product designs.',
+      },
+      {
+        question: 'How much storage does app use?',
+        answer: 'Base app ~50MB. Offline cache configurable (100MB-2GB). Doesn\'t store full tree - streams content as needed.',
+      },
+      {
+        question: 'Can I use mobile app without internet?',
+        answer: 'Yes! Offline mode caches recent memories. Can create new memories offline - auto-sync when connection returns. Smart prefetching.',
+      },
+      {
+        question: 'Is mobile app included in subscription?',
+        answer: 'Yes. Mobile app free with any subscription tier (including free). Same features available based on your subscription level.',
+      },
+      {
+        question: 'Does app drain battery quickly?',
+        answer: 'No. Optimized for battery life. Background sync minimal. Push notifications efficient. Camera/mic only active when used.',
+      },
+    ],
+
+    relatedGuides: [
+      'mobile-photo-upload-camera-integration',
+      'voice-capture-mobile-convenience',
+      'audio-sparks-quick-voice-capture',
+    ],
+  },
+
+  'mobile-photo-upload-camera-integration': {
+    slug: 'mobile-photo-upload-camera-integration',
+    title: 'Mobile Photo Upload: Camera Integration',
+    subtitle: 'Snap, save, preserve - instantly',
+    icon: '📷',
+    category: 'MOBILE',
+
+    overview: `Mobile camera integration makes memory preservation effortless. Take photo, instantly add to tree with one tap. Auto-tagging, location capture, and instant sync. No more "I'll upload those photos later" - preserve moments as they happen.`,
+
+    howItWorks: [
+      {
+        title: 'Camera Access',
+        content: 'App requests camera permission. Grant once, use forever. In-app camera or select from camera roll. Both work seamlessly.',
+      },
+      {
+        title: 'Instant Capture',
+        content: 'Tap camera icon → Take photo → Choose tree/branch → Add context → Save. Whole process under 10 seconds. Memory preserved instantly.',
+      },
+      {
+        title: 'Auto-Enhancement',
+        content: 'AI suggests tags, dates, locations based on photo content and metadata. One-tap acceptance. Manual override available.',
+      },
+      {
+        title: 'Background Upload',
+        content: 'Photos upload in background while you keep using app. Progress indicator. Retry on failed uploads. WiFi-only option saves cellular data.',
+      },
+    ],
+
+    useCases: [
+      'Family gatherings - capture and upload in real-time',
+      'Vacation memories added throughout trip',
+      'Grandparent visits documented as they happen',
+      'Kids\' milestones captured immediately',
+      'Historical documents photographed at archives',
+      'Recipe cards from grandma\'s kitchen preserved instantly',
+    ],
+
+    tips: [
+      'Enable "Auto-upload photos" in settings for ultimate convenience',
+      'Use burst mode for action shots, select best ones after',
+      'Portrait mode photos work great - depth preserved',
+      'Can upload videos too (mind storage limits)',
+      'Add voice caption right after photo - context while fresh',
+      'Share from other apps to Firefly Grove - add screenshots, downloads',
+    ],
+
+    faqs: [
+      {
+        question: 'Are photos compressed when uploaded from mobile?',
+        answer: 'Smart compression. High quality for viewing, not massive for storage. Can set "Original quality" in settings. WiFi = original, cellular = compressed (configurable).',
+      },
+      {
+        question: 'Can I bulk upload camera roll photos?',
+        answer: 'Yes! Select multiple photos → Share → Firefly Grove. Bulk upload interface lets you organize all at once. Great for post-event uploads.',
+      },
+      {
+        question: 'What happens if upload fails?',
+        answer: 'Photo saved locally in drafts. Auto-retry when connection improves. Manual retry available. Never lose photos due to bad connection.',
+      },
+      {
+        question: 'Does mobile upload preserve EXIF data?',
+        answer: 'Yes. Date, time, location, camera settings preserved. Privacy option to strip GPS data before upload if desired.',
+      },
+      {
+        question: 'Can I edit photos before uploading?',
+        answer: 'Basic edits yes - crop, rotate, brightness. Advanced editing better in phone\'s photo app, then upload. Or upload and edit on desktop later.',
+      },
+    ],
+
+    relatedGuides: [
+      'mobile-app-download',
+      'adding-photos-to-memories',
+      'the-nest-bulk-photo-uploads',
+    ],
+  },
+
+  'voice-capture-mobile-convenience': {
+    slug: 'voice-capture-mobile-convenience',
+    title: 'Voice Capture Mobile: Speak Your Memories',
+    subtitle: 'Record voice memories anywhere, anytime',
+    icon: '🎤',
+    category: 'MOBILE',
+
+    overview: `Voice capture on mobile makes preserving oral history effortless. Record thoughts while driving, capture grandparent stories during visits, save bedtime story voices. High-quality recording, auto-transcription, instant save. Most intimate memories are spoken - now easily preserved.`,
+
+    howItWorks: [
+      {
+        title: 'Quick Record',
+        content: 'Tap mic icon anywhere in app. Red recording indicator. Speak naturally. Tap stop when done. That\'s it - memory captured.',
+      },
+      {
+        title: 'Auto-Transcription',
+        content: 'AI transcribes recording to text (optional). Searchable, readable, but original audio preserved. Best of both worlds.',
+      },
+      {
+        title: 'Background Recording',
+        content: 'Start recording, minimize app, keep talking. Great for long stories. Survives phone calls interruption (pauses, resumes). Robust recording.',
+      },
+      {
+        title: 'Organize and Enhance',
+        content: 'After recording, choose tree/branch, add title, attach photos if relevant. Context makes voice memories findable later.',
+      },
+    ],
+
+    useCases: [
+      'Recording grandparent stories during visits',
+      'Capturing thoughts while commuting',
+      'Documenting family recipes with voice instructions',
+      'Bedtime stories in parent/grandparent voice',
+      'Anniversary messages for future playback',
+      'Oral history interviews with elderly relatives',
+    ],
+
+    tips: [
+      'Use headphone mic for better quality in noisy environments',
+      'Airplane mode recording works - saves and syncs later',
+      'Can record up to 2 hours continuous (unlimited storage tiers)',
+      'Audio Spark quick capture for sub-30-second thoughts',
+      'Regular voice memo for longer stories and context',
+      'Transcription can be edited - correct AI misheard names',
+    ],
+
+    faqs: [
+      {
+        question: 'What audio quality does mobile recording use?',
+        answer: 'High quality by default (128kbps AAC). Configurable to "Voice quality" (64kbps) to save storage. Both very clear for voice.',
+      },
+      {
+        question: 'Can I record phone calls as memories?',
+        answer: 'Technically possible but check laws. Many jurisdictions require two-party consent. Not officially supported feature due to legal complexity.',
+      },
+      {
+        question: 'How accurate is auto-transcription?',
+        answer: '95%+ accuracy for clear audio. Struggles with heavy accents, mumbling, background noise. Always keeps original audio - transcription is bonus.',
+      },
+      {
+        question: 'Can I import existing voice memos?',
+        answer: 'Yes! Share from Voice Memos app → Firefly Grove. Works with any audio file. Preserves existing recordings.',
+      },
+      {
+        question: 'Does recording work with phone locked?',
+        answer: 'Yes if recording started while unlocked. Keeps recording with screen off. Saves battery on long recordings.',
+      },
+    ],
+
+    relatedGuides: [
+      'mobile-app-download',
+      'audio-sparks-quick-voice-capture',
+      'recording-voice-memories',
+    ],
+  },
+
+  'memorial-video-maker': {
+    slug: 'memorial-video-maker',
+    title: 'Memorial Video Maker: Tribute Videos',
+    subtitle: 'Create beautiful memorial videos for services',
+    icon: '🎬',
+    category: 'PRODUCTS',
+
+    overview: `Memorial Video Maker helps you create professional tribute videos for memorial services, celebrations of life, or anniversaries. Combine photos, music, text, and transitions into moving video presentations. No video editing experience needed - simple builder creates beautiful results in minutes.`,
+
+    howItWorks: [
+      {
+        title: 'Upload Photos',
+        content: 'Select photos from your computer, phone, or Firefly Grove memories. Drag to reorder. Automatic duration adjustment based on number of photos.',
+      },
+      {
+        title: 'Customize Style',
+        content: 'Choose transitions (fade, slide, zoom, Ken Burns). Apply filters (vintage, sepia, B&W, cinematic). Add background music from library or upload your own.',
+      },
+      {
+        title: 'Add Text Overlays',
+        content: 'Include name, dates, quotes, messages. Position text anywhere. Choose fonts and colors. Title slide, closing slide, and photo captions available.',
+      },
+      {
+        title: 'Preview and Download',
+        content: 'Real-time preview shows your video as you build. Export when satisfied. High-quality download ready for projection, TV, or online sharing.',
+      },
+    ],
+
+    useCases: [
+      'Memorial service projection videos',
+      'Celebration of life presentations',
+      'Anniversary tribute videos (50th wedding anniversary, etc.)',
+      'Funeral home display videos',
+      'Social media memorial posts',
+      'Grief counseling visual remembrance',
+    ],
+
+    tips: [
+      'Use 20-40 photos for 3-5 minute video (sweet spot)',
+      'Mix close-ups and full scenes for visual variety',
+      'Chronological order tells life story effectively',
+      'Choose music that reflects personality (not just generic sad songs)',
+      'Test video on actual display device before service',
+      'Export in 1080p for projection, 720p for online sharing',
+    ],
+
+    faqs: [
+      {
+        question: 'Is the Memorial Video Maker really free?',
+        answer: 'Yes! Basic video creation complimentary. Paid plans remove watermark, offer unlimited monthly videos, and extended storage. Free tier includes watermark and 30-day storage.',
+      },
+      {
+        question: 'How long can my video be?',
+        answer: 'Up to 10 minutes on all tiers. Most memorial videos are 3-5 minutes (20-40 photos at 5-7 seconds each). Longer videos lose audience attention.',
+      },
+      {
+        question: 'What music can I use?',
+        answer: 'Upload your own music (you\'re responsible for rights), or choose from our royalty-free library. Library includes gentle piano, classical, ambient tracks.',
+      },
+      {
+        question: 'Can I edit video after downloading?',
+        answer: 'Videos are rendered/exported - final output. Can\'t edit after download. But can return to builder, modify, and re-export anytime during storage period.',
+      },
+      {
+        question: 'What video format is the download?',
+        answer: 'MP4 (H.264 codec). Universal format works on all devices - TVs, projectors, computers, phones. 1920x1080 resolution (1080p HD).',
+      },
+    ],
+
+    relatedGuides: [
+      'greeting-cards-memory-sharing',
+      'adding-photos-to-memories',
+      'open-grove-public-memorials',
+    ],
+  },
+
 }
 
 /**
