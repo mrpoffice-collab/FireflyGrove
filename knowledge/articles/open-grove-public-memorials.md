@@ -9,8 +9,8 @@ timeToRead: 3
 icon: 🌍
 featured: false
 isNew: false
-createdAt: 2025-11-13T12:50:20.566Z
-updatedAt: 2025-11-13T12:50:20.566Z
+createdAt: 2025-11-13T13:08:47.202Z
+updatedAt: 2025-11-13T13:08:47.202Z
 ---
 
 # 🌍 Open Grove: Public Memorial Space

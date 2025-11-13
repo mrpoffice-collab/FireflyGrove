@@ -9,8 +9,8 @@ timeToRead: 3
 icon: 🔐
 featured: false
 isNew: false
-createdAt: 2025-11-13T12:50:20.577Z
-updatedAt: 2025-11-13T12:50:20.577Z
+createdAt: 2025-11-13T13:08:47.215Z
+updatedAt: 2025-11-13T13:08:47.215Z
 ---
 
 # 🔐 Branch Permissions: Fine-Tune Access

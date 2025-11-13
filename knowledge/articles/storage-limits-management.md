@@ -9,8 +9,8 @@ timeToRead: 2
 icon: 💾
 featured: false
 isNew: false
-createdAt: 2025-11-13T12:50:20.563Z
-updatedAt: 2025-11-13T12:50:20.563Z
+createdAt: 2025-11-13T13:08:47.198Z
+updatedAt: 2025-11-13T13:08:47.198Z
 ---
 
 # 💾 Storage Limits: Manage Your Space

@@ -140,6 +140,7 @@ export default function GrovePage() {
   const [burstId, setBurstId] = useState<string | null>(null)
   const [sessionId] = useState(() => Math.random().toString(36).substring(7))
   const [burstSnoozed, setBurstSnoozed] = useState(false)
+  const [burstTriggered, setBurstTriggered] = useState(false)
 
   // Audio Sparks state
   const [showAudioSparks, setShowAudioSparks] = useState(false)
@@ -336,11 +337,12 @@ export default function GrovePage() {
       showAudioSparks ||
       guideToRemind !== null
 
-    // If no popups showing, not snoozed, and burst not already showing, trigger it
-    if (!anyPopupShowing && !burstSnoozed && !showBurst && grove) {
+    // If no popups showing, not snoozed, burst not already showing, and hasn't been triggered yet this session, trigger it
+    if (!anyPopupShowing && !burstSnoozed && !showBurst && !burstTriggered && grove) {
       // Small delay to ensure popup transitions are complete
       const timer = setTimeout(() => {
         generateBurst()
+        setBurstTriggered(true) // Mark as triggered for this session
       }, 1000)
       return () => clearTimeout(timer)
     }
@@ -359,6 +361,7 @@ export default function GrovePage() {
     guideToRemind,
     burstSnoozed,
     showBurst,
+    burstTriggered,
     grove,
   ])
 
@@ -654,6 +657,7 @@ export default function GrovePage() {
 
     localStorage.removeItem('fireflyBurstSnoozeUntil')
     setBurstSnoozed(false)
+    setBurstTriggered(false) // Allow burst to trigger again
     toast.success('Firefly Bursts re-enabled!')
     generateBurst()
   }
