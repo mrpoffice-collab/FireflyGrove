@@ -4,28 +4,29 @@ import { format, startOfWeek, endOfWeek } from 'date-fns'
 
 /**
  * Weekly Keepsake PDF Generator
- * Creates a beautiful weekly summary of treasure entries
+ * Creates cut-apart treasure cards for refrigerator display!
  */
 
 // Page dimensions (8.5" x 11" letter size)
 const PAGE_WIDTH = 612 // 8.5 * 72
 const PAGE_HEIGHT = 792 // 11 * 72
-const MARGIN = 54 // 0.75 * 72
-const CONTENT_WIDTH = PAGE_WIDTH - (MARGIN * 2)
+const MARGIN = 36 // 0.5 inch margin for printing
+
+// Card dimensions - 4 cards per page (2x2 grid)
+const CARDS_PER_PAGE = 4
+const CARD_WIDTH = (PAGE_WIDTH - (MARGIN * 2)) / 2 - 8 // Small gap between cards
+const CARD_HEIGHT = (PAGE_HEIGHT - (MARGIN * 2)) / 2 - 8
 
 // Colors - Firefly Grove theme (converted to RGB 0-1 scale)
-// Using darker colors for better readability on white paper
 const COLORS = {
-  primary: rgb(0.420, 0.451, 0.275), // #6B7346 firefly-dim (darker green)
-  secondary: rgb(0.3, 0.3, 0.3), // Dark grey for lines
-  text: rgb(0.1, 0.1, 0.1), // Nearly black for main text
-  muted: rgb(0.4, 0.4, 0.4), // Medium grey for secondary text
-  background: rgb(1, 1, 1), // White background
+  primary: rgb(0.420, 0.451, 0.275), // #6B7346 firefly-dim
+  text: rgb(0.1, 0.1, 0.1), // Nearly black
+  muted: rgb(0.4, 0.4, 0.4), // Medium grey
 }
 
 interface WeeklyKeepsakeOptions {
   userId: string
-  weekStart?: Date // Defaults to start of current week
+  weekStart?: Date
 }
 
 interface GeneratedKeepsake {
@@ -53,13 +54,6 @@ export async function generateWeeklyKeepsake(
         lte: weekEnd,
       },
     },
-    include: {
-      branch: {
-        select: {
-          title: true,
-        },
-      },
-    },
     orderBy: {
       entryUTC: 'asc',
     },
@@ -78,7 +72,7 @@ export async function generateWeeklyKeepsake(
 }
 
 /**
- * Generate the PDF document
+ * Generate the PDF document - Cut-apart treasure cards!
  */
 async function generateKeepsakePDF(
   entries: any[],
@@ -90,425 +84,241 @@ async function generateKeepsakePDF(
   const fontBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold)
   const fontItalic = await pdfDoc.embedFont(StandardFonts.HelveticaOblique)
 
-  // Create cover page
-  await createCoverPage(pdfDoc, font, fontBold, entries, weekStart, weekEnd)
+  // Create treasure cards - 4 per page in a 2x2 grid
+  let currentPage = null
+  let cardIndex = 0
 
-  // Create entry pages - one entry per page for full text display
   for (let i = 0; i < entries.length; i++) {
-    await createEntryPage(pdfDoc, font, fontBold, fontItalic, entries[i], i + 1, entries.length)
+    // Create new page every 4 cards
+    if (cardIndex % CARDS_PER_PAGE === 0) {
+      currentPage = pdfDoc.addPage([PAGE_WIDTH, PAGE_HEIGHT])
+      // Add cut lines to show where to cut
+      drawCutLines(currentPage, font)
+    }
+
+    // Calculate card position (2x2 grid)
+    const row = Math.floor((cardIndex % CARDS_PER_PAGE) / 2) // 0 or 1
+    const col = (cardIndex % CARDS_PER_PAGE) % 2 // 0 or 1
+
+    const cardX = MARGIN + (col * (CARD_WIDTH + 8))
+    const cardY = PAGE_HEIGHT - MARGIN - ((row + 1) * (CARD_HEIGHT + 8))
+
+    // Draw the treasure card
+    await drawTreasureCard(
+      currentPage!,
+      font,
+      fontBold,
+      fontItalic,
+      entries[i],
+      cardX,
+      cardY
+    )
+
+    cardIndex++
   }
 
   return await pdfDoc.save()
 }
 
 /**
- * Create beautiful cover page
+ * Draw cut lines showing where to cut apart cards
  */
-async function createCoverPage(
-  pdfDoc: PDFDocument,
-  font: any,
-  fontBold: any,
-  entries: any[],
-  weekStart: Date,
-  weekEnd: Date
-) {
-  const page = pdfDoc.addPage([PAGE_WIDTH, PAGE_HEIGHT])
+function drawCutLines(page: any, font: any) {
   const centerX = PAGE_WIDTH / 2
   const centerY = PAGE_HEIGHT / 2
 
-  // Background accent - soft color block at top
-  page.drawRectangle({
-    x: 0,
-    y: PAGE_HEIGHT - 200,
-    width: PAGE_WIDTH,
-    height: 200,
-    color: rgb(0.95, 0.96, 0.94), // Very light green
-  })
-
-  // Decorative border - inset from page edges for printer margins
-  const borderInset = 36 // 0.5 inch from edge
-  page.drawRectangle({
-    x: borderInset,
-    y: borderInset,
-    width: PAGE_WIDTH - (borderInset * 2),
-    height: PAGE_HEIGHT - (borderInset * 2),
-    borderColor: COLORS.primary,
-    borderWidth: 2,
-  })
-
-  // Inner decorative border for elegance
-  const innerBorderInset = borderInset + 8
-  page.drawRectangle({
-    x: innerBorderInset,
-    y: innerBorderInset,
-    width: PAGE_WIDTH - (innerBorderInset * 2),
-    height: PAGE_HEIGHT - (innerBorderInset * 2),
-    borderColor: COLORS.primary,
-    borderWidth: 0.5,
-  })
-
-  let yPosition = PAGE_HEIGHT - 80
-
-  // Title
-  const title = 'My Glow Trail'
-  const titleSize = 36
-  const titleWidth = fontBold.widthOfTextAtSize(title, titleSize)
-  page.drawText(title, {
-    x: centerX - titleWidth / 2,
-    y: yPosition,
-    size: titleSize,
-    font: fontBold,
-    color: COLORS.primary,
-  })
-  yPosition -= 45
-
-  // Subtitle: "Treasures" - bigger and capitalized
-  const subtitle = 'Weekly Treasures'
-  const subtitleSize = 20
-  const subtitleWidth = fontBold.widthOfTextAtSize(subtitle, subtitleSize)
-  page.drawText(subtitle, {
-    x: centerX - subtitleWidth / 2,
-    y: yPosition,
-    size: subtitleSize,
-    font: fontBold,
-    color: COLORS.primary,
-  })
-  yPosition -= 15
-
-  // Decorative line under title
+  // Vertical center line
   page.drawLine({
-    start: { x: centerX - 120, y: yPosition },
-    end: { x: centerX + 120, y: yPosition },
-    color: COLORS.primary,
-    thickness: 2,
+    start: { x: centerX, y: MARGIN },
+    end: { x: centerX, y: PAGE_HEIGHT - MARGIN },
+    color: rgb(0.8, 0.8, 0.8),
+    thickness: 0.5,
+    dashArray: [3, 3],
   })
-  yPosition -= 35
 
-  // Week dates
-  const dateText = `${format(weekStart, 'MMMM d')} - ${format(weekEnd, 'MMMM d, yyyy')}`
-  const dateSize = 16
-  const dateWidth = font.widthOfTextAtSize(dateText, dateSize)
-  page.drawText(dateText, {
-    x: centerX - dateWidth / 2,
-    y: yPosition,
-    size: dateSize,
-    font: font,
-    color: COLORS.text,
-  })
-  yPosition -= 30
-
-  // Decorative stars (using text that WinAnsi can encode)
-  const starsText = '* * *'
-  const starsSize = 14
-  const starsWidth = font.widthOfTextAtSize(starsText, starsSize)
-  page.drawText(starsText, {
-    x: centerX - starsWidth / 2,
-    y: yPosition,
-    size: starsSize,
-    font: font,
-    color: COLORS.primary,
-  })
-  yPosition -= 60
-
-  const numEntries = entries.length
-
-  // Summary box in center
-  if (numEntries === 0) {
-    // Empty state
-    const emptyMsg = 'No treasures captured this week'
-    const emptySize = 14
-    const emptyWidth = font.widthOfTextAtSize(emptyMsg, emptySize)
-    page.drawText(emptyMsg, {
-      x: centerX - emptyWidth / 2,
-      y: centerY,
-      size: emptySize,
-      font: font,
-      color: COLORS.muted,
-    })
-  } else {
-    // Draw summary box
-    const boxWidth = 300
-    const boxHeight = 180
-    const boxX = centerX - boxWidth / 2
-    const boxYPos = centerY - boxHeight / 2
-
-    // Box background
-    page.drawRectangle({
-      x: boxX,
-      y: boxYPos,
-      width: boxWidth,
-      height: boxHeight,
-      color: rgb(0.98, 0.98, 0.97),
-      borderColor: COLORS.primary,
-      borderWidth: 1.5,
-    })
-
-    let boxY = centerY + 60
-
-    // Summary title
-    const summaryTitle = 'This Week\'s Treasures'
-    const summaryTitleSize = 16
-    const summaryTitleWidth = fontBold.widthOfTextAtSize(summaryTitle, summaryTitleSize)
-    page.drawText(summaryTitle, {
-      x: centerX - summaryTitleWidth / 2,
-      y: boxY,
-      size: summaryTitleSize,
-      font: fontBold,
-      color: COLORS.primary,
-    })
-    boxY -= 35
-
-    // Count
-    const countText = `${numEntries} ${numEntries === 1 ? 'Night' : 'Nights'} of Reflection`
-    const countSize = 14
-    const countWidth = font.widthOfTextAtSize(countText, countSize)
-    page.drawText(countText, {
-      x: centerX - countWidth / 2,
-      y: boxY,
-      size: countSize,
-      font: font,
-      color: COLORS.text,
-    })
-    boxY -= 30
-
-    // Category breakdown
-    const categories = entries.reduce((acc: any, entry: any) => {
-      acc[entry.category] = (acc[entry.category] || 0) + 1
-      return acc
-    }, {})
-
-    Object.entries(categories).forEach(([category, count]) => {
-      const catText = `${category}: ${count}`
-      const catSize = 11
-      const catWidth = font.widthOfTextAtSize(catText, catSize)
-      page.drawText(catText, {
-        x: centerX - catWidth / 2,
-        y: boxY,
-        size: catSize,
-        font: font,
-        color: COLORS.muted,
-      })
-      boxY -= 18
-    })
-  }
-
-  // Bottom decorative element
+  // Horizontal center line
   page.drawLine({
-    start: { x: MARGIN, y: MARGIN + 70 },
-    end: { x: PAGE_WIDTH - MARGIN, y: MARGIN + 70 },
-    color: COLORS.primary,
-    thickness: 1,
+    start: { x: MARGIN, y: centerY },
+    end: { x: PAGE_WIDTH - MARGIN, y: centerY },
+    color: rgb(0.8, 0.8, 0.8),
+    thickness: 0.5,
+    dashArray: [3, 3],
   })
 
-  // "Keep glowing" message
-  const keepText = 'Keep glowing'
-  const keepSize = 12
-  const keepWidth = font.widthOfTextAtSize(keepText, keepSize)
-  page.drawText(keepText, {
-    x: centerX - keepWidth / 2,
-    y: MARGIN + 35,
-    size: keepSize,
-    font: fontBold,
-    color: COLORS.primary,
-  })
+  // "Cut here" text
+  const scissorText = '- - cut here - -'
+  const scissorSize = 7
+  const scissorWidth = font.widthOfTextAtSize(scissorText, scissorSize)
 
-  // Firefly Grove branding (small)
-  const brandText = 'FireflyGrove.app'
-  const brandSize = 9
-  const brandWidth = font.widthOfTextAtSize(brandText, brandSize)
-  page.drawText(brandText, {
-    x: centerX - brandWidth / 2,
-    y: MARGIN + 15,
-    size: brandSize,
+  // Top center
+  page.drawText(scissorText, {
+    x: centerX - scissorWidth / 2,
+    y: PAGE_HEIGHT - MARGIN + 10,
+    size: scissorSize,
     font: font,
-    color: COLORS.muted,
+    color: rgb(0.7, 0.7, 0.7),
   })
 }
 
 /**
- * Create a beautiful page for each treasure entry
+ * Draw a single treasure card
  */
-async function createEntryPage(
-  pdfDoc: PDFDocument,
+async function drawTreasureCard(
+  page: any,
   font: any,
   fontBold: any,
   fontItalic: any,
   entry: any,
-  entryNumber: number,
-  totalEntries: number
+  x: number,
+  y: number
 ) {
-  const page = pdfDoc.addPage([PAGE_WIDTH, PAGE_HEIGHT])
-  const centerX = PAGE_WIDTH / 2
+  const cardPadding = 10
+  const innerWidth = CARD_WIDTH - (cardPadding * 2)
+  const cardCenterX = x + CARD_WIDTH / 2
 
-  // Decorative header background
+  // Card background with soft color
   page.drawRectangle({
-    x: 0,
-    y: PAGE_HEIGHT - 120,
-    width: PAGE_WIDTH,
-    height: 120,
-    color: rgb(0.95, 0.96, 0.94), // Very light green
+    x,
+    y,
+    width: CARD_WIDTH,
+    height: CARD_HEIGHT,
+    color: rgb(0.98, 0.98, 0.96), // Very light cream
   })
 
-  // Decorative border
-  const borderInset = 36
+  // Card border
   page.drawRectangle({
-    x: borderInset,
-    y: borderInset,
-    width: PAGE_WIDTH - (borderInset * 2),
-    height: PAGE_HEIGHT - (borderInset * 2),
+    x: x + 3,
+    y: y + 3,
+    width: CARD_WIDTH - 6,
+    height: CARD_HEIGHT - 6,
     borderColor: COLORS.primary,
-    borderWidth: 1.5,
+    borderWidth: 2,
   })
 
-  let yPosition = PAGE_HEIGHT - 50
-
-  // Page number
-  const pageNum = `${entryNumber} of ${totalEntries}`
-  const pageNumSize = 10
-  const pageNumWidth = font.widthOfTextAtSize(pageNum, pageNumSize)
-  page.drawText(pageNum, {
-    x: PAGE_WIDTH - MARGIN - pageNumWidth,
-    y: yPosition,
-    size: pageNumSize,
-    font: font,
-    color: COLORS.muted,
+  // Inner decorative border
+  page.drawRectangle({
+    x: x + 6,
+    y: y + 6,
+    width: CARD_WIDTH - 12,
+    height: CARD_HEIGHT - 12,
+    borderColor: COLORS.primary,
+    borderWidth: 0.5,
   })
 
-  // Date header
-  const dayLabel = format(new Date(entry.entryUTC), 'EEEE, MMMM d, yyyy')
-  const daySize = 14
+  let yPos = y + CARD_HEIGHT - 18
+
+  // Date (small, at top)
+  const dayLabel = format(new Date(entry.entryUTC), 'EEE, MMM d')
+  const daySize = 8
   const dayWidth = fontBold.widthOfTextAtSize(dayLabel, daySize)
   page.drawText(dayLabel, {
-    x: centerX - dayWidth / 2,
-    y: yPosition,
+    x: cardCenterX - dayWidth / 2,
+    y: yPos,
     size: daySize,
     font: fontBold,
     color: COLORS.primary,
   })
-  yPosition -= 30
-
-  // Decorative line
-  page.drawLine({
-    start: { x: centerX - 80, y: yPosition },
-    end: { x: centerX + 80, y: yPosition },
-    color: COLORS.primary,
-    thickness: 1,
-  })
-  yPosition -= 40
+  yPos -= 18
 
   // Category badge
   const categoryText = entry.category.toUpperCase()
-  const categorySize = 10
-  const categoryWidth = font.widthOfTextAtSize(categoryText, categorySize)
-  const badgePadding = 8
+  const categorySize = 8
+  const categoryWidth = fontBold.widthOfTextAtSize(categoryText, categorySize)
+  const badgePadding = 6
 
   page.drawRectangle({
-    x: centerX - categoryWidth / 2 - badgePadding,
-    y: yPosition - 3,
+    x: cardCenterX - categoryWidth / 2 - badgePadding,
+    y: yPos - 2,
     width: categoryWidth + (badgePadding * 2),
-    height: 18,
+    height: 14,
     color: COLORS.primary,
   })
 
   page.drawText(categoryText, {
-    x: centerX - categoryWidth / 2,
-    y: yPosition,
+    x: cardCenterX - categoryWidth / 2,
+    y: yPos,
     size: categorySize,
     font: fontBold,
     color: rgb(1, 1, 1), // White text
   })
-  yPosition -= 40
+  yPos -= 22
 
-  // Prompt (in italic, centered)
+  // Prompt (small, italic)
   const promptText = `"${entry.promptText}"`
-  const promptSize = 11
-  const promptLines = wrapText(promptText, fontItalic, promptSize, CONTENT_WIDTH - 80)
+  const promptSize = 7.5
+  const promptLines = wrapText(promptText, fontItalic, promptSize, innerWidth)
 
-  for (const line of promptLines) {
+  // Limit prompt to 2 lines max
+  const displayPromptLines = promptLines.slice(0, 2)
+  for (const line of displayPromptLines) {
     const lineWidth = fontItalic.widthOfTextAtSize(line, promptSize)
     page.drawText(line, {
-      x: centerX - lineWidth / 2,
-      y: yPosition,
+      x: cardCenterX - lineWidth / 2,
+      y: yPos,
       size: promptSize,
       font: fontItalic,
       color: COLORS.muted,
     })
-    yPosition -= (promptSize + 4)
+    yPos -= (promptSize + 3)
   }
-  yPosition -= 20
+  yPos -= 8
 
-  // Decorative separator
-  const separatorText = '* * *'
-  const separatorSize = 10
-  const separatorWidth = font.widthOfTextAtSize(separatorText, separatorSize)
-  page.drawText(separatorText, {
-    x: centerX - separatorWidth / 2,
-    y: yPosition,
-    size: separatorSize,
+  // Separator
+  const sepText = '* * *'
+  const sepSize = 8
+  const sepWidth = font.widthOfTextAtSize(sepText, sepSize)
+  page.drawText(sepText, {
+    x: cardCenterX - sepWidth / 2,
+    y: yPos,
+    size: sepSize,
     font: font,
     color: COLORS.primary,
   })
-  yPosition -= 30
+  yPos -= 15
 
-  // Treasure response - FULL TEXT, NO TRUNCATION!
-  const responseSize = 12
-  const responseLineHeight = responseSize + 5
-  const responseLines = wrapText(entry.text, font, responseSize, CONTENT_WIDTH - 40)
+  // Treasure text (THE MAIN CONTENT!)
+  const treasureSize = 9
+  const treasureLines = wrapText(entry.text, font, treasureSize, innerWidth)
 
-  let currentPage = page
-  for (const line of responseLines) {
-    // Check if we need a new page
-    if (yPosition < MARGIN + 60) {
-      // Continue on next page
-      currentPage = pdfDoc.addPage([PAGE_WIDTH, PAGE_HEIGHT])
+  // Calculate available space and fit as much as possible
+  const bottomMargin = y + 20 // Leave space at bottom
+  const availableHeight = yPos - bottomMargin
+  const lineHeight = treasureSize + 3
+  const maxLines = Math.floor(availableHeight / lineHeight)
 
-      // Add border to continuation page
-      currentPage.drawRectangle({
-        x: borderInset,
-        y: borderInset,
-        width: PAGE_WIDTH - (borderInset * 2),
-        height: PAGE_HEIGHT - (borderInset * 2),
-        borderColor: COLORS.primary,
-        borderWidth: 1.5,
-      })
+  const displayLines = treasureLines.slice(0, maxLines)
 
-      // Reset yPosition for new page
-      yPosition = PAGE_HEIGHT - MARGIN - 20
+  for (let i = 0; i < displayLines.length; i++) {
+    let line = displayLines[i]
 
-      // Add "continued" marker
-      const contText = `(continued from ${format(new Date(entry.entryUTC), 'MMMM d')})`
-      const contSize = 9
-      const contWidth = font.widthOfTextAtSize(contText, contSize)
-      currentPage.drawText(contText, {
-        x: centerX - contWidth / 2,
-        y: yPosition,
-        size: contSize,
-        font: fontItalic,
-        color: COLORS.muted,
-      })
-      yPosition -= 30
+    // If this is the last line and there's more text, add ellipsis
+    if (i === displayLines.length - 1 && treasureLines.length > maxLines) {
+      // Truncate to fit "..."
+      while (font.widthOfTextAtSize(line + '...', treasureSize) > innerWidth && line.length > 0) {
+        line = line.slice(0, -1).trim()
+      }
+      line = line + '...'
     }
 
-    const lineWidth = font.widthOfTextAtSize(line, responseSize)
-    currentPage.drawText(line, {
-      x: centerX - lineWidth / 2,
-      y: yPosition,
-      size: responseSize,
+    const lineWidth = font.widthOfTextAtSize(line, treasureSize)
+    page.drawText(line, {
+      x: cardCenterX - lineWidth / 2,
+      y: yPos,
+      size: treasureSize,
       font: font,
       color: COLORS.text,
     })
-    yPosition -= responseLineHeight
+    yPos -= lineHeight
   }
 
-  // Audio indicator if present
-  if (entry.audioUrl && yPosition > MARGIN + 40) {
-    yPosition -= 15
-    const voiceText = '~ Voice Recording Included ~'
-    const voiceSize = 10
-    const voiceWidth = font.widthOfTextAtSize(voiceText, voiceSize)
-    currentPage.drawText(voiceText, {
-      x: centerX - voiceWidth / 2,
-      y: yPosition,
+  // Audio indicator at bottom if present
+  if (entry.audioUrl) {
+    const voiceText = '~ voice ~'
+    const voiceSize = 7
+    const voiceWidth = fontItalic.widthOfTextAtSize(voiceText, voiceSize)
+    page.drawText(voiceText, {
+      x: cardCenterX - voiceWidth / 2,
+      y: y + 8,
       size: voiceSize,
       font: fontItalic,
       color: COLORS.primary,
@@ -516,18 +326,14 @@ async function createEntryPage(
   }
 }
 
-
 /**
  * Helper: Wrap text to fit within width
  * Sanitizes text to remove characters that PDFLib cannot encode
  */
 function wrapText(text: string, font: any, size: number, maxWidth: number): string[] {
-  // First, sanitize the text:
-  // 1. Replace newlines with spaces
-  // 2. Remove other control characters that WinAnsi can't encode
-  // 3. Replace any other problematic characters
+  // Sanitize the text
   const sanitized = text
-    .replace(/[\n\r\t]/g, ' ') // Replace newlines, carriage returns, tabs with spaces
+    .replace(/[\n\r\t]/g, ' ') // Replace newlines, tabs with spaces
     .replace(/[\x00-\x1F\x7F-\x9F]/g, '') // Remove control characters
     .replace(/\s+/g, ' ') // Collapse multiple spaces
     .trim()
@@ -551,4 +357,3 @@ function wrapText(text: string, font: any, size: number, maxWidth: number): stri
   if (currentLine) lines.push(currentLine)
   return lines
 }
-

@@ -9,8 +9,8 @@ timeToRead: 2
 icon: 🔗
 featured: false
 isNew: false
-createdAt: 2025-11-13T14:15:31.929Z
-updatedAt: 2025-11-13T14:15:31.929Z
+createdAt: 2025-11-13T14:40:07.039Z
+updatedAt: 2025-11-13T14:40:07.039Z
 ---
 
 # 🔗 Shareable Links: One-Time Access

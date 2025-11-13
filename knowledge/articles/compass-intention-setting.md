@@ -9,8 +9,8 @@ timeToRead: 3
 icon: 🧭
 featured: false
 isNew: false
-createdAt: 2025-11-13T14:15:31.940Z
-updatedAt: 2025-11-13T14:15:31.940Z
+createdAt: 2025-11-13T14:40:07.051Z
+updatedAt: 2025-11-13T14:40:07.051Z
 ---
 
 # 🧭 Compass: Set Your Memory Intentions
