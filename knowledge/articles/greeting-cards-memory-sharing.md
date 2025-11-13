@@ -9,8 +9,8 @@ timeToRead: 2
 icon: 💌
 featured: false
 isNew: false
-createdAt: 2025-11-13T13:08:47.212Z
-updatedAt: 2025-11-13T13:08:47.212Z
+createdAt: 2025-11-13T13:16:41.695Z
+updatedAt: 2025-11-13T13:16:41.695Z
 ---
 
 # 💌 Greeting Cards: Share Memories Beautifully

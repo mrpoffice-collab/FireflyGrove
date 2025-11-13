@@ -362,9 +362,20 @@ async function createKeepsakePage(
 
 /**
  * Helper: Wrap text to fit within width
+ * Sanitizes text to remove characters that PDFLib cannot encode
  */
 function wrapText(text: string, font: any, size: number, maxWidth: number): string[] {
-  const words = text.split(' ')
+  // First, sanitize the text:
+  // 1. Replace newlines with spaces
+  // 2. Remove other control characters that WinAnsi can't encode
+  // 3. Replace any other problematic characters
+  const sanitized = text
+    .replace(/[\n\r\t]/g, ' ') // Replace newlines, carriage returns, tabs with spaces
+    .replace(/[\x00-\x1F\x7F-\x9F]/g, '') // Remove control characters
+    .replace(/\s+/g, ' ') // Collapse multiple spaces
+    .trim()
+
+  const words = sanitized.split(' ')
   const lines: string[] = []
   let currentLine = ''
 
