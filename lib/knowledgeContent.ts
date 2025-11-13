@@ -1089,6 +1089,1002 @@ export const knowledgeArticles: Record<string, KnowledgeArticle> = {
     ],
   },
 
+  // ============================================================================
+  // PRODUCTS
+  // ============================================================================
+
+  'greeting-cards-memory-sharing': {
+    slug: 'greeting-cards-memory-sharing',
+    title: 'Greeting Cards: Share Memories Beautifully',
+    subtitle: 'Turn memories into physical keepsakes',
+    icon: '💌',
+    category: 'PRODUCTS',
+
+    overview: `Transform your favorite Firefly Grove memories into beautiful physical greeting cards. Perfect for birthdays, holidays, sympathy, or "just because" - share your family stories as tangible keepsakes that recipients can hold and treasure.`,
+
+    howItWorks: [
+      {
+        title: 'Choose a Memory',
+        content: 'Browse your tree and select a memory you want to share. Could be a photo memory, a written story, or a voice recording with an image.',
+      },
+      {
+        title: 'Design Your Card',
+        content: 'Choose from elegant card templates. The memory\'s photo becomes the front, your text becomes the inside message. Customize fonts, colors, and layout.',
+      },
+      {
+        title: 'Add Personal Touch',
+        content: 'Write a personal note, add a QR code linking to the digital memory, or include multiple photos as a collage. Preview before ordering.',
+      },
+      {
+        title: 'Send Physical Card',
+        content: 'We print on premium cardstock and mail directly to your recipient. Or have it shipped to you for hand-delivery. Includes envelope.',
+      },
+    ],
+
+    useCases: [
+      'Birthday cards featuring memories of the birthday person',
+      'Sympathy cards with photos and stories of the deceased',
+      'Holiday cards showcasing family memories from the year',
+      'Thank you cards with meaningful family photos',
+      'Anniversary cards with memories from your relationship',
+      'Sharing grandparent stories with grandchildren via mail',
+    ],
+
+    tips: [
+      'Use high-resolution photos (300+ DPI) for best print quality',
+      'Keep text concise - cards have limited space',
+      'Order a few days early for time-sensitive occasions',
+      'Include QR code so recipients can see the full digital memory',
+      'Batch order multiple cards for holidays to save on shipping',
+      'Preview on mobile AND desktop before ordering',
+    ],
+
+    faqs: [
+      {
+        question: 'How long does shipping take?',
+        answer: 'Standard shipping is 5-7 business days within the US. Rush shipping (2-3 days) available for additional cost. International shipping varies.',
+      },
+      {
+        question: 'What size are the cards?',
+        answer: 'Standard greeting card size: 5x7 inches folded. Premium cardstock, includes white envelope. Larger sizes available for special occasions.',
+      },
+      {
+        question: 'Can I preview before the card ships?',
+        answer: 'Yes! You\'ll see a digital proof and can make changes before we print. We won\'t print until you approve the final design.',
+      },
+      {
+        question: 'What if the recipient doesn\'t have Firefly Grove?',
+        answer: 'That\'s perfect! Cards work standalone. The QR code (optional) lets them view the digital memory without creating an account.',
+      },
+      {
+        question: 'Can I order in bulk for holidays?',
+        answer: 'Yes! Discounts available for 10+ cards. Great for sending year-end family updates or memorial service programs.',
+      },
+    ],
+
+    relatedGuides: [
+      'adding-photos-to-memories',
+      'memory-book-pdf-compilation',
+      'soundart-audio-wave-art',
+    ],
+  },
+
+  'soundart-audio-wave-art': {
+    slug: 'soundart-audio-wave-art',
+    title: 'SoundArt: Turn Voice into Visual Beauty',
+    subtitle: 'Transform audio memories into wall art',
+    icon: '🎨',
+    category: 'PRODUCTS',
+
+    overview: `Turn voice recordings into stunning visual art. SoundArt creates beautiful waveform prints of your audio memories - see "I love you," a child\'s laugh, or grandma\'s voice as elegant artwork you can frame and display.`,
+
+    howItWorks: [
+      {
+        title: 'Select an Audio Memory',
+        content: 'Choose any memory with voice recording: an Audio Spark, voice memory, or audio from a video. Short clips (5-30 seconds) work best for visual clarity.',
+      },
+      {
+        title: 'Customize the Design',
+        content: 'Pick colors, background style, and layout. Add text overlay (like "Mom\'s Laugh" or the quote itself). Preview shows exactly how it will look.',
+      },
+      {
+        title: 'Choose Size & Material',
+        content: 'Available as canvas prints, framed posters, or metal prints. Sizes from 8x10 to 24x36. Select finish: matte, glossy, or metallic.',
+      },
+      {
+        title: 'Order & Display',
+        content: 'We print museum-quality artwork and ship ready to hang. Includes QR code you can scan to hear the original audio.',
+      },
+    ],
+
+    useCases: [
+      'Printing a loved one\'s voice who passed away',
+      'Baby\'s first laugh or first words as nursery art',
+      'Wedding vows turned into anniversary gift',
+      '"I love you" from grandparent for grandchild\'s room',
+      'Favorite song lyric sung by family member',
+      'Memorial service keepsake with deceased\'s voice',
+    ],
+
+    tips: [
+      'Shorter clips make cleaner, more striking waveforms',
+      'Choose audio with clear emotional peaks (laughter, emphasis)',
+      'Black and white designs are timeless and elegant',
+      'Order a small print first to test before committing to large',
+      'The QR code is subtle - great for scannable memories',
+      'Clean up background noise before creating SoundArt',
+    ],
+
+    faqs: [
+      {
+        question: 'What if my audio has background noise?',
+        answer: 'Some noise is fine - it becomes part of the waveform texture. For cleaner results, use our audio cleanup tool before creating SoundArt.',
+      },
+      {
+        question: 'How do people hear the audio from the print?',
+        answer: 'Each print includes a small QR code. Scan with any smartphone to hear the original audio. Code is discreet but accessible.',
+      },
+      {
+        question: 'Can I use music or copyrighted audio?',
+        answer: 'Only if you own rights or it\'s personal (family singing). No commercial music due to copyright. Original recordings work best anyway.',
+      },
+      {
+        question: 'What\'s the difference between canvas and metal?',
+        answer: 'Canvas is classic, warm, textured. Metal is modern, vibrant, durable. Both museum-quality. Canvas for traditional, metal for contemporary.',
+      },
+      {
+        question: 'Can I edit the audio clip before making SoundArt?',
+        answer: 'Yes! Trim to the perfect 10 seconds, adjust volume, or isolate just the laugh/quote you want visualized.',
+      },
+    ],
+
+    relatedGuides: [
+      'recording-voice-memories',
+      'audio-sparks-quick-capture',
+      'greeting-cards-memory-sharing',
+    ],
+  },
+
+  'forever-kit-export-backup': {
+    slug: 'forever-kit-export-backup',
+    title: 'Forever Kit: Own Your Memories',
+    subtitle: 'Export and backup everything you create',
+    icon: '📦',
+    category: 'PRODUCTS',
+
+    overview: `Forever Kit gives you complete ownership. Export your entire tree - every memory, photo, audio, video - as downloadable files you can store anywhere. Your legacy, your data, forever accessible even without Firefly Grove.`,
+
+    howItWorks: [
+      {
+        title: 'Request Your Forever Kit',
+        content: 'Go to Settings > Forever Kit and click "Create Export". Choose full tree export or specific branches/date ranges.',
+      },
+      {
+        title: 'We Package Everything',
+        content: 'We compile all your memories into organized folders: photos in one folder, audio in another, PDFs of stories, etc. Can take a few hours for large trees.',
+      },
+      {
+        title: 'Download Your Archive',
+        content: 'Receive a download link (via email) to a ZIP file containing everything. Files organized logically, with index HTML for easy browsing.',
+      },
+      {
+        title: 'Store Anywhere Forever',
+        content: 'Save to external hard drive, cloud storage (Google Drive, Dropbox), or burn to DVD. Your memories are now portable and permanent.',
+      },
+    ],
+
+    useCases: [
+      'Creating local backups of your entire family history',
+      'Giving copies to adult children as inheritance',
+      'Migrating to a different platform in the future',
+      'Ensuring memories survive even if Firefly Grove shuts down',
+      'Archiving for estate planning and legal purposes',
+      'Sharing complete family history with distant relatives',
+    ],
+
+    tips: [
+      'Schedule annual Forever Kit exports as year-end ritual',
+      'Store on multiple drives (3-2-1 backup rule)',
+      'Include the Forever Kit in your will as digital asset',
+      'Test opening the files before storing long-term',
+      'Forever Kits include readable HTML - no special software needed',
+      'Export before major life events (marriage, moving, etc.)',
+    ],
+
+    faqs: [
+      {
+        question: 'How big is the download? Will it fit on a flash drive?',
+        answer: 'Depends on photos/videos. Average tree: 2-5GB. Large trees with videos: 20-50GB. We\'ll tell you size before you download.',
+      },
+      {
+        question: 'What format are the files?',
+        answer: 'Standard formats: JPG for photos, MP3/M4A for audio, MP4 for video, PDF for text. Plus HTML index you can open in any browser.',
+      },
+      {
+        question: 'Can I re-import a Forever Kit into Firefly Grove later?',
+        answer: 'Not currently, but coming soon. For now, Forever Kit is for backup/ownership, not migration between accounts.',
+      },
+      {
+        question: 'Do private memories get included?',
+        answer: 'Only YOUR private memories. You can\'t export other people\'s private content, even if you\'re admin.',
+      },
+      {
+        question: 'How often should I create a Forever Kit?',
+        answer: 'Annually is good. After major family events (reunions, deaths, births) is smart. We keep copies on our servers too, but redundancy is wise.',
+      },
+    ],
+
+    relatedGuides: [
+      'storage-limits-management',
+      'import-features-migration',
+      'choosing-your-keepers',
+    ],
+  },
+
+  'memory-book-pdf-compilation': {
+    slug: 'memory-book-pdf-compilation',
+    title: 'Memory Book: Beautiful Printed Stories',
+    subtitle: 'Compile memories into physical books',
+    icon: '📖',
+    category: 'PRODUCTS',
+
+    overview: `Transform your digital memories into a beautiful printed book. Memory Books compile selected memories, photos, and stories into professionally bound keepsakes perfect for coffee tables, gifts, or preserving your complete family history.`,
+
+    howItWorks: [
+      {
+        title: 'Select Memories to Include',
+        content: 'Choose memories by branch, date range, or manually pick favorites. Can include text, photos, audio transcripts - everything becomes print-ready.',
+      },
+      {
+        title: 'Customize Layout & Style',
+        content: 'Choose book size (8x10, 11x14, etc.), cover design, paper quality, and layout style. Preview shows exactly how pages will look.',
+      },
+      {
+        title: 'Review & Edit',
+        content: 'We generate a PDF proof. Review every page, adjust photo placement, edit text. Make unlimited changes before printing.',
+      },
+      {
+        title: 'Print & Bind',
+        content: 'Professional printing on archival paper. Hardcover or softcover binding. Shipped in protective packaging. Additional copies available at discount.',
+      },
+    ],
+
+    useCases: [
+      'Creating family history books for each child',
+      'Memorial books after a loved one passes',
+      'Anniversary gifts compiling relationship memories',
+      'Grandparent life story books for grandchildren',
+      'Year-in-review books as annual tradition',
+      'Legacy books to include in estate planning',
+    ],
+
+    tips: [
+      'Start with 50-100 memories for a good-sized book',
+      'Mix photo-heavy and text-heavy pages for variety',
+      'Order multiple copies when printing - much cheaper than re-ordering',
+      'Hardcover for heirlooms, softcover for personal copies',
+      'Include a table of contents and index for navigation',
+      'Test with a small book (25 memories) before committing to huge project',
+    ],
+
+    faqs: [
+      {
+        question: 'How many memories can fit in one book?',
+        answer: 'Unlimited, but sweet spot is 50-200 memories. Fewer than 50 feels thin, more than 200 gets unwieldy. We can split into volumes.',
+      },
+      {
+        question: 'Can I edit memories just for the book without changing the digital version?',
+        answer: 'Yes! The book is a snapshot. Edit the book version without affecting your live Firefly Grove memories.',
+      },
+      {
+        question: 'What if I have video or audio memories?',
+        answer: 'Videos become photo stills with captions. Audio gets transcribed to text. QR codes can link to online versions.',
+      },
+      {
+        question: 'How long does printing take?',
+        answer: '2-3 weeks for standard printing. Rush service available (1 week) for extra cost. Proof review adds a few days.',
+      },
+      {
+        question: 'Can I order more copies later?',
+        answer: 'Yes, but re-printing is more expensive than ordering multiple copies initially. Order extras for siblings/cousins upfront.',
+      },
+    ],
+
+    relatedGuides: [
+      'forever-kit-export-backup',
+      'greeting-cards-memory-sharing',
+      'adding-photos-to-memories',
+    ],
+  },
+
+  'spark-collections-prompt-organization': {
+    slug: 'spark-collections-prompt-organization',
+    title: 'Spark Collections: Organize Your Journey',
+    subtitle: 'Curate themed writing prompts',
+    icon: '✨',
+    category: 'PRODUCTS',
+
+    overview: `Spark Collections are themed sets of writing prompts organized around specific topics or life phases. Instead of random prompts, work through curated collections like "Childhood Memories," "Career Journey," or "Travel Stories" to systematically capture your life.`,
+
+    howItWorks: [
+      {
+        title: 'Browse Collections',
+        content: 'Explore pre-made collections like "First Year of Parenthood" or "Grandmother\'s Recipe Stories". Each collection has 10-50 related prompts.',
+      },
+      {
+        title: 'Start a Collection',
+        content: 'Begin any collection and work through prompts at your pace. Save progress - come back anytime. Collections track which prompts you\'ve completed.',
+      },
+      {
+        title: 'Answer Prompts',
+        content: 'Each prompt becomes a memory when you answer it. Write, record audio, or add photos. Prompts guide you through comprehensive storytelling.',
+      },
+      {
+        title: 'Complete & Celebrate',
+        content: 'Finishing a collection unlocks a completion certificate and creates a special "Collection Complete" memory showing all your stories together.',
+      },
+    ],
+
+    useCases: [
+      'Working through "Childhood Memories" collection with aging parent',
+      'Completing "Our Love Story" collection for anniversary gift',
+      'Using "Military Service" collection to document veteran experience',
+      'Following "New Parent" collection as baby journal',
+      'Tackling "Career Highlights" collection before retirement',
+      'Creating custom collection for unique family tradition',
+    ],
+
+    tips: [
+      'Do one prompt per week for sustainable progress',
+      'Share collection progress with family for accountability',
+      'Create custom collections for your family\'s unique experiences',
+      'Gift a collection to family members ("Mom, do the Grandmother collection!")',
+      'Some collections work great as interview guides',
+      'Completed collections make excellent Memory Books',
+    ],
+
+    faqs: [
+      {
+        question: 'Can I create my own Spark Collections?',
+        answer: 'Yes! Premium feature. Curate your own themed prompt sets for personal use or share with family.',
+      },
+      {
+        question: 'Do I have to complete prompts in order?',
+        answer: 'No! Skip around, cherry-pick favorites, or go sequentially. Whatever works for your creative process.',
+      },
+      {
+        question: 'What happens if I abandon a collection halfway?',
+        answer: 'Nothing! Progress saves automatically. Come back months later and pick up where you left off. No pressure.',
+      },
+      {
+        question: 'Can multiple people work on the same collection?',
+        answer: 'Yes! Great for families. Everyone answers the same prompts from their perspective. Creates rich multi-voice narratives.',
+      },
+      {
+        question: 'How many collections should I work on at once?',
+        answer: 'One or two max. Trying to juggle many creates overwhelm. Finish one, celebrate, then start another.',
+      },
+    ],
+
+    relatedGuides: [
+      'story-sparks-writing-prompts',
+      'memory-book-pdf-compilation',
+      'compass-intention-setting',
+    ],
+  },
+
+  'treasure-chest-milestones': {
+    slug: 'treasure-chest-milestones',
+    title: 'Treasure Chest: Celebrate Milestones',
+    subtitle: 'Track your memory preservation journey',
+    icon: '🏆',
+    category: 'PRODUCTS',
+
+    overview: `Treasure Chest gamifies memory creation. Earn badges, unlock achievements, and reach milestones as you preserve your family's story. Turn the important work of legacy-building into a rewarding journey with visible progress.`,
+
+    howItWorks: [
+      {
+        title: 'Complete Memory Activities',
+        content: 'Every action earns points: creating memories, adding photos, inviting family, answering prompts. Points accumulate toward milestones.',
+      },
+      {
+        title: 'Unlock Achievements',
+        content: 'Hit milestones like "10 Memories Created," "First Audio Recording," "Invited Family Member." Each unlocks a badge and celebration.',
+      },
+      {
+        title: 'Track Progress',
+        content: 'Visit Treasure Chest to see all achievements, current streaks (days in a row creating memories), and progress toward next milestone.',
+      },
+      {
+        title: 'Celebrate & Share',
+        content: 'When you hit big milestones (100 memories!), we create a special memory commemorating it. Share achievements with family.',
+      },
+    ],
+
+    useCases: [
+      'Motivating yourself to build consistent memory-creation habit',
+      'Gamifying memory preservation for kids/teens',
+      'Celebrating progress milestones with family',
+      'Setting goals ("I want to hit 50 memories by Dad\'s birthday")',
+      'Tracking streaks for accountability',
+      'Making memory work feel more like play',
+    ],
+
+    tips: [
+      'Don\'t obsess over badges - focus on meaningful memories',
+      'Use streak tracking for habit-building, not guilt',
+      'Share milestone achievements in family group chats',
+      'Set personal goals based on milestones',
+      'Treasure Chest works great for New Year\'s resolutions',
+      'Kids love badges - get them involved in family memory-making',
+    ],
+
+    faqs: [
+      {
+        question: 'What counts as a "memory" for milestones?',
+        answer: 'Any saved entry: text memory, photo memory, audio spark, reply to another memory. Quality matters more than quantity.',
+      },
+      {
+        question: 'If I break a streak, do I lose my progress?',
+        answer: 'Streaks reset, but lifetime achievements stay forever. Breaking a 30-day streak doesn\'t erase those 30 memories.',
+      },
+      {
+        question: 'Can I turn off Treasure Chest if I find it distracting?',
+        answer: 'Yes! Settings > Treasure Chest > Disable. Some people love gamification, others prefer quiet focus. Both valid.',
+      },
+      {
+        question: 'Do private memories count toward achievements?',
+        answer: 'Yes! All memories count, public or private. Your achievements are personal.',
+      },
+      {
+        question: 'Is there a leaderboard or competition?',
+        answer: 'No. Treasure Chest is personal, not competitive. Family stories aren\'t a race.',
+      },
+    ],
+
+    relatedGuides: [
+      'spark-collections-prompt-organization',
+      'compass-intention-setting',
+      'audio-sparks-quick-capture',
+    ],
+  },
+
+  'compass-intention-setting': {
+    slug: 'compass-intention-setting',
+    title: 'Compass: Set Your Memory Intentions',
+    subtitle: 'Define your legacy goals and focus',
+    icon: '🧭',
+    category: 'PRODUCTS',
+
+    overview: `Compass helps you set intentions for what you want to preserve and why. Instead of random memory-capturing, define your purpose: preserving grandparent stories, documenting a specific life phase, building a complete family history. Compass keeps you focused.`,
+
+    howItWorks: [
+      {
+        title: 'Define Your Intention',
+        content: 'Answer reflection questions: What stories matter most? Who are you preserving for? What themes want to capture? This creates your North Star.',
+      },
+      {
+        title: 'Set Concrete Goals',
+        content: 'Turn intentions into actionable goals: "Record 20 of Mom\'s childhood stories" or "Document our first year as parents." Specific beats vague.',
+      },
+      {
+        title: 'Get Guided Prompts',
+        content: 'Compass generates custom prompts aligned with your goals. Instead of generic prompts, you get suggestions that serve your specific intention.',
+      },
+      {
+        title: 'Track Alignment',
+        content: 'Compass shows which memories align with your intention. Stay on course or adjust your north star as life changes.',
+      },
+    ],
+
+    useCases: [
+      'Focusing on capturing a dying relative\'s stories before it\'s too late',
+      'Documenting a specific life chapter (career, parenthood, illness)',
+      'Building comprehensive family tree with intentional research',
+      'Preserving specific traditions before they\'re lost',
+      'Creating legacy for unborn grandchildren',
+      'Processing grief through intentional remembrance',
+    ],
+
+    tips: [
+      'Start with one clear intention, not five vague ones',
+      'Revisit Compass quarterly - intentions evolve',
+      'Share your intention with family - they can help',
+      'Use Compass to avoid "analysis paralysis" - it cuts through decision fatigue',
+      'Compass is especially powerful during major life transitions',
+      'Pair Compass with Spark Collections for focused work',
+    ],
+
+    faqs: [
+      {
+        question: 'Can I have multiple intentions at once?',
+        answer: 'Yes, but limit to 2-3. Too many creates scattered effort. Complete one intention before adding more.',
+      },
+      {
+        question: 'What if my intention changes?',
+        answer: 'Great! Edit your Compass anytime. Life changes, priorities shift. Your Compass should reflect current reality.',
+      },
+      {
+        question: 'Is Compass required to use Firefly Grove?',
+        answer: 'No! It\'s optional. Some people love intentional focus, others prefer organic capturing. Both approaches work.',
+      },
+      {
+        question: 'Can family members see my Compass?',
+        answer: 'Only if you share it. Compass is private by default. But sharing can help family contribute to your goals.',
+      },
+      {
+        question: 'How is Compass different from Spark Collections?',
+        answer: 'Compass = why and what (intention). Spark Collections = how (prompts). Use together: set intention, then use collections to execute.',
+      },
+    ],
+
+    relatedGuides: [
+      'spark-collections-prompt-organization',
+      'story-sparks-writing-prompts',
+      'treasure-chest-milestones',
+    ],
+  },
+
+  // ============================================================================
+  // ORGANIZATION FEATURES
+  // ============================================================================
+
+  'multiple-trees-organization': {
+    slug: 'multiple-trees-organization',
+    title: 'Multiple Trees: Organize by Life',
+    subtitle: 'Create separate trees for different purposes',
+    icon: '🌳',
+    category: 'ORGANIZATION',
+
+    overview: `Most families need just one tree. But sometimes separate trees make sense: one for birth family, one for married family, one for a deceased relative\'s legacy. Multiple trees keep different life spheres organized without mixing memories.`,
+
+    howItWorks: [
+      {
+        title: 'Create a New Tree',
+        content: 'Go to Grove > New Tree. Name it clearly ("Mom\'s Side," "Our Marriage," "Grandpa\'s WWII Stories"). Each tree is independent.',
+      },
+      {
+        title: 'Add Members to Each Tree',
+        content: 'Different people in different trees. Your spouse in marriage tree, siblings in birth family tree. Same person can be in multiple trees.',
+      },
+      {
+        title: 'Switch Between Trees',
+        content: 'Tree selector in header lets you switch contexts instantly. Each tree has its own branches, memories, and members.',
+      },
+      {
+        title: 'Manage Separately',
+        content: 'Each tree has independent settings, privacy rules, and heir designations. Keeps different purposes cleanly separated.',
+      },
+    ],
+
+    useCases: [
+      'Separating birth family from married family memories',
+      'Creating dedicated tree for deceased parent as memorial',
+      'Organizing by geography (US family vs overseas family)',
+      'Keeping work/military service separate from personal life',
+      'Building community trees for neighborhood or friend groups',
+      'Maintaining multiple family lines without confusion',
+    ],
+
+    tips: [
+      'Most people overestimate need for multiple trees - start with one',
+      'Name trees clearly to avoid confusion when switching',
+      'Use branches within one tree before creating second tree',
+      'Multiple trees are great for co-parenting situations',
+      'Consider privacy: some memories belong in separate trees',
+      'You can transplant memories between trees later if needed',
+    ],
+
+    faqs: [
+      {
+        question: 'Is there a limit to how many trees I can create?',
+        answer: 'Free: 1 tree. Paid plans: unlimited trees. Most families use 1-3 trees total.',
+      },
+      {
+        question: 'Can I copy a memory from one tree to another?',
+        answer: 'Yes! Duplicate any memory to different tree. Original stays put, copy appears in new tree. Edit independently.',
+      },
+      {
+        question: 'Do all trees count toward my storage limit?',
+        answer: 'Yes, storage limit is account-wide across all trees. But you can allocate differently per tree.',
+      },
+      {
+        question: 'Can different trees have different Keepers/Heirs?',
+        answer: 'Yes! Each tree has independent heir designation. Perfect for ensuring the right people get the right trees.',
+      },
+      {
+        question: 'What if I regret creating multiple trees?',
+        answer: 'You can merge trees by transplanting all memories/branches from one to another, then deleting the empty tree.',
+      },
+    ],
+
+    relatedGuides: [
+      'understanding-trees-and-branches',
+      'transplanting-trees-grove-transfer',
+      'branches-organization-strategies',
+    ],
+  },
+
+  'branches-organization-strategies': {
+    slug: 'branches-organization-strategies',
+    title: 'Branch Organization: Structure Your Stories',
+    subtitle: 'Best practices for organizing branches',
+    icon: '🌿',
+    category: 'ORGANIZATION',
+
+    overview: `Branches organize your memories, but how should you structure them? By person? By theme? By time period? This guide shares proven strategies for organizing branches so your family can navigate memories easily, now and for generations.`,
+
+    howItWorks: [
+      {
+        title: 'Choose Organization Strategy',
+        content: 'Decide primary structure: by person (Mom, Dad, Kids), by theme (Holidays, Travel, Daily Life), by time (Decades, Life Phases), or hybrid.',
+      },
+      {
+        title: 'Create Top-Level Branches',
+        content: 'Start with 3-7 main branches matching your strategy. Don\'t over-organize initially - you can always add sub-branches later.',
+      },
+      {
+        title: 'Add Sub-Branches as Needed',
+        content: 'As memories accumulate, create sub-branches. "Travel" becomes "Beach Vacations" and "Mountain Trips." Let structure emerge organically.',
+      },
+      {
+        title: 'Use Consistent Naming',
+        content: 'Name branches clearly and consistently. "Childhood (1950-1960)" not just "Childhood." Future family will thank you.',
+      },
+    ],
+
+    useCases: [
+      'Organizing by person for multi-generational family trees',
+      'Structuring by theme for topic-focused preservation',
+      'Grouping by decade for chronological life stories',
+      'Creating hybrid structures (Person > Theme > Time)',
+      'Reorganizing existing chaotic branch structure',
+      'Planning branch structure before inviting family',
+    ],
+
+    tips: [
+      'Start simple - perfect is the enemy of done',
+      'Mirror real-life relationships in branch structure',
+      'Use branch descriptions to explain organization system',
+      'Create "Unsorted" branch for quick captures, organize later',
+      'Consistent structure across branches reduces confusion',
+      'Ask family for input before finalizing structure',
+    ],
+
+    faqs: [
+      {
+        question: 'Can I change branch organization later?',
+        answer: 'Yes! Move memories between branches, rename branches, restructure anytime. Nothing is permanent.',
+      },
+      {
+        question: 'What\'s the "best" way to organize branches?',
+        answer: 'Depends on your family. Small families: by theme. Large families: by person. No universal "best." What makes sense to YOUR family?',
+      },
+      {
+        question: 'How deep should branch hierarchies go?',
+        answer: '3 levels max is ideal. More than that becomes confusing to navigate. Broader is better than deeper.',
+      },
+      {
+        question: 'Should I create a branch for each grandchild?',
+        answer: 'Depends on family size. 3-5 grandkids: yes, individual branches. 15 grandkids: probably not. Use tags instead.',
+      },
+      {
+        question: 'What if family disagrees on organization?',
+        answer: 'Tree admin decides. Or use branch permissions to let different people organize their own branches their way.',
+      },
+    ],
+
+    relatedGuides: [
+      'understanding-trees-and-branches',
+      'moving-memories-reorganization',
+      'multiple-trees-organization',
+    ],
+  },
+
+  'moving-memories-reorganization': {
+    slug: 'moving-memories-reorganization',
+    title: 'Moving Memories: Reorganize as You Grow',
+    subtitle: 'Restructure without losing content',
+    icon: '↔️',
+    category: 'ORGANIZATION',
+
+    overview: `As your tree grows, you\'ll want to reorganize. Move memories to better branches, merge branches, split large branches. Moving memories is safe and reversible - your content stays intact while structure improves.`,
+
+    howItWorks: [
+      {
+        title: 'Select Memories to Move',
+        content: 'From any branch, select one or multiple memories. Checkbox appears next to each memory. Select as many as needed.',
+      },
+      {
+        title: 'Choose Destination',
+        content: 'Click "Move" and select target branch. Can move to existing branch or create new branch during move process.',
+      },
+      {
+        title: 'Memories Transfer',
+        content: 'Memories disappear from old branch, appear in new branch. All comments, reactions, and metadata transfer intact.',
+      },
+      {
+        title: 'History Preserved',
+        content: 'Memories show "Moved from [old branch]" note for transparency. Everyone can see reorganization history.',
+      },
+    ],
+
+    useCases: [
+      'Reorganizing after tree structure evolves',
+      'Moving all beach vacation photos from "Photos" to new "Beach Trips" branch',
+      'Consolidating scattered memories about one person into dedicated branch',
+      'Splitting an overcrowded "Memories" branch into themed sub-branches',
+      'Fixing initial organization mistakes without starting over',
+      'Preparing tree for new family members by reorganizing for clarity',
+    ],
+
+    tips: [
+      'Move memories in batches to save time',
+      'Tell family before major reorganizations so they aren\'t confused',
+      'Use "Unsorted" branch as staging area during reorganization',
+      'Preview destination branch before moving to avoid mistakes',
+      'Moving doesn\'t break threaded replies - they stay connected',
+      'Can\'t move someone else\'s memory without permission (unless admin)',
+    ],
+
+    faqs: [
+      {
+        question: 'Can I undo a move if I make a mistake?',
+        answer: 'Yes! Move it back to original branch. The "moved from" history helps you track changes.',
+      },
+      {
+        question: 'What happens to comments/reactions when moving?',
+        answer: 'Everything stays attached to the memory. Moving changes location but preserves all content, engagement, and metadata.',
+      },
+      {
+        question: 'Can I move someone else\'s memories?',
+        answer: 'Only if you\'re tree admin or branch admin. Regular members can only move their own memories.',
+      },
+      {
+        question: 'Does moving affect privacy settings?',
+        answer: 'Memories inherit new branch\'s default privacy, but you can override. Check privacy after moving to new branch.',
+      },
+      {
+        question: 'Can I move memories to a different tree?',
+        answer: 'Use "transplanting" feature instead. Moving is within-tree only. Transplanting is cross-tree.',
+      },
+    ],
+
+    relatedGuides: [
+      'branches-organization-strategies',
+      'transplanting-trees-grove-transfer',
+      'branch-permissions-access-control',
+    ],
+  },
+
+  'transplanting-trees-grove-transfer': {
+    slug: 'transplanting-trees-grove-transfer',
+    title: 'Transplanting Trees: Transfer Between Groves',
+    subtitle: 'Move entire trees to different accounts',
+    icon: '🚚',
+    category: 'ORGANIZATION',
+
+    overview: `Transplanting moves an entire tree from one account to another. Perfect for transferring deceased parent\'s tree to adult child, gifting a tree to grown kids, or consolidating multiple accounts. The tree moves completely, including all memories and members.`,
+
+    howItWorks: [
+      {
+        title: 'Initiate Transplant',
+        content: 'Go to Tree Settings > Transfer Tree. Enter recipient\'s email. They must have a Firefly Grove account (or will create one).',
+      },
+      {
+        title: 'Recipient Accepts',
+        content: 'Recipient receives email with transfer link. They review what\'s being transferred and accept or decline. No surprise transfers.',
+      },
+      {
+        title: 'Tree Moves',
+        content: 'Accepted transplant moves entire tree - memories, branches, members, settings - to recipient\'s account. Original owner loses access.',
+      },
+      {
+        title: 'Permissions Adjust',
+        content: 'Recipient becomes tree owner/admin. Previous owner becomes regular member (unless removed). All other members retain access.',
+      },
+    ],
+
+    useCases: [
+      'Transferring deceased parent\'s tree to adult child',
+      'Giving children their childhood tree when they turn 18',
+      'Consolidating multiple accounts into one',
+      'Transferring ownership before moving to nursing home',
+      'Gifting a curated tree to family member',
+      'Estate planning: ensuring tree goes to right person',
+    ],
+
+    tips: [
+      'Communicate with family before transplanting - it affects everyone',
+      'Recipient should have storage capacity for the tree',
+      'You can stay as member after transplanting if recipient allows',
+      'Consider copying instead of moving if you want to keep access',
+      'Transplanting triggers Keeper/Heir notifications',
+      'Test with small tree before transplanting precious family history',
+    ],
+
+    faqs: [
+      {
+        question: 'Can I get the tree back if I change my mind?',
+        answer: 'Only if new owner transplants it back to you. Transfers aren\'t automatically reversible. Choose wisely.',
+      },
+      {
+        question: 'What happens to my subscription if I transfer my only tree?',
+        answer: 'You keep your paid plan. Can create new trees or receive transplants. Or downgrade if you no longer need paid features.',
+      },
+      {
+        question: 'Do all members transfer with the tree?',
+        answer: 'Yes, all members retain access. Their relationship to tree stays same, just the owner changes.',
+      },
+      {
+        question: 'Can I transfer just part of a tree?',
+        answer: 'No. Transplanting is all-or-nothing. To move partial content, use memory copying or create new tree with selected content.',
+      },
+      {
+        question: 'What about scheduled/private memories?',
+        answer: 'Everything transfers including private and scheduled memories. New owner gets full access to all content.',
+      },
+    ],
+
+    relatedGuides: [
+      'multiple-trees-organization',
+      'choosing-your-keepers',
+      'legacy-transfer-immediate-handoff',
+    ],
+  },
+
+  'rooting-trees-family-connections': {
+    slug: 'rooting-trees-family-connections',
+    title: 'Rooting Trees: Connect Family Heritage',
+    subtitle: 'Link trees to show family relationships',
+    icon: '🌲',
+    category: 'ORGANIZATION',
+
+    overview: `Rooting connects separate trees to show family relationships. Your tree, your parent\'s tree, your sibling\'s tree - all independent but visually connected. Build a forest that shows how individual family lines relate to the broader family history.`,
+
+    howItWorks: [
+      {
+        title: 'Identify Connected Trees',
+        content: 'Determine which trees should connect. Your tree connects to parent\'s tree (you\'re their child). Your tree connects to sibling\'s (shared parents).',
+      },
+      {
+        title: 'Send Root Connection',
+        content: 'From Tree Settings, click "Connect to Another Tree." Enter relationship type (parent, child, sibling) and select/invite the other tree.',
+      },
+      {
+        title: 'Other Tree Accepts',
+        content: 'Owner of other tree receives connection request. They can accept (connection forms) or decline (remains separate).',
+      },
+      {
+        title: 'Navigate Between Trees',
+        content: 'Connected trees show visual links. Click to jump between related trees. Helpful for seeing broader family context.',
+      },
+    ],
+
+    useCases: [
+      'Connecting your tree to parents\' tree showing family lineage',
+      'Linking siblings\' independent trees under parents',
+      'Building multi-generational family forest',
+      'Showing adopted/blended family connections',
+      'Creating visual family tree across multiple accounts',
+      'Preserving extended family relationships for future generations',
+    ],
+
+    tips: [
+      'Trees stay independent - rooting just shows relationships',
+      'Connection requests need acceptance - respect boundaries',
+      'Rooting doesn\'t share content, only shows how trees relate',
+      'Great for complex family structures (divorce, remarriage, adoption)',
+      'Visual representation helps kids understand family connections',
+      'Rooting is metadata - doesn\'t affect privacy or access',
+    ],
+
+    faqs: [
+      {
+        question: 'Does rooting give the connected tree access to my memories?',
+        answer: 'No! Rooting is visual only. Trees stay completely separate. No content sharing unless you explicitly invite them.',
+      },
+      {
+        question: 'Can I disconnect trees later?',
+        answer: 'Yes, either owner can break the connection anytime. Trees revert to independent, no content lost.',
+      },
+      {
+        question: 'What if I root to someone who later deletes their tree?',
+        answer: 'The connection disappears but your tree is unaffected. Rooting is non-destructive.',
+      },
+      {
+        question: 'Can one tree have multiple roots (complex families)?',
+        answer: 'Yes! Connect to biological parents, adoptive parents, step-parents. Rooting handles complex modern families.',
+      },
+      {
+        question: 'Is rooting required to use Firefly Grove?',
+        answer: 'No! It\'s optional. Useful for seeing big picture but not necessary. Single independent trees work great.',
+      },
+    ],
+
+    relatedGuides: [
+      'multiple-trees-organization',
+      'transplanting-trees-grove-transfer',
+      'inviting-family-members',
+    ],
+  },
+
+  'open-grove-public-memorials': {
+    slug: 'open-grove-public-memorials',
+    title: 'Open Grove: Public Memorial Space',
+    subtitle: 'Create public memorials anyone can view',
+    icon: '🕊️',
+    category: 'ORGANIZATION',
+
+    overview: `Open Grove is for public memorials. Unlike private family trees, Open Grove memorials are searchable and viewable by anyone. Perfect for honoring public figures, community members, or creating memorial pages you want the world to see.`,
+
+    howItWorks: [
+      {
+        title: 'Create Open Grove Memorial',
+        content: 'Choose "Create Public Memorial" instead of private tree. These live in Open Grove, separate from private family trees.',
+      },
+      {
+        title: 'Add Memorial Content',
+        content: 'Add memories, photos, videos about the deceased. Write obituary, share stories, upload service information. Anyone can contribute (with moderation).',
+      },
+      {
+        title: 'Memorial is Searchable',
+        content: 'Open Grove memorials appear in search engines and Firefly Grove public directory. Anyone can find and view them.',
+      },
+      {
+        title: 'Manage Contributions',
+        content: 'As memorial creator, you moderate contributions. Approve/reject memories others submit. Keep memorial respectful and accurate.',
+      },
+    ],
+
+    useCases: [
+      'Creating public memorial for deceased loved one',
+      'Honoring community members (teachers, coaches, veterans)',
+      'Memorial pages for public figures',
+      'Funeral home memorial pages',
+      'Scholarship fund memorial pages',
+      'Public remembrance for tragic events',
+    ],
+
+    tips: [
+      'Open Grove for public tributes, private trees for family intimacy',
+      'Moderate contributions carefully - public means anyone can see',
+      'Link Open Grove memorial from obituary/funeral program',
+      'Can have both: public Open Grove memorial AND private family tree',
+      'Set contribution rules clearly in memorial description',
+      'Open Grove is permanent - plan for long-term maintenance',
+    ],
+
+    faqs: [
+      {
+        question: 'Can I make an Open Grove memorial private later?',
+        answer: 'Yes, but it\'s complicated. Easier to start private. Only make Open Grove if you\'re sure you want public visibility.',
+      },
+      {
+        question: 'Who can add to Open Grove memorials?',
+        answer: 'Anyone, but contributions go to moderation queue. You approve before they appear publicly. Prevents spam/abuse.',
+      },
+      {
+        question: 'What if someone posts inappropriate content?',
+        answer: 'You can reject it. Repeat offenders get blocked. We also monitor for ToS violations and remove abusive content.',
+      },
+      {
+        question: 'Can Open Grove memorials have multiple admins?',
+        answer: 'Yes! Useful for large memorials. Share moderation responsibilities with trusted family members.',
+      },
+      {
+        question: 'Are Open Grove memorials free?',
+        answer: 'Basic memorials yes. Premium features (unlimited photos, videos, custom domain) require paid plan.',
+      },
+    ],
+
+    relatedGuides: [
+      'memory-visibility-privacy',
+      'approval-workflow-review-contributions',
+      'inviting-family-members',
+    ],
+  },
+
 }
 
 /**
