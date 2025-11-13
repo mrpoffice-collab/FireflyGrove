@@ -9,8 +9,8 @@ timeToRead: 2
 icon: 👋
 featured: false
 isNew: false
-createdAt: 2025-11-13T13:52:09.837Z
-updatedAt: 2025-11-13T13:52:09.837Z
+createdAt: 2025-11-13T14:15:31.937Z
+updatedAt: 2025-11-13T14:15:31.937Z
 ---
 
 # 👋 Member Removal: Manage Your Circle

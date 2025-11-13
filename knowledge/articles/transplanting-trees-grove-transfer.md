@@ -9,8 +9,8 @@ timeToRead: 3
 icon: 🌲
 featured: false
 isNew: false
-createdAt: 2025-11-13T13:52:09.798Z
-updatedAt: 2025-11-13T13:52:09.798Z
+createdAt: 2025-11-13T14:15:31.926Z
+updatedAt: 2025-11-13T14:15:31.926Z
 ---
 
 # 🌲 Transplanting Trees: Move Between Groves

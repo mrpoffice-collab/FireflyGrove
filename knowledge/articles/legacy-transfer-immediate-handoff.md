@@ -9,8 +9,8 @@ timeToRead: 3
 icon: 🎁
 featured: false
 isNew: false
-createdAt: 2025-11-13T13:52:09.838Z
-updatedAt: 2025-11-13T13:52:09.838Z
+createdAt: 2025-11-13T14:15:31.937Z
+updatedAt: 2025-11-13T14:15:31.937Z
 ---
 
 # 🎁 Legacy Transfer: Immediate Handoff

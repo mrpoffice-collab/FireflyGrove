@@ -9,8 +9,8 @@ timeToRead: 2
 icon: 🎤
 featured: false
 isNew: false
-createdAt: 2025-11-13T13:52:09.794Z
-updatedAt: 2025-11-13T13:52:09.794Z
+createdAt: 2025-11-13T14:15:31.924Z
+updatedAt: 2025-11-13T14:15:31.924Z
 ---
 
 # 🎤 Voice Capture on Mobile: Your Best Tool

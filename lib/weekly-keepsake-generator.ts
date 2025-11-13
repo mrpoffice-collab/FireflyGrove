@@ -197,14 +197,14 @@ async function createCoverPage(
   })
   yPosition -= 30
 
-  // Decorative firefly symbols
-  const fireflyText = '✨ 🌙 ✨'
-  const fireflySize = 16
-  const fireflyWidth = font.widthOfTextAtSize(fireflyText, fireflySize)
-  page.drawText(fireflyText, {
-    x: centerX - fireflyWidth / 2,
+  // Decorative stars (using text that WinAnsi can encode)
+  const starsText = '* * *'
+  const starsSize = 14
+  const starsWidth = font.widthOfTextAtSize(starsText, starsSize)
+  page.drawText(starsText, {
+    x: centerX - starsWidth / 2,
     y: yPosition,
-    size: fireflySize,
+    size: starsSize,
     font: font,
     color: COLORS.primary,
   })
@@ -301,7 +301,7 @@ async function createCoverPage(
   })
 
   // "Keep glowing" message
-  const keepText = 'Keep glowing ✨'
+  const keepText = 'Keep glowing'
   const keepSize = 12
   const keepWidth = font.widthOfTextAtSize(keepText, keepSize)
   page.drawText(keepText, {
@@ -503,10 +503,10 @@ async function createEntryPage(
   // Audio indicator if present
   if (entry.audioUrl && yPosition > MARGIN + 40) {
     yPosition -= 15
-    const voiceText = '♪ Voice Recording Included'
+    const voiceText = '~ Voice Recording Included ~'
     const voiceSize = 10
     const voiceWidth = font.widthOfTextAtSize(voiceText, voiceSize)
-    page.drawText(voiceText, {
+    currentPage.drawText(voiceText, {
       x: centerX - voiceWidth / 2,
       y: yPosition,
       size: voiceSize,
