@@ -9,8 +9,8 @@ timeToRead: 2
 icon: 📦
 featured: false
 isNew: false
-createdAt: 2025-11-13T13:16:41.696Z
-updatedAt: 2025-11-13T13:16:41.696Z
+createdAt: 2025-11-13T13:52:09.846Z
+updatedAt: 2025-11-13T13:52:09.846Z
 ---
 
 # 📦 Forever Kit: Own Your Memories

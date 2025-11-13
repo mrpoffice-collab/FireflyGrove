@@ -9,8 +9,8 @@ timeToRead: 2
 icon: 🌿
 featured: false
 isNew: false
-createdAt: 2025-11-13T13:16:41.699Z
-updatedAt: 2025-11-13T13:16:41.699Z
+createdAt: 2025-11-13T13:52:09.852Z
+updatedAt: 2025-11-13T13:52:09.852Z
 ---
 
 # 🌿 Branch Organization: Structure Your Stories

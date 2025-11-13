@@ -88,17 +88,23 @@ async function generateKeepsakePDF(
   const pdfDoc = await PDFDocument.create()
   const font = await pdfDoc.embedFont(StandardFonts.Helvetica)
   const fontBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold)
+  const fontItalic = await pdfDoc.embedFont(StandardFonts.HelveticaOblique)
 
-  // Single beautiful keepsake page
-  await createKeepsakePage(pdfDoc, font, fontBold, entries, weekStart, weekEnd)
+  // Create cover page
+  await createCoverPage(pdfDoc, font, fontBold, entries, weekStart, weekEnd)
+
+  // Create entry pages - one entry per page for full text display
+  for (let i = 0; i < entries.length; i++) {
+    await createEntryPage(pdfDoc, font, fontBold, fontItalic, entries[i], i + 1, entries.length)
+  }
 
   return await pdfDoc.save()
 }
 
 /**
- * Create a single beautiful keepsake page
+ * Create beautiful cover page
  */
-async function createKeepsakePage(
+async function createCoverPage(
   pdfDoc: PDFDocument,
   font: any,
   fontBold: any,
@@ -110,6 +116,15 @@ async function createKeepsakePage(
   const centerX = PAGE_WIDTH / 2
   const centerY = PAGE_HEIGHT / 2
 
+  // Background accent - soft color block at top
+  page.drawRectangle({
+    x: 0,
+    y: PAGE_HEIGHT - 200,
+    width: PAGE_WIDTH,
+    height: 200,
+    color: rgb(0.95, 0.96, 0.94), // Very light green
+  })
+
   // Decorative border - inset from page edges for printer margins
   const borderInset = 36 // 0.5 inch from edge
   page.drawRectangle({
@@ -118,11 +133,11 @@ async function createKeepsakePage(
     width: PAGE_WIDTH - (borderInset * 2),
     height: PAGE_HEIGHT - (borderInset * 2),
     borderColor: COLORS.primary,
-    borderWidth: 1.5,
+    borderWidth: 2,
   })
 
   // Inner decorative border for elegance
-  const innerBorderInset = borderInset + 6
+  const innerBorderInset = borderInset + 8
   page.drawRectangle({
     x: innerBorderInset,
     y: innerBorderInset,
@@ -132,11 +147,11 @@ async function createKeepsakePage(
     borderWidth: 0.5,
   })
 
-  let yPosition = PAGE_HEIGHT - MARGIN - 10 // Start a bit lower
+  let yPosition = PAGE_HEIGHT - 80
 
   // Title
   const title = 'My Glow Trail'
-  const titleSize = 28
+  const titleSize = 36
   const titleWidth = fontBold.widthOfTextAtSize(title, titleSize)
   page.drawText(title, {
     x: centerX - titleWidth / 2,
@@ -145,11 +160,11 @@ async function createKeepsakePage(
     font: fontBold,
     color: COLORS.primary,
   })
-  yPosition -= 35
+  yPosition -= 45
 
   // Subtitle: "Treasures" - bigger and capitalized
-  const subtitle = 'Treasures'
-  const subtitleSize = 18
+  const subtitle = 'Weekly Treasures'
+  const subtitleSize = 20
   const subtitleWidth = fontBold.widthOfTextAtSize(subtitle, subtitleSize)
   page.drawText(subtitle, {
     x: centerX - subtitleWidth / 2,
@@ -158,51 +173,50 @@ async function createKeepsakePage(
     font: fontBold,
     color: COLORS.primary,
   })
-  yPosition -= 8
+  yPosition -= 15
 
-  // Decorative line under title (not overlapping)
+  // Decorative line under title
   page.drawLine({
-    start: { x: centerX - 100, y: yPosition },
-    end: { x: centerX + 100, y: yPosition },
+    start: { x: centerX - 120, y: yPosition },
+    end: { x: centerX + 120, y: yPosition },
     color: COLORS.primary,
     thickness: 2,
   })
-  yPosition -= 25
+  yPosition -= 35
 
   // Week dates
   const dateText = `${format(weekStart, 'MMMM d')} - ${format(weekEnd, 'MMMM d, yyyy')}`
-  const dateSize = 14
+  const dateSize = 16
   const dateWidth = font.widthOfTextAtSize(dateText, dateSize)
   page.drawText(dateText, {
     x: centerX - dateWidth / 2,
     y: yPosition,
     size: dateSize,
     font: font,
-    color: COLORS.muted,
+    color: COLORS.text,
   })
-  yPosition -= 20
+  yPosition -= 30
 
-  // Decorative stars
-  const starsText = '* * *'
-  const starsSize = 12
-  const starsWidth = font.widthOfTextAtSize(starsText, starsSize)
-  page.drawText(starsText, {
-    x: centerX - starsWidth / 2,
+  // Decorative firefly symbols
+  const fireflyText = '✨ 🌙 ✨'
+  const fireflySize = 16
+  const fireflyWidth = font.widthOfTextAtSize(fireflyText, fireflySize)
+  page.drawText(fireflyText, {
+    x: centerX - fireflyWidth / 2,
     y: yPosition,
-    size: starsSize,
+    size: fireflySize,
     font: font,
     color: COLORS.primary,
   })
-  yPosition -= 35
+  yPosition -= 60
 
-  // Calculate dynamic layout based on number of entries
-  const availableHeight = yPosition - (MARGIN + 100) // Space for entries
   const numEntries = entries.length
 
+  // Summary box in center
   if (numEntries === 0) {
     // Empty state
     const emptyMsg = 'No treasures captured this week'
-    const emptySize = 12
+    const emptySize = 14
     const emptyWidth = font.widthOfTextAtSize(emptyMsg, emptySize)
     page.drawText(emptyMsg, {
       x: centerX - emptyWidth / 2,
@@ -212,106 +226,70 @@ async function createKeepsakePage(
       color: COLORS.muted,
     })
   } else {
-    // Determine layout: 1 column centered for 1-4, 2 columns for 5+
-    const useTwoColumns = numEntries > 4
-    const entriesPerColumn = useTwoColumns ? Math.ceil(numEntries / 2) : numEntries
+    // Draw summary box
+    const boxWidth = 300
+    const boxHeight = 180
+    const boxX = centerX - boxWidth / 2
+    const boxYPos = centerY - boxHeight / 2
 
-    // Calculate dynamic spacing to USE ALL available space
-    const entrySpacing = Math.floor(availableHeight / entriesPerColumn)
+    // Box background
+    page.drawRectangle({
+      x: boxX,
+      y: boxYPos,
+      width: boxWidth,
+      height: boxHeight,
+      color: rgb(0.98, 0.98, 0.97),
+      borderColor: COLORS.primary,
+      borderWidth: 1.5,
+    })
 
-    // Column setup - for two column layout, define column centers
-    const columnWidth = useTwoColumns ? (CONTENT_WIDTH / 2) - 20 : CONTENT_WIDTH
-    const leftColumnCenter = useTwoColumns ? MARGIN + (CONTENT_WIDTH / 4) : centerX
-    const rightColumnCenter = useTwoColumns ? MARGIN + (CONTENT_WIDTH * 3 / 4) : centerX
+    let boxY = centerY + 60
 
-    // Calculate total content height for vertical centering
-    const totalContentHeight = entriesPerColumn * entrySpacing
-    const verticalOffset = (availableHeight - totalContentHeight) / 2
-    const startY = yPosition - verticalOffset
+    // Summary title
+    const summaryTitle = 'This Week\'s Treasures'
+    const summaryTitleSize = 16
+    const summaryTitleWidth = fontBold.widthOfTextAtSize(summaryTitle, summaryTitleSize)
+    page.drawText(summaryTitle, {
+      x: centerX - summaryTitleWidth / 2,
+      y: boxY,
+      size: summaryTitleSize,
+      font: fontBold,
+      color: COLORS.primary,
+    })
+    boxY -= 35
 
-    for (let i = 0; i < numEntries; i++) {
-      const entry = entries[i]
-      const column = useTwoColumns ? Math.floor(i / entriesPerColumn) : 0
-      const row = useTwoColumns ? i % entriesPerColumn : i
+    // Count
+    const countText = `${numEntries} ${numEntries === 1 ? 'Night' : 'Nights'} of Reflection`
+    const countSize = 14
+    const countWidth = font.widthOfTextAtSize(countText, countSize)
+    page.drawText(countText, {
+      x: centerX - countWidth / 2,
+      y: boxY,
+      size: countSize,
+      font: font,
+      color: COLORS.text,
+    })
+    boxY -= 30
 
-      // Center point for this entry's column
-      const columnCenterX = column === 0 ? leftColumnCenter : rightColumnCenter
-      const yPos = startY - (row * entrySpacing)
+    // Category breakdown
+    const categories = entries.reduce((acc: any, entry: any) => {
+      acc[entry.category] = (acc[entry.category] || 0) + 1
+      return acc
+    }, {})
 
-      // Day label (e.g., "Monday, Nov 4") - CENTERED - smaller, subtle
-      const dayLabel = format(new Date(entry.entryUTC), 'EEEE, MMM d')
-      const daySize = numEntries <= 2 ? 8 : (numEntries <= 4 ? 7.5 : 7)
-      const dayWidth = font.widthOfTextAtSize(dayLabel, daySize)
-      page.drawText(dayLabel, {
-        x: columnCenterX - (dayWidth / 2),
-        y: yPos,
-        size: daySize,
-        font: font, // Regular font, not bold
+    Object.entries(categories).forEach(([category, count]) => {
+      const catText = `${category}: ${count}`
+      const catSize = 11
+      const catWidth = font.widthOfTextAtSize(catText, catSize)
+      page.drawText(catText, {
+        x: centerX - catWidth / 2,
+        y: boxY,
+        size: catSize,
+        font: font,
         color: COLORS.muted,
       })
-
-      let contentY = yPos - (daySize + 3)
-
-      // Prompt - show complete text, no truncation - CENTERED - smaller, subtle
-      const promptSize = numEntries <= 2 ? 7.5 : (numEntries <= 4 ? 7 : 6.5)
-      const promptLines = wrapText(`"${entry.promptText}"`, font, promptSize, columnWidth)
-      // Calculate max lines based on available space per entry
-      const linesAvailableForPrompt = Math.floor((entrySpacing * 0.25) / (promptSize + 2))
-      const maxPromptLines = Math.max(2, Math.min(linesAvailableForPrompt, promptLines.length))
-
-      for (let j = 0; j < Math.min(promptLines.length, maxPromptLines); j++) {
-        const lineWidth = font.widthOfTextAtSize(promptLines[j], promptSize)
-        page.drawText(promptLines[j], {
-          x: columnCenterX - (lineWidth / 2),
-          y: contentY,
-          size: promptSize,
-          font: font,
-          color: COLORS.muted,
-        })
-        contentY -= (promptSize + 2)
-      }
-
-      contentY -= 6
-
-      // TREASURE (Response) - THE STAR! - CENTERED - LARGE
-      if (entry.text) {
-        const responseSize = numEntries <= 2 ? 13 : (numEntries <= 4 ? 11.5 : 10.5)
-        const responseLines = wrapText(entry.text, font, responseSize, columnWidth)
-        // Use remaining space for response - give it most of the space!
-        const linesAvailableForResponse = Math.floor((yPos - contentY - 15) / (responseSize + 3))
-        const maxResponseLines = Math.max(2, Math.min(linesAvailableForResponse, responseLines.length))
-
-        for (let j = 0; j < Math.min(responseLines.length, maxResponseLines); j++) {
-          if (contentY < MARGIN + 100) break
-          const line = j === maxResponseLines - 1 && responseLines.length > maxResponseLines
-            ? responseLines[j].substring(0, Math.max(0, responseLines[j].length - 3)) + '...'
-            : responseLines[j]
-          const lineWidth = font.widthOfTextAtSize(line, responseSize)
-          page.drawText(line, {
-            x: columnCenterX - (lineWidth / 2),
-            y: contentY,
-            size: responseSize,
-            font: font,
-            color: COLORS.text, // Darkest color for maximum visibility
-          })
-          contentY -= (responseSize + 3)
-        }
-      }
-
-      // Audio indicator - CENTERED
-      if (entry.audioUrl && contentY > MARGIN + 100) {
-        contentY -= 5
-        const voiceText = '♪ Voice'
-        const voiceWidth = font.widthOfTextAtSize(voiceText, 7)
-        page.drawText(voiceText, {
-          x: columnCenterX - (voiceWidth / 2),
-          y: contentY,
-          size: 7,
-          font: font,
-          color: COLORS.primary,
-        })
-      }
-    }
+      boxY -= 18
+    })
   }
 
   // Bottom decorative element
@@ -322,41 +300,220 @@ async function createKeepsakePage(
     thickness: 1,
   })
 
-  // Count and footer
-  const countText = `${entries.length} ${entries.length === 1 ? 'night' : 'nights'} of wisdom & gratitude`
-  const countSize = 11
-  const countWidth = font.widthOfTextAtSize(countText, countSize)
-  page.drawText(countText, {
-    x: centerX - countWidth / 2,
-    y: MARGIN + 45,
-    size: countSize,
-    font: fontBold,
-    color: COLORS.text,
-  })
-
   // "Keep glowing" message
-  const keepText = 'Keep glowing'
-  const keepSize = 9
+  const keepText = 'Keep glowing ✨'
+  const keepSize = 12
   const keepWidth = font.widthOfTextAtSize(keepText, keepSize)
   page.drawText(keepText, {
     x: centerX - keepWidth / 2,
-    y: MARGIN + 25,
+    y: MARGIN + 35,
     size: keepSize,
-    font: font,
+    font: fontBold,
     color: COLORS.primary,
   })
 
   // Firefly Grove branding (small)
   const brandText = 'FireflyGrove.app'
-  const brandSize = 8
+  const brandSize = 9
   const brandWidth = font.widthOfTextAtSize(brandText, brandSize)
   page.drawText(brandText, {
     x: centerX - brandWidth / 2,
-    y: MARGIN + 10,
+    y: MARGIN + 15,
     size: brandSize,
     font: font,
     color: COLORS.muted,
   })
+}
+
+/**
+ * Create a beautiful page for each treasure entry
+ */
+async function createEntryPage(
+  pdfDoc: PDFDocument,
+  font: any,
+  fontBold: any,
+  fontItalic: any,
+  entry: any,
+  entryNumber: number,
+  totalEntries: number
+) {
+  const page = pdfDoc.addPage([PAGE_WIDTH, PAGE_HEIGHT])
+  const centerX = PAGE_WIDTH / 2
+
+  // Decorative header background
+  page.drawRectangle({
+    x: 0,
+    y: PAGE_HEIGHT - 120,
+    width: PAGE_WIDTH,
+    height: 120,
+    color: rgb(0.95, 0.96, 0.94), // Very light green
+  })
+
+  // Decorative border
+  const borderInset = 36
+  page.drawRectangle({
+    x: borderInset,
+    y: borderInset,
+    width: PAGE_WIDTH - (borderInset * 2),
+    height: PAGE_HEIGHT - (borderInset * 2),
+    borderColor: COLORS.primary,
+    borderWidth: 1.5,
+  })
+
+  let yPosition = PAGE_HEIGHT - 50
+
+  // Page number
+  const pageNum = `${entryNumber} of ${totalEntries}`
+  const pageNumSize = 10
+  const pageNumWidth = font.widthOfTextAtSize(pageNum, pageNumSize)
+  page.drawText(pageNum, {
+    x: PAGE_WIDTH - MARGIN - pageNumWidth,
+    y: yPosition,
+    size: pageNumSize,
+    font: font,
+    color: COLORS.muted,
+  })
+
+  // Date header
+  const dayLabel = format(new Date(entry.entryUTC), 'EEEE, MMMM d, yyyy')
+  const daySize = 14
+  const dayWidth = fontBold.widthOfTextAtSize(dayLabel, daySize)
+  page.drawText(dayLabel, {
+    x: centerX - dayWidth / 2,
+    y: yPosition,
+    size: daySize,
+    font: fontBold,
+    color: COLORS.primary,
+  })
+  yPosition -= 30
+
+  // Decorative line
+  page.drawLine({
+    start: { x: centerX - 80, y: yPosition },
+    end: { x: centerX + 80, y: yPosition },
+    color: COLORS.primary,
+    thickness: 1,
+  })
+  yPosition -= 40
+
+  // Category badge
+  const categoryText = entry.category.toUpperCase()
+  const categorySize = 10
+  const categoryWidth = font.widthOfTextAtSize(categoryText, categorySize)
+  const badgePadding = 8
+
+  page.drawRectangle({
+    x: centerX - categoryWidth / 2 - badgePadding,
+    y: yPosition - 3,
+    width: categoryWidth + (badgePadding * 2),
+    height: 18,
+    color: COLORS.primary,
+  })
+
+  page.drawText(categoryText, {
+    x: centerX - categoryWidth / 2,
+    y: yPosition,
+    size: categorySize,
+    font: fontBold,
+    color: rgb(1, 1, 1), // White text
+  })
+  yPosition -= 40
+
+  // Prompt (in italic, centered)
+  const promptText = `"${entry.promptText}"`
+  const promptSize = 11
+  const promptLines = wrapText(promptText, fontItalic, promptSize, CONTENT_WIDTH - 80)
+
+  for (const line of promptLines) {
+    const lineWidth = fontItalic.widthOfTextAtSize(line, promptSize)
+    page.drawText(line, {
+      x: centerX - lineWidth / 2,
+      y: yPosition,
+      size: promptSize,
+      font: fontItalic,
+      color: COLORS.muted,
+    })
+    yPosition -= (promptSize + 4)
+  }
+  yPosition -= 20
+
+  // Decorative separator
+  const separatorText = '* * *'
+  const separatorSize = 10
+  const separatorWidth = font.widthOfTextAtSize(separatorText, separatorSize)
+  page.drawText(separatorText, {
+    x: centerX - separatorWidth / 2,
+    y: yPosition,
+    size: separatorSize,
+    font: font,
+    color: COLORS.primary,
+  })
+  yPosition -= 30
+
+  // Treasure response - FULL TEXT, NO TRUNCATION!
+  const responseSize = 12
+  const responseLineHeight = responseSize + 5
+  const responseLines = wrapText(entry.text, font, responseSize, CONTENT_WIDTH - 40)
+
+  let currentPage = page
+  for (const line of responseLines) {
+    // Check if we need a new page
+    if (yPosition < MARGIN + 60) {
+      // Continue on next page
+      currentPage = pdfDoc.addPage([PAGE_WIDTH, PAGE_HEIGHT])
+
+      // Add border to continuation page
+      currentPage.drawRectangle({
+        x: borderInset,
+        y: borderInset,
+        width: PAGE_WIDTH - (borderInset * 2),
+        height: PAGE_HEIGHT - (borderInset * 2),
+        borderColor: COLORS.primary,
+        borderWidth: 1.5,
+      })
+
+      // Reset yPosition for new page
+      yPosition = PAGE_HEIGHT - MARGIN - 20
+
+      // Add "continued" marker
+      const contText = `(continued from ${format(new Date(entry.entryUTC), 'MMMM d')})`
+      const contSize = 9
+      const contWidth = font.widthOfTextAtSize(contText, contSize)
+      currentPage.drawText(contText, {
+        x: centerX - contWidth / 2,
+        y: yPosition,
+        size: contSize,
+        font: fontItalic,
+        color: COLORS.muted,
+      })
+      yPosition -= 30
+    }
+
+    const lineWidth = font.widthOfTextAtSize(line, responseSize)
+    currentPage.drawText(line, {
+      x: centerX - lineWidth / 2,
+      y: yPosition,
+      size: responseSize,
+      font: font,
+      color: COLORS.text,
+    })
+    yPosition -= responseLineHeight
+  }
+
+  // Audio indicator if present
+  if (entry.audioUrl && yPosition > MARGIN + 40) {
+    yPosition -= 15
+    const voiceText = '♪ Voice Recording Included'
+    const voiceSize = 10
+    const voiceWidth = font.widthOfTextAtSize(voiceText, voiceSize)
+    page.drawText(voiceText, {
+      x: centerX - voiceWidth / 2,
+      y: yPosition,
+      size: voiceSize,
+      font: fontItalic,
+      color: COLORS.primary,
+    })
+  }
 }
 
 

@@ -9,8 +9,8 @@ timeToRead: 2
 icon: 👁️
 featured: false
 isNew: false
-createdAt: 2025-11-13T13:16:41.690Z
-updatedAt: 2025-11-13T13:16:41.690Z
+createdAt: 2025-11-13T13:52:09.829Z
+updatedAt: 2025-11-13T13:52:09.829Z
 ---
 
 # 👁️ Memory Visibility: Private vs Shared
