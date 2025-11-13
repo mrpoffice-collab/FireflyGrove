@@ -3392,3 +3392,10 @@ export function getKnowledgeArticle(slug: string): KnowledgeArticle | null {
 export function getAllKnowledgeSlugs(): string[] {
   return Object.keys(knowledgeArticles)
 }
+
+/**
+ * Get all knowledge articles
+ */
+export function getAllKnowledgeArticles(): KnowledgeArticle[] {
+  return Object.values(knowledgeArticles)
+}
