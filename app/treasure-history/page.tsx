@@ -216,16 +216,46 @@ export default function TreasureHistoryPage() {
 
         {/* Actions */}
         <div className="mb-6 flex gap-3">
-          <a
-            href="/api/treasure/weekly-keepsake"
-            download
+          <button
+            onClick={async () => {
+              try {
+                const response = await fetch('/api/treasure/weekly-keepsake')
+
+                if (!response.ok) {
+                  const error = await response.json()
+                  alert(error.details || 'Failed to generate keepsake PDF')
+                  return
+                }
+
+                // Check if response is actually a PDF
+                const contentType = response.headers.get('content-type')
+                if (!contentType?.includes('application/pdf')) {
+                  alert('Error: Server did not return a PDF. Please try again.')
+                  return
+                }
+
+                // Download the PDF
+                const blob = await response.blob()
+                const url = window.URL.createObjectURL(blob)
+                const a = document.createElement('a')
+                a.href = url
+                a.download = `Weekly-Keepsake-${new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}.pdf`
+                document.body.appendChild(a)
+                a.click()
+                document.body.removeChild(a)
+                window.URL.revokeObjectURL(url)
+              } catch (error) {
+                console.error('Download error:', error)
+                alert('Failed to download keepsake. Please try again.')
+              }
+            }}
             className="inline-flex items-center gap-2 px-4 py-2 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded-lg text-sm font-medium transition-soft"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
             Download This Week's Keepsake PDF
-          </a>
+          </button>
         </div>
 
         {/* Stats */}
