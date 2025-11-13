@@ -4,6 +4,7 @@ import './globals.css'
 import { Providers } from './providers'
 import Footer from '@/components/Footer'
 import StructuredData from '@/components/StructuredData'
+import GlowGuideAutoPopup from '@/components/GlowGuideAutoPopup'
 // import CommunityGoalBanner from '@/components/CommunityGoalBanner'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -131,6 +132,7 @@ export default function RootLayout({
             {/* <CommunityGoalBanner /> */}
             <div style={{ flex: 1 }}>{children}</div>
             <Footer />
+            <GlowGuideAutoPopup />
           </Providers>
         </div>
       </body>
