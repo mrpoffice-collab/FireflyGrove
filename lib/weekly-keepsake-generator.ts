@@ -45,13 +45,22 @@ export async function generateWeeklyKeepsake(
 
   const weekEnd = endOfWeek(weekStart, { weekStartsOn: 0 })
 
-  // Fetch entries for the week
+  // Fetch user info for attribution
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { name: true },
+  })
+
+  // Fetch entries for the week (excluding BLESSING category which user refers to as "grace")
   const entries = await prisma.treasureEntry.findMany({
     where: {
       userId,
       entryUTC: {
         gte: weekStart,
         lte: weekEnd,
+      },
+      NOT: {
+        category: 'BLESSING', // Exclude blessing/grace entries
       },
     },
     orderBy: {
@@ -60,7 +69,8 @@ export async function generateWeeklyKeepsake(
   })
 
   // Generate PDF
-  const pdf = await generateKeepsakePDF(entries, weekStart, weekEnd)
+  const userName = user?.name || 'Anonymous'
+  const pdf = await generateKeepsakePDF(entries, weekStart, weekEnd, userName)
 
   const weekLabel = `${format(weekStart, 'MMM d')} - ${format(weekEnd, 'MMM d, yyyy')}`
 
@@ -77,7 +87,8 @@ export async function generateWeeklyKeepsake(
 async function generateKeepsakePDF(
   entries: any[],
   weekStart: Date,
-  weekEnd: Date
+  weekEnd: Date,
+  userName: string
 ): Promise<Uint8Array> {
   const pdfDoc = await PDFDocument.create()
   const font = await pdfDoc.embedFont(StandardFonts.Helvetica)
@@ -111,7 +122,8 @@ async function generateKeepsakePDF(
       fontItalic,
       entries[i],
       cardX,
-      cardY
+      cardY,
+      userName
     )
 
     cardIndex++
@@ -170,7 +182,8 @@ async function drawTreasureCard(
   fontItalic: any,
   entry: any,
   x: number,
-  y: number
+  y: number,
+  userName: string
 ) {
   const cardPadding = 10
   const innerWidth = CARD_WIDTH - (cardPadding * 2)
@@ -311,13 +324,27 @@ async function drawTreasureCard(
     yPos -= lineHeight
   }
 
-  // Audio indicator at bottom if present
+  // Author attribution (like a poet's name on a quote)
+  const authorText = `- ${userName}`
+  const authorSize = 8
+  const authorWidth = fontItalic.widthOfTextAtSize(authorText, authorSize)
+
+  // Position at bottom right corner for elegant attribution
+  page.drawText(authorText, {
+    x: x + CARD_WIDTH - cardPadding - authorWidth,
+    y: y + 18,
+    size: authorSize,
+    font: fontItalic,
+    color: COLORS.muted,
+  })
+
+  // Audio indicator at bottom left if present
   if (entry.audioUrl) {
     const voiceText = '~ voice ~'
     const voiceSize = 7
     const voiceWidth = fontItalic.widthOfTextAtSize(voiceText, voiceSize)
     page.drawText(voiceText, {
-      x: cardCenterX - voiceWidth / 2,
+      x: x + cardPadding,
       y: y + 8,
       size: voiceSize,
       font: fontItalic,

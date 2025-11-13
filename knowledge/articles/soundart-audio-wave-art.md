@@ -9,8 +9,8 @@ timeToRead: 2
 icon: 🎨
 featured: false
 isNew: false
-createdAt: 2025-11-13T14:40:07.038Z
-updatedAt: 2025-11-13T14:40:07.038Z
+createdAt: 2025-11-13T14:49:02.754Z
+updatedAt: 2025-11-13T14:49:02.754Z
 ---
 
 # 🎨 SoundArt: Turn Voice into Visual Beauty
