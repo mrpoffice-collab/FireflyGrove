@@ -24,21 +24,7 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  icons: {
-    icon: [
-      { url: '/icon.svg', type: 'image/svg+xml' },
-      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }
-    ],
-    apple: [
-      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }
-    ],
-    other: [
-      {
-        rel: 'apple-touch-icon-precomposed',
-        url: '/apple-touch-icon.png',
-      }
-    ]
-  },
+  // Icons are auto-generated from app/icon.tsx and app/apple-icon.tsx
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
