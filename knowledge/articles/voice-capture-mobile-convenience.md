@@ -9,8 +9,8 @@ timeToRead: 2
 icon: 🎤
 featured: false
 isNew: false
-createdAt: 2025-11-08T20:00:37.099Z
-updatedAt: 2025-11-08T20:00:37.099Z
+createdAt: 2025-11-13T12:50:20.559Z
+updatedAt: 2025-11-13T12:50:20.559Z
 ---
 
 # 🎤 Voice Capture on Mobile: Your Best Tool
@@ -65,6 +65,7 @@ Mobile voice recording is hands-free, effortless, and perfect for those moments 
 - 💡 Take your time - this feature is designed to be intuitive
 - 💡 You can preview before committing to changes
 - 💡 Settings can be updated anytime
+- 💡 If you get stuck, look for the (?) help icons
 
 ---
 
@@ -86,6 +87,6 @@ Mobile voice recording is hands-free, effortless, and perfect for those moments 
 
 <small>
 **Glow Guide:** This article is auto-generated from the voice-capture-mobile Glow Guide component.
-**Last Updated:** 2025-11-08
+**Last Updated:** 2025-11-13
 **Related Glow Guide:** Appears mobile device, never recorded
 </small>

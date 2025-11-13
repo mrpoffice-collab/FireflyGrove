@@ -9,8 +9,8 @@ timeToRead: 3
 icon: 🔐
 featured: false
 isNew: false
-createdAt: 2025-11-08T20:00:37.175Z
-updatedAt: 2025-11-08T20:00:37.175Z
+createdAt: 2025-11-13T12:50:20.577Z
+updatedAt: 2025-11-13T12:50:20.577Z
 ---
 
 # 🔐 Branch Permissions: Fine-Tune Access
@@ -65,6 +65,7 @@ Not everyone needs the same level of access. Permissions let you create viewers,
 - 💡 Take your time - this feature is designed to be intuitive
 - 💡 You can preview before committing to changes
 - 💡 Settings can be updated anytime
+- 💡 If you get stuck, look for the (?) help icons
 
 ---
 
@@ -86,6 +87,6 @@ Not everyone needs the same level of access. Permissions let you create viewers,
 
 <small>
 **Glow Guide:** This article is auto-generated from the branch-permissions Glow Guide component.
-**Last Updated:** 2025-11-08
+**Last Updated:** 2025-11-13
 **Related Glow Guide:** Appears invited 2+ people, all same permission
 </small>

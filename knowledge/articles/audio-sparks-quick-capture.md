@@ -9,8 +9,8 @@ timeToRead: 2
 icon: ⚡
 featured: false
 isNew: false
-createdAt: 2025-11-08T20:00:37.178Z
-updatedAt: 2025-11-08T20:00:37.178Z
+createdAt: 2025-11-13T12:50:20.577Z
+updatedAt: 2025-11-13T12:50:20.577Z
 ---
 
 # ⚡ Audio Sparks: Quick Voice Capture
@@ -65,6 +65,7 @@ Audio Sparks lets you capture these fleeting moments without opening a full memo
 - 💡 Take your time - this feature is designed to be intuitive
 - 💡 You can preview before committing to changes
 - 💡 Settings can be updated anytime
+- 💡 If you get stuck, look for the (?) help icons
 
 ---
 
@@ -86,6 +87,6 @@ Audio Sparks lets you capture these fleeting moments without opening a full memo
 
 <small>
 **Glow Guide:** This article is auto-generated from the audio-sparks Glow Guide component.
-**Last Updated:** 2025-11-08
+**Last Updated:** 2025-11-13
 **Related Glow Guide:** Appears user has never used audio sparks feature
 </small>

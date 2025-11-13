@@ -9,8 +9,8 @@ timeToRead: 3
 icon: 🪺
 featured: false
 isNew: false
-createdAt: 2025-11-08T20:00:37.119Z
-updatedAt: 2025-11-08T20:00:37.119Z
+createdAt: 2025-11-13T12:50:20.566Z
+updatedAt: 2025-11-13T12:50:20.566Z
 ---
 
 # 🪺 The Nest: Bulk Photo Uploads
@@ -64,6 +64,7 @@ The Nest is where photos wait before they become memories. Upload hundreds at on
 - 💡 Take your time - this feature is designed to be intuitive
 - 💡 You can preview before committing to changes
 - 💡 Settings can be updated anytime
+- 💡 If you get stuck, look for the (?) help icons
 
 ---
 
@@ -85,6 +86,6 @@ The Nest is where photos wait before they become memories. Upload hundreds at on
 
 <small>
 **Glow Guide:** This article is auto-generated from the nest Glow Guide component.
-**Last Updated:** 2025-11-08
+**Last Updated:** 2025-11-13
 **Related Glow Guide:** Appears user visits /nest for first time
 </small>

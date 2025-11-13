@@ -9,8 +9,8 @@ timeToRead: 3
 icon: 👨‍👩‍👧‍👦
 featured: false
 isNew: false
-createdAt: 2025-11-08T20:00:37.122Z
-updatedAt: 2025-11-08T20:00:37.122Z
+createdAt: 2025-11-13T12:50:20.567Z
+updatedAt: 2025-11-13T12:50:20.567Z
 ---
 
 # 👨‍👩‍👧‍👦 Multiple Heirs: Redundancy & Fairness
@@ -65,6 +65,7 @@ Multiple heirs protect your legacy and honor different relationships. It's not a
 - 💡 Take your time - this feature is designed to be intuitive
 - 💡 You can preview before committing to changes
 - 💡 Settings can be updated anytime
+- 💡 If you get stuck, look for the (?) help icons
 
 ---
 
@@ -86,6 +87,6 @@ Multiple heirs protect your legacy and honor different relationships. It's not a
 
 <small>
 **Glow Guide:** This article is auto-generated from the multiple-heirs Glow Guide component.
-**Last Updated:** 2025-11-08
+**Last Updated:** 2025-11-13
 **Related Glow Guide:** Appears 1 heir set, been active 30 days
 </small>

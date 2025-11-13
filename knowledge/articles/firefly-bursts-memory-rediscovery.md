@@ -9,8 +9,8 @@ timeToRead: 2
 icon: ✨
 featured: false
 isNew: false
-createdAt: 2025-11-08T20:00:37.168Z
-updatedAt: 2025-11-08T20:00:37.168Z
+createdAt: 2025-11-13T12:50:20.575Z
+updatedAt: 2025-11-13T12:50:20.575Z
 ---
 
 # ✨ Firefly Bursts: Rediscover Your Memories
@@ -65,6 +65,7 @@ Firefly Bursts take your memories and create a beautiful, shareable moment of re
 - 💡 Take your time - this feature is designed to be intuitive
 - 💡 You can preview before committing to changes
 - 💡 Settings can be updated anytime
+- 💡 If you get stuck, look for the (?) help icons
 
 ---
 
@@ -86,6 +87,6 @@ Firefly Bursts take your memories and create a beautiful, shareable moment of re
 
 <small>
 **Glow Guide:** This article is auto-generated from the firefly-bursts Glow Guide component.
-**Last Updated:** 2025-11-08
+**Last Updated:** 2025-11-13
 **Related Glow Guide:** Appears user has 20+ memories but never generated a burst
 </small>

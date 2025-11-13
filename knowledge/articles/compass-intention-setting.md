@@ -9,8 +9,8 @@ timeToRead: 3
 icon: 🧭
 featured: false
 isNew: false
-createdAt: 2025-11-08T20:00:37.170Z
-updatedAt: 2025-11-08T20:00:37.170Z
+createdAt: 2025-11-13T12:50:20.575Z
+updatedAt: 2025-11-13T12:50:20.575Z
 ---
 
 # 🧭 Compass: Set Your Memory Intentions
@@ -65,6 +65,7 @@ Your Compass helps you set goals, track progress, and stay focused on what matte
 - 💡 Take your time - this feature is designed to be intuitive
 - 💡 You can preview before committing to changes
 - 💡 Settings can be updated anytime
+- 💡 If you get stuck, look for the (?) help icons
 
 ---
 
@@ -86,6 +87,6 @@ Your Compass helps you set goals, track progress, and stay focused on what matte
 
 <small>
 **Glow Guide:** This article is auto-generated from the compass Glow Guide component.
-**Last Updated:** 2025-11-08
+**Last Updated:** 2025-11-13
 **Related Glow Guide:** Appears first visit to /compass
 </small>

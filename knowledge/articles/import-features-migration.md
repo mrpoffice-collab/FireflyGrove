@@ -9,8 +9,8 @@ timeToRead: 3
 icon: 📥
 featured: false
 isNew: false
-createdAt: 2025-11-08T20:00:37.155Z
-updatedAt: 2025-11-08T20:00:37.155Z
+createdAt: 2025-11-13T12:50:20.572Z
+updatedAt: 2025-11-13T12:50:20.572Z
 ---
 
 # 📥 Import Features: Bring Your Existing Memories
@@ -65,6 +65,7 @@ Our import tools help you migrate existing content quickly, giving you a head st
 - 💡 Take your time - this feature is designed to be intuitive
 - 💡 You can preview before committing to changes
 - 💡 Settings can be updated anytime
+- 💡 If you get stuck, look for the (?) help icons
 
 ---
 
@@ -86,6 +87,6 @@ Our import tools help you migrate existing content quickly, giving you a head st
 
 <small>
 **Glow Guide:** This article is auto-generated from the import-features Glow Guide component.
-**Last Updated:** 2025-11-08
+**Last Updated:** 2025-11-13
 **Related Glow Guide:** Appears new user, no memories yet
 </small>

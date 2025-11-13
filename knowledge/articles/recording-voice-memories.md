@@ -9,8 +9,8 @@ timeToRead: 2
 icon: 🎙️
 featured: false
 isNew: false
-createdAt: 2025-11-08T20:00:37.092Z
-updatedAt: 2025-11-08T20:00:37.092Z
+createdAt: 2025-11-13T12:50:20.558Z
+updatedAt: 2025-11-13T12:50:20.558Z
 ---
 
 # 🎙️ Recording Voice Memories
@@ -25,8 +25,7 @@ updatedAt: 2025-11-08T20:00:37.092Z
 
 ## What is it?
 
-Voice recordings carry something text can't — the warmth of your tone, the pauses between thoughts,
-            the laughter that punctuates your stories.
+Learn about recording voice memories and how to use this feature in Firefly Grove.
 
 ---
 
@@ -36,8 +35,6 @@ Voice recordings carry something text can't — the warmth of your tone, the pau
 - Enhance your memory preservation workflow
 - Connect with your family story in meaningful ways
 
-
-> 🔒 **Privacy Note:** Record anywhere — at your computer or on your phone while memories are fresh.
 
 
 ---
@@ -66,6 +63,7 @@ Voice recordings carry something text can't — the warmth of your tone, the pau
 - 💡 Take your time - this feature is designed to be intuitive
 - 💡 You can preview before committing to changes
 - 💡 Settings can be updated anytime
+- 💡 If you get stuck, look for the (?) help icons
 
 ---
 
@@ -87,6 +85,6 @@ Voice recordings carry something text can't — the warmth of your tone, the pau
 
 <small>
 **Glow Guide:** This article is auto-generated from the voice-memories Glow Guide component.
-**Last Updated:** 2025-11-08
+**Last Updated:** 2025-11-13
 **Related Glow Guide:** Appears user has 10+ text memories but 0 audio memories
 </small>

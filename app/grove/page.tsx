@@ -333,7 +333,8 @@ export default function GrovePage() {
       showHeirConditions ||
       showMultipleHeirs ||
       showNestGuide ||
-      showAudioSparks
+      showAudioSparks ||
+      guideToRemind !== null
 
     // If no popups showing, not snoozed, and burst not already showing, trigger it
     if (!anyPopupShowing && !burstSnoozed && !showBurst && grove) {
@@ -355,6 +356,7 @@ export default function GrovePage() {
     showMultipleHeirs,
     showNestGuide,
     showAudioSparks,
+    guideToRemind,
     burstSnoozed,
     showBurst,
     grove,

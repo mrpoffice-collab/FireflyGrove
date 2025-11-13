@@ -9,8 +9,8 @@ timeToRead: 2
 icon: 👁️
 featured: false
 isNew: false
-createdAt: 2025-11-08T20:00:37.130Z
-updatedAt: 2025-11-08T20:00:37.130Z
+createdAt: 2025-11-13T12:50:20.570Z
+updatedAt: 2025-11-13T12:50:20.570Z
 ---
 
 # 👁️ Memory Visibility: Private vs Shared
@@ -65,6 +65,7 @@ Not every memory is meant for everyone. Some are just for you. Some are gifts fo
 - 💡 Take your time - this feature is designed to be intuitive
 - 💡 You can preview before committing to changes
 - 💡 Settings can be updated anytime
+- 💡 If you get stuck, look for the (?) help icons
 
 ---
 
@@ -86,6 +87,6 @@ Not every memory is meant for everyone. Some are just for you. Some are gifts fo
 
 <small>
 **Glow Guide:** This article is auto-generated from the memory-visibility Glow Guide component.
-**Last Updated:** 2025-11-08
+**Last Updated:** 2025-11-13
 **Related Glow Guide:** Appears creating first memory in shared branch
 </small>

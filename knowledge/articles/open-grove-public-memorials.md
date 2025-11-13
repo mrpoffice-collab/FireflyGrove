@@ -9,8 +9,8 @@ timeToRead: 3
 icon: 🌍
 featured: false
 isNew: false
-createdAt: 2025-11-08T20:00:37.118Z
-updatedAt: 2025-11-08T20:00:37.118Z
+createdAt: 2025-11-13T12:50:20.566Z
+updatedAt: 2025-11-13T12:50:20.566Z
 ---
 
 # 🌍 Open Grove: Public Memorial Space
@@ -65,6 +65,7 @@ Open Grove is our public memorial space where anyone can discover and honor rema
 - 💡 Take your time - this feature is designed to be intuitive
 - 💡 You can preview before committing to changes
 - 💡 Settings can be updated anytime
+- 💡 If you get stuck, look for the (?) help icons
 
 ---
 
@@ -86,6 +87,6 @@ Open Grove is our public memorial space where anyone can discover and honor rema
 
 <small>
 **Glow Guide:** This article is auto-generated from the open-grove Glow Guide component.
-**Last Updated:** 2025-11-08
+**Last Updated:** 2025-11-13
 **Related Glow Guide:** Appears has legacy tree, not in open grove
 </small>

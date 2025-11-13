@@ -9,8 +9,8 @@ timeToRead: 2
 icon: ✨
 featured: false
 isNew: false
-createdAt: 2025-11-08T20:00:37.164Z
-updatedAt: 2025-11-08T20:00:37.164Z
+createdAt: 2025-11-13T12:50:20.574Z
+updatedAt: 2025-11-13T12:50:20.574Z
 ---
 
 # ✨ Glowing Memories: React to Stories
@@ -65,6 +65,7 @@ Glowing is our way of saying "this matters to me" — a gentle way to show appre
 - 💡 Take your time - this feature is designed to be intuitive
 - 💡 You can preview before committing to changes
 - 💡 Settings can be updated anytime
+- 💡 If you get stuck, look for the (?) help icons
 
 ---
 
@@ -86,6 +87,6 @@ Glowing is our way of saying "this matters to me" — a gentle way to show appre
 
 <small>
 **Glow Guide:** This article is auto-generated from the glowing-memories Glow Guide component.
-**Last Updated:** 2025-11-08
+**Last Updated:** 2025-11-13
 **Related Glow Guide:** Appears viewing shared branch, never glowed
 </small>

@@ -9,8 +9,8 @@ timeToRead: 3
 icon: ⏰
 featured: false
 isNew: false
-createdAt: 2025-11-08T20:00:37.135Z
-updatedAt: 2025-11-08T20:00:37.135Z
+createdAt: 2025-11-13T12:50:20.571Z
+updatedAt: 2025-11-13T12:50:20.571Z
 ---
 
 # ⏰ Memory Scheduling: Time-Released Stories
@@ -65,6 +65,7 @@ Scheduled memories let you be present in moments you might not be there for — 
 - 💡 Take your time - this feature is designed to be intuitive
 - 💡 You can preview before committing to changes
 - 💡 Settings can be updated anytime
+- 💡 If you get stuck, look for the (?) help icons
 
 ---
 
@@ -86,6 +87,6 @@ Scheduled memories let you be present in moments you might not be there for — 
 
 <small>
 **Glow Guide:** This article is auto-generated from the memory-scheduling Glow Guide component.
-**Last Updated:** 2025-11-08
+**Last Updated:** 2025-11-13
 **Related Glow Guide:** Appears creating memory, never scheduled
 </small>

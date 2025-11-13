@@ -9,8 +9,8 @@ timeToRead: 2
 icon: 🤝
 featured: false
 isNew: false
-createdAt: 2025-11-08T20:00:37.113Z
-updatedAt: 2025-11-08T20:00:37.113Z
+createdAt: 2025-11-13T12:50:20.564Z
+updatedAt: 2025-11-13T12:50:20.564Z
 ---
 
 # 🤝 Inviting Family Members
@@ -25,8 +25,7 @@ updatedAt: 2025-11-08T20:00:37.113Z
 
 ## What is it?
 
-Invite family members to tend branches together. Each person brings their unique perspective,
-            their own memories, their piece of the story.
+Learn about inviting family members and how to use this feature in Firefly Grove.
 
 ---
 
@@ -36,8 +35,6 @@ Invite family members to tend branches together. Each person brings their unique
 - Enhance your memory preservation workflow
 - Connect with your family story in meaningful ways
 
-
-> 🔒 **Privacy Note:** You control who sees what. Each branch can have different collaborators with different permissions.
 
 
 ---
@@ -66,6 +63,7 @@ Invite family members to tend branches together. Each person brings their unique
 - 💡 Take your time - this feature is designed to be intuitive
 - 💡 You can preview before committing to changes
 - 💡 Settings can be updated anytime
+- 💡 If you get stuck, look for the (?) help icons
 
 ---
 
@@ -87,6 +85,6 @@ Invite family members to tend branches together. Each person brings their unique
 
 <small>
 **Glow Guide:** This article is auto-generated from the sharing Glow Guide component.
-**Last Updated:** 2025-11-08
+**Last Updated:** 2025-11-13
 **Related Glow Guide:** Appears user has 5+ memories but 0 collaborators invited
 </small>

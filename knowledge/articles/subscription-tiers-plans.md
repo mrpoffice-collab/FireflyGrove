@@ -9,8 +9,8 @@ timeToRead: 2
 icon: 💎
 featured: false
 isNew: false
-createdAt: 2025-11-08T20:00:37.103Z
-updatedAt: 2025-11-08T20:00:37.103Z
+createdAt: 2025-11-13T12:50:20.562Z
+updatedAt: 2025-11-13T12:50:20.562Z
 ---
 
 # 💎 Subscription Tiers: Choose Your Plan
@@ -65,6 +65,7 @@ Firefly Grove offers plans for every stage of your memory preservation journey �
 - 💡 Take your time - this feature is designed to be intuitive
 - 💡 You can preview before committing to changes
 - 💡 Settings can be updated anytime
+- 💡 If you get stuck, look for the (?) help icons
 
 ---
 
@@ -86,6 +87,6 @@ Firefly Grove offers plans for every stage of your memory preservation journey �
 
 <small>
 **Glow Guide:** This article is auto-generated from the subscription-tiers Glow Guide component.
-**Last Updated:** 2025-11-08
+**Last Updated:** 2025-11-13
 **Related Glow Guide:** Appears approaching tree limit
 </small>

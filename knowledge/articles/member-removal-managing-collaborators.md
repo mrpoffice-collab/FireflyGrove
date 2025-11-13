@@ -9,8 +9,8 @@ timeToRead: 2
 icon: 👋
 featured: false
 isNew: false
-createdAt: 2025-11-08T20:00:37.150Z
-updatedAt: 2025-11-08T20:00:37.150Z
+createdAt: 2025-11-13T12:50:20.572Z
+updatedAt: 2025-11-13T12:50:20.572Z
 ---
 
 # 👋 Member Removal: Manage Your Circle
@@ -65,6 +65,7 @@ Removing someone doesn't erase their contributions — it just revokes their acc
 - 💡 Take your time - this feature is designed to be intuitive
 - 💡 You can preview before committing to changes
 - 💡 Settings can be updated anytime
+- 💡 If you get stuck, look for the (?) help icons
 
 ---
 
@@ -86,6 +87,6 @@ Removing someone doesn't erase their contributions — it just revokes their acc
 
 <small>
 **Glow Guide:** This article is auto-generated from the member-removal Glow Guide component.
-**Last Updated:** 2025-11-08
+**Last Updated:** 2025-11-13
 **Related Glow Guide:** Appears has members, never managed
 </small>

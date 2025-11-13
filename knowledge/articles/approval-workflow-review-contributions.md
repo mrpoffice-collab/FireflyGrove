@@ -9,8 +9,8 @@ timeToRead: 2
 icon: ✅
 featured: false
 isNew: false
-createdAt: 2025-11-08T20:00:37.182Z
-updatedAt: 2025-11-08T20:00:37.182Z
+createdAt: 2025-11-13T12:50:20.578Z
+updatedAt: 2025-11-13T12:50:20.578Z
 ---
 
 # ✅ Approval Workflow: Curate Your Tree
@@ -65,6 +65,7 @@ Approval workflows give you control over what appears in your trees — ensuring
 - 💡 Take your time - this feature is designed to be intuitive
 - 💡 You can preview before committing to changes
 - 💡 Settings can be updated anytime
+- 💡 If you get stuck, look for the (?) help icons
 
 ---
 
@@ -86,6 +87,6 @@ Approval workflows give you control over what appears in your trees — ensuring
 
 <small>
 **Glow Guide:** This article is auto-generated from the approval-workflow Glow Guide component.
-**Last Updated:** 2025-11-08
+**Last Updated:** 2025-11-13
 **Related Glow Guide:** Appears first pending memory in owned branch
 </small>

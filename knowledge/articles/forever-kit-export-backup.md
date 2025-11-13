@@ -9,8 +9,8 @@ timeToRead: 2
 icon: 📦
 featured: false
 isNew: false
-createdAt: 2025-11-08T20:00:37.166Z
-updatedAt: 2025-11-08T20:00:37.166Z
+createdAt: 2025-11-13T12:50:20.575Z
+updatedAt: 2025-11-13T12:50:20.575Z
 ---
 
 # 📦 Forever Kit: Own Your Memories
@@ -65,6 +65,7 @@ A Forever Kit is a complete package of your memories — text, audio, photos, ev
 - 💡 Take your time - this feature is designed to be intuitive
 - 💡 You can preview before committing to changes
 - 💡 Settings can be updated anytime
+- 💡 If you get stuck, look for the (?) help icons
 
 ---
 
@@ -86,6 +87,6 @@ A Forever Kit is a complete package of your memories — text, audio, photos, ev
 
 <small>
 **Glow Guide:** This article is auto-generated from the forever-kit Glow Guide component.
-**Last Updated:** 2025-11-08
+**Last Updated:** 2025-11-13
 **Related Glow Guide:** Appears 10+ memories, never exported
 </small>

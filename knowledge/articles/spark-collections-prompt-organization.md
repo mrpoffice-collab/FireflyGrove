@@ -9,8 +9,8 @@ timeToRead: 2
 icon: ✨
 featured: false
 isNew: false
-createdAt: 2025-11-08T20:00:37.110Z
-updatedAt: 2025-11-08T20:00:37.110Z
+createdAt: 2025-11-13T12:50:20.563Z
+updatedAt: 2025-11-13T12:50:20.563Z
 ---
 
 # ✨ Spark Collections: Organize Your Journey
@@ -65,6 +65,7 @@ Spark Collections let you group prompts by theme, create personal workflows, or 
 - 💡 Take your time - this feature is designed to be intuitive
 - 💡 You can preview before committing to changes
 - 💡 Settings can be updated anytime
+- 💡 If you get stuck, look for the (?) help icons
 
 ---
 
@@ -86,6 +87,6 @@ Spark Collections let you group prompts by theme, create personal workflows, or 
 
 <small>
 **Glow Guide:** This article is auto-generated from the spark-collections Glow Guide component.
-**Last Updated:** 2025-11-08
+**Last Updated:** 2025-11-13
 **Related Glow Guide:** Appears viewing /sparks, never created collection
 </small>

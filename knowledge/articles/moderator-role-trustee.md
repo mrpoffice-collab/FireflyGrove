@@ -9,8 +9,8 @@ timeToRead: 3
 icon: ⭐
 featured: false
 isNew: false
-createdAt: 2025-11-08T20:00:37.124Z
-updatedAt: 2025-11-08T20:00:37.124Z
+createdAt: 2025-11-13T12:50:20.568Z
+updatedAt: 2025-11-13T12:50:20.568Z
 ---
 
 # ⭐ Moderator Role: Your Trusted Helper
@@ -65,6 +65,7 @@ A Moderator is different from an heir — they help you manage your tree during 
 - 💡 Take your time - this feature is designed to be intuitive
 - 💡 You can preview before committing to changes
 - 💡 Settings can be updated anytime
+- 💡 If you get stuck, look for the (?) help icons
 
 ---
 
@@ -86,6 +87,6 @@ A Moderator is different from an heir — they help you manage your tree during 
 
 <small>
 **Glow Guide:** This article is auto-generated from the moderator-role Glow Guide component.
-**Last Updated:** 2025-11-08
+**Last Updated:** 2025-11-13
 **Related Glow Guide:** Appears legacy tree, no moderator
 </small>

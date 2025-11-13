@@ -9,8 +9,8 @@ timeToRead: 3
 icon: 🔒
 featured: false
 isNew: false
-createdAt: 2025-11-08T20:00:37.116Z
-updatedAt: 2025-11-08T20:00:37.116Z
+createdAt: 2025-11-13T12:50:20.565Z
+updatedAt: 2025-11-13T12:50:20.565Z
 ---
 
 # 🔒 Privacy Settings: Your Data, Your Rules
@@ -65,6 +65,7 @@ Firefly Grove gives you granular control over every aspect of your privacy — f
 - 💡 Take your time - this feature is designed to be intuitive
 - 💡 You can preview before committing to changes
 - 💡 Settings can be updated anytime
+- 💡 If you get stuck, look for the (?) help icons
 
 ---
 
@@ -86,6 +87,6 @@ Firefly Grove gives you granular control over every aspect of your privacy — f
 
 <small>
 **Glow Guide:** This article is auto-generated from the privacy-settings Glow Guide component.
-**Last Updated:** 2025-11-08
+**Last Updated:** 2025-11-13
 **Related Glow Guide:** Appears never visited settings, active 7 days
 </small>

@@ -9,8 +9,8 @@ timeToRead: 2
 icon: ✍️
 featured: false
 isNew: false
-createdAt: 2025-11-08T20:00:37.173Z
-updatedAt: 2025-11-08T20:00:37.173Z
+createdAt: 2025-11-13T12:50:20.576Z
+updatedAt: 2025-11-13T12:50:20.576Z
 ---
 
 # ✍️ Co-Authoring: Write Memories Together
@@ -65,6 +65,7 @@ Co-authoring lets multiple people contribute to a single memory — perfect for 
 - 💡 Take your time - this feature is designed to be intuitive
 - 💡 You can preview before committing to changes
 - 💡 Settings can be updated anytime
+- 💡 If you get stuck, look for the (?) help icons
 
 ---
 
@@ -86,6 +87,6 @@ Co-authoring lets multiple people contribute to a single memory — perfect for 
 
 <small>
 **Glow Guide:** This article is auto-generated from the co-authoring Glow Guide component.
-**Last Updated:** 2025-11-08
+**Last Updated:** 2025-11-13
 **Related Glow Guide:** Appears invited to branch, never co-authored
 </small>

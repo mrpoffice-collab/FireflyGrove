@@ -9,8 +9,8 @@ timeToRead: 3
 icon: 🕯️
 featured: false
 isNew: false
-createdAt: 2025-11-08T20:00:37.157Z
-updatedAt: 2025-11-08T20:00:37.157Z
+createdAt: 2025-11-13T12:50:20.573Z
+updatedAt: 2025-11-13T12:50:20.573Z
 ---
 
 # 🕯️ Choosing Your Keepers
@@ -25,8 +25,7 @@ updatedAt: 2025-11-08T20:00:37.157Z
 
 ## What is it?
 
-Choose who will receive your memories when you pass. They'll become keepers of your stories,
-            ensuring the light you've captured continues to glow for generations.
+Learn about choosing your keepers and how to use this feature in Firefly Grove.
 
 ---
 
@@ -36,9 +35,6 @@ Choose who will receive your memories when you pass. They'll become keepers of y
 - Enhance your memory preservation workflow
 - Connect with your family story in meaningful ways
 
-
-> 🔒 **Privacy Note:** Your keepers won't have access until you decide. This is about peace of mind,
-            knowing your stories will find the right hands.
 
 
 ---
@@ -67,6 +63,7 @@ Choose who will receive your memories when you pass. They'll become keepers of y
 - 💡 Take your time - this feature is designed to be intuitive
 - 💡 You can preview before committing to changes
 - 💡 Settings can be updated anytime
+- 💡 If you get stuck, look for the (?) help icons
 
 ---
 
@@ -88,6 +85,6 @@ Choose who will receive your memories when you pass. They'll become keepers of y
 
 <small>
 **Glow Guide:** This article is auto-generated from the heirs Glow Guide component.
-**Last Updated:** 2025-11-08
+**Last Updated:** 2025-11-13
 **Related Glow Guide:** Appears user has created 3+ memories but 0 heirs set
 </small>

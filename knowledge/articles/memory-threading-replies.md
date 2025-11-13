@@ -9,8 +9,8 @@ timeToRead: 2
 icon: 💬
 featured: false
 isNew: false
-createdAt: 2025-11-08T20:00:37.134Z
-updatedAt: 2025-11-08T20:00:37.134Z
+createdAt: 2025-11-13T12:50:20.570Z
+updatedAt: 2025-11-13T12:50:20.570Z
 ---
 
 # 💬 Memory Threading: Join the Conversation
@@ -65,6 +65,7 @@ Threading lets you add context, share your version of events, or simply say "I r
 - 💡 Take your time - this feature is designed to be intuitive
 - 💡 You can preview before committing to changes
 - 💡 Settings can be updated anytime
+- 💡 If you get stuck, look for the (?) help icons
 
 ---
 
@@ -86,6 +87,6 @@ Threading lets you add context, share your version of events, or simply say "I r
 
 <small>
 **Glow Guide:** This article is auto-generated from the memory-threading Glow Guide component.
-**Last Updated:** 2025-11-08
+**Last Updated:** 2025-11-13
 **Related Glow Guide:** Appears viewing someone else's memory, never replied
 </small>

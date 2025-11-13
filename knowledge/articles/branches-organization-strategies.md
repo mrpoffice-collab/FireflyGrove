@@ -9,8 +9,8 @@ timeToRead: 2
 icon: 🌿
 featured: false
 isNew: false
-createdAt: 2025-11-08T20:00:37.176Z
-updatedAt: 2025-11-08T20:00:37.176Z
+createdAt: 2025-11-13T12:50:20.577Z
+updatedAt: 2025-11-13T12:50:20.577Z
 ---
 
 # 🌿 Branch Organization: Structure Your Stories
@@ -65,6 +65,7 @@ There's no "right" way to organize branches, but some strategies work better tha
 - 💡 Take your time - this feature is designed to be intuitive
 - 💡 You can preview before committing to changes
 - 💡 Settings can be updated anytime
+- 💡 If you get stuck, look for the (?) help icons
 
 ---
 
@@ -86,6 +87,6 @@ There's no "right" way to organize branches, but some strategies work better tha
 
 <small>
 **Glow Guide:** This article is auto-generated from the branches-organization Glow Guide component.
-**Last Updated:** 2025-11-08
+**Last Updated:** 2025-11-13
 **Related Glow Guide:** Appears 3+ branches on one tree
 </small>

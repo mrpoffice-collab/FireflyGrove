@@ -9,8 +9,8 @@ timeToRead: 2
 icon: 💌
 featured: false
 isNew: false
-createdAt: 2025-11-08T20:00:37.160Z
-updatedAt: 2025-11-08T20:00:37.160Z
+createdAt: 2025-11-13T12:50:20.574Z
+updatedAt: 2025-11-13T12:50:20.574Z
 ---
 
 # 💌 Greeting Cards: Share Memories Beautifully
@@ -65,6 +65,7 @@ Whether it's sympathy, celebration, or just "thinking of you" — a card with a 
 - 💡 Take your time - this feature is designed to be intuitive
 - 💡 You can preview before committing to changes
 - 💡 Settings can be updated anytime
+- 💡 If you get stuck, look for the (?) help icons
 
 ---
 
@@ -86,6 +87,6 @@ Whether it's sympathy, celebration, or just "thinking of you" — a card with a 
 
 <small>
 **Glow Guide:** This article is auto-generated from the greeting-cards Glow Guide component.
-**Last Updated:** 2025-11-08
+**Last Updated:** 2025-11-13
 **Related Glow Guide:** Appears visiting /cards for first time
 </small>

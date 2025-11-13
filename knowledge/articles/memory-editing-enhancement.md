@@ -9,8 +9,8 @@ timeToRead: 2
 icon: ✏️
 featured: false
 isNew: false
-createdAt: 2025-11-08T20:00:37.148Z
-updatedAt: 2025-11-08T20:00:37.148Z
+createdAt: 2025-11-13T12:50:20.571Z
+updatedAt: 2025-11-13T12:50:20.571Z
 ---
 
 # ✏️ Memory Editing: Enrich Your Stories
@@ -65,6 +65,7 @@ Memories aren't frozen in time — they're living documents. As you recall new d
 - 💡 Take your time - this feature is designed to be intuitive
 - 💡 You can preview before committing to changes
 - 💡 Settings can be updated anytime
+- 💡 If you get stuck, look for the (?) help icons
 
 ---
 
@@ -86,6 +87,6 @@ Memories aren't frozen in time — they're living documents. As you recall new d
 
 <small>
 **Glow Guide:** This article is auto-generated from the memory-editing Glow Guide component.
-**Last Updated:** 2025-11-08
+**Last Updated:** 2025-11-13
 **Related Glow Guide:** Appears viewing own memory, never edited
 </small>

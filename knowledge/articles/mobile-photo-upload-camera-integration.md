@@ -9,8 +9,8 @@ timeToRead: 2
 icon: 📷
 featured: false
 isNew: false
-createdAt: 2025-11-08T20:00:37.126Z
-updatedAt: 2025-11-08T20:00:37.126Z
+createdAt: 2025-11-13T12:50:20.569Z
+updatedAt: 2025-11-13T12:50:20.569Z
 ---
 
 # 📷 Mobile Photo Upload: Capture the Moment
@@ -65,6 +65,7 @@ Mobile photo capture lets you preserve moments instantly — no need to wait unt
 - 💡 Take your time - this feature is designed to be intuitive
 - 💡 You can preview before committing to changes
 - 💡 Settings can be updated anytime
+- 💡 If you get stuck, look for the (?) help icons
 
 ---
 
@@ -86,6 +87,6 @@ Mobile photo capture lets you preserve moments instantly — no need to wait unt
 
 <small>
 **Glow Guide:** This article is auto-generated from the mobile-photo-upload Glow Guide component.
-**Last Updated:** 2025-11-08
+**Last Updated:** 2025-11-13
 **Related Glow Guide:** Appears mobile device, never used camera
 </small>

@@ -9,8 +9,8 @@ timeToRead: 3
 icon: 🎁
 featured: false
 isNew: false
-createdAt: 2025-11-08T20:00:37.151Z
-updatedAt: 2025-11-08T20:00:37.151Z
+createdAt: 2025-11-13T12:50:20.572Z
+updatedAt: 2025-11-13T12:50:20.572Z
 ---
 
 # 🎁 Legacy Transfer: Immediate Handoff
@@ -65,6 +65,7 @@ Legacy Transfer gives full ownership to someone else immediately. Different from
 - 💡 Take your time - this feature is designed to be intuitive
 - 💡 You can preview before committing to changes
 - 💡 Settings can be updated anytime
+- 💡 If you get stuck, look for the (?) help icons
 
 ---
 
@@ -86,6 +87,6 @@ Legacy Transfer gives full ownership to someone else immediately. Different from
 
 <small>
 **Glow Guide:** This article is auto-generated from the legacy-transfer Glow Guide component.
-**Last Updated:** 2025-11-08
+**Last Updated:** 2025-11-13
 **Related Glow Guide:** Appears tree with heir, never used transfer
 </small>

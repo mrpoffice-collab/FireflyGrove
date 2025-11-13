@@ -9,8 +9,8 @@ timeToRead: 2
 icon: 📸
 featured: false
 isNew: false
-createdAt: 2025-11-08T20:00:37.117Z
-updatedAt: 2025-11-08T20:00:37.117Z
+createdAt: 2025-11-13T12:50:20.565Z
+updatedAt: 2025-11-13T12:50:20.565Z
 ---
 
 # 📸 Adding Photos to Memories
@@ -25,8 +25,7 @@ updatedAt: 2025-11-08T20:00:37.117Z
 
 ## What is it?
 
-Photos don't just show what happened — they transport you back. The setting, the expressions,
-            the details you'd forgotten until you saw them again.
+Learn about adding photos to memories and how to use this feature in Firefly Grove.
 
 ---
 
@@ -36,8 +35,6 @@ Photos don't just show what happened — they transport you back. The setting, t
 - Enhance your memory preservation workflow
 - Connect with your family story in meaningful ways
 
-
-> 🔒 **Privacy Note:** Upload from your computer, phone, or use The Nest for bulk photo organization.
 
 
 ---
@@ -66,6 +63,7 @@ Photos don't just show what happened — they transport you back. The setting, t
 - 💡 Take your time - this feature is designed to be intuitive
 - 💡 You can preview before committing to changes
 - 💡 Settings can be updated anytime
+- 💡 If you get stuck, look for the (?) help icons
 
 ---
 
@@ -87,6 +85,6 @@ Photos don't just show what happened — they transport you back. The setting, t
 
 <small>
 **Glow Guide:** This article is auto-generated from the photo-memories Glow Guide component.
-**Last Updated:** 2025-11-08
+**Last Updated:** 2025-11-13
 **Related Glow Guide:** Appears user has 10+ text memories but 0 photos
 </small>

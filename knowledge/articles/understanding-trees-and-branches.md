@@ -9,8 +9,8 @@ timeToRead: 2
 icon: 🌳
 featured: false
 isNew: false
-createdAt: 2025-11-08T20:00:37.100Z
-updatedAt: 2025-11-08T20:00:37.100Z
+createdAt: 2025-11-13T12:50:20.560Z
+updatedAt: 2025-11-13T12:50:20.560Z
 ---
 
 # 🌳 Understanding Trees and Branches
@@ -70,6 +70,7 @@ Create a tree for your grandmother,
 - 💡 Take your time - this feature is designed to be intuitive
 - 💡 You can preview before committing to changes
 - 💡 Settings can be updated anytime
+- 💡 If you get stuck, look for the (?) help icons
 
 ---
 
@@ -91,6 +92,6 @@ Create a tree for your grandmother,
 
 <small>
 **Glow Guide:** This article is auto-generated from the trees-branches Glow Guide component.
-**Last Updated:** 2025-11-08
+**Last Updated:** 2025-11-13
 **Related Glow Guide:** Appears user visits grove page with 0 trees
 </small>

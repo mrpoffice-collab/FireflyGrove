@@ -9,8 +9,8 @@ timeToRead: 2
 icon: 🎨
 featured: false
 isNew: false
-createdAt: 2025-11-08T20:00:37.111Z
-updatedAt: 2025-11-08T20:00:37.111Z
+createdAt: 2025-11-13T12:50:20.564Z
+updatedAt: 2025-11-13T12:50:20.564Z
 ---
 
 # 🎨 SoundArt: Turn Voice into Visual Beauty
@@ -65,6 +65,7 @@ SoundArt transforms voice recordings into beautiful waveform visualizations — 
 - 💡 Take your time - this feature is designed to be intuitive
 - 💡 You can preview before committing to changes
 - 💡 Settings can be updated anytime
+- 💡 If you get stuck, look for the (?) help icons
 
 ---
 
@@ -86,6 +87,6 @@ SoundArt transforms voice recordings into beautiful waveform visualizations — 
 
 <small>
 **Glow Guide:** This article is auto-generated from the soundart Glow Guide component.
-**Last Updated:** 2025-11-08
+**Last Updated:** 2025-11-13
 **Related Glow Guide:** Appears visiting /soundart, has audio memories
 </small>

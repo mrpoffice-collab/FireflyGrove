@@ -9,8 +9,8 @@ timeToRead: 2
 icon: 📱
 featured: false
 isNew: false
-createdAt: 2025-11-08T20:00:37.127Z
-updatedAt: 2025-11-08T20:00:37.127Z
+createdAt: 2025-11-13T12:50:20.569Z
+updatedAt: 2025-11-13T12:50:20.569Z
 ---
 
 # 📱 Mobile App: Memory Preservation On-the-Go
@@ -65,6 +65,7 @@ The Firefly Grove mobile app is built specifically for capturing memories in the
 - 💡 Take your time - this feature is designed to be intuitive
 - 💡 You can preview before committing to changes
 - 💡 Settings can be updated anytime
+- 💡 If you get stuck, look for the (?) help icons
 
 ---
 
@@ -86,6 +87,6 @@ The Firefly Grove mobile app is built specifically for capturing memories in the
 
 <small>
 **Glow Guide:** This article is auto-generated from the mobile-app Glow Guide component.
-**Last Updated:** 2025-11-08
+**Last Updated:** 2025-11-13
 **Related Glow Guide:** Appears mobile browser, been active 3+ sessions
 </small>

@@ -9,8 +9,8 @@ timeToRead: 2
 icon: 💾
 featured: false
 isNew: false
-createdAt: 2025-11-08T20:00:37.108Z
-updatedAt: 2025-11-08T20:00:37.108Z
+createdAt: 2025-11-13T12:50:20.563Z
+updatedAt: 2025-11-13T12:50:20.563Z
 ---
 
 # 💾 Storage Limits: Manage Your Space
@@ -65,6 +65,7 @@ Storage limits exist to keep the platform sustainable, but there are smart ways 
 - 💡 Take your time - this feature is designed to be intuitive
 - 💡 You can preview before committing to changes
 - 💡 Settings can be updated anytime
+- 💡 If you get stuck, look for the (?) help icons
 
 ---
 
@@ -86,6 +87,6 @@ Storage limits exist to keep the platform sustainable, but there are smart ways 
 
 <small>
 **Glow Guide:** This article is auto-generated from the storage-limits Glow Guide component.
-**Last Updated:** 2025-11-08
+**Last Updated:** 2025-11-13
 **Related Glow Guide:** Appears 50% storage used
 </small>

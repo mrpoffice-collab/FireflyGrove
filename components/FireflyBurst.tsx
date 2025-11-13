@@ -38,6 +38,7 @@ export default function FireflyBurst({ memories, burstId, onClose, onViewNext, o
   const [isPaused, setIsPaused] = useState(false)
   const [imageLoaded, setImageLoaded] = useState(false)
   const [imageError, setImageError] = useState(false)
+  const [audioLoaded, setAudioLoaded] = useState(false)
   const memoryAudioRef = useRef<HTMLAudioElement>(null)
   const memoryAudioWithImageRef = useRef<HTMLAudioElement>(null)
   const [audio] = useState(() => {
@@ -52,10 +53,11 @@ export default function FireflyBurst({ memories, burstId, onClose, onViewNext, o
 
   const currentMemory = memories[currentIndex]
 
-  // Reset image loading state when memory changes
+  // Reset image and audio loading state when memory changes
   useEffect(() => {
     setImageLoaded(false)
     setImageError(false)
+    setAudioLoaded(false)
   }, [currentIndex])
 
   // Auto-play memory audio when memory changes
@@ -176,6 +178,7 @@ export default function FireflyBurst({ memories, burstId, onClose, onViewNext, o
     if (isPaused || isAnimating) return
 
     const duration = calculateDuration(currentMemory)
+    console.log('Auto-advance timer set for:', duration, 'ms')
     const isLastMemory = currentIndex === memories.length - 1
 
     // Start fading audio on last memory
@@ -223,7 +226,7 @@ export default function FireflyBurst({ memories, burstId, onClose, onViewNext, o
     }, duration)
 
     return () => clearTimeout(timer)
-  }, [currentIndex, isPaused, isAnimating, currentMemory, memories.length, audio, audioEnabled])
+  }, [currentIndex, isPaused, isAnimating, currentMemory, memories.length, audio, audioEnabled, audioLoaded])
 
   // Audio management
   useEffect(() => {
@@ -519,6 +522,8 @@ export default function FireflyBurst({ memories, burstId, onClose, onViewNext, o
                 autoPlay
                 className="w-full max-w-md"
                 onLoadedMetadata={() => {
+                  console.log('Audio metadata loaded, duration:', memoryAudioRef.current?.duration)
+                  setAudioLoaded(true)
                   // Force recalculation when audio metadata loads
                   setIsPaused(false)
                 }}
@@ -566,6 +571,8 @@ export default function FireflyBurst({ memories, burstId, onClose, onViewNext, o
                 autoPlay
                 className="w-full"
                 onLoadedMetadata={() => {
+                  console.log('Audio with image metadata loaded, duration:', memoryAudioWithImageRef.current?.duration)
+                  setAudioLoaded(true)
                   // Force recalculation when audio metadata loads
                   setIsPaused(false)
                 }}
