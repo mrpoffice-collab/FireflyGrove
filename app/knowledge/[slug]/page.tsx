@@ -6,6 +6,44 @@ import { useEffect, useState } from 'react'
 import Header from '@/components/Header'
 import { SkeletonTitle, SkeletonText } from '@/components/SkeletonLoader'
 import ReactMarkdown from 'react-markdown'
+import { glowGuideMetadata } from '@/lib/glowGuideMetadata'
+import { GlowGuideName } from '@/lib/glowGuideManager'
+
+// Import all Glow Guide components
+import AudioSparksGlowGuide from '@/components/glow-guides/AudioSparksGlowGuide'
+import NestGlowGuide from '@/components/glow-guides/NestGlowGuide'
+import FireflyBurstsGlowGuide from '@/components/glow-guides/FireflyBurstsGlowGuide'
+import MemoryThreadingGlowGuide from '@/components/glow-guides/MemoryThreadingGlowGuide'
+import StorySparksGlowGuide from '@/components/glow-guides/StorySparksGlowGuide'
+import GlowingMemoriesGlowGuide from '@/components/glow-guides/GlowingMemoriesGlowGuide'
+import MemoryEditingGlowGuide from '@/components/glow-guides/MemoryEditingGlowGuide'
+import MemoryVisibilityGlowGuide from '@/components/glow-guides/MemoryVisibilityGlowGuide'
+import MemorySchedulingGlowGuide from '@/components/glow-guides/MemorySchedulingGlowGuide'
+import TreesVsBranchesGlowGuide from '@/components/glow-guides/TreesVsBranchesGlowGuide'
+import HeirsGlowGuide from '@/components/glow-guides/HeirsGlowGuide'
+import SharingGlowGuide from '@/components/glow-guides/SharingGlowGuide'
+import VoiceMemoriesGlowGuide from '@/components/glow-guides/VoiceMemoriesGlowGuide'
+import PhotoMemoriesGlowGuide from '@/components/glow-guides/PhotoMemoriesGlowGuide'
+// Add more imports as needed...
+
+// Map slug to Glow Guide component
+const glowGuideComponents: Record<string, React.ComponentType<{ onClose: () => void; onAction?: () => void }>> = {
+  'audio-sparks-quick-capture': AudioSparksGlowGuide,
+  'the-nest-bulk-photo-uploads': NestGlowGuide,
+  'firefly-bursts-memory-rediscovery': FireflyBurstsGlowGuide,
+  'memory-threading-replies': MemoryThreadingGlowGuide,
+  'story-sparks-writing-prompts': StorySparksGlowGuide,
+  'glowing-memories-reactions': GlowingMemoriesGlowGuide,
+  'memory-editing-enhancement': MemoryEditingGlowGuide,
+  'memory-visibility-privacy': MemoryVisibilityGlowGuide,
+  'memory-scheduling-future-release': MemorySchedulingGlowGuide,
+  'understanding-trees-and-branches': TreesVsBranchesGlowGuide,
+  'choosing-your-keepers': HeirsGlowGuide,
+  'inviting-family-members': SharingGlowGuide,
+  'recording-voice-memories': VoiceMemoriesGlowGuide,
+  'adding-photos-to-memories': PhotoMemoriesGlowGuide,
+  // Add more mappings as needed...
+}
 
 interface KnowledgeArticle {
   id: string
@@ -33,6 +71,7 @@ export default function KnowledgeArticlePage() {
   const [article, setArticle] = useState<KnowledgeArticle | null>(null)
   const [loading, setLoading] = useState(true)
   const [feedbackSubmitted, setFeedbackSubmitted] = useState(false)
+  const [showGlowGuide, setShowGlowGuide] = useState(false)
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -150,6 +189,22 @@ export default function KnowledgeArticlePage() {
                 ))}
               </div>
             )}
+
+            {/* Launch Interactive Guide Button */}
+            {glowGuideComponents[article.slug] && (
+              <div className="mt-6">
+                <button
+                  onClick={() => setShowGlowGuide(true)}
+                  className="w-full sm:w-auto px-6 py-3 bg-firefly-glow hover:bg-firefly-glow/90 text-bg-dark rounded-lg font-medium transition-soft flex items-center justify-center gap-2"
+                >
+                  <span className="text-xl">✨</span>
+                  Launch Interactive Guide
+                </button>
+                <p className="text-xs text-text-muted mt-2">
+                  See this feature in action with our interactive walkthrough
+                </p>
+              </div>
+            )}
           </header>
 
           {/* Article Content */}
@@ -255,6 +310,12 @@ export default function KnowledgeArticlePage() {
           </div>
         </article>
       </div>
+
+      {/* Render Glow Guide if available and user clicked launch */}
+      {showGlowGuide && glowGuideComponents[article.slug] && (() => {
+        const GlowGuideComponent = glowGuideComponents[article.slug]
+        return <GlowGuideComponent onClose={() => setShowGlowGuide(false)} />
+      })()}
     </div>
   )
 }
