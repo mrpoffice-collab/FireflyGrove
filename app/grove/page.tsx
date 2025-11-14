@@ -1056,28 +1056,31 @@ export default function GrovePage() {
             {/* Quick Actions */}
             <div className="mb-4 flex flex-wrap items-center justify-center gap-2 sm:gap-3">
               {burstSnoozed ? (
-                <Tooltip content="Wake your memories">
+                <Tooltip content="Click to restart Firefly Bursts">
                   <button
                     onClick={unsnoozeBursts}
                     className="inline-flex items-center gap-2 min-h-[44px] px-4 py-2.5 bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 text-amber-400 rounded-lg text-sm font-medium transition-soft"
-                    aria-label="Bursts snoozed for 3 hours - click to wake them"
+                    aria-label="Click to restart Firefly Bursts"
                   >
-                    <span>😴</span>
-                    <span className="hidden xs:inline">Bursts Snoozed</span>
-                    <span className="xs:hidden">Snoozed</span>
+                    <span>🔄</span>
+                    <span className="hidden xs:inline">Restart Bursts</span>
+                    <span className="xs:hidden">Restart</span>
                   </button>
                 </Tooltip>
               ) : (
                 <>
-                  {burstMemories.length > 0 && (
-                    <Tooltip content="Discover memories from your past">
+                  {(burstMemories.length > 0 || burstTriggered) && (
+                    <Tooltip content="Show me memories from my past">
                       <button
-                        onClick={generateBurst}
+                        onClick={() => {
+                          setBurstTriggered(false)
+                          generateBurst()
+                        }}
                         className="inline-flex items-center gap-2 min-h-[44px] px-4 py-2.5 bg-firefly-dim/20 hover:bg-firefly-dim/30 border border-firefly-dim/40 text-firefly-glow rounded-lg text-sm font-medium transition-soft"
-                        aria-label="Generate another firefly burst of random memories"
+                        aria-label="Show me memories from my past"
                       >
                         <span>✨</span>
-                        <span className="hidden xs:inline">Get Another Burst</span>
+                        <span className="hidden xs:inline">Show Memory Burst</span>
                         <span className="xs:hidden">Burst</span>
                       </button>
                     </Tooltip>

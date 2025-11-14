@@ -39,6 +39,9 @@ export default function TreasureChestModal({ onClose, onSave }: TreasureChestMod
   const [yesterdayLocal, setYesterdayLocal] = useState<string | null>(null)
   const [applyingGrace, setApplyingGrace] = useState(false)
 
+  // Refresh prompt state
+  const [refreshing, setRefreshing] = useState(false)
+
   // Quick action chips - template starters
   const quickChips = [
     { label: 'My Advice', value: 'my_advice', template: 'My advice about this is ' },
@@ -240,6 +243,32 @@ export default function TreasureChestModal({ onClose, onSave }: TreasureChestMod
     }
   }
 
+  const handleRefreshPrompt = async () => {
+    setRefreshing(true)
+
+    try {
+      const res = await fetch('/api/treasure/refresh-prompt', {
+        method: 'POST',
+      })
+
+      if (res.ok) {
+        const data = await res.json()
+        setPrompt(data.prompt)
+        // Clear any existing content when getting a new prompt
+        setText('')
+        deleteAudio()
+      } else {
+        const error = await res.json()
+        alert(error.error || 'Failed to refresh prompt')
+      }
+    } catch (error) {
+      console.error('Refresh prompt error:', error)
+      alert('Network error. Please try again.')
+    } finally {
+      setRefreshing(false)
+    }
+  }
+
   const handleSave = async (textOverride?: string, chipUsed?: string) => {
     if (!prompt) return
 
@@ -366,9 +395,22 @@ export default function TreasureChestModal({ onClose, onSave }: TreasureChestMod
                 <span className="text-3xl">📜</span>
                 <h2 className="text-2xl font-light text-text-soft">Today's Treasure</h2>
               </div>
-              <p className="text-text-muted text-sm italic">
-                "{prompt.text}"
-              </p>
+              <div className="flex items-start gap-3">
+                <p className="text-text-muted text-sm italic flex-1">
+                  "{prompt.text}"
+                </p>
+                <button
+                  onClick={handleRefreshPrompt}
+                  disabled={refreshing || saving}
+                  className="flex-shrink-0 px-3 py-1.5 bg-bg-dark hover:bg-border-subtle text-text-muted hover:text-text-soft border border-border-subtle rounded-lg text-xs font-medium transition-soft disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1.5"
+                  title="Get a different prompt"
+                >
+                  <svg className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                  </svg>
+                  {refreshing ? 'Loading...' : 'Different prompt?'}
+                </button>
+              </div>
             </div>
             <button
               onClick={onClose}
