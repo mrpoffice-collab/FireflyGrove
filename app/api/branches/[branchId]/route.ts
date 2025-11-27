@@ -139,6 +139,16 @@ export async function GET(
       return NextResponse.json({ error: 'Branch not found' }, { status: 404 })
     }
 
+    // Check if this is an Open Grove memorial
+    let isOpenGrove = false
+    if (branch.personId) {
+      const membership = await prisma.groveTreeMembership.findFirst({
+        where: { personId: branch.personId },
+        include: { grove: { select: { isOpenGrove: true } } },
+      })
+      isOpenGrove = membership?.grove?.isOpenGrove || false
+    }
+
     // Check if user is owner to determine what entries to show
     const isOwner = userId && branch.ownerId === userId
 
@@ -168,7 +178,9 @@ export async function GET(
           branchId: branchId,
           status: 'ACTIVE',
           ...(isPublicView
-            ? { visibility: 'LEGACY' } // Public viewers only see LEGACY entries
+            ? isOpenGrove
+              ? { visibility: 'SHARED' } // Open Grove public view shows SHARED entries
+              : { visibility: 'LEGACY' } // Other public views only see LEGACY entries
             : isOwner || isMember
             ? {} // Owner and approved members see all active entries
             : { // Non-members only see approved shared entries
@@ -207,7 +219,9 @@ export async function GET(
           branchId: branchId,
           status: 'ACTIVE',
           ...(isPublicView
-            ? { visibility: 'LEGACY' }
+            ? isOpenGrove
+              ? { visibility: 'SHARED' }
+              : { visibility: 'LEGACY' }
             : isOwner || isMember
             ? {}
             : {
@@ -224,6 +238,7 @@ export async function GET(
       ...branch,
       entries,
       isPublicView, // Let frontend know if this is public view
+      isOpenGrove, // Let frontend know if this is an Open Grove memorial
       isAdmin, // Let frontend know if user is admin (for video feature)
       pagination: {
         page,

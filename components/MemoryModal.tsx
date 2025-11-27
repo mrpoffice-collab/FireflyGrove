@@ -25,6 +25,8 @@ interface MemoryModalProps {
     sharedBranchIds?: string[]
     memoryCard?: string | null
     parentMemoryId?: string
+    contributorEmail?: string
+    contributorName?: string
   }) => void
   spark: string
   onRefreshSpark?: () => void
@@ -37,11 +39,17 @@ interface MemoryModalProps {
   isAdmin?: boolean
   parentMemoryId?: string
   threadType?: 'thread' | 'inspired'
+  isOpenGrove?: boolean
+  isAnonymous?: boolean
 }
 
-export default function MemoryModal({ onClose, onSave, spark, onRefreshSpark, currentBranchId, prePopulatedPhoto, isAdmin = false, parentMemoryId, threadType }: MemoryModalProps) {
+export default function MemoryModal({ onClose, onSave, spark, onRefreshSpark, currentBranchId, prePopulatedPhoto, isAdmin = false, parentMemoryId, threadType, isOpenGrove = false, isAnonymous = false }: MemoryModalProps) {
   const [text, setText] = useState('')
-  const [visibility, setVisibility] = useState('PRIVATE')
+  const [visibility, setVisibility] = useState(isAnonymous ? 'SHARED' : 'PRIVATE')
+
+  // Anonymous contributor info (for Open Grove)
+  const [contributorEmail, setContributorEmail] = useState('')
+  const [contributorName, setContributorName] = useState('')
   const [legacyFlag, setLegacyFlag] = useState(false)
   const [image, setImage] = useState<File | null>(null)
   const [imagePreview, setImagePreview] = useState<string | null>(
@@ -338,16 +346,26 @@ export default function MemoryModal({ onClose, onSave, spark, onRefreshSpark, cu
     e.preventDefault()
     if (!text.trim() || isSubmitting) return
 
+    // Validate email for anonymous contributors
+    if (isAnonymous && !contributorEmail.trim()) {
+      alert('Please enter your email address to contribute')
+      return
+    }
+
     setIsSubmitting(true)
 
     // For MVP, we'll store media as data URLs (in production, upload to storage)
     const data: any = {
       text: text.trim(),
-      visibility,
+      visibility: isAnonymous ? 'SHARED' : visibility, // Anonymous always shared
       legacyFlag: visibility === 'LEGACY' || legacyFlag,
       sharedBranchIds: selectedBranchIds,
       memoryCard: memoryCard.trim() || null,
       parentMemoryId: parentMemoryId || undefined,
+      ...(isAnonymous && {
+        contributorEmail: contributorEmail.trim(),
+        contributorName: contributorName.trim() || undefined,
+      }),
     }
 
     if (imagePreview) {
@@ -488,6 +506,40 @@ export default function MemoryModal({ onClose, onSave, spark, onRefreshSpark, cu
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Anonymous Contributor Info (Open Grove) */}
+          {isAnonymous && (
+            <div className="bg-firefly-dim/10 border border-firefly-dim/30 rounded-lg p-4 space-y-3">
+              <p className="text-firefly-glow text-sm font-medium">Share your connection</p>
+              <div>
+                <label htmlFor="contributorEmail" className="block text-sm text-text-soft mb-1">
+                  Your Email <span className="text-error-text">*</span>
+                </label>
+                <input
+                  id="contributorEmail"
+                  type="email"
+                  value={contributorEmail}
+                  onChange={(e) => setContributorEmail(e.target.value)}
+                  placeholder="your@email.com"
+                  className="w-full px-3 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50 transition-soft text-sm"
+                  required
+                />
+              </div>
+              <div>
+                <label htmlFor="contributorName" className="block text-sm text-text-soft mb-1">
+                  Your Name <span className="text-text-muted">(optional)</span>
+                </label>
+                <input
+                  id="contributorName"
+                  type="text"
+                  value={contributorName}
+                  onChange={(e) => setContributorName(e.target.value)}
+                  placeholder="How you knew them"
+                  className="w-full px-3 py-2 bg-bg-darker border border-border-subtle rounded text-text-soft focus:outline-none focus:border-firefly-glow focus:ring-2 focus:ring-firefly-glow/50 transition-soft text-sm"
+                />
+              </div>
+            </div>
+          )}
+
           <div>
             <div className="flex items-center justify-between mb-2">
               <label htmlFor="text" className="block text-sm text-text-soft">
@@ -707,46 +759,49 @@ export default function MemoryModal({ onClose, onSave, spark, onRefreshSpark, cu
             </div>
           )}
 
-          <div>
-            <label className="block text-sm text-text-soft mb-2">
-              Visibility
-            </label>
-            <div className="space-y-2">
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="radio"
-                  name="visibility"
-                  value="PRIVATE"
-                  checked={visibility === 'PRIVATE'}
-                  onChange={(e) => setVisibility(e.target.value)}
-                  className="text-firefly-glow"
-                />
-                <span className="text-text-soft">Private - Only you can see this</span>
+          {/* Hide visibility options for anonymous users - they're always shared */}
+          {!isAnonymous && (
+            <div>
+              <label className="block text-sm text-text-soft mb-2">
+                Visibility
               </label>
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="radio"
-                  name="visibility"
-                  value="SHARED"
-                  checked={visibility === 'SHARED'}
-                  onChange={(e) => setVisibility(e.target.value)}
-                  className="text-firefly-glow"
-                />
-                <span className="text-text-soft">Shared - Visible to branch members</span>
-              </label>
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="radio"
-                  name="visibility"
-                  value="LEGACY"
-                  checked={visibility === 'LEGACY'}
-                  onChange={(e) => setVisibility(e.target.value)}
-                  className="text-firefly-glow"
-                />
-                <span className="text-text-soft">Legacy - Hidden until release</span>
-              </label>
+              <div className="space-y-2">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="visibility"
+                    value="PRIVATE"
+                    checked={visibility === 'PRIVATE'}
+                    onChange={(e) => setVisibility(e.target.value)}
+                    className="text-firefly-glow"
+                  />
+                  <span className="text-text-soft">Private - Only you can see this</span>
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="visibility"
+                    value="SHARED"
+                    checked={visibility === 'SHARED'}
+                    onChange={(e) => setVisibility(e.target.value)}
+                    className="text-firefly-glow"
+                  />
+                  <span className="text-text-soft">Shared - Visible to branch members</span>
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="visibility"
+                    value="LEGACY"
+                    checked={visibility === 'LEGACY'}
+                    onChange={(e) => setVisibility(e.target.value)}
+                    className="text-firefly-glow"
+                  />
+                  <span className="text-text-soft">Legacy - Hidden until release</span>
+                </label>
+              </div>
             </div>
-          </div>
+          )}
 
           <div className="flex gap-3 pt-4">
             <button

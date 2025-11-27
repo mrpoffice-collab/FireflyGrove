@@ -66,6 +66,7 @@ interface Branch {
   }
   entries: Entry[]
   isPublicView?: boolean
+  isOpenGrove?: boolean
   pagination?: {
     page: number
     limit: number
@@ -859,8 +860,8 @@ export default function BranchPage() {
             </div>
           </div>
 
-          {/* Story Sparks Section - Only for authenticated users */}
-          {isAuthenticated && (
+          {/* Story Sparks Section - For authenticated users or Open Grove visitors */}
+          {(isAuthenticated || branch?.isOpenGrove) && (
             <div className="mb-6 sm:mb-8">
               <h3 className={`text-base sm:text-lg font-medium mb-3 sm:mb-4 ${
                 isLegacy ? 'text-[var(--legacy-text)]' : 'text-text-soft'
@@ -1348,6 +1349,8 @@ export default function BranchPage() {
           currentBranchId={branchId}
           prePopulatedPhoto={prePopulatedPhoto}
           isAdmin={isAdmin}
+          isOpenGrove={branch?.isOpenGrove || false}
+          isAnonymous={!isAuthenticated && (branch?.isOpenGrove || false)}
         />
       )}
 
