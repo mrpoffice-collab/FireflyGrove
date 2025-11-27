@@ -69,10 +69,13 @@ export async function DELETE(
       where: { personId: params.personId }
     })
 
-    // Delete any memories associated with this person (safety check)
-    await prisma.memory.deleteMany({
-      where: { personId: params.personId }
-    })
+    // Delete any entries (memories) associated with branches of this person (safety check)
+    const branchIds = person.branches.map(b => b.id)
+    if (branchIds.length > 0) {
+      await prisma.entry.deleteMany({
+        where: { branchId: { in: branchIds } }
+      })
+    }
 
     // Delete the person
     await prisma.person.delete({
