@@ -126,6 +126,10 @@ model Person {
   moderatorId       String?  // Content approver (defaults to owner)
   trusteeExpiresAt  DateTime? // 60 days from creation
 
+  // Open Grove trustee contact (for unauthenticated memorial creators)
+  trusteeEmail      String?  // Email of the person who created the memorial
+  trusteeName       String?  // Name of the person who created the memorial
+
   // Discovery & limits
   discoveryEnabled  Boolean  @default(true) // Public search toggle
   memoryLimit       Int?     // 100 for Open Grove, null for private groves

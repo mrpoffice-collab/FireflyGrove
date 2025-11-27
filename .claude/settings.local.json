@@ -11,7 +11,9 @@
       "Bash(npm run build:*)",
       "Bash(vercel env:*)",
       "Bash(BLOB_READ_WRITE_TOKEN=vercel_blob_rw_brUWG0E0jQyNr4rB_xc4hA3SaKX28TQf00LjXm1xzSg0LIW DATABASE_URL=\"postgresql://neondb_owner:npg_J5Lx3EnpTkrO@ep-still-credit-a4y8w43n-pooler.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require\" npx tsx:*)",
-      "Bash(BLOB_READ_WRITE_TOKEN=vercel_blob_rw_brUWG0E0jQyNr4rB_xc4hA3SaKX28TQf00LjXm1xzSg0LIW DATABASE_URL=\"postgresql://neondb_owner:npg_HTNoEMZhR3n4@ep-still-credit-a4y8w43n-pooler.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require\" npx tsx:*)"
+      "Bash(BLOB_READ_WRITE_TOKEN=vercel_blob_rw_brUWG0E0jQyNr4rB_xc4hA3SaKX28TQf00LjXm1xzSg0LIW DATABASE_URL=\"postgresql://neondb_owner:npg_HTNoEMZhR3n4@ep-still-credit-a4y8w43n-pooler.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require\" npx tsx:*)",
+      "Bash(npx prisma db push:*)",
+      "Bash(ping:*)"
     ],
     "deny": [],
     "ask": []

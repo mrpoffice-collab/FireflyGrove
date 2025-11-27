@@ -82,3 +82,12 @@ export function isOpenGrove(groveId: string, grove?: { isOpenGrove: boolean }): 
   // If grove object not provided, would need to query - return false for now
   return false
 }
+
+/**
+ * Get the system user ID for Open Grove operations
+ * Used when creating memorials without an authenticated user
+ */
+export async function getSystemUserId(): Promise<string> {
+  const grove = await getOrCreateOpenGrove()
+  return grove.userId
+}
