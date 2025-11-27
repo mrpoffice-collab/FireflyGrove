@@ -5,6 +5,7 @@ import { prisma } from '@/lib/prisma'
 import { generateContentHash, checkRecentDuplicate } from '@/lib/content-hash'
 import { trackEventServer, AnalyticsEvents, AnalyticsCategories, AnalyticsActions } from '@/lib/analytics'
 import { copyNestBlobToMemory, extractFilenameFromBlobUrl } from '@/lib/blob-copy'
+import { getSystemUserId } from '@/lib/openGrove'
 
 export async function POST(
   req: NextRequest,
@@ -12,47 +13,87 @@ export async function POST(
 ) {
   try {
     const session = await getServerSession(authOptions)
-
-    if (!session?.user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const userId = (session.user as any).id
     const branchId = params.branchId
     const body = await req.json()
 
-    const { text, visibility, legacyFlag, mediaUrl, videoUrl, audioUrl, memoryCard, forceDuplicate, parentMemoryId } = body
+    const { text, visibility, legacyFlag, mediaUrl, videoUrl, audioUrl, memoryCard, forceDuplicate, parentMemoryId, contributorEmail, contributorName } = body
+
+    // Check if this is an Open Grove branch (allows anonymous contributions)
+    const branchCheck = await prisma.branch.findFirst({
+      where: { id: branchId },
+      include: {
+        person: {
+          include: {
+            memberships: {
+              include: {
+                grove: true,
+              },
+            },
+          },
+        },
+      },
+    })
+
+    const isOpenGroveBranch = branchCheck?.person?.memberships?.some(m => m.grove?.isOpenGrove) || false
+
+    // Determine user ID - authenticated user or system user for anonymous Open Grove
+    let userId: string
+    let isAnonymousContribution = false
+
+    if (session?.user) {
+      userId = (session.user as any).id
+    } else if (isOpenGroveBranch) {
+      // Anonymous contribution to Open Grove - require email
+      if (!contributorEmail) {
+        return NextResponse.json(
+          { error: 'Email is required to contribute to Open Grove' },
+          { status: 400 }
+        )
+      }
+      userId = await getSystemUserId()
+      isAnonymousContribution = true
+    } else {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
 
     if (!text) {
       return NextResponse.json({ error: 'Text is required' }, { status: 400 })
     }
 
     // Check if user has access to this branch
-    const branch = await prisma.branch.findFirst({
-      where: {
-        id: branchId,
-        OR: [
-          { ownerId: userId },
-          {
-            members: {
-              some: {
-                userId: userId,
-                approved: true,
+    // For anonymous Open Grove contributions, we already verified above
+    let branch
+    if (isAnonymousContribution) {
+      // Anonymous Open Grove - use the branch we already fetched
+      branch = branchCheck
+    } else {
+      // Authenticated user - check permissions
+      branch = await prisma.branch.findFirst({
+        where: {
+          id: branchId,
+          OR: [
+            { ownerId: userId },
+            {
+              members: {
+                some: {
+                  userId: userId,
+                  approved: true,
+                },
               },
             },
-          },
-          {
-            // Allow any authenticated user to add to Open Grove trees
-            person: {
-              discoveryEnabled: true,
+            {
+              // Allow any authenticated user to add to Open Grove trees
+              person: {
+                discoveryEnabled: true,
+              },
             },
-          },
-        ],
-      },
-      include: {
-        person: true, // Include person to check memory limits
-      },
-    })
+          ],
+        },
+        include: {
+          person: true, // Include person to check memory limits
+        },
+      })
+    }
 
     if (!branch) {
       return NextResponse.json(
@@ -134,16 +175,18 @@ export async function POST(
       console.log(`⚠️  [NEST COPY] Will copy after entry creation`)
     }
 
-    // Determine if entry needs approval (if user is not owner)
-    const isOwner = branch.ownerId === userId
-    const approved = isOwner
+    // Determine if entry needs approval (if user is not owner or anonymous)
+    const isOwner = !isAnonymousContribution && branch.ownerId === userId
+    // Anonymous contributions are auto-approved for Open Grove (public memorials)
+    // Owner contributions are always approved
+    const approved = isOwner || isAnonymousContribution
 
     const entry = await prisma.entry.create({
       data: {
         branchId,
         authorId: userId,
         text,
-        visibility: visibility || 'PRIVATE',
+        visibility: isAnonymousContribution ? 'SHARED' : (visibility || 'PRIVATE'), // Anonymous always shared
         legacyFlag: legacyFlag || false,
         mediaUrl: finalMediaUrl || null,
         videoUrl: finalVideoUrl || null,
@@ -153,6 +196,8 @@ export async function POST(
         contentHash, // Store the hash
         status: 'ACTIVE', // Set initial status
         parentMemoryId: parentMemoryId || null, // For threaded replies
+        contributorEmail: isAnonymousContribution ? contributorEmail : null,
+        contributorName: isAnonymousContribution ? (contributorName || null) : null,
       },
       include: {
         author: {

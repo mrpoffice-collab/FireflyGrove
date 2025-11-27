@@ -295,6 +295,10 @@ model Entry {
   hiddenBy    String?  // User ID who hid it
   deletedBy   String?  // User ID who deleted it
 
+  // Open Grove anonymous contributor info
+  contributorEmail String?  // Email of anonymous contributor (Open Grove)
+  contributorName  String?  // Name of anonymous contributor (Open Grove)
+
   // Import tracking
   importSource   String?  // 'facebook', 'instagram', 'manual'
   importSourceId String?  // Original post/photo ID
