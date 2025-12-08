@@ -112,7 +112,7 @@ export default function FireflyBurst({ memories, burstId, onClose, onViewNext, o
     const textLength = memory.text.length
     const lines = Math.ceil(textLength / 80) // Approx 80 chars per line
 
-    // If memory has audio, get its duration
+    // If memory has audio, get its duration - this takes priority
     let audioDuration = 0
     if (memory.audioUrl) {
       // Try to get audio duration from the refs
@@ -121,34 +121,35 @@ export default function FireflyBurst({ memories, burstId, onClose, onViewNext, o
       } else if (!memory.mediaUrl && memoryAudioRef.current) {
         audioDuration = (memoryAudioRef.current.duration || 0) * 1000
       }
-      // If we couldn't get duration (not loaded yet), estimate 30 seconds for audio
+      // If we couldn't get duration (not loaded yet), estimate 15 seconds for audio
       if (audioDuration === 0 || isNaN(audioDuration)) {
-        audioDuration = 30000 // Default 30s for audio memories
+        audioDuration = 15000 // Default 15s for audio memories (reduced from 30s)
       }
     }
 
-    // If memory has image/video, add extra time to view both text and media
+    // If memory has image/video, use faster timing
     const hasMedia = memory.mediaUrl || memory.videoUrl
 
-    // Based on actual reading speed: 6 seconds per line
-    const baseTime = hasMedia ? 8000 : 6000 // 8s base for media (time to view image), 6s for text-only
-    const extraTime = 6000 // 6 seconds per line (actual measured reading speed)
+    // Reduced timing: ~1/2 of previous values for images
+    const baseTime = hasMedia ? 4000 : 4000 // 4s base (reduced from 8s for media, 6s for text)
+    const extraTime = 3000 // 3 seconds per line (reduced from 6s)
 
     // Calculate text reading time
     const textReadingTime = baseTime + (lines * extraTime)
 
-    // If audio is present, use the longer of: audio duration + 2s buffer OR text reading time
+    // If audio is present, use the audio duration + small buffer (audio-driven timing)
     let duration
     if (audioDuration > 0) {
-      const audioWithBuffer = audioDuration + 2000 // Add 2 seconds after audio finishes
-      duration = Math.max(audioWithBuffer, textReadingTime)
+      const audioWithBuffer = audioDuration + 1500 // Add 1.5 seconds after audio finishes
+      // For audio memories, always prioritize audio duration
+      duration = audioWithBuffer
     } else {
       duration = textReadingTime
     }
 
-    // Apply min/max constraints
-    const minTime = hasMedia ? 10000 : 8000
-    const maxTime = 60000 // Increased max to 60s to accommodate longer audio
+    // Apply min/max constraints - reduced minimums for snappier experience
+    const minTime = hasMedia ? 5000 : 4000 // Reduced from 10s/8s to 5s/4s
+    const maxTime = 90000 // Allow up to 90s for longer audio
     duration = Math.min(Math.max(duration, minTime), maxTime)
 
     return duration

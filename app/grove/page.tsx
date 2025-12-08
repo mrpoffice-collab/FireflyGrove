@@ -366,15 +366,8 @@ export default function GrovePage() {
       showAudioSparks ||
       guideToRemind !== null
 
-    // If no popups showing, not snoozed, burst not already showing, and hasn't been triggered yet this session, trigger it
-    if (!anyPopupShowing && !burstSnoozed && !showBurst && !burstTriggered && grove) {
-      // Small delay to ensure popup transitions are complete
-      const timer = setTimeout(() => {
-        generateBurst()
-        setBurstTriggered(true) // Mark as triggered for this session
-      }, 1000)
-      return () => clearTimeout(timer)
-    }
+    // Burst is now user-triggered only via "Show Memory Burst" button
+    // No auto-trigger to reduce friction during normal navigation
   }, [
     showTreasureWelcome,
     showTreasure,
