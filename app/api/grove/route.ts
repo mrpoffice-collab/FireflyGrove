@@ -280,7 +280,7 @@ export async function GET(req: NextRequest) {
     const originalPersons = grove.memberships.filter(m => m.isOriginal)
     const rootedPersons = grove.memberships.filter(m => !m.isOriginal && m.adoptionType === 'rooted')
 
-    // Collect all branches for firefly visualization
+    // Collect all branches for firefly visualization and recent branches
     const allBranches = [
       // Branches from trees
       ...grove.trees.flatMap(tree =>
@@ -289,6 +289,9 @@ export async function GET(req: NextRequest) {
           title: branch.title,
           personStatus: branch.person?.isLegacy ? 'legacy' : 'living',
           lastMemoryDate: branch.entries[0]?.createdAt?.toISOString() || null,
+          treeId: tree.id,
+          treeName: tree.name,
+          sourceType: 'tree' as const,
           _count: {
             entries: branch._count.entries
           }
@@ -301,6 +304,9 @@ export async function GET(req: NextRequest) {
           title: branch.title,
           personStatus: membership.person.isLegacy ? 'legacy' : 'living',
           lastMemoryDate: branch.entries[0]?.createdAt?.toISOString() || null,
+          treeId: membership.person.id,
+          treeName: membership.person.name,
+          sourceType: 'person' as const,
           _count: {
             entries: branch._count.entries
           }

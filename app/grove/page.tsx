@@ -57,6 +57,9 @@ interface Branch {
   title: string
   personStatus: string
   lastMemoryDate: string | null
+  treeId?: string
+  treeName?: string
+  sourceType?: 'tree' | 'person'
   _count: {
     entries: number
   }
@@ -168,6 +171,10 @@ export default function GrovePage() {
     guideName: GlowGuideName
   } | null>(null)
 
+  // View mode state - trees view or all branches view
+  const [viewMode, setViewMode] = useState<'trees' | 'branches'>('trees')
+  const [expandedTrees, setExpandedTrees] = useState<Set<string>>(new Set())
+
   // Check for pending nest photo from URL and preview parameters
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -230,6 +237,28 @@ export default function GrovePage() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status])
+
+  // Smart redirect: if user has exactly 1 tree with 1 branch, go straight to branch
+  useEffect(() => {
+    if (!grove || loading || typeof window === 'undefined') return
+
+    // Check if user explicitly wants to stay on grove (via URL param)
+    const urlParams = new URLSearchParams(window.location.search)
+    if (urlParams.get('stay') === 'true') return
+
+    // Check if this is first visit or returning user who prefers grove view
+    const preferGroveView = localStorage.getItem('preferGroveView')
+    if (preferGroveView === 'true') return
+
+    // Count total trees and branches
+    const totalTrees = (grove.trees?.length || 0) + (grove.persons?.length || 0) + (grove.rootedPersons?.length || 0)
+    const allBranches = grove.allBranches || []
+
+    // Smart redirect: exactly 1 branch total -> go straight there
+    if (totalTrees === 1 && allBranches.length === 1) {
+      router.push(`/branch/${allBranches[0].id}`)
+    }
+  }, [grove, loading, router])
 
   // Check for discovery modal triggers after grove is loaded
   useEffect(() => {
@@ -1164,7 +1193,166 @@ export default function GrovePage() {
             )}
           </div>
 
+          {/* Recent Branches - Quick Access */}
+          {grove.allBranches && grove.allBranches.length > 0 && (
+            <div className="mb-6 sm:mb-8">
+              <div className="flex items-center justify-between mb-3">
+                <h2 className="text-lg text-text-soft font-medium flex items-center gap-2">
+                  <span>⚡</span>
+                  <span>Quick Access</span>
+                </h2>
+                <button
+                  onClick={() => {
+                    localStorage.setItem('preferGroveView', 'true')
+                  }}
+                  className="text-xs text-text-muted hover:text-text-soft transition-soft"
+                >
+                  Always show grove
+                </button>
+              </div>
+              <div className="flex gap-2 overflow-x-auto pb-2 -mx-3 px-3 sm:mx-0 sm:px-0 sm:flex-wrap">
+                {[...grove.allBranches]
+                  .filter(b => b.lastMemoryDate || b._count.entries > 0)
+                  .sort((a, b) => {
+                    if (!a.lastMemoryDate && !b.lastMemoryDate) return 0
+                    if (!a.lastMemoryDate) return 1
+                    if (!b.lastMemoryDate) return -1
+                    return new Date(b.lastMemoryDate).getTime() - new Date(a.lastMemoryDate).getTime()
+                  })
+                  .slice(0, 5)
+                  .map((branch) => (
+                    <button
+                      key={branch.id}
+                      onClick={() => router.push(`/branch/${branch.id}`)}
+                      className="flex-shrink-0 flex items-center gap-2 px-3 py-2 bg-bg-dark border border-border-subtle rounded-lg hover:border-firefly-dim/50 transition-soft text-left min-w-[140px] sm:min-w-0"
+                    >
+                      <span className="text-lg">{branch.personStatus === 'legacy' ? '🕯️' : '🌿'}</span>
+                      <div className="min-w-0">
+                        <div className="text-sm text-text-soft font-medium truncate max-w-[120px] sm:max-w-[150px]">
+                          {branch.title}
+                        </div>
+                        <div className="text-xs text-text-muted">
+                          {branch._count.entries} memories
+                        </div>
+                      </div>
+                    </button>
+                  ))}
+              </div>
+            </div>
+          )}
+
+          {/* Shared Branches - Quick Access (moved from bottom) */}
+          {sharedBranches.length > 0 && (
+            <div className="mb-6 sm:mb-8">
+              <h2 className="text-lg text-text-soft font-medium mb-3 flex items-center gap-2">
+                <span>🤝</span>
+                <span>Shared with You</span>
+              </h2>
+              <div className="flex gap-2 overflow-x-auto pb-2 -mx-3 px-3 sm:mx-0 sm:px-0 sm:flex-wrap">
+                {sharedBranches.slice(0, 5).map((branch) => (
+                  <button
+                    key={branch.id}
+                    onClick={() => router.push(`/branch/${branch.id}`)}
+                    className="flex-shrink-0 flex items-center gap-2 px-3 py-2 bg-bg-dark border border-blue-500/30 rounded-lg hover:border-blue-400/50 transition-soft text-left min-w-[140px] sm:min-w-0"
+                  >
+                    <span className="text-lg">{branch.person?.isLegacy ? '🕯️' : '🌿'}</span>
+                    <div className="min-w-0">
+                      <div className="text-sm text-text-soft font-medium truncate max-w-[120px] sm:max-w-[150px]">
+                        {branch.title}
+                      </div>
+                      <div className="text-xs text-text-muted truncate max-w-[120px] sm:max-w-[150px]">
+                        from {branch.owner.name}
+                      </div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* View Mode Toggle */}
+          <div className="mb-4 flex items-center justify-between">
+            <div className="flex items-center gap-1 bg-bg-dark border border-border-subtle rounded-lg p-1">
+              <button
+                onClick={() => setViewMode('trees')}
+                className={`px-3 py-1.5 rounded text-sm font-medium transition-soft ${
+                  viewMode === 'trees'
+                    ? 'bg-firefly-dim/30 text-firefly-glow'
+                    : 'text-text-muted hover:text-text-soft'
+                }`}
+              >
+                🌲 Trees
+              </button>
+              <button
+                onClick={() => setViewMode('branches')}
+                className={`px-3 py-1.5 rounded text-sm font-medium transition-soft ${
+                  viewMode === 'branches'
+                    ? 'bg-firefly-dim/30 text-firefly-glow'
+                    : 'text-text-muted hover:text-text-soft'
+                }`}
+              >
+                🌿 All Branches
+              </button>
+            </div>
+            {viewMode === 'trees' && grove.status !== 'canceled' && (
+              <button
+                onClick={() => {
+                  const url = pendingNestPhoto
+                    ? `/grove/new-tree?pendingNestPhoto=${pendingNestPhoto}`
+                    : '/grove/new-tree'
+                  router.push(url)
+                }}
+                disabled={isAtCapacity}
+                className="px-3 py-1.5 bg-firefly-dim hover:bg-firefly-glow text-bg-dark rounded text-sm font-medium transition-soft disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                + New Tree
+              </button>
+            )}
+          </div>
+
+          {/* All Branches View */}
+          {viewMode === 'branches' && grove.allBranches && (
+            <div className="mb-8">
+              {grove.allBranches.length === 0 ? (
+                <div className="text-center py-12 border-2 border-dashed border-border-subtle rounded-lg">
+                  <div className="text-4xl mb-3">🌿</div>
+                  <p className="text-text-muted">No branches yet. Create a tree first!</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {grove.allBranches.map((branch) => (
+                    <button
+                      key={branch.id}
+                      onClick={() => router.push(`/branch/${branch.id}`)}
+                      className="bg-bg-dark border border-border-subtle rounded-lg p-4 hover:border-firefly-dim/50 transition-soft text-left"
+                    >
+                      <div className="flex items-start justify-between mb-2">
+                        <span className="text-2xl">{branch.personStatus === 'legacy' ? '🕯️' : '🌿'}</span>
+                        {branch.personStatus === 'legacy' && (
+                          <span className="text-xs bg-[var(--legacy-amber)]/20 text-[var(--legacy-text)] px-2 py-0.5 rounded">
+                            Legacy
+                          </span>
+                        )}
+                      </div>
+                      <h3 className="text-lg text-text-soft font-medium mb-1">{branch.title}</h3>
+                      <p className="text-xs text-text-muted mb-2">
+                        in {branch.treeName}
+                      </p>
+                      <div className="flex items-center gap-3 text-xs text-text-muted">
+                        <span>💫 {branch._count.entries} memories</span>
+                        {branch.lastMemoryDate && (
+                          <span>Last: {new Date(branch.lastMemoryDate).toLocaleDateString()}</span>
+                        )}
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
           {/* Trees Grid with Firefly Background - Olive Grove Style */}
+          {viewMode === 'trees' && (
           <div className="relative">
             {/* Firefly Visualization - Background Layer */}
             {grove.allBranches && grove.allBranches.length > 0 && (
@@ -1176,46 +1364,99 @@ export default function GrovePage() {
             {/* Trees Grid */}
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4 md:gap-6 relative z-10">
             {/* Existing Trees */}
-            {grove.trees?.map((tree) => (
-              <button
-                key={tree.id}
-                onClick={() => {
-                  const url = pendingNestPhoto
-                    ? `/tree/${tree.id}?pendingNestPhoto=${pendingNestPhoto}`
-                    : `/tree/${tree.id}`
-                  router.push(url)
-                }}
-                className="flex flex-col items-center gap-2 sm:gap-3 p-3 sm:p-4 rounded-lg hover:bg-bg-dark transition-soft cursor-pointer group min-h-[120px] sm:min-h-[140px]"
-                aria-label={`View ${tree.name} tree with ${tree._count.branches} ${tree._count.branches === 1 ? 'branch' : 'branches'}`}
-              >
-                {/* Simple Olive Tree SVG */}
-                <svg
-                  width="60"
-                  height="60"
-                  viewBox="0 0 80 80"
-                  className="sm:w-[80px] sm:h-[80px] group-hover:scale-110 transition-transform"
-                >
-                  {/* Trunk */}
-                  <rect x="36" y="50" width="8" height="25" fill="#8B7355" />
-                  {/* Foliage - Olive tree style (organic, flowing) */}
-                  <ellipse cx="40" cy="35" rx="20" ry="15" fill="#9ca986" opacity="0.8" />
-                  <ellipse cx="30" cy="40" rx="15" ry="12" fill="#9ca986" opacity="0.9" />
-                  <ellipse cx="50" cy="40" rx="15" ry="12" fill="#9ca986" opacity="0.9" />
-                  <ellipse cx="40" cy="45" rx="18" ry="10" fill="#b8c5a6" opacity="0.7" />
-                  {/* Highlight */}
-                  <ellipse cx="35" cy="32" rx="8" ry="6" fill="#c5d4b3" opacity="0.5" />
-                </svg>
+            {grove.trees?.map((tree) => {
+              const isExpanded = expandedTrees.has(tree.id)
+              const treeBranches = grove.allBranches?.filter(b => b.treeId === tree.id) || []
 
-                <div className="text-center">
-                  <div className="text-sm font-medium text-text-soft group-hover:text-firefly-glow transition-soft line-clamp-2 mb-1">
-                    {tree.name}
+              return (
+                <div key={tree.id} className="relative">
+                  <div
+                    className={`flex flex-col items-center gap-2 sm:gap-3 p-3 sm:p-4 rounded-lg hover:bg-bg-dark transition-soft group min-h-[120px] sm:min-h-[140px] ${isExpanded ? 'bg-bg-dark' : ''}`}
+                  >
+                    {/* Tree Icon - Click to navigate */}
+                    <button
+                      onClick={() => {
+                        const url = pendingNestPhoto
+                          ? `/tree/${tree.id}?pendingNestPhoto=${pendingNestPhoto}`
+                          : `/tree/${tree.id}`
+                        router.push(url)
+                      }}
+                      className="cursor-pointer"
+                      aria-label={`View ${tree.name} tree with ${tree._count.branches} ${tree._count.branches === 1 ? 'branch' : 'branches'}`}
+                    >
+                      <svg
+                        width="60"
+                        height="60"
+                        viewBox="0 0 80 80"
+                        className="sm:w-[80px] sm:h-[80px] group-hover:scale-110 transition-transform"
+                      >
+                        <rect x="36" y="50" width="8" height="25" fill="#8B7355" />
+                        <ellipse cx="40" cy="35" rx="20" ry="15" fill="#9ca986" opacity="0.8" />
+                        <ellipse cx="30" cy="40" rx="15" ry="12" fill="#9ca986" opacity="0.9" />
+                        <ellipse cx="50" cy="40" rx="15" ry="12" fill="#9ca986" opacity="0.9" />
+                        <ellipse cx="40" cy="45" rx="18" ry="10" fill="#b8c5a6" opacity="0.7" />
+                        <ellipse cx="35" cy="32" rx="8" ry="6" fill="#c5d4b3" opacity="0.5" />
+                      </svg>
+                    </button>
+
+                    <div className="text-center">
+                      <div className="text-sm font-medium text-text-soft group-hover:text-firefly-glow transition-soft line-clamp-2 mb-1">
+                        {tree.name}
+                      </div>
+                      {/* Expandable branches button */}
+                      {tree._count.branches > 0 ? (
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            setExpandedTrees(prev => {
+                              const next = new Set(prev)
+                              if (next.has(tree.id)) {
+                                next.delete(tree.id)
+                              } else {
+                                next.add(tree.id)
+                              }
+                              return next
+                            })
+                          }}
+                          className="text-xs text-text-muted hover:text-firefly-glow transition-soft flex items-center gap-1 mx-auto"
+                        >
+                          <span>{tree._count.branches} {tree._count.branches === 1 ? 'branch' : 'branches'}</span>
+                          <svg
+                            className={`w-3 h-3 transition-transform ${isExpanded ? 'rotate-180' : ''}`}
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                          </svg>
+                        </button>
+                      ) : (
+                        <div className="text-xs text-text-muted">No branches</div>
+                      )}
+                    </div>
                   </div>
-                  <div className="text-xs text-text-muted">
-                    {tree._count.branches} {tree._count.branches === 1 ? 'branch' : 'branches'}
-                  </div>
+
+                  {/* Expanded branches dropdown */}
+                  {isExpanded && treeBranches.length > 0 && (
+                    <div className="absolute top-full left-0 right-0 z-20 mt-1 bg-bg-darker border border-border-subtle rounded-lg shadow-lg p-2 space-y-1">
+                      {treeBranches.map(branch => (
+                        <button
+                          key={branch.id}
+                          onClick={() => router.push(`/branch/${branch.id}`)}
+                          className="w-full text-left px-3 py-2 rounded hover:bg-firefly-dim/20 transition-soft flex items-center gap-2"
+                        >
+                          <span>{branch.personStatus === 'legacy' ? '🕯️' : '🌿'}</span>
+                          <div className="flex-1 min-w-0">
+                            <div className="text-sm text-text-soft truncate">{branch.title}</div>
+                            <div className="text-xs text-text-muted">{branch._count.entries} memories</div>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
-              </button>
-            ))}
+              )
+            })}
 
             {/* Empty Slots */}
             {Array.from({ length: grove.treeLimit - treeCount }).map((_, index) => (
@@ -1261,8 +1502,9 @@ export default function GrovePage() {
             ))}
             </div>
           </div>
+          )}
 
-          {(grove.trees?.length || 0) === 0 && (
+          {viewMode === 'trees' && (grove.trees?.length || 0) === 0 && (
             <div className="text-center mt-8 p-8 bg-bg-dark border border-border-subtle rounded-lg">
               <p className="text-text-muted mb-4">
                 Click an empty tree slot above to plant your first tree
@@ -1271,7 +1513,7 @@ export default function GrovePage() {
           )}
 
           {/* Rooted Legacy Trees Section */}
-          {grove.rootedPersons && grove.rootedPersons.length > 0 && (
+          {viewMode === 'trees' && grove.rootedPersons && grove.rootedPersons.length > 0 && (
             <div className="mt-8 sm:mt-12">
               <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
                 <h2 className="text-xl sm:text-2xl text-text-soft">
@@ -1313,76 +1555,6 @@ export default function GrovePage() {
                       <span>💫 {person.memoryCount} memories</span>
                       <span>🌿 {person._count.branches} branches</span>
                     </div>
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Shared Branches from Other Groves */}
-          {sharedBranches.length > 0 && (
-            <div className="mt-12">
-              <div className="mb-6">
-                <h2 className="text-2xl text-text-soft mb-2">
-                  Shared with You
-                </h2>
-                <p className="text-text-muted text-sm">
-                  Branches you've been invited to from other groves
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {sharedBranches.map((branch) => (
-                  <button
-                    key={branch.id}
-                    onClick={() => router.push(`/branch/${branch.id}`)}
-                    className="bg-bg-dark border border-blue-500/30 rounded-lg p-4 hover:border-blue-400/50 transition-soft cursor-pointer w-full text-left"
-                    aria-label={`View shared branch ${branch.title} from ${branch.owner.name} with ${branch._count.entries} ${branch._count.entries === 1 ? 'memory' : 'memories'}`}
-                  >
-                    <div className="flex items-start justify-between mb-2">
-                      <h3 className="text-lg text-text-soft font-medium flex-1">
-                        {branch.title}
-                      </h3>
-                      <span className="text-xs text-blue-300 bg-blue-500/20 px-2 py-1 rounded ml-2 whitespace-nowrap">
-                        Shared
-                      </span>
-                    </div>
-
-                    {branch.description && (
-                      <p className="text-sm text-text-muted mb-2 line-clamp-2">
-                        {branch.description}
-                      </p>
-                    )}
-
-                    <div className="mb-3 text-xs text-text-muted">
-                      <div className="flex items-center gap-1">
-                        <span>🏡</span>
-                        <span>
-                          {branch.owner.grove?.name || `${branch.owner.name}'s Grove`}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-1 mt-1">
-                        <span>👤</span>
-                        <span>Owner: {branch.owner.name}</span>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-3 text-xs text-text-muted">
-                      <span className="flex items-center gap-1">
-                        💫 {branch._count.entries} {branch._count.entries === 1 ? 'memory' : 'memories'}
-                      </span>
-                      {branch.person?.isLegacy && (
-                        <span className="text-purple-300 bg-purple-500/20 px-2 py-0.5 rounded">
-                          Legacy
-                        </span>
-                      )}
-                    </div>
-
-                    {branch.entries.length > 0 && (
-                      <div className="mt-2 text-xs text-text-muted/70">
-                        Last update: {new Date(branch.entries[0].createdAt).toLocaleDateString()}
-                      </div>
-                    )}
                   </button>
                 ))}
               </div>
