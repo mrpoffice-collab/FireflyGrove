@@ -9,9 +9,10 @@ import { prisma } from '@/lib/prisma'
  */
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const session = await getServerSession(authOptions)
     if (!session?.user?.email) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
@@ -29,7 +30,7 @@ export async function GET(
 
     // Get brief by topic score ID
     const brief = await prisma.contentBrief.findUnique({
-      where: { topicScoreId: params.id },
+      where: { topicScoreId: id },
       include: {
         topicScore: true,
       },

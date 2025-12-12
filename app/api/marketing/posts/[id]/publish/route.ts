@@ -5,17 +5,16 @@ import { prisma } from '@/lib/prisma'
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id: postId } = await params
     const session = await getServerSession(authOptions)
     const userId = (session?.user as any)?.id
 
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
-
-    const postId = params.id
 
     // Get the post first
     const post = await prisma.marketingPost.findUnique({

@@ -9,9 +9,10 @@ import { prisma } from '@/lib/prisma'
  */
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const session = await getServerSession(authOptions)
     if (!session?.user?.email) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
@@ -35,13 +36,13 @@ export async function PATCH(
 
     // Update the post
     const post = await prisma.marketingPost.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         scheduledFor: new Date(scheduledFor),
       },
     })
 
-    console.log(`📅 Rescheduled post ${params.id} to ${scheduledFor}`)
+    console.log(`📅 Rescheduled post ${id} to ${scheduledFor}`)
 
     return NextResponse.json({ post })
   } catch (error) {

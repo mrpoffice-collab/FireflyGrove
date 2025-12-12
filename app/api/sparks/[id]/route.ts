@@ -6,17 +6,16 @@ import { prisma } from '@/lib/prisma'
 // PATCH /api/sparks/[id] - Update spark
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id: sparkId } = await params
     const session = await getServerSession(authOptions)
     const userId = (session?.user as any)?.id
 
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
-
-    const sparkId = params.id
     const body = await request.json()
 
     // Check if spark exists and user owns it
@@ -73,17 +72,16 @@ export async function PATCH(
 // DELETE /api/sparks/[id] - Delete spark
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id: sparkId } = await params
     const session = await getServerSession(authOptions)
     const userId = (session?.user as any)?.id
 
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
-
-    const sparkId = params.id
 
     // Check if spark exists and user owns it
     const spark = await prisma.spark.findUnique({
@@ -121,17 +119,16 @@ export async function DELETE(
 // POST /api/sparks/[id]/use - Increment usage count
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id: sparkId } = await params
     const session = await getServerSession(authOptions)
     const userId = (session?.user as any)?.id
 
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
-
-    const sparkId = params.id
 
     // Increment usage count
     const spark = await prisma.spark.update({

@@ -9,9 +9,10 @@ import { prisma } from '@/lib/prisma'
  */
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id: topicId } = await params
     const session = await getServerSession(authOptions)
     if (!session?.user?.email) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
@@ -26,8 +27,6 @@ export async function PATCH(
     if (!user?.isAdmin) {
       return NextResponse.json({ error: 'Admin access required' }, { status: 403 })
     }
-
-    const topicId = params.id
 
     // Update topic status to dismissed
     const updatedTopic = await prisma.topicScore.update({

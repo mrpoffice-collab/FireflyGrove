@@ -5,9 +5,10 @@ import { prisma } from '@/lib/prisma'
 
 export async function PATCH(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const session = await getServerSession(authOptions)
 
     if (!session?.user) {
@@ -27,7 +28,7 @@ export async function PATCH(
     const { action } = body
 
     const report = await prisma.report.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: { memory: true }
     })
 
@@ -39,7 +40,7 @@ export async function PATCH(
       case 'dismiss':
         // Mark report as dismissed but keep memory visible
         await prisma.report.update({
-          where: { id: params.id },
+          where: { id },
           data: { status: 'DISMISSED' }
         })
         break
@@ -48,7 +49,7 @@ export async function PATCH(
         // Hide memory from public view and mark report as action taken
         await prisma.$transaction([
           prisma.report.update({
-            where: { id: params.id },
+            where: { id },
             data: {
               status: 'ACTION_TAKEN',
               actionBy: user.id,
@@ -67,7 +68,7 @@ export async function PATCH(
         // Delete the memory and mark report as action taken
         await prisma.$transaction([
           prisma.report.update({
-            where: { id: params.id },
+            where: { id },
             data: {
               status: 'ACTION_TAKEN',
               actionBy: user.id,

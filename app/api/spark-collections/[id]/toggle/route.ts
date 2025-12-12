@@ -5,17 +5,16 @@ import { prisma } from '@/lib/prisma'
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id: collectionId } = await params
     const session = await getServerSession(authOptions)
     const userId = (session?.user as any)?.id
 
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
-
-    const collectionId = params.id
 
     // Check if collection exists
     const collection = await prisma.sparkCollection.findUnique({

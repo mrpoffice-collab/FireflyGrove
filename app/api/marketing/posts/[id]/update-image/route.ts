@@ -5,9 +5,10 @@ import { prisma } from '@/lib/prisma'
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id: postId } = await params
     const session = await getServerSession(authOptions)
     const userId = (session?.user as any)?.id
 
@@ -16,7 +17,6 @@ export async function PATCH(
     }
 
     const { image } = await request.json()
-    const postId = params.id
 
     // Update the post's image
     const updatedPost = await prisma.marketingPost.update({

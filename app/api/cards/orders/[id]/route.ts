@@ -5,9 +5,10 @@ import { prisma } from '@/lib/prisma'
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id: orderId } = await params
     const session = await getServerSession(authOptions)
 
     if (!session?.user) {
@@ -18,7 +19,6 @@ export async function GET(
     }
 
     const userId = (session.user as any)?.id
-    const orderId = params.id
 
     const order = await prisma.cardOrder.findFirst({
       where: {

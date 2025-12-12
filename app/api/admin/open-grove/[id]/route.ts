@@ -5,9 +5,10 @@ import { prisma } from '@/lib/prisma'
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const session = await getServerSession(authOptions)
 
     if (!session?.user) {
@@ -24,7 +25,7 @@ export async function DELETE(
     }
 
     const memorial = await prisma.person.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: {
         branches: true,
         memberships: true,
@@ -38,12 +39,12 @@ export async function DELETE(
     // Delete related records first (due to foreign key constraints)
     // Delete branches
     await prisma.branch.deleteMany({
-      where: { personId: params.id }
+      where: { personId: id }
     })
 
     // Delete grove memberships
     await prisma.groveTreeMembership.deleteMany({
-      where: { personId: params.id }
+      where: { personId: id }
     })
 
     // Delete any entries (memories) associated with branches of this person
@@ -56,7 +57,7 @@ export async function DELETE(
 
     // Delete the person
     await prisma.person.delete({
-      where: { id: params.id }
+      where: { id }
     })
 
     // Log the admin action
@@ -65,9 +66,9 @@ export async function DELETE(
         actorId: user.id,
         action: 'memorial_delete',
         targetType: 'person',
-        targetId: params.id,
+        targetId: id,
         metadata: JSON.stringify({
-          memorialId: params.id,
+          memorialId: id,
           memorialName: memorial.name,
           action: 'delete'
         })
@@ -86,9 +87,10 @@ export async function DELETE(
 
 export async function PATCH(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const session = await getServerSession(authOptions)
 
     if (!session?.user) {
@@ -108,7 +110,7 @@ export async function PATCH(
     const { action } = body
 
     const memorial = await prisma.person.findUnique({
-      where: { id: params.id }
+      where: { id }
     })
 
     if (!memorial) {
@@ -127,7 +129,7 @@ export async function PATCH(
 
       case 'hide':
         await prisma.person.update({
-          where: { id: params.id },
+          where: { id },
           data: { discoveryEnabled: false }
         })
         break

@@ -5,9 +5,10 @@ import { prisma } from '@/lib/prisma'
 
 export async function POST(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const session = await getServerSession(authOptions)
 
     if (!session?.user) {
@@ -24,7 +25,7 @@ export async function POST(
     }
 
     const targetUser = await prisma.user.findUnique({
-      where: { id: params.id },
+      where: { id },
       select: { id: true, email: true, name: true, status: true }
     })
 
@@ -38,7 +39,7 @@ export async function POST(
 
     // Unlock the account
     await prisma.user.update({
-      where: { id: params.id },
+      where: { id },
       data: { status: 'ACTIVE' }
     })
 

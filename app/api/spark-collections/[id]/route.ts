@@ -6,17 +6,16 @@ import { prisma } from '@/lib/prisma'
 // DELETE /api/spark-collections/[id] - Delete a collection
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id: collectionId } = await params
     const session = await getServerSession(authOptions)
     const userId = (session?.user as any)?.id
 
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
-
-    const collectionId = params.id
 
     // Check if collection exists and belongs to user
     const collection = await prisma.sparkCollection.findUnique({
@@ -52,17 +51,16 @@ export async function DELETE(
 // PATCH /api/spark-collections/[id] - Update collection details
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id: collectionId } = await params
     const session = await getServerSession(authOptions)
     const userId = (session?.user as any)?.id
 
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
-
-    const collectionId = params.id
     const body = await request.json()
     const { name, description, icon } = body
 

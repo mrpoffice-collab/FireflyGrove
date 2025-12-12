@@ -6,9 +6,10 @@ import { prisma } from '@/lib/prisma'
 // POST /api/spark-collections/[id]/share - Toggle Grove sharing
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const session = await getServerSession(authOptions)
     const userId = (session?.user as any)?.id
 
@@ -21,7 +22,7 @@ export async function POST(
 
     // Verify the collection belongs to the user
     const collection = await prisma.sparkCollection.findUnique({
-      where: { id: params.id },
+      where: { id },
     })
 
     if (!collection) {
@@ -34,7 +35,7 @@ export async function POST(
 
     // Update the sharing status
     const updated = await prisma.sparkCollection.update({
-      where: { id: params.id },
+      where: { id },
       data: { isSharedWithGrove },
     })
 

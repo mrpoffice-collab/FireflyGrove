@@ -9,9 +9,10 @@ import { prisma } from '@/lib/prisma'
  */
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id: topicId } = await params
     const session = await getServerSession(authOptions)
     if (!session?.user?.email) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
@@ -26,8 +27,6 @@ export async function DELETE(
     if (!user?.isAdmin) {
       return NextResponse.json({ error: 'Admin access required' }, { status: 403 })
     }
-
-    const topicId = params.id
 
     // Delete the topic (cascade will delete related brief if exists)
     await prisma.topicScore.delete({

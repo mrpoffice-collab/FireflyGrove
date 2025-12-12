@@ -12,9 +12,10 @@ export const dynamic = 'force-dynamic'
  */
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id: itemId } = await params
     const session = await getServerSession(authOptions)
 
     if (!session?.user) {
@@ -22,7 +23,6 @@ export async function DELETE(
     }
 
     const userId = (session.user as any).id
-    const itemId = params.id
 
     // Find the nest item
     const nestItem = await prisma.nestItem.findUnique({
