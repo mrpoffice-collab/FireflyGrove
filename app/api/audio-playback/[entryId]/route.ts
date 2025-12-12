@@ -11,10 +11,10 @@ export const dynamic = 'force-dynamic'
  */
 export async function GET(
   req: NextRequest,
-  { params }: { params: { entryId: string } }
+  { params }: { params: Promise<{ entryId: string }> }
 ) {
   try {
-    const { entryId } = params
+    const { entryId } = await params
 
     // Fetch entry with audio
     const entry = await prisma.entry.findUnique({
@@ -98,11 +98,12 @@ export async function GET(
  */
 export async function HEAD(
   req: NextRequest,
-  { params }: { params: { entryId: string } }
+  { params }: { params: Promise<{ entryId: string }> }
 ) {
   try {
+    const { entryId } = await params
     const entry = await prisma.entry.findUnique({
-      where: { id: params.entryId },
+      where: { id: entryId },
       select: { audioUrl: true, status: true },
     })
 

@@ -5,9 +5,10 @@ import { prisma } from '@/lib/prisma'
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { slug: string } }
+  { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
+    const { slug } = await params
     const session = await getServerSession(authOptions)
 
     if (!session?.user?.email) {
@@ -17,7 +18,7 @@ export async function POST(
     const { helpful } = await request.json()
 
     const article = await prisma.knowledgeArticle.update({
-      where: { slug: params.slug },
+      where: { slug },
       data: helpful
         ? { helpfulYes: { increment: 1 } }
         : { helpfulNo: { increment: 1 } },

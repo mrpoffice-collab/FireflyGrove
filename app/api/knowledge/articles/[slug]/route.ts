@@ -5,9 +5,10 @@ import { prisma } from '@/lib/prisma'
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { slug: string } }
+  { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
+    const { slug } = await params
     const session = await getServerSession(authOptions)
 
     if (!session?.user?.email) {
@@ -15,7 +16,7 @@ export async function GET(
     }
 
     const article = await prisma.knowledgeArticle.findUnique({
-      where: { slug: params.slug },
+      where: { slug },
     })
 
     if (!article) {
@@ -24,7 +25,7 @@ export async function GET(
 
     // Increment view count
     await prisma.knowledgeArticle.update({
-      where: { slug: params.slug },
+      where: { slug },
       data: { viewCount: { increment: 1 } },
     })
 

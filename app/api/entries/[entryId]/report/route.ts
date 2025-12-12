@@ -14,9 +14,10 @@ export const dynamic = 'force-dynamic'
  */
 export async function POST(
   req: NextRequest,
-  { params }: { params: { entryId: string } }
+  { params }: { params: Promise<{ entryId: string }> }
 ) {
   try {
+    const { entryId } = await params
     const session = await getServerSession(authOptions)
 
     if (!session?.user) {
@@ -24,7 +25,6 @@ export async function POST(
     }
 
     const userId = (session.user as any).id
-    const entryId = params.entryId
     const body = await req.json()
 
     const { reason, notes } = body
