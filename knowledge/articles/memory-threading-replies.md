@@ -9,8 +9,8 @@ timeToRead: 2
 icon: 💬
 featured: false
 isNew: false
-createdAt: 2025-11-13T15:16:35.009Z
-updatedAt: 2025-11-13T15:16:35.009Z
+createdAt: 2025-12-12T17:39:15.547Z
+updatedAt: 2025-12-12T17:39:15.547Z
 ---
 
 # 💬 Memory Threading: Join the Conversation
@@ -25,7 +25,7 @@ updatedAt: 2025-11-13T15:16:35.009Z
 
 ## What is it?
 
-Threading lets you add context, share your version of events, or simply say "I remember that too."
+Learn about memory threading: join the conversation and how to use this feature in Firefly Grove.
 
 ---
 
@@ -35,8 +35,6 @@ Threading lets you add context, share your version of events, or simply say "I r
 - Enhance your memory preservation workflow
 - Connect with your family story in meaningful ways
 
-
-> 🔒 **Privacy Note:** Add text, voice, or photos — your reply can be as simple or rich as you want.
 
 
 ---
@@ -87,6 +85,6 @@ Threading lets you add context, share your version of events, or simply say "I r
 
 <small>
 **Glow Guide:** This article is auto-generated from the memory-threading Glow Guide component.
-**Last Updated:** 2025-11-13
+**Last Updated:** 2025-12-12
 **Related Glow Guide:** Appears viewing someone else's memory, never replied
 </small>

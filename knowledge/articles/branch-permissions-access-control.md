@@ -9,8 +9,8 @@ timeToRead: 3
 icon: 🔐
 featured: false
 isNew: false
-createdAt: 2025-11-13T15:16:35.017Z
-updatedAt: 2025-11-13T15:16:35.017Z
+createdAt: 2025-12-12T17:39:15.559Z
+updatedAt: 2025-12-12T17:39:15.559Z
 ---
 
 # 🔐 Branch Permissions: Fine-Tune Access
@@ -25,7 +25,7 @@ updatedAt: 2025-11-13T15:16:35.017Z
 
 ## What is it?
 
-Not everyone needs the same level of access. Permissions let you create viewers, contributors, and moderators based on trust and role.
+Learn about branch permissions: fine-tune access and how to use this feature in Firefly Grove.
 
 ---
 
@@ -35,8 +35,6 @@ Not everyone needs the same level of access. Permissions let you create viewers,
 - Enhance your memory preservation workflow
 - Connect with your family story in meaningful ways
 
-
-> 🔒 **Privacy Note:** Permissions can be adjusted anytime as relationships and trust evolve.
 
 
 ---
@@ -87,6 +85,6 @@ Not everyone needs the same level of access. Permissions let you create viewers,
 
 <small>
 **Glow Guide:** This article is auto-generated from the branch-permissions Glow Guide component.
-**Last Updated:** 2025-11-13
+**Last Updated:** 2025-12-12
 **Related Glow Guide:** Appears invited 2+ people, all same permission
 </small>

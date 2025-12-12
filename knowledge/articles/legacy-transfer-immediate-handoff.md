@@ -9,8 +9,8 @@ timeToRead: 3
 icon: 🎁
 featured: false
 isNew: false
-createdAt: 2025-11-13T15:16:35.013Z
-updatedAt: 2025-11-13T15:16:35.013Z
+createdAt: 2025-12-12T17:39:15.549Z
+updatedAt: 2025-12-12T17:39:15.549Z
 ---
 
 # 🎁 Legacy Transfer: Immediate Handoff
@@ -25,7 +25,7 @@ updatedAt: 2025-11-13T15:16:35.013Z
 
 ## What is it?
 
-Legacy Transfer gives full ownership to someone else immediately. Different from heirs (who wait) or moderators (who help) — this is a complete handoff.
+Learn about legacy transfer: immediate handoff and how to use this feature in Firefly Grove.
 
 ---
 
@@ -35,8 +35,6 @@ Legacy Transfer gives full ownership to someone else immediately. Different from
 - Enhance your memory preservation workflow
 - Connect with your family story in meaningful ways
 
-
-> 🔒 **Privacy Note:** Transfer is permanent — make sure you're ready to let go completely.
 
 
 ---
@@ -87,6 +85,6 @@ Legacy Transfer gives full ownership to someone else immediately. Different from
 
 <small>
 **Glow Guide:** This article is auto-generated from the legacy-transfer Glow Guide component.
-**Last Updated:** 2025-11-13
+**Last Updated:** 2025-12-12
 **Related Glow Guide:** Appears tree with heir, never used transfer
 </small>

@@ -9,8 +9,8 @@ timeToRead: 3
 icon: ⭐
 featured: false
 isNew: false
-createdAt: 2025-11-13T15:16:35.008Z
-updatedAt: 2025-11-13T15:16:35.008Z
+createdAt: 2025-12-12T17:39:15.545Z
+updatedAt: 2025-12-12T17:39:15.545Z
 ---
 
 # ⭐ Moderator Role: Your Trusted Helper
@@ -25,7 +25,7 @@ updatedAt: 2025-11-13T15:16:35.008Z
 
 ## What is it?
 
-A Moderator is different from an heir — they help you manage your tree during your life, like a trusted co-pilot for your legacy work.
+Learn about moderator role: your trusted helper and how to use this feature in Firefly Grove.
 
 ---
 
@@ -35,8 +35,6 @@ A Moderator is different from an heir — they help you manage your tree during 
 - Enhance your memory preservation workflow
 - Connect with your family story in meaningful ways
 
-
-> 🔒 **Privacy Note:** Choose someone patient, organized, and trusted — a caretaker for your legacy.
 
 
 ---
@@ -87,6 +85,6 @@ A Moderator is different from an heir — they help you manage your tree during 
 
 <small>
 **Glow Guide:** This article is auto-generated from the moderator-role Glow Guide component.
-**Last Updated:** 2025-11-13
+**Last Updated:** 2025-12-12
 **Related Glow Guide:** Appears legacy tree, no moderator
 </small>

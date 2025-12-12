@@ -9,8 +9,8 @@ timeToRead: 2
 icon: 📷
 featured: false
 isNew: false
-createdAt: 2025-11-13T15:16:35.008Z
-updatedAt: 2025-11-13T15:16:35.008Z
+createdAt: 2025-12-12T17:39:15.546Z
+updatedAt: 2025-12-12T17:39:15.546Z
 ---
 
 # 📷 Mobile Photo Upload: Capture the Moment
@@ -25,7 +25,7 @@ updatedAt: 2025-11-13T15:16:35.008Z
 
 ## What is it?
 
-Mobile photo capture lets you preserve moments instantly — no need to wait until you're at a computer to upload them later.
+Learn about mobile photo upload: capture the moment and how to use this feature in Firefly Grove.
 
 ---
 
@@ -35,8 +35,6 @@ Mobile photo capture lets you preserve moments instantly — no need to wait unt
 - Enhance your memory preservation workflow
 - Connect with your family story in meaningful ways
 
-
-> 🔒 **Privacy Note:** Perfect for family gatherings, travel, and everyday moments you don't want to forget.
 
 
 ---
@@ -87,6 +85,6 @@ Mobile photo capture lets you preserve moments instantly — no need to wait unt
 
 <small>
 **Glow Guide:** This article is auto-generated from the mobile-photo-upload Glow Guide component.
-**Last Updated:** 2025-11-13
+**Last Updated:** 2025-12-12
 **Related Glow Guide:** Appears mobile device, never used camera
 </small>

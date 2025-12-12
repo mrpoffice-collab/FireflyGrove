@@ -9,12 +9,12 @@ import { prisma } from '@/lib/prisma'
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { memoryId: string } }
+  { params }: { params: Promise<{ memoryId: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions)
     const userId = session?.user ? (session.user as any).id : null
-    const { memoryId } = params
+    const { memoryId } = await params
 
     // Fetch child memories (threaded replies)
     const childMemories = await prisma.entry.findMany({

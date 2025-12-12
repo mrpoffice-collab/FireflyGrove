@@ -9,7 +9,7 @@ export const dynamic = 'force-dynamic'
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: { inviteId: string } }
+  { params }: { params: Promise<{ inviteId: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions)
@@ -19,7 +19,7 @@ export async function POST(
     }
 
     const userId = (session.user as any).id
-    const inviteId = params.inviteId
+    const { inviteId } = await params
 
     // Get the invite
     const invite = await prisma.invite.findUnique({

@@ -9,8 +9,8 @@ timeToRead: 2
 icon: 💌
 featured: false
 isNew: false
-createdAt: 2025-11-13T15:16:35.014Z
-updatedAt: 2025-11-13T15:16:35.014Z
+createdAt: 2025-12-12T17:39:15.552Z
+updatedAt: 2025-12-12T17:39:15.552Z
 ---
 
 # 💌 Greeting Cards: Share Memories Beautifully
@@ -25,7 +25,7 @@ updatedAt: 2025-11-13T15:16:35.014Z
 
 ## What is it?
 
-Whether it's sympathy, celebration, or just "thinking of you" — a card with a real memory means infinitely more than store-bought words.
+Learn about greeting cards: share memories beautifully and how to use this feature in Firefly Grove.
 
 ---
 
@@ -35,8 +35,6 @@ Whether it's sympathy, celebration, or just "thinking of you" — a card with a 
 - Enhance your memory preservation workflow
 - Connect with your family story in meaningful ways
 
-
-> 🔒 **Privacy Note:** Choose from beautiful templates designed to let your memory shine.
 
 
 ---
@@ -87,6 +85,6 @@ Whether it's sympathy, celebration, or just "thinking of you" — a card with a 
 
 <small>
 **Glow Guide:** This article is auto-generated from the greeting-cards Glow Guide component.
-**Last Updated:** 2025-11-13
+**Last Updated:** 2025-12-12
 **Related Glow Guide:** Appears visiting /cards for first time
 </small>

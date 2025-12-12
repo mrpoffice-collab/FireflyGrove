@@ -9,8 +9,8 @@ timeToRead: 2
 icon: ✍️
 featured: false
 isNew: false
-createdAt: 2025-11-13T15:16:35.016Z
-updatedAt: 2025-11-13T15:16:35.016Z
+createdAt: 2025-12-12T17:39:15.559Z
+updatedAt: 2025-12-12T17:39:15.559Z
 ---
 
 # ✍️ Co-Authoring: Write Memories Together
@@ -25,7 +25,7 @@ updatedAt: 2025-11-13T15:16:35.016Z
 
 ## What is it?
 
-Co-authoring lets multiple people contribute to a single memory — perfect for shared experiences, family events, or memories told from multiple perspectives.
+Learn about co-authoring: write memories together and how to use this feature in Firefly Grove.
 
 ---
 
@@ -35,8 +35,6 @@ Co-authoring lets multiple people contribute to a single memory — perfect for 
 - Enhance your memory preservation workflow
 - Connect with your family story in meaningful ways
 
-
-> 🔒 **Privacy Note:** Co-authored memories show who contributed what — credit where credit's due.
 
 
 ---
@@ -87,6 +85,6 @@ Co-authoring lets multiple people contribute to a single memory — perfect for 
 
 <small>
 **Glow Guide:** This article is auto-generated from the co-authoring Glow Guide component.
-**Last Updated:** 2025-11-13
+**Last Updated:** 2025-12-12
 **Related Glow Guide:** Appears invited to branch, never co-authored
 </small>

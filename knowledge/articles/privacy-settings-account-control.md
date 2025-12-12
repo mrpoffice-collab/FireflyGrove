@@ -9,8 +9,8 @@ timeToRead: 3
 icon: 🔒
 featured: false
 isNew: false
-createdAt: 2025-11-13T15:16:35.005Z
-updatedAt: 2025-11-13T15:16:35.005Z
+createdAt: 2025-12-12T17:39:15.542Z
+updatedAt: 2025-12-12T17:39:15.542Z
 ---
 
 # 🔒 Privacy Settings: Your Data, Your Rules
@@ -25,7 +25,7 @@ updatedAt: 2025-11-13T15:16:35.005Z
 
 ## What is it?
 
-Firefly Grove gives you granular control over every aspect of your privacy — from who can find you to how your data is used.
+Learn about privacy settings: your data, your rules and how to use this feature in Firefly Grove.
 
 ---
 
@@ -35,8 +35,6 @@ Firefly Grove gives you granular control over every aspect of your privacy — f
 - Enhance your memory preservation workflow
 - Connect with your family story in meaningful ways
 
-
-> 🔒 **Privacy Note:** We're privacy-first by design — your memories are never sold or used for advertising.
 
 
 ---
@@ -87,6 +85,6 @@ Firefly Grove gives you granular control over every aspect of your privacy — f
 
 <small>
 **Glow Guide:** This article is auto-generated from the privacy-settings Glow Guide component.
-**Last Updated:** 2025-11-13
+**Last Updated:** 2025-12-12
 **Related Glow Guide:** Appears never visited settings, active 7 days
 </small>

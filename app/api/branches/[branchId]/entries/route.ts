@@ -9,11 +9,11 @@ import { getSystemUserId } from '@/lib/openGrove'
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: { branchId: string } }
+  { params }: { params: Promise<{ branchId: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions)
-    const branchId = params.branchId
+    const { branchId } = await params
     const body = await req.json()
 
     const { text, visibility, legacyFlag, mediaUrl, videoUrl, audioUrl, memoryCard, forceDuplicate, parentMemoryId, contributorEmail, contributorName } = body

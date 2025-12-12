@@ -9,8 +9,8 @@ timeToRead: 2
 icon: 📖
 featured: false
 isNew: false
-createdAt: 2025-11-13T15:16:35.012Z
-updatedAt: 2025-11-13T15:16:35.012Z
+createdAt: 2025-12-12T17:39:15.548Z
+updatedAt: 2025-12-12T17:39:15.548Z
 ---
 
 # 📖 Memory Book: Beautiful Printed Stories
@@ -25,7 +25,7 @@ updatedAt: 2025-11-13T15:16:35.012Z
 
 ## What is it?
 
-A Memory Book transforms your digital collection into a professionally formatted, printable volume — perfect for gifts, coffee tables, or legacy preservation.
+Learn about memory book: beautiful printed stories and how to use this feature in Firefly Grove.
 
 ---
 
@@ -35,8 +35,6 @@ A Memory Book transforms your digital collection into a professionally formatted
 - Enhance your memory preservation workflow
 - Connect with your family story in meaningful ways
 
-
-> 🔒 **Privacy Note:** Download as PDF to print yourself, or order professional binding through our partners.
 
 
 ---
@@ -87,6 +85,6 @@ A Memory Book transforms your digital collection into a professionally formatted
 
 <small>
 **Glow Guide:** This article is auto-generated from the memory-book Glow Guide component.
-**Last Updated:** 2025-11-13
+**Last Updated:** 2025-12-12
 **Related Glow Guide:** Appears branch with 15+ memories
 </small>

@@ -9,8 +9,8 @@ timeToRead: 2
 icon: ✨
 featured: false
 isNew: false
-createdAt: 2025-11-13T15:16:35.015Z
-updatedAt: 2025-11-13T15:16:35.015Z
+createdAt: 2025-12-12T17:39:15.557Z
+updatedAt: 2025-12-12T17:39:15.557Z
 ---
 
 # ✨ Firefly Bursts: Rediscover Your Memories
@@ -25,7 +25,7 @@ updatedAt: 2025-11-13T15:16:35.015Z
 
 ## What is it?
 
-Firefly Bursts take your memories and create a beautiful, shareable moment of reflection. Watch your words glow and fade like fireflies in the night.
+Learn about firefly bursts: rediscover your memories and how to use this feature in Firefly Grove.
 
 ---
 
@@ -35,8 +35,6 @@ Firefly Bursts take your memories and create a beautiful, shareable moment of re
 - Enhance your memory preservation workflow
 - Connect with your family story in meaningful ways
 
-
-> 🔒 **Privacy Note:** Generate a new burst anytime — each one is unique and ephemeral.
 
 
 ---
@@ -87,6 +85,6 @@ Firefly Bursts take your memories and create a beautiful, shareable moment of re
 
 <small>
 **Glow Guide:** This article is auto-generated from the firefly-bursts Glow Guide component.
-**Last Updated:** 2025-11-13
+**Last Updated:** 2025-12-12
 **Related Glow Guide:** Appears user has 20+ memories but never generated a burst
 </small>

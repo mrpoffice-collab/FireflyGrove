@@ -9,8 +9,8 @@ timeToRead: 3
 icon: 🕯️
 featured: false
 isNew: false
-createdAt: 2025-11-13T15:16:35.014Z
-updatedAt: 2025-11-13T15:16:35.014Z
+createdAt: 2025-12-12T17:39:15.551Z
+updatedAt: 2025-12-12T17:39:15.551Z
 ---
 
 # 🕯️ Choosing Your Keepers
@@ -85,6 +85,6 @@ Learn about choosing your keepers and how to use this feature in Firefly Grove.
 
 <small>
 **Glow Guide:** This article is auto-generated from the heirs Glow Guide component.
-**Last Updated:** 2025-11-13
+**Last Updated:** 2025-12-12
 **Related Glow Guide:** Appears user has created 3+ memories but 0 heirs set
 </small>

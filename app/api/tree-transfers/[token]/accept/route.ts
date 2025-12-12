@@ -16,7 +16,7 @@ export const dynamic = 'force-dynamic'
  */
 export async function POST(
   req: NextRequest,
-  { params }: { params: { token: string } }
+  { params }: { params: Promise<{ token: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions)
@@ -26,7 +26,7 @@ export async function POST(
     }
 
     const userId = (session.user as any).id
-    const token = params.token
+    const { token } = await params
     const { option } = await req.json()
 
     if (!option || !['grove', 'single', 'new-grove'].includes(option)) {

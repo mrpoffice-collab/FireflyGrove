@@ -9,8 +9,8 @@ timeToRead: 3
 icon: ⏰
 featured: false
 isNew: false
-createdAt: 2025-11-13T15:16:35.009Z
-updatedAt: 2025-11-13T15:16:35.009Z
+createdAt: 2025-12-12T17:39:15.547Z
+updatedAt: 2025-12-12T17:39:15.547Z
 ---
 
 # ⏰ Memory Scheduling: Time-Released Stories
@@ -25,7 +25,7 @@ updatedAt: 2025-11-13T15:16:35.009Z
 
 ## What is it?
 
-Scheduled memories let you be present in moments you might not be there for — delivering the right words at exactly the right time.
+Learn about memory scheduling: time-released stories and how to use this feature in Firefly Grove.
 
 ---
 
@@ -35,8 +35,6 @@ Scheduled memories let you be present in moments you might not be there for — 
 - Enhance your memory preservation workflow
 - Connect with your family story in meaningful ways
 
-
-> 🔒 **Privacy Note:** You can schedule multiple versions of the same memory for different recipients.
 
 
 ---
@@ -87,6 +85,6 @@ Scheduled memories let you be present in moments you might not be there for — 
 
 <small>
 **Glow Guide:** This article is auto-generated from the memory-scheduling Glow Guide component.
-**Last Updated:** 2025-11-13
+**Last Updated:** 2025-12-12
 **Related Glow Guide:** Appears creating memory, never scheduled
 </small>

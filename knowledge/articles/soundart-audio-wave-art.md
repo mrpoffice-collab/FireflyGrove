@@ -9,8 +9,8 @@ timeToRead: 2
 icon: 🎨
 featured: false
 isNew: false
-createdAt: 2025-11-13T15:16:35.003Z
-updatedAt: 2025-11-13T15:16:35.003Z
+createdAt: 2025-12-12T17:39:15.539Z
+updatedAt: 2025-12-12T17:39:15.539Z
 ---
 
 # 🎨 SoundArt: Turn Voice into Visual Beauty
@@ -25,7 +25,7 @@ updatedAt: 2025-11-13T15:16:35.003Z
 
 ## What is it?
 
-SoundArt transforms voice recordings into beautiful waveform visualizations — perfect for framing, gifting, or remembering.
+Learn about soundart: turn voice into visual beauty and how to use this feature in Firefly Grove.
 
 ---
 
@@ -35,8 +35,6 @@ SoundArt transforms voice recordings into beautiful waveform visualizations — 
 - Enhance your memory preservation workflow
 - Connect with your family story in meaningful ways
 
-
-> 🔒 **Privacy Note:** Customize colors, styles, and add text to make each piece uniquely meaningful.
 
 
 ---
@@ -87,6 +85,6 @@ SoundArt transforms voice recordings into beautiful waveform visualizations — 
 
 <small>
 **Glow Guide:** This article is auto-generated from the soundart Glow Guide component.
-**Last Updated:** 2025-11-13
+**Last Updated:** 2025-12-12
 **Related Glow Guide:** Appears visiting /soundart, has audio memories
 </small>

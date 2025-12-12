@@ -9,8 +9,8 @@ timeToRead: 2
 icon: ✨
 featured: false
 isNew: false
-createdAt: 2025-11-13T15:16:35.003Z
-updatedAt: 2025-11-13T15:16:35.003Z
+createdAt: 2025-12-12T17:39:15.539Z
+updatedAt: 2025-12-12T17:39:15.539Z
 ---
 
 # ✨ Spark Collections: Organize Your Journey
@@ -25,7 +25,7 @@ updatedAt: 2025-11-13T15:16:35.003Z
 
 ## What is it?
 
-Spark Collections let you group prompts by theme, create personal workflows, or design storytelling journeys for yourself or others.
+Learn about spark collections: organize your journey and how to use this feature in Firefly Grove.
 
 ---
 
@@ -35,8 +35,6 @@ Spark Collections let you group prompts by theme, create personal workflows, or 
 - Enhance your memory preservation workflow
 - Connect with your family story in meaningful ways
 
-
-> 🔒 **Privacy Note:** Collections can include our prompts, your own custom questions, or a mix of both.
 
 
 ---
@@ -87,6 +85,6 @@ Spark Collections let you group prompts by theme, create personal workflows, or 
 
 <small>
 **Glow Guide:** This article is auto-generated from the spark-collections Glow Guide component.
-**Last Updated:** 2025-11-13
+**Last Updated:** 2025-12-12
 **Related Glow Guide:** Appears viewing /sparks, never created collection
 </small>

@@ -12,7 +12,7 @@ export const dynamic = 'force-dynamic'
  */
 export async function POST(
   req: NextRequest,
-  { params }: { params: { requestId: string } }
+  { params }: { params: Promise<{ requestId: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions)
@@ -22,7 +22,7 @@ export async function POST(
     }
 
     const userId = (session.user as any).id
-    const requestId = params.requestId
+    const { requestId } = await params
 
     // Get the connection request
     const request = await prisma.branchConnectionRequest.findUnique({

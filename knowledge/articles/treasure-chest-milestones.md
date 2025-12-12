@@ -9,8 +9,8 @@ timeToRead: 2
 icon: 🎊
 featured: false
 isNew: false
-createdAt: 2025-11-13T15:16:35.001Z
-updatedAt: 2025-11-13T15:16:35.001Z
+createdAt: 2025-12-12T17:39:15.535Z
+updatedAt: 2025-12-12T17:39:15.535Z
 ---
 
 # 🎊 Treasure Chest Milestones: Celebrate Your Journey
@@ -25,7 +25,7 @@ updatedAt: 2025-11-13T15:16:35.001Z
 
 ## What is it?
 
-Your Treasure Chest grows richer as you show up for yourself. Milestones unlock unique reflections, insights, and surprises.
+Learn about treasure chest milestones: celebrate your journey and how to use this feature in Firefly Grove.
 
 ---
 
@@ -35,8 +35,6 @@ Your Treasure Chest grows richer as you show up for yourself. Milestones unlock 
 - Enhance your memory preservation workflow
 - Connect with your family story in meaningful ways
 
-
-> 🔒 **Privacy Note:** The real treasure? The habit you're building and the memories you're preserving.
 
 
 ---
@@ -87,6 +85,6 @@ Your Treasure Chest grows richer as you show up for yourself. Milestones unlock 
 
 <small>
 **Glow Guide:** This article is auto-generated from the treasure-chest-milestone Glow Guide component.
-**Last Updated:** 2025-11-13
+**Last Updated:** 2025-12-12
 **Related Glow Guide:** Appears after 7 day streak, milestone reached
 </small>

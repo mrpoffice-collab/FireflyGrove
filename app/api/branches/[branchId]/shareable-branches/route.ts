@@ -6,7 +6,7 @@ import { getBranchPreferences } from '@/lib/association'
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { branchId: string } }
+  { params }: { params: Promise<{ branchId: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions)
@@ -15,7 +15,7 @@ export async function GET(
     }
 
     const userId = (session.user as any).id
-    const { branchId } = params
+    const { branchId } = await params
 
     // Get the current branch to find its grove
     const currentBranch = await prisma.branch.findUnique({

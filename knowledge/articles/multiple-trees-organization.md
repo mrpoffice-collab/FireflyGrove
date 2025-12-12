@@ -9,8 +9,8 @@ timeToRead: 2
 icon: 🌳
 featured: false
 isNew: false
-createdAt: 2025-11-13T15:16:35.007Z
-updatedAt: 2025-11-13T15:16:35.007Z
+createdAt: 2025-12-12T17:39:15.544Z
+updatedAt: 2025-12-12T17:39:15.544Z
 ---
 
 # 🌳 Multiple Trees: Organize by Life
@@ -25,7 +25,7 @@ updatedAt: 2025-11-13T15:16:35.007Z
 
 ## What is it?
 
-Different parts of your life deserve different trees. Separate your own story from Mom's legacy. Keep your marriage memories distinct from childhood tales.
+Learn about multiple trees: organize by life and how to use this feature in Firefly Grove.
 
 ---
 
@@ -35,8 +35,6 @@ Different parts of your life deserve different trees. Separate your own story fr
 - Enhance your memory preservation workflow
 - Connect with your family story in meaningful ways
 
-
-> 🔒 **Privacy Note:** Trees can have different privacy settings, heirs, and purposes — total flexibility.
 
 
 ---
@@ -87,6 +85,6 @@ Different parts of your life deserve different trees. Separate your own story fr
 
 <small>
 **Glow Guide:** This article is auto-generated from the multiple-trees Glow Guide component.
-**Last Updated:** 2025-11-13
+**Last Updated:** 2025-12-12
 **Related Glow Guide:** Appears created 1 tree, been active 7 days
 </small>

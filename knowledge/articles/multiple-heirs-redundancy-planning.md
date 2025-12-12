@@ -9,8 +9,8 @@ timeToRead: 3
 icon: 👨‍👩‍👧‍👦
 featured: false
 isNew: false
-createdAt: 2025-11-13T15:16:35.007Z
-updatedAt: 2025-11-13T15:16:35.007Z
+createdAt: 2025-12-12T17:39:15.544Z
+updatedAt: 2025-12-12T17:39:15.544Z
 ---
 
 # 👨‍👩‍👧‍👦 Multiple Heirs: Redundancy & Fairness
@@ -25,7 +25,7 @@ updatedAt: 2025-11-13T15:16:35.007Z
 
 ## What is it?
 
-Multiple heirs protect your legacy and honor different relationships. It's not about playing favorites — it's about ensuring nothing is lost.
+Learn about multiple heirs: redundancy & fairness and how to use this feature in Firefly Grove.
 
 ---
 
@@ -35,8 +35,6 @@ Multiple heirs protect your legacy and honor different relationships. It's not a
 - Enhance your memory preservation workflow
 - Connect with your family story in meaningful ways
 
-
-> 🔒 **Privacy Note:** You can set different conditions for each heir — ultimate flexibility.
 
 
 ---
@@ -87,6 +85,6 @@ Multiple heirs protect your legacy and honor different relationships. It's not a
 
 <small>
 **Glow Guide:** This article is auto-generated from the multiple-heirs Glow Guide component.
-**Last Updated:** 2025-11-13
+**Last Updated:** 2025-12-12
 **Related Glow Guide:** Appears 1 heir set, been active 30 days
 </small>

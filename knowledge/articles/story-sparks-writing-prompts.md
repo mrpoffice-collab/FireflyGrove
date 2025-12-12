@@ -9,8 +9,8 @@ timeToRead: 2
 icon: 📝
 featured: false
 isNew: false
-createdAt: 2025-11-13T15:16:35.002Z
-updatedAt: 2025-11-13T15:16:35.002Z
+createdAt: 2025-12-12T17:39:15.536Z
+updatedAt: 2025-12-12T17:39:15.536Z
 ---
 
 # 📝 Story Sparks: Writing Prompts
@@ -25,7 +25,7 @@ updatedAt: 2025-11-13T15:16:35.002Z
 
 ## What is it?
 
-Story Sparks are thoughtful questions designed to unlock memories you didn't even know you had.
+Learn about story sparks: writing prompts and how to use this feature in Firefly Grove.
 
 ---
 
@@ -35,8 +35,6 @@ Story Sparks are thoughtful questions designed to unlock memories you didn't eve
 - Enhance your memory preservation workflow
 - Connect with your family story in meaningful ways
 
-
-> 🔒 **Privacy Note:** Pro tip: Browse sparks when you have time, then write when inspiration strikes.
 
 
 ---
@@ -87,6 +85,6 @@ Story Sparks are thoughtful questions designed to unlock memories you didn't eve
 
 <small>
 **Glow Guide:** This article is auto-generated from the story-sparks Glow Guide component.
-**Last Updated:** 2025-11-13
+**Last Updated:** 2025-12-12
 **Related Glow Guide:** Appears viewing sparks page, never used a prompt
 </small>

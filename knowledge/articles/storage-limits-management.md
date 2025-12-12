@@ -9,8 +9,8 @@ timeToRead: 2
 icon: 💾
 featured: false
 isNew: false
-createdAt: 2025-11-13T15:16:35.003Z
-updatedAt: 2025-11-13T15:16:35.003Z
+createdAt: 2025-12-12T17:39:15.538Z
+updatedAt: 2025-12-12T17:39:15.538Z
 ---
 
 # 💾 Storage Limits: Manage Your Space
@@ -25,7 +25,7 @@ updatedAt: 2025-11-13T15:16:35.003Z
 
 ## What is it?
 
-Storage limits exist to keep the platform sustainable, but there are smart ways to maximize what you have and tools to help you manage it.
+Learn about storage limits: manage your space and how to use this feature in Firefly Grove.
 
 ---
 
@@ -35,8 +35,6 @@ Storage limits exist to keep the platform sustainable, but there are smart ways 
 - Enhance your memory preservation workflow
 - Connect with your family story in meaningful ways
 
-
-> 🔒 **Privacy Note:** Or upgrade your plan for more space — it's like adding rooms to your memory home.
 
 
 ---
@@ -87,6 +85,6 @@ Storage limits exist to keep the platform sustainable, but there are smart ways 
 
 <small>
 **Glow Guide:** This article is auto-generated from the storage-limits Glow Guide component.
-**Last Updated:** 2025-11-13
+**Last Updated:** 2025-12-12
 **Related Glow Guide:** Appears 50% storage used
 </small>

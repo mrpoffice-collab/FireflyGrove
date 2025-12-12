@@ -9,8 +9,8 @@ timeToRead: 2
 icon: ✏️
 featured: false
 isNew: false
-createdAt: 2025-11-13T15:16:35.010Z
-updatedAt: 2025-11-13T15:16:35.010Z
+createdAt: 2025-12-12T17:39:15.548Z
+updatedAt: 2025-12-12T17:39:15.548Z
 ---
 
 # ✏️ Memory Editing: Enrich Your Stories
@@ -25,7 +25,7 @@ updatedAt: 2025-11-13T15:16:35.010Z
 
 ## What is it?
 
-Memories aren't frozen in time — they're living documents. As you recall new details or find old photos, come back and enrich what you've preserved.
+Learn about memory editing: enrich your stories and how to use this feature in Firefly Grove.
 
 ---
 
@@ -35,8 +35,6 @@ Memories aren't frozen in time — they're living documents. As you recall new d
 - Enhance your memory preservation workflow
 - Connect with your family story in meaningful ways
 
-
-> 🔒 **Privacy Note:** Don't worry about perfection on the first try. You can always come back.
 
 
 ---
@@ -87,6 +85,6 @@ Memories aren't frozen in time — they're living documents. As you recall new d
 
 <small>
 **Glow Guide:** This article is auto-generated from the memory-editing Glow Guide component.
-**Last Updated:** 2025-11-13
+**Last Updated:** 2025-12-12
 **Related Glow Guide:** Appears viewing own memory, never edited
 </small>

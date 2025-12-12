@@ -9,8 +9,8 @@ timeToRead: 2
 icon: 🎤
 featured: false
 isNew: false
-createdAt: 2025-11-13T15:16:35.000Z
-updatedAt: 2025-11-13T15:16:35.000Z
+createdAt: 2025-12-12T17:39:15.532Z
+updatedAt: 2025-12-12T17:39:15.532Z
 ---
 
 # 🎤 Voice Capture on Mobile: Your Best Tool
@@ -25,7 +25,7 @@ updatedAt: 2025-11-13T15:16:35.000Z
 
 ## What is it?
 
-Mobile voice recording is hands-free, effortless, and perfect for those moments when typing would break the flow of memory.
+Learn about voice capture on mobile: your best tool and how to use this feature in Firefly Grove.
 
 ---
 
@@ -35,8 +35,6 @@ Mobile voice recording is hands-free, effortless, and perfect for those moments 
 - Enhance your memory preservation workflow
 - Connect with your family story in meaningful ways
 
-
-> 🔒 **Privacy Note:** Auto-transcribed to text, so your voice becomes searchable — best of both worlds.
 
 
 ---
@@ -87,6 +85,6 @@ Mobile voice recording is hands-free, effortless, and perfect for those moments 
 
 <small>
 **Glow Guide:** This article is auto-generated from the voice-capture-mobile Glow Guide component.
-**Last Updated:** 2025-11-13
+**Last Updated:** 2025-12-12
 **Related Glow Guide:** Appears mobile device, never recorded
 </small>

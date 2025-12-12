@@ -9,8 +9,8 @@ timeToRead: 3
 icon: ⏳
 featured: false
 isNew: false
-createdAt: 2025-11-13T15:16:35.014Z
-updatedAt: 2025-11-13T15:16:35.014Z
+createdAt: 2025-12-12T17:39:15.551Z
+updatedAt: 2025-12-12T17:39:15.551Z
 ---
 
 # ⏳ Heir Conditions: When They Receive Access
@@ -25,7 +25,7 @@ updatedAt: 2025-11-13T15:16:35.014Z
 
 ## What is it?
 
-Heir conditions let you orchestrate the perfect moment — ensuring your legacy arrives when they're ready, when it matters most, or simply when you're gone.
+Learn about heir conditions: when they receive access and how to use this feature in Firefly Grove.
 
 ---
 
@@ -35,8 +35,6 @@ Heir conditions let you orchestrate the perfect moment — ensuring your legacy 
 - Enhance your memory preservation workflow
 - Connect with your family story in meaningful ways
 
-
-> 🔒 **Privacy Note:** Different branches can have different conditions — total flexibility.
 
 
 ---
@@ -87,6 +85,6 @@ Heir conditions let you orchestrate the perfect moment — ensuring your legacy 
 
 <small>
 **Glow Guide:** This article is auto-generated from the heir-conditions Glow Guide component.
-**Last Updated:** 2025-11-13
+**Last Updated:** 2025-12-12
 **Related Glow Guide:** Appears set heir, but no conditions
 </small>

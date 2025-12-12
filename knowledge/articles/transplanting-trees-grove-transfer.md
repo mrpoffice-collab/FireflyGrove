@@ -9,8 +9,8 @@ timeToRead: 3
 icon: 🌲
 featured: false
 isNew: false
-createdAt: 2025-11-13T15:16:35.001Z
-updatedAt: 2025-11-13T15:16:35.001Z
+createdAt: 2025-12-12T17:39:15.535Z
+updatedAt: 2025-12-12T17:39:15.535Z
 ---
 
 # 🌲 Transplanting Trees: Move Between Groves
@@ -25,7 +25,7 @@ updatedAt: 2025-11-13T15:16:35.001Z
 
 ## What is it?
 
-Transplanting lets you move entire trees between groves while keeping everything intact — all memories, branches, permissions, and connections.
+Learn about transplanting trees: move between groves and how to use this feature in Firefly Grove.
 
 ---
 
@@ -35,8 +35,6 @@ Transplanting lets you move entire trees between groves while keeping everything
 - Enhance your memory preservation workflow
 - Connect with your family story in meaningful ways
 
-
-> 🔒 **Privacy Note:** Transplanting requires permission from both grove owners — protection for everyone.
 
 
 ---
@@ -87,6 +85,6 @@ Transplanting lets you move entire trees between groves while keeping everything
 
 <small>
 **Glow Guide:** This article is auto-generated from the transplanting-trees Glow Guide component.
-**Last Updated:** 2025-11-13
+**Last Updated:** 2025-12-12
 **Related Glow Guide:** Appears multiple groves exist
 </small>

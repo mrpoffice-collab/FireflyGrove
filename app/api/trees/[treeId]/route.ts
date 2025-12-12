@@ -15,7 +15,7 @@ export const dynamic = 'force-dynamic'
  */
 export async function GET(
   req: NextRequest,
-  { params }: { params: { treeId: string } }
+  { params }: { params: Promise<{ treeId: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions)
@@ -25,7 +25,7 @@ export async function GET(
     }
 
     const userId = (session.user as any).id
-    const treeId = params.treeId
+    const { treeId } = await params
 
     // Try to find as old Tree model first
     const tree = await prisma.tree.findUnique({

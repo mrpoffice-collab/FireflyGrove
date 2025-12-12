@@ -9,7 +9,7 @@ import { prisma } from '@/lib/prisma'
  */
 export async function POST(
   request: NextRequest,
-  { params }: { params: { memoryId: string } }
+  { params }: { params: Promise<{ memoryId: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions)
@@ -25,7 +25,7 @@ export async function POST(
       return NextResponse.json({ error: 'User not found' }, { status: 404 })
     }
 
-    const { memoryId } = params
+    const { memoryId } = await params
 
     // Check if memory exists and user has access to it
     const memory = await prisma.entry.findUnique({
@@ -129,7 +129,7 @@ export async function POST(
  */
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { memoryId: string } }
+  { params }: { params: Promise<{ memoryId: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions)
@@ -145,7 +145,7 @@ export async function DELETE(
       return NextResponse.json({ error: 'User not found' }, { status: 404 })
     }
 
-    const { memoryId } = params
+    const { memoryId } = await params
 
     // Check if glow exists
     const existingGlow = await prisma.memoryGlow.findUnique({

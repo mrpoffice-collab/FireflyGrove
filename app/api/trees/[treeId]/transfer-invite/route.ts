@@ -14,9 +14,10 @@ export const dynamic = 'force-dynamic'
  */
 export async function POST(
   req: NextRequest,
-  { params }: { params: { treeId: string } }
+  { params }: { params: Promise<{ treeId: string }> }
 ) {
   try {
+    const { treeId } = await params
     const session = await getServerSession(authOptions)
 
     if (!session?.user) {
@@ -24,7 +25,7 @@ export async function POST(
     }
 
     const userId = (session.user as any).id
-    const personId = params.treeId
+    const personId = treeId
 
     const body = await req.json()
     const { recipientEmail, message } = body

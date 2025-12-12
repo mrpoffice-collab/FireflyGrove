@@ -9,8 +9,8 @@ timeToRead: 2
 icon: ⚡
 featured: false
 isNew: false
-createdAt: 2025-11-13T15:16:35.017Z
-updatedAt: 2025-11-13T15:16:35.017Z
+createdAt: 2025-12-12T17:39:15.560Z
+updatedAt: 2025-12-12T17:39:15.560Z
 ---
 
 # ⚡ Audio Sparks: Quick Voice Capture
@@ -25,7 +25,7 @@ updatedAt: 2025-11-13T15:16:35.017Z
 
 ## What is it?
 
-Audio Sparks lets you capture these fleeting moments without opening a full memory form. Just click, speak, done.
+Learn about audio sparks: quick voice capture and how to use this feature in Firefly Grove.
 
 ---
 
@@ -35,8 +35,6 @@ Audio Sparks lets you capture these fleeting moments without opening a full memo
 - Enhance your memory preservation workflow
 - Connect with your family story in meaningful ways
 
-
-> 🔒 **Privacy Note:** Perfect for daily practice — keep the muscle of remembering strong.
 
 
 ---
@@ -87,6 +85,6 @@ Audio Sparks lets you capture these fleeting moments without opening a full memo
 
 <small>
 **Glow Guide:** This article is auto-generated from the audio-sparks Glow Guide component.
-**Last Updated:** 2025-11-13
+**Last Updated:** 2025-12-12
 **Related Glow Guide:** Appears user has never used audio sparks feature
 </small>

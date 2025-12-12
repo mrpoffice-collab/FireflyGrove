@@ -9,8 +9,8 @@ timeToRead: 3
 icon: 📥
 featured: false
 isNew: false
-createdAt: 2025-11-13T15:16:35.013Z
-updatedAt: 2025-11-13T15:16:35.013Z
+createdAt: 2025-12-12T17:39:15.550Z
+updatedAt: 2025-12-12T17:39:15.550Z
 ---
 
 # 📥 Import Features: Bring Your Existing Memories
@@ -25,7 +25,7 @@ updatedAt: 2025-11-13T15:16:35.013Z
 
 ## What is it?
 
-Our import tools help you migrate existing content quickly, giving you a head start on building your legacy collection.
+Learn about import features: bring your existing memories and how to use this feature in Firefly Grove.
 
 ---
 
@@ -35,8 +35,6 @@ Our import tools help you migrate existing content quickly, giving you a head st
 - Enhance your memory preservation workflow
 - Connect with your family story in meaningful ways
 
-
-> 🔒 **Privacy Note:** Imports preserve original dates, so your timeline stays authentic.
 
 
 ---
@@ -87,6 +85,6 @@ Our import tools help you migrate existing content quickly, giving you a head st
 
 <small>
 **Glow Guide:** This article is auto-generated from the import-features Glow Guide component.
-**Last Updated:** 2025-11-13
+**Last Updated:** 2025-12-12
 **Related Glow Guide:** Appears new user, no memories yet
 </small>

@@ -9,8 +9,8 @@ timeToRead: 2
 icon: 📱
 featured: false
 isNew: false
-createdAt: 2025-11-13T15:16:35.008Z
-updatedAt: 2025-11-13T15:16:35.008Z
+createdAt: 2025-12-12T17:39:15.546Z
+updatedAt: 2025-12-12T17:39:15.546Z
 ---
 
 # 📱 Mobile App: Memory Preservation On-the-Go
@@ -25,7 +25,7 @@ updatedAt: 2025-11-13T15:16:35.008Z
 
 ## What is it?
 
-The Firefly Grove mobile app is built specifically for capturing memories in the moment — when inspiration strikes and you're away from your desk.
+Learn about mobile app: memory preservation on-the-go and how to use this feature in Firefly Grove.
 
 ---
 
@@ -35,8 +35,6 @@ The Firefly Grove mobile app is built specifically for capturing memories in the
 - Enhance your memory preservation workflow
 - Connect with your family story in meaningful ways
 
-
-> 🔒 **Privacy Note:** Available for iOS and Android — same account, seamless sync.
 
 
 ---
@@ -87,6 +85,6 @@ The Firefly Grove mobile app is built specifically for capturing memories in the
 
 <small>
 **Glow Guide:** This article is auto-generated from the mobile-app Glow Guide component.
-**Last Updated:** 2025-11-13
+**Last Updated:** 2025-12-12
 **Related Glow Guide:** Appears mobile browser, been active 3+ sessions
 </small>

@@ -9,8 +9,8 @@ timeToRead: 2
 icon: 🤝
 featured: false
 isNew: false
-createdAt: 2025-11-13T15:16:35.004Z
-updatedAt: 2025-11-13T15:16:35.004Z
+createdAt: 2025-12-12T17:39:15.540Z
+updatedAt: 2025-12-12T17:39:15.540Z
 ---
 
 # 🤝 Inviting Family Members
@@ -85,6 +85,6 @@ Learn about inviting family members and how to use this feature in Firefly Grove
 
 <small>
 **Glow Guide:** This article is auto-generated from the sharing Glow Guide component.
-**Last Updated:** 2025-11-13
+**Last Updated:** 2025-12-12
 **Related Glow Guide:** Appears user has 5+ memories but 0 collaborators invited
 </small>

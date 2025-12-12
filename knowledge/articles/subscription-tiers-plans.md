@@ -9,8 +9,8 @@ timeToRead: 2
 icon: 💎
 featured: false
 isNew: false
-createdAt: 2025-11-13T15:16:35.001Z
-updatedAt: 2025-11-13T15:16:35.001Z
+createdAt: 2025-12-12T17:39:15.536Z
+updatedAt: 2025-12-12T17:39:15.536Z
 ---
 
 # 💎 Subscription Tiers: Choose Your Plan
@@ -25,7 +25,7 @@ updatedAt: 2025-11-13T15:16:35.001Z
 
 ## What is it?
 
-Firefly Grove offers plans for every stage of your memory preservation journey — from casual preservers to serious legacy builders.
+Learn about subscription tiers: choose your plan and how to use this feature in Firefly Grove.
 
 ---
 
@@ -35,8 +35,6 @@ Firefly Grove offers plans for every stage of your memory preservation journey �
 - Enhance your memory preservation workflow
 - Connect with your family story in meaningful ways
 
-
-> 🔒 **Privacy Note:** All plans include full access to products, exports, and heir planning features.
 
 
 ---
@@ -87,6 +85,6 @@ Firefly Grove offers plans for every stage of your memory preservation journey �
 
 <small>
 **Glow Guide:** This article is auto-generated from the subscription-tiers Glow Guide component.
-**Last Updated:** 2025-11-13
+**Last Updated:** 2025-12-12
 **Related Glow Guide:** Appears approaching tree limit
 </small>

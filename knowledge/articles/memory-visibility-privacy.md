@@ -9,8 +9,8 @@ timeToRead: 2
 icon: 👁️
 featured: false
 isNew: false
-createdAt: 2025-11-13T15:16:35.009Z
-updatedAt: 2025-11-13T15:16:35.009Z
+createdAt: 2025-12-12T17:39:15.547Z
+updatedAt: 2025-12-12T17:39:15.547Z
 ---
 
 # 👁️ Memory Visibility: Private vs Shared
@@ -25,7 +25,7 @@ updatedAt: 2025-11-13T15:16:35.009Z
 
 ## What is it?
 
-Not every memory is meant for everyone. Some are just for you. Some are gifts for family now. Some are treasures for heirs later.
+Learn about memory visibility: private vs shared and how to use this feature in Firefly Grove.
 
 ---
 
@@ -35,8 +35,6 @@ Not every memory is meant for everyone. Some are just for you. Some are gifts fo
 - Enhance your memory preservation workflow
 - Connect with your family story in meaningful ways
 
-
-> 🔒 **Privacy Note:** You can change visibility settings anytime, even after saving.
 
 
 ---
@@ -87,6 +85,6 @@ Not every memory is meant for everyone. Some are just for you. Some are gifts fo
 
 <small>
 **Glow Guide:** This article is auto-generated from the memory-visibility Glow Guide component.
-**Last Updated:** 2025-11-13
+**Last Updated:** 2025-12-12
 **Related Glow Guide:** Appears creating first memory in shared branch
 </small>

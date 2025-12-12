@@ -9,8 +9,8 @@ timeToRead: 2
 icon: ✅
 featured: false
 isNew: false
-createdAt: 2025-11-13T15:16:35.018Z
-updatedAt: 2025-11-13T15:16:35.018Z
+createdAt: 2025-12-12T17:39:15.561Z
+updatedAt: 2025-12-12T17:39:15.561Z
 ---
 
 # ✅ Approval Workflow: Curate Your Tree
@@ -25,7 +25,7 @@ updatedAt: 2025-11-13T15:16:35.018Z
 
 ## What is it?
 
-Approval workflows give you control over what appears in your trees — ensuring quality, accuracy, and appropriateness before memories are published.
+Learn about approval workflow: curate your tree and how to use this feature in Firefly Grove.
 
 ---
 
@@ -35,8 +35,6 @@ Approval workflows give you control over what appears in your trees — ensuring
 - Enhance your memory preservation workflow
 - Connect with your family story in meaningful ways
 
-
-> 🔒 **Privacy Note:** You can set different approval rules for different members based on trust.
 
 
 ---
@@ -87,6 +85,6 @@ Approval workflows give you control over what appears in your trees — ensuring
 
 <small>
 **Glow Guide:** This article is auto-generated from the approval-workflow Glow Guide component.
-**Last Updated:** 2025-11-13
+**Last Updated:** 2025-12-12
 **Related Glow Guide:** Appears first pending memory in owned branch
 </small>

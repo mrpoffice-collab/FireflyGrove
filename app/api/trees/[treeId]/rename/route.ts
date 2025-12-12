@@ -13,7 +13,7 @@ export const dynamic = 'force-dynamic'
  */
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { treeId: string } }
+  { params }: { params: Promise<{ treeId: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions)
@@ -23,7 +23,7 @@ export async function PATCH(
     }
 
     const userId = (session.user as any).id
-    const treeId = params.treeId
+    const { treeId } = await params
     const { name, description } = await req.json()
 
     if (!name || name.trim().length === 0) {

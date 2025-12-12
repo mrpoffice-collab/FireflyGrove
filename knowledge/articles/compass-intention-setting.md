@@ -9,8 +9,8 @@ timeToRead: 3
 icon: 🧭
 featured: false
 isNew: false
-createdAt: 2025-11-13T15:16:35.016Z
-updatedAt: 2025-11-13T15:16:35.016Z
+createdAt: 2025-12-12T17:39:15.557Z
+updatedAt: 2025-12-12T17:39:15.557Z
 ---
 
 # 🧭 Compass: Set Your Memory Intentions
@@ -25,7 +25,7 @@ updatedAt: 2025-11-13T15:16:35.016Z
 
 ## What is it?
 
-Your Compass helps you set goals, track progress, and stay focused on what matters most in your memory preservation journey.
+Learn about compass: set your memory intentions and how to use this feature in Firefly Grove.
 
 ---
 
@@ -35,8 +35,6 @@ Your Compass helps you set goals, track progress, and stay focused on what matte
 - Enhance your memory preservation workflow
 - Connect with your family story in meaningful ways
 
-
-> 🔒 **Privacy Note:** Set as many intentions as you want, or keep it simple with just one focus.
 
 
 ---
@@ -87,6 +85,6 @@ Your Compass helps you set goals, track progress, and stay focused on what matte
 
 <small>
 **Glow Guide:** This article is auto-generated from the compass Glow Guide component.
-**Last Updated:** 2025-11-13
+**Last Updated:** 2025-12-12
 **Related Glow Guide:** Appears first visit to /compass
 </small>

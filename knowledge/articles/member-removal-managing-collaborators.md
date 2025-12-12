@@ -9,8 +9,8 @@ timeToRead: 2
 icon: 👋
 featured: false
 isNew: false
-createdAt: 2025-11-13T15:16:35.013Z
-updatedAt: 2025-11-13T15:16:35.013Z
+createdAt: 2025-12-12T17:39:15.548Z
+updatedAt: 2025-12-12T17:39:15.548Z
 ---
 
 # 👋 Member Removal: Manage Your Circle
@@ -25,7 +25,7 @@ updatedAt: 2025-11-13T15:16:35.013Z
 
 ## What is it?
 
-Removing someone doesn't erase their contributions — it just revokes their access going forward. Your tree, your rules.
+Learn about member removal: manage your circle and how to use this feature in Firefly Grove.
 
 ---
 
@@ -35,8 +35,6 @@ Removing someone doesn't erase their contributions — it just revokes their acc
 - Enhance your memory preservation workflow
 - Connect with your family story in meaningful ways
 
-
-> 🔒 **Privacy Note:** Common reasons: divorce, family conflict, changed privacy needs, or simply drift.
 
 
 ---
@@ -87,6 +85,6 @@ Removing someone doesn't erase their contributions — it just revokes their acc
 
 <small>
 **Glow Guide:** This article is auto-generated from the member-removal Glow Guide component.
-**Last Updated:** 2025-11-13
+**Last Updated:** 2025-12-12
 **Related Glow Guide:** Appears has members, never managed
 </small>

@@ -9,8 +9,8 @@ timeToRead: 2
 icon: 🌿
 featured: false
 isNew: false
-createdAt: 2025-11-13T15:16:35.017Z
-updatedAt: 2025-11-13T15:16:35.017Z
+createdAt: 2025-12-12T17:39:15.560Z
+updatedAt: 2025-12-12T17:39:15.560Z
 ---
 
 # 🌿 Branch Organization: Structure Your Stories
@@ -25,7 +25,7 @@ updatedAt: 2025-11-13T15:16:35.017Z
 
 ## What is it?
 
-There's no "right" way to organize branches, but some strategies work better than others. Find what feels natural for your story.
+Learn about branch organization: structure your stories and how to use this feature in Firefly Grove.
 
 ---
 
@@ -35,8 +35,6 @@ There's no "right" way to organize branches, but some strategies work better tha
 - Enhance your memory preservation workflow
 - Connect with your family story in meaningful ways
 
-
-> 🔒 **Privacy Note:** You can always reorganize later — branches can be renamed, merged, or moved.
 
 
 ---
@@ -87,6 +85,6 @@ There's no "right" way to organize branches, but some strategies work better tha
 
 <small>
 **Glow Guide:** This article is auto-generated from the branches-organization Glow Guide component.
-**Last Updated:** 2025-11-13
+**Last Updated:** 2025-12-12
 **Related Glow Guide:** Appears 3+ branches on one tree
 </small>

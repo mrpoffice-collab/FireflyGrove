@@ -12,7 +12,7 @@ export const dynamic = 'force-dynamic'
  */
 export async function GET(
   req: NextRequest,
-  { params }: { params: { branchId: string } }
+  { params }: { params: Promise<{ branchId: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions)
@@ -22,7 +22,7 @@ export async function GET(
     }
 
     const userId = (session.user as any).id
-    const branchId = params.branchId
+    const { branchId } = await params
 
     // Verify user owns this branch
     const branch = await prisma.branch.findUnique({
@@ -67,7 +67,7 @@ export async function GET(
  */
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { branchId: string } }
+  { params }: { params: Promise<{ branchId: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions)
@@ -77,7 +77,7 @@ export async function PATCH(
     }
 
     const userId = (session.user as any).id
-    const branchId = params.branchId
+    const { branchId } = await params
     const body = await req.json()
 
     const { canBeTagged, requiresTagApproval, visibleInCrossShares } = body

@@ -14,7 +14,7 @@ export const dynamic = 'force-dynamic'
  */
 export async function POST(
   req: NextRequest,
-  { params }: { params: { memoryId: string } }
+  { params }: { params: Promise<{ memoryId: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions)
@@ -24,7 +24,7 @@ export async function POST(
     }
 
     const userId = (session.user as any).id
-    const memoryId = params.memoryId
+    const { memoryId } = await params
     const body = await req.json()
     const { branchId } = body
 

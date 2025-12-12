@@ -9,8 +9,8 @@ timeToRead: 3
 icon: 🪺
 featured: false
 isNew: false
-createdAt: 2025-11-13T15:16:35.006Z
-updatedAt: 2025-11-13T15:16:35.006Z
+createdAt: 2025-12-12T17:39:15.543Z
+updatedAt: 2025-12-12T17:39:15.543Z
 ---
 
 # 🪺 The Nest: Bulk Photo Uploads
@@ -25,8 +25,7 @@ updatedAt: 2025-11-13T15:16:35.006Z
 
 ## What is it?
 
-The Nest is where photos wait before they become memories. Upload hundreds at once,
-            then "hatch" them into memories when you're ready.
+Learn about the nest: bulk photo uploads and how to use this feature in Firefly Grove.
 
 ---
 
@@ -86,6 +85,6 @@ The Nest is where photos wait before they become memories. Upload hundreds at on
 
 <small>
 **Glow Guide:** This article is auto-generated from the nest Glow Guide component.
-**Last Updated:** 2025-11-13
+**Last Updated:** 2025-12-12
 **Related Glow Guide:** Appears user visits /nest for first time
 </small>

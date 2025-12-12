@@ -9,7 +9,7 @@ export const dynamic = 'force-dynamic'
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: { branchId: string } }
+  { params }: { params: Promise<{ branchId: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions)
@@ -19,7 +19,7 @@ export async function POST(
     }
 
     const userId = (session.user as any).id
-    const branchId = params.branchId
+    const { branchId } = await params
     const { email, message } = await req.json()
 
     if (!email) {

@@ -9,8 +9,8 @@ timeToRead: 3
 icon: 🌱
 featured: false
 isNew: false
-createdAt: 2025-11-13T15:16:35.005Z
-updatedAt: 2025-11-13T15:16:35.005Z
+createdAt: 2025-12-12T17:39:15.540Z
+updatedAt: 2025-12-12T17:39:15.540Z
 ---
 
 # 🌱 Rooting Trees: Connect Family Heritage
@@ -25,7 +25,7 @@ updatedAt: 2025-11-13T15:16:35.005Z
 
 ## What is it?
 
-Rooting lets you define family relationships between trees — parent/child, siblings, spouses — creating a visual map of your family's interconnected stories.
+Learn about rooting trees: connect family heritage and how to use this feature in Firefly Grove.
 
 ---
 
@@ -35,8 +35,6 @@ Rooting lets you define family relationships between trees — parent/child, sib
 - Enhance your memory preservation workflow
 - Connect with your family story in meaningful ways
 
-
-> 🔒 **Privacy Note:** Rooting is optional but powerful — it turns separate trees into a family forest.
 
 
 ---
@@ -87,6 +85,6 @@ Rooting lets you define family relationships between trees — parent/child, sib
 
 <small>
 **Glow Guide:** This article is auto-generated from the rooting-trees Glow Guide component.
-**Last Updated:** 2025-11-13
+**Last Updated:** 2025-12-12
 **Related Glow Guide:** Appears 2+ people have trees
 </small>

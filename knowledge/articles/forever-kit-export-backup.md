@@ -9,8 +9,8 @@ timeToRead: 2
 icon: 📦
 featured: false
 isNew: false
-createdAt: 2025-11-13T15:16:35.015Z
-updatedAt: 2025-11-13T15:16:35.015Z
+createdAt: 2025-12-12T17:39:15.556Z
+updatedAt: 2025-12-12T17:39:15.556Z
 ---
 
 # 📦 Forever Kit: Own Your Memories
@@ -25,7 +25,7 @@ updatedAt: 2025-11-13T15:16:35.015Z
 
 ## What is it?
 
-A Forever Kit is a complete package of your memories — text, audio, photos, everything — ready to download, archive, or take with you.
+Learn about forever kit: own your memories and how to use this feature in Firefly Grove.
 
 ---
 
@@ -35,8 +35,6 @@ A Forever Kit is a complete package of your memories — text, audio, photos, ev
 - Enhance your memory preservation workflow
 - Connect with your family story in meaningful ways
 
-
-> 🔒 **Privacy Note:** Pro tip: Export regularly to keep an offline backup of your growing collection.
 
 
 ---
@@ -87,6 +85,6 @@ A Forever Kit is a complete package of your memories — text, audio, photos, ev
 
 <small>
 **Glow Guide:** This article is auto-generated from the forever-kit Glow Guide component.
-**Last Updated:** 2025-11-13
+**Last Updated:** 2025-12-12
 **Related Glow Guide:** Appears 10+ memories, never exported
 </small>

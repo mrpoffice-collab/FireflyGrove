@@ -9,8 +9,8 @@ timeToRead: 2
 icon: 🌳
 featured: false
 isNew: false
-createdAt: 2025-11-13T15:16:35.000Z
-updatedAt: 2025-11-13T15:16:35.000Z
+createdAt: 2025-12-12T17:39:15.534Z
+updatedAt: 2025-12-12T17:39:15.534Z
 ---
 
 # 🌳 Understanding Trees and Branches
@@ -25,8 +25,7 @@ updatedAt: 2025-11-13T15:16:35.000Z
 
 ## What is it?
 
-Your grove is where you'll preserve the stories that matter. Think of it like a memory garden,
-            organized by the people you cherish.
+Learn about understanding trees and branches and how to use this feature in Firefly Grove.
 
 ---
 
@@ -92,6 +91,6 @@ Create a tree for your grandmother,
 
 <small>
 **Glow Guide:** This article is auto-generated from the trees-branches Glow Guide component.
-**Last Updated:** 2025-11-13
+**Last Updated:** 2025-12-12
 **Related Glow Guide:** Appears user visits grove page with 0 trees
 </small>

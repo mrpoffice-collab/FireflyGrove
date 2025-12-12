@@ -9,8 +9,8 @@ timeToRead: 3
 icon: 🌍
 featured: false
 isNew: false
-createdAt: 2025-11-13T15:16:35.006Z
-updatedAt: 2025-11-13T15:16:35.006Z
+createdAt: 2025-12-12T17:39:15.543Z
+updatedAt: 2025-12-12T17:39:15.543Z
 ---
 
 # 🌍 Open Grove: Public Memorial Space
@@ -25,7 +25,7 @@ updatedAt: 2025-11-13T15:16:35.006Z
 
 ## What is it?
 
-Open Grove is our public memorial space where anyone can discover and honor remarkable lives. It's for those whose stories deserve to be found.
+Learn about open grove: public memorial space and how to use this feature in Firefly Grove.
 
 ---
 
@@ -35,8 +35,6 @@ Open Grove is our public memorial space where anyone can discover and honor rema
 - Enhance your memory preservation workflow
 - Connect with your family story in meaningful ways
 
-
-> 🔒 **Privacy Note:** Open Grove listings can be removed anytime — you're always in control.
 
 
 ---
@@ -87,6 +85,6 @@ Open Grove is our public memorial space where anyone can discover and honor rema
 
 <small>
 **Glow Guide:** This article is auto-generated from the open-grove Glow Guide component.
-**Last Updated:** 2025-11-13
+**Last Updated:** 2025-12-12
 **Related Glow Guide:** Appears has legacy tree, not in open grove
 </small>

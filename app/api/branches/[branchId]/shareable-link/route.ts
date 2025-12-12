@@ -13,7 +13,7 @@ export const dynamic = 'force-dynamic'
  */
 export async function POST(
   req: NextRequest,
-  { params }: { params: { branchId: string } }
+  { params }: { params: Promise<{ branchId: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions)
@@ -23,7 +23,7 @@ export async function POST(
     }
 
     const userId = (session.user as any).id
-    const branchId = params.branchId
+    const { branchId } = await params
     const { message } = await req.json().catch(() => ({}))
 
     // Verify ownership
@@ -121,7 +121,7 @@ export async function POST(
  */
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { branchId: string } }
+  { params }: { params: Promise<{ branchId: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions)
@@ -131,7 +131,7 @@ export async function DELETE(
     }
 
     const userId = (session.user as any).id
-    const branchId = params.branchId
+    const { branchId } = await params
 
     // Verify ownership
     const branch = await prisma.branch.findFirst({

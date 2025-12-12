@@ -6,12 +6,12 @@ import { checkAndExpireTrustee } from '@/lib/trustee'
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { branchId: string } }
+  { params }: { params: Promise<{ branchId: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions)
     const userId = session?.user ? (session.user as any).id : null
-    const branchId = params.branchId
+    const { branchId } = await params
 
     // First, try to find the branch (either user has access OR it's public)
     let branch = null
@@ -271,7 +271,7 @@ export async function GET(
  */
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { branchId: string } }
+  { params }: { params: Promise<{ branchId: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions)
@@ -281,7 +281,7 @@ export async function DELETE(
     }
 
     const userId = (session.user as any).id
-    const branchId = params.branchId
+    const { branchId } = await params
 
     // Find branch and verify ownership
     const branch = await prisma.branch.findUnique({

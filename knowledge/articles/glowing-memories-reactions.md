@@ -9,8 +9,8 @@ timeToRead: 2
 icon: ✨
 featured: false
 isNew: false
-createdAt: 2025-11-13T15:16:35.015Z
-updatedAt: 2025-11-13T15:16:35.015Z
+createdAt: 2025-12-12T17:39:15.554Z
+updatedAt: 2025-12-12T17:39:15.554Z
 ---
 
 # ✨ Glowing Memories: React to Stories
@@ -25,7 +25,7 @@ updatedAt: 2025-11-13T15:16:35.015Z
 
 ## What is it?
 
-Glowing is our way of saying "this matters to me" — a gentle way to show appreciation without interrupting the intimacy of the memory.
+Learn about glowing memories: react to stories and how to use this feature in Firefly Grove.
 
 ---
 
@@ -35,8 +35,6 @@ Glowing is our way of saying "this matters to me" — a gentle way to show appre
 - Enhance your memory preservation workflow
 - Connect with your family story in meaningful ways
 
-
-> 🔒 **Privacy Note:** Glow as many memories as you want — there's no limit to appreciation.
 
 
 ---
@@ -87,6 +85,6 @@ Glowing is our way of saying "this matters to me" — a gentle way to show appre
 
 <small>
 **Glow Guide:** This article is auto-generated from the glowing-memories Glow Guide component.
-**Last Updated:** 2025-11-13
+**Last Updated:** 2025-12-12
 **Related Glow Guide:** Appears viewing shared branch, never glowed
 </small>

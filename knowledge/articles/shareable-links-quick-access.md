@@ -9,8 +9,8 @@ timeToRead: 2
 icon: 🔗
 featured: false
 isNew: false
-createdAt: 2025-11-13T15:16:35.004Z
-updatedAt: 2025-11-13T15:16:35.004Z
+createdAt: 2025-12-12T17:39:15.540Z
+updatedAt: 2025-12-12T17:39:15.540Z
 ---
 
 # 🔗 Shareable Links: One-Time Access
@@ -25,7 +25,7 @@ updatedAt: 2025-11-13T15:16:35.004Z
 
 ## What is it?
 
-Generate secure links that give one-time or temporary access — great for showing non-users, sharing on social media, or quick previews.
+Learn about shareable links: one-time access and how to use this feature in Firefly Grove.
 
 ---
 
@@ -35,8 +35,6 @@ Generate secure links that give one-time or temporary access — great for showi
 - Enhance your memory preservation workflow
 - Connect with your family story in meaningful ways
 
-
-> 🔒 **Privacy Note:** You can revoke any link anytime, even before it expires.
 
 
 ---
@@ -87,6 +85,6 @@ Generate secure links that give one-time or temporary access — great for showi
 
 <small>
 **Glow Guide:** This article is auto-generated from the shareable-links Glow Guide component.
-**Last Updated:** 2025-11-13
+**Last Updated:** 2025-12-12
 **Related Glow Guide:** Appears branch with memories, never shared link
 </small>

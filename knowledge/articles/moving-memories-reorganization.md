@@ -9,8 +9,8 @@ timeToRead: 2
 icon: 📦
 featured: false
 isNew: false
-createdAt: 2025-11-13T15:16:35.007Z
-updatedAt: 2025-11-13T15:16:35.007Z
+createdAt: 2025-12-12T17:39:15.545Z
+updatedAt: 2025-12-12T17:39:15.545Z
 ---
 
 # 📦 Moving Memories: Reorganize as You Grow
@@ -25,7 +25,7 @@ updatedAt: 2025-11-13T15:16:35.007Z
 
 ## What is it?
 
-As your grove grows, you'll discover better ways to organize. Moving memories lets you refine your structure without losing anything.
+Learn about moving memories: reorganize as you grow and how to use this feature in Firefly Grove.
 
 ---
 
@@ -35,8 +35,6 @@ As your grove grows, you'll discover better ways to organize. Moving memories le
 - Enhance your memory preservation workflow
 - Connect with your family story in meaningful ways
 
-
-> 🔒 **Privacy Note:** You can move multiple memories at once when reorganizing large sections.
 
 
 ---
@@ -87,6 +85,6 @@ As your grove grows, you'll discover better ways to organize. Moving memories le
 
 <small>
 **Glow Guide:** This article is auto-generated from the moving-memories Glow Guide component.
-**Last Updated:** 2025-11-13
+**Last Updated:** 2025-12-12
 **Related Glow Guide:** Appears 20+ memories, never moved one
 </small>

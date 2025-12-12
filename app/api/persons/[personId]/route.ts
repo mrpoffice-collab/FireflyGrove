@@ -12,9 +12,10 @@ export const dynamic = 'force-dynamic'
  */
 export async function DELETE(
   request: Request,
-  { params }: { params: { personId: string } }
+  { params }: { params: Promise<{ personId: string }> }
 ) {
   try {
+    const { personId } = await params
     const session = await getServerSession(authOptions)
 
     if (!session?.user) {
@@ -25,7 +26,7 @@ export async function DELETE(
     const isAdmin = (session.user as any).isAdmin
 
     const person = await prisma.person.findUnique({
-      where: { id: params.personId },
+      where: { id: personId },
       include: {
         branches: {
           include: {
@@ -61,12 +62,12 @@ export async function DELETE(
     // Delete related records first (due to foreign key constraints)
     // Delete branches
     await prisma.branch.deleteMany({
-      where: { personId: params.personId }
+      where: { personId: personId }
     })
 
     // Delete grove memberships
     await prisma.groveTreeMembership.deleteMany({
-      where: { personId: params.personId }
+      where: { personId: personId }
     })
 
     // Delete any entries (memories) associated with branches of this person (safety check)
@@ -79,7 +80,7 @@ export async function DELETE(
 
     // Delete the person
     await prisma.person.delete({
-      where: { id: params.personId }
+      where: { id: personId }
     })
 
     // Log the action
@@ -88,9 +89,9 @@ export async function DELETE(
         actorId: userId,
         action: 'person_delete',
         targetType: 'person',
-        targetId: params.personId,
+        targetId: personId,
         metadata: JSON.stringify({
-          personId: params.personId,
+          personId: personId,
           personName: person.name,
         })
       }
