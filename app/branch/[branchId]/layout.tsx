@@ -4,11 +4,12 @@ import { prisma } from '@/lib/prisma'
 export async function generateMetadata({
   params,
 }: {
-  params: { branchId: string }
+  params: Promise<{ branchId: string }>
 }): Promise<Metadata> {
   try {
+    const { branchId } = await params
     const branch = await prisma.branch.findUnique({
-      where: { id: params.branchId },
+      where: { id: branchId },
       select: {
         title: true,
         description: true,
@@ -22,7 +23,7 @@ export async function generateMetadata({
     }
 
     const description = branch.description || `Memories and stories about ${branch.title}`
-    const branchUrl = `https://fireflygrove.app/branch/${params.branchId}`
+    const branchUrl = `https://fireflygrove.app/branch/${branchId}`
 
     console.log(`[OG Meta] Branch: ${branch.title}, URL: ${branchUrl}`)
 
